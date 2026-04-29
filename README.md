@@ -75,7 +75,7 @@ Assets/_Project/
 
 ### 로컬 셋업
 ```bash
-git clone https://github.com/<your-username>/little-hero-by-the-lake.git
+git clone https://github.com/MoonjaeChoi/little-hero-by-the-lake.git
 cd little-hero-by-the-lake
 # Unity Hub에서 폴더 열기
 ```
