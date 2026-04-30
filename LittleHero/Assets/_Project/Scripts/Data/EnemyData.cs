@@ -18,6 +18,9 @@ namespace LittleHero
         public float xpDrop;
         public float starDustDrop;
 
+        [Tooltip("방어력 — 0=무방어. DamageCalculator 가 dmg/(1 + armor×(1-관통)/100). 일몹 0, 보스만 ~30~80 권장 (stats_v1 §5)")]
+        public float armor = 0f;
+
         [Header("외형")]
         public Color tintColor = Color.white;
         public float scaleMultiplier = 1f;

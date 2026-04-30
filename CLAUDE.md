@@ -284,7 +284,7 @@ public interface IAttackPattern
 
 ### Data (ScriptableObject)
 - 클래스: `EquipmentData`, `EnemyData`, `ChapterData`, `CharacterData`, `MemoryData`, `BalanceConfig`, `ShopPool`
-- `EnemyData`에 tintColor / scaleMultiplier 필드 추가
+- `EnemyData`에 tintColor / scaleMultiplier / armor (A3, 기본 0) 필드 추가
 - `BalanceConfig`에 priceByRarity 추가
 - `CharacterData`에 4 코어 비중(`strengthMultiplier`/`agilityMultiplier`/`wisdomMultiplier`/`spiritMultiplier`) 추가 (stats_v1 §3.3)
 - `ChapterData`에 `chapterNumber` 필드 추가 (A2: PlayerProgress XP 모디파이어용. 기본 0, B7가 1~35 채움)
@@ -297,7 +297,7 @@ public interface IAttackPattern
 - **Enemies**: `EnemyController` (외형 적용), `EnemyAI`, `EnemySpawner`
 - **Waves**: `WaveManager` (보스 플레이어 기준 spawn), `ChapterRunner`
 - **Equipment**: `IAttackPattern`, 7종 패턴 (`ProjectileAttack`, `AuraAttack`, `OrbitAttack`, `RainAttack`, `TrailAttack`, `PulseAttack`, `SummonAttack`), `OrbitOrb`, `TrailField`, `PulseVisual`, `EquipmentManager`, `TestEquip`
-- **Combat**: `DamageSystem`, `Projectile`
+- **Combat**: `DamageSystem`, `Projectile`, `DamageCalculator`(A3: 3 버킷 + 방어 관통, 평균/RNG 두 모드)
 
 ### Meta / Hub
 - `Meta/ShopController.cs` — 6칸 롤/구매/새로고침
@@ -393,3 +393,4 @@ public interface IAttackPattern
 - 2026-04-30: A7 GameEvents 신규 이벤트 — `OnMagicCrystalChanged(int)` ◇, `OnStarlightChanged(int)` ⋆ 추가. `OnLevelUp(int)`은 기존 시그니처 유지. `OnAffixRolled`는 B2 EquipmentInstance 시그니처 결합으로 B2와 함께 도입. CLAUDE.md §4 EventBus 목록도 갱신.
 - 2026-04-30: A5 CurrencyService — 4 화폐(★/✦/◇/⋆) 통합 정적 facade. MetaProgression에 `MagicCrystals`/`Starlight` 보관·Add·Spend·이벤트 발행. 챕터 보상 공식(`CalcChapterStarFragmentReward = 5×1.10^(N-1)` / `CalcChapterMagicCrystalReward = 1+N/3` / `CalcChapterStarlightReward = N×2`) + 일일 로그인 5⋆ + 추억 발견 10⋆.
 - 2026-05-01: A2 PlayerProgress — 싱글턴(자동 부트스트랩), L100 piecewise XP 곡선(L1~50 1.15^L / L51~100 1.05^(L-50), L1→L2=50 하드코드), XP 적립(적 2/미니 20/보스 80/챕터 N×40/추억 40 + 챕터 모디파이어 1+N×0.1), 사망 시 XP 후퇴 없음, SaveData.level/xp 영구. PlayerStats에 `SetLevel(int)` 절대 동기화 API + L51+ 둔화(HP+5·공격력+0·부수 0). ChapterData에 `chapterNumber` 필드 추가(B7가 1~35 채움). PlayerController.Start에서 SyncStatsToCurrentLevel 호출.
+- 2026-05-01: A3 DamageCalculator — 3 데미지 버킷(합산/최종/크리) × 적 방어력÷(1+effective/100) + 방어 관통. `CalculateExpectedDamage`(평균, UI/시뮬용)와 `RollDamage`(RNG, 런타임 1회 공격, isCrit out) 두 시그니처. EnemyData에 `armor` 필드 추가(기본 0). 호출처 통합은 C8 IAttackPattern 갱신에서.
