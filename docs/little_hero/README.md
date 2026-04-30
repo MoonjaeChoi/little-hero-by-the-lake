@@ -52,7 +52,7 @@
 | [`item_drop_v1.md`](./item_drop_v1.md) | **활성** | 주옵션 3줄 + 부옵션 3줄(글로벌) + 드랍 결정 트리 + 분리 리롤 |
 | [`character_progression_v1.md`](./character_progression_v1.md) | **활성** | XP·레벨업 곡선 — L50 캡, 50×1.15^L, 35 챕터 권장 레벨 매트릭스 (Part 1b 적용) |
 | [`chapter_curve_v1.md`](./chapter_curve_v1.md) | **활성** | 35 챕터 적 스탯 곡선 + 플레이어 DPS·HP 추정 + TTK 검증 (v2 §5 placeholder 대체) |
-| `economy_v1.md` | 미작성 | 별가루/별 조각 + 강화석 등 신규 재화 |
+| [`economy_v1.md`](./economy_v1.md) | **활성** | 3 화폐(별가루 ★ / 별 조각 ✦ / 별 모래 ◆) 곡선 + 35 챕터 풀빌드 정합 시뮬 |
 | `ui_v1.md` | 미작성 | 모바일 카드 5단 위계 + 강화 모달 + 12슬롯 인벤토리 + 지도 모달 |
 
 ---
@@ -65,7 +65,7 @@
 4. **`item_drop_v1.md`** ✅ — 주옵션 3줄 + 부옵션 3줄 + 드랍 트리
 5. **`character_progression_v1.md`** ✅ — XP 곡선 + 레벨업 자동 보상 + 권장 레벨
 6. **`chapter_curve_v1.md`** ✅ — 적 곡선·DPS·TTK 정합 검증
-7. **`economy_v1.md`** — 강화석/리롤석 추가 + 챕터 보상 매트릭스
+7. **`economy_v1.md`** ✅ — 3 화폐 곡선·풀빌드 정합 시뮬
 8. **`ui_v1.md`** — 위 시스템들이 안정된 후 UI 구현
 
 ---
