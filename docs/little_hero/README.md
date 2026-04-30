@@ -49,7 +49,7 @@
 | [`chapter_structure_v1.md`](./chapter_structure_v1.md) | ⚠️ archived | (폐기) 동화 8권 직렬 모델 — 보존용 |
 | [`stats_v1.md`](./stats_v1.md) | **활성** | 4 코어 스탯·3 데미지 버킷·부위별 옵션 매트릭스 (Diablo 4 + 메이플 키우기, 스킬 시스템 미채용) |
 | [`affix_pool_v1.md`](./affix_pool_v1.md) | **활성** | L4 옵션 풀 카탈로그 — Affix 23종 + 슬롯 12 풀 매핑 + 등급별 정확한 수치 |
-| `character_progression_v1.md` | 미작성 | XP·레벨업 곡선 (Part 1b를 Little Hero에 적용, stats_v1과 통합 검토) |
+| [`character_progression_v1.md`](./character_progression_v1.md) | **활성** | XP·레벨업 곡선 — L50 캡, 50×1.15^L, 35 챕터 권장 레벨 매트릭스 (Part 1b 적용) |
 | `economy_v1.md` | 미작성 | 별가루/별 조각 + 강화석 등 신규 재화 |
 | `chapter_curve_v1.md` | 미작성 | 챕터 깊이별 적 HP/공격·권장 레벨·강화 단계 (v2의 §5 곡선과 통합) |
 | `ui_v1.md` | 미작성 | 모바일 카드 5단 위계 + 강화 모달 + 12슬롯 인벤토리 + 지도 모달 |
@@ -61,8 +61,8 @@
 1. **`equipment_v1.md`** ✅ — 5층 아키텍처가 모든 후속 시스템의 기반
 2. **`stats_v1.md`** ✅ — 데미지 버킷·코어 스탯·부위별 옵션 채널
 3. **`affix_pool_v1.md`** ✅ — L4 옵션 라인 23종 + 슬롯 풀 + 수치
-4. **`character_progression_v1.md`** — 캐릭터 진행 곡선 정해야 챕터 보스 튜닝 가능
-5. **`chapter_curve_v1.md`** — 위 셋이 결합되어 동조 곡선 설계
+4. **`character_progression_v1.md`** ✅ — XP 곡선 + 레벨업 자동 보상 + 권장 레벨
+5. **`chapter_curve_v1.md`** — 적 HP/공격력 곡선이 권장 레벨 매트릭스를 따르는지 검증
 6. **`economy_v1.md`** — 강화석/리롤석 추가 + 챕터 보상 매트릭스
 7. **`ui_v1.md`** — 위 시스템들이 안정된 후 UI 구현
 
