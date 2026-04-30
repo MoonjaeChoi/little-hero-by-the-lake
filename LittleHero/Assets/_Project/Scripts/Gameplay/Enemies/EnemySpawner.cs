@@ -13,6 +13,11 @@ namespace LittleHero
 
         private Transform _poolRoot;
 
+        // C9 — 현재 진행 챕터의 적 스탯 곱셈을 인스펙터·SelectedChapter 어느 경로로든 일관되게 반영.
+        private ChapterData _activeChapter;
+        public ChapterData ActiveChapter => _activeChapter;
+        public void SetActiveChapter(ChapterData chapter) => _activeChapter = chapter;
+
         private void Awake()
         {
             _poolRoot = new GameObject("EnemyPool").transform;
@@ -40,8 +45,11 @@ namespace LittleHero
 
             EnemyController enemy = pool.Get();
             enemy.transform.position = GetSpawnPosition();
-            // A4 — 현재 챕터의 enemyStatMultiplier 자동 적용 (HP/공격력)
-            float multi = MetaProgression.Instance?.SelectedChapter?.enemyStatMultiplier ?? 1f;
+            // C9 — 활성 챕터(인스펙터 또는 SelectedChapter) 의 enemyStatMultiplier 자동 적용.
+            //     ActiveChapter 우선, 없으면 SelectedChapter, 둘 다 없으면 1f.
+            float multi = _activeChapter != null
+                ? _activeChapter.enemyStatMultiplier
+                : (MetaProgression.Instance?.SelectedChapter?.enemyStatMultiplier ?? 1f);
             enemy.Initialize(data, multi);
             return enemy;
         }

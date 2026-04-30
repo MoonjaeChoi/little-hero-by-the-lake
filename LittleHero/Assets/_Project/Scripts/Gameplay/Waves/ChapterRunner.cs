@@ -22,6 +22,8 @@ namespace LittleHero
                 _chapterData = MetaProgression.Instance.SelectedChapter;
 
             GameEvents.OnShopClosed += OnShopClosed;
+            // C9 — 챕터 곱셈을 spawner 에 명시적으로 전달 (인스펙터·SelectedChapter 경로 일관)
+            _spawner.SetActiveChapter(_chapterData);
             RegisterEnemyPool();
             _waveManager.Initialize(_spawner);
             GameManager.Instance.ResetRun();   // 새 런: CurrentWave=0, StarDust=0
