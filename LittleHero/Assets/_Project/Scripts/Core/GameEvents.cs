@@ -16,6 +16,11 @@ namespace LittleHero
         public static event Action<MemoryData> OnMemoryDiscovered;
         public static event Action<ChapterData> OnChapterCleared;
 
+        // ✦ A7 — 신규 화폐 이벤트 (A5 CurrencyService 가 발행)
+        public static event Action<int> OnMagicCrystalChanged;   // ◇ 마법 결정
+        public static event Action<int> OnStarlightChanged;      // ⋆ 별빛
+        // OnAffixRolled 는 B2 EquipmentInstance 도입 후 시그니처 확정.
+
         public static void RaiseEnemyKilled(EnemyData data) => OnEnemyKilled?.Invoke(data);
         public static void RaiseLevelUp(int level) => OnLevelUp?.Invoke(level);
         public static void RaiseWaveCleared(int wave) => OnWaveCleared?.Invoke(wave);
@@ -27,5 +32,7 @@ namespace LittleHero
         public static void RaisePlayerDied() => OnPlayerDied?.Invoke();
         public static void RaiseMemoryDiscovered(MemoryData data) => OnMemoryDiscovered?.Invoke(data);
         public static void RaiseChapterCleared(ChapterData data) => OnChapterCleared?.Invoke(data);
+        public static void RaiseMagicCrystalChanged(int amount) => OnMagicCrystalChanged?.Invoke(amount);
+        public static void RaiseStarlightChanged(int amount) => OnStarlightChanged?.Invoke(amount);
     }
 }

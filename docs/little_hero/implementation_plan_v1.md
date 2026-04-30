@@ -55,7 +55,7 @@
 | **A4** | `EnemyController` 챕터 곱셈 — 1.10^(N-1) 자동 적용 | chapter_curve §9.1 | — | 간단 |
 | **A5** | `CurrencyService` 정적 — 4 화폐 grant·calc | economy §9.3, monetization §7.3 | A6 | 간단 |
 | **A6** | `SaveData` 확장 — magicCrystals·starlight·level·xp·affix 등 | economy §9.2 + character_progression §7.4 + monetization §7.1 | — | 중 | ✅ 2026-04-30 (affix 관련은 B2와 함께) |
-| **A7** | `GameEvents` 신규 이벤트 — OnLevelUp(int)·OnStarlightChanged·OnMagicCrystalChanged·OnAffixRolled | (각 시스템) | — | 간단 |
+| **A7** | `GameEvents` 신규 이벤트 — OnLevelUp(int)·OnStarlightChanged·OnMagicCrystalChanged·OnAffixRolled | (각 시스템) | — | 간단 | ✅ 2026-04-30 (OnAffixRolled는 B2와 함께) |
 
 **총 7 작업. 예상 4~5일.**
 

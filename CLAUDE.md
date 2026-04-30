@@ -128,6 +128,8 @@ public static class GameEvents
     public static event Action OnPlayerDied;                    // 플레이어 사망
     public static event Action<MemoryData> OnMemoryDiscovered;  // 아빠 추억 발견
     public static event Action<ChapterData> OnChapterCleared;
+    public static event Action<int> OnMagicCrystalChanged;      // ◇ 마법 결정 (영구)
+    public static event Action<int> OnStarlightChanged;         // ⋆ 별빛 (캐시)
 }
 ```
 
@@ -272,7 +274,7 @@ public interface IAttackPattern
 > Claude Code와 함께 작성한 스크립트/에셋 (2026-04-30 기준)
 
 ### Core
-- `GameEvents.cs` — 정적 EventBus, 11개 이벤트 (OnPlayerDied 포함)
+- `GameEvents.cs` — 정적 EventBus, 13개 이벤트 (A7: OnMagicCrystalChanged ◇·OnStarlightChanged ⋆ 추가; OnAffixRolled 는 B2와 함께)
 - `GameManager.cs` — 싱글턴, GameState, CurrentWave, StarDust + 사망/챕터클리어 핸들러
 - `ObjectPool.cs` — 제네릭 `ObjectPool<T>`
 - `SaveSystem.cs` — JSON 영구 저장 (무지개 구슬 등)
@@ -385,3 +387,4 @@ public interface IAttackPattern
 - 2026-04-30: 화폐 명칭 일괄 갱신 — `별 조각` → `무지개 구슬` ✦ (영구), 신규 `마법 결정` ◇ (강화 전용, +16 이상). 영문 필드명(`StarFragments` 등)은 유지. 다른 게임 사례 조사 기반 차별화 (메이플 키우기·디아블로 4·로스트 아크 참조).
 - 2026-04-30: A1 PlayerStats 확장 — 4 코어 스탯(힘/빠름/슬기/마음) + 11 신규 파생(메이플 키우기 채널 4 + 데미지 버킷 1 + 크리/방어/배수 6) + 코어 100점당 효과 통합 + `ApplyLevelUp()` 메서드 (A2 호출 대기). `CharacterData`에 4 코어 비중 필드 추가. 신규 필드 기본값 0/베이스로 기존 게임플레이 영향 0 (참조: docs/little_hero/stats_v1.md §6).
 - 2026-04-30: A6 SaveData 확장 — `magicCrystals` ◇, `starlight` ⋆, `level`(=1), `xp`, `firstClearedChapters`(35비트) 추가. A2/A5/E3가 의존. `permanentlyLockedAffixes`/`mythicMileageBonus`는 B2 EquipmentInstance와 함께 도입 (참조: economy §9.2 + character_progression §7.4 + monetization §7.1).
+- 2026-04-30: A7 GameEvents 신규 이벤트 — `OnMagicCrystalChanged(int)` ◇, `OnStarlightChanged(int)` ⋆ 추가. `OnLevelUp(int)`은 기존 시그니처 유지. `OnAffixRolled`는 B2 EquipmentInstance 시그니처 결합으로 B2와 함께 도입. CLAUDE.md §4 EventBus 목록도 갱신.
