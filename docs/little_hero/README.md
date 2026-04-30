@@ -25,7 +25,7 @@
 
 | Jackpot ARPG | 기존 Little Hero | 결합 방안 |
 |---|---|---|
-| 5층 아이템 아키텍처 | `EquipmentData` 16종 (현행) | 마스터 = `EquipmentTemplate`, 인스턴스 = `EquipmentInstance` 분리 |
+| 5층 아이템 아키텍처 | `EquipmentData` 16종 (현행, 7슬롯) | 마스터 = `EquipmentTemplate`, 인스턴스 = `EquipmentInstance` 분리. ✦ 슬롯 12개로 확장(주 7 + 장신구 5), 가방 슬롯 폐기 |
 | 강화 +0~+25 + 천장 | 없음 (현재 장비는 정적) | 신규 강화 시스템 도입, 별가루(`★`)가 강화 자원 |
 | 옵션 라인 3개 + 리롤 | 없음 | 신규. 별 조각(`✦`)으로 리롤 |
 | 세트 효과 | `EquipmentData.setId` (정의만) | 챕터 테마별 세트 (빨간모자 세트, 잭과 콩나무 세트, 앨리스 세트) |

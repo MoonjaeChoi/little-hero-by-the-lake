@@ -8,13 +8,16 @@
 
 ## 1. 핵심 결정
 
-- **7슬롯 유지** (기존 Little Hero CLAUDE.md §6 그대로): Head / Top / Hand / Foot / Acc1 / Acc2 / Bag
+- **12슬롯으로 확장** ✦ 2026-04-30 재구성:
+  - **주 슬롯 7**: 모자 / 상의 / 하의 / 망토 / 장갑 / 무기 / 신발
+  - **장신구 슬롯 5**: 귀걸이 / 안경 / 목걸이 / 반지 / 펫
 - **5층 아키텍처 도입** (Part 2 그대로): 베이스 → 강화 +0~+15 → 강화 +16~+25 → 옵션 라인 3개 → 신화 옵션
 - **등급 5단계 유지** (기존 `Rarity` enum: Common/Uncommon/Rare/Epic/Legendary)
 - **강화 자원**: 별가루(`★`, 런 내) + 강화 보호석(별 조각 ✦로 구매)
 - **신화 옵션은 "아빠의 마법"** — 추억 4종(MemoryData)을 다 모으면 신화 풀 언락. 잭팟 ARPG의 마일리지 공식은 그대로 사용.
-- **세트 효과 3종은 동화 챕터 테마**: 빨간모자 / 잭과 콩나무 / 앨리스
+- **세트 효과는 동화 챕터 테마 + 장신구 트리오**: 빨간모자 / 잭과 콩나무 / 앨리스(장신구 3피스)
 - **마이그레이션 모델**: `EquipmentData`(현 SO) → `EquipmentTemplate`(마스터) + `EquipmentInstance`(런타임/세이브)
+- **`Bag` 슬롯 폐기**: 기존 가방 2종(`Equip_MagicBag`, `Equip_PulseBag`)은 효과를 다른 슬롯으로 이전하거나 폐기 (마이그레이션 표 참조).
 
 ---
 
@@ -45,17 +48,33 @@
 
 ## 3. 구체적 사양
 
-### 3.1. 7슬롯 카탈로그
+### 3.1. 12슬롯 카탈로그 (✦ 재구성)
 
-| 슬롯 | 카테고리 | 주력 패턴 (현행) | 비고 |
-|---|---|---|---|
-| Head | 모자/후광 | Aura | 플레이어 주변 광역 |
-| Top | 옷 | (스탯) | HP·방어 베이스, 코스메틱 자부심 |
-| Hand | 마법봉/막대 | Projectile | 메인 무기, DPS의 핵 |
-| Foot | 신발 | Trail | 이동 속도 + 자취 데미지 |
-| Acc1 | 액세서리 (반려) | Orbit / Summon | 회전체·동료 |
-| Acc2 | 액세서리 (장신구) | (스탯) | 보조 스탯 (속도·공속) |
-| Bag | 가방 | Pulse | 광역 폭발 + xp/별가루 보너스 |
+#### 주 슬롯 (7개) — 의류·무기 코어
+HP·공격력·이동속도 등 기본 스탯의 70% 비중. 모든 챕터 진입에 필수.
+
+| 슬롯 ID | 한국어 | 카테고리 | 권장 패턴 | 비고 |
+|---|---|---|---|---|
+| `Hat` | 모자 | 머리 | Aura | 플레이어 주변 광역 (후광 등) |
+| `Top` | 상의 | 몸통 | (스탯) | HP 베이스, 코스메틱 자부심 |
+| `Bottom` | 하의 | 다리 | (스탯) | 방어·이동 베이스 |
+| `Cloak` | 망토 | 등 | (스탯·특수) | 회피·반사 류 옵션 적합 |
+| `Gloves` | 장갑 | 손 | (스탯·공속) | 공격속도·크리티컬 베이스 |
+| `Weapon` | 무기 | 메인 무기 | Projectile | DPS의 핵, 단일 슬롯 |
+| `Shoes` | 신발 | 발 | Trail | 이동 속도 + 자취 |
+
+#### 장신구 슬롯 (5개) — 디테일·자부심
+특수 옵션·세트 시너지 중심. 일부는 가시적 자랑 요소(펫·반지).
+
+| 슬롯 ID | 한국어 | 카테고리 | 권장 패턴 | 비고 |
+|---|---|---|---|---|
+| `Earring` | 귀걸이 | 머리 옆 | (스탯·작은 효과) | 크리·치명피해 |
+| `Glasses` | 안경 | 시야 | (시야·정확도) | 적 표시·미니맵 옵션 적합 |
+| `Necklace` | 목걸이 | 목 | (스탯·트리거) | 발동형 효과 적합 |
+| `Ring` | 반지 | 손가락 | (스탯·MUL 비율) | 곱연산 옵션 |
+| `Pet` | 펫 | 동행 | Orbit / Summon | 회전체·동료, 자부심 가시화 |
+
+> **무기 1개 + 장갑 1개**가 분리되어 있다. 의류 6피스 풀세트 + 무기 + 장신구 5 = 12슬롯 동시 장착. 주 슬롯 6피스가 채워지면 캐릭터의 외형이 완성된다 → 코스메틱 자부심.
 
 ### 3.2. 등급 5단계 (한국어 + 시각)
 
@@ -138,15 +157,21 @@ type Affix = {
 - 잠금된 라인은 자물쇠 아이콘 + 황금 테두리.
 - 미잠금 라인은 점선 테두리 + 리롤 버튼 옆에 별가루 비용 표시.
 
-### 3.6. 세트 효과 (챕터 테마)
+### 3.6. 세트 효과 (챕터 테마 + 장신구 트리오) ✦ 재설계
 
-| 세트 ID | 이름 | 멤버 슬롯 | 2피스 효과 | 4피스 효과 (해당 시) |
-|---|---|---|---|---|
-| `set_red_hood` | 빨간 모자의 용기 | Head + Top | HP +30, 공격력 +5 | (4피스 미정) |
-| `set_beanstalk` | 잭과 콩나무의 모험 | Hand + Foot | 공격력 +10, 이동속도 +0.5 | (미정) |
-| `set_alice` | 앨리스의 호기심 | Acc1 + Acc2 + Bag | XP +20%, 별가루 +20%, 크리 +5% | (미정) |
+12슬롯 확장에 맞춰 세트 멤버 슬롯을 재정의.
 
-> 세트는 **서로 다른 챕터의 보스 보상**으로 일부 멤버를 드롭한다 — 챕터를 골고루 돌아야 완성.
+| 세트 ID | 이름 | 멤버 슬롯 | 2피스 | 3피스 | 5피스 (해당 시) |
+|---|---|---|---|---|---|
+| `set_red_hood` | 빨간 모자의 용기 | 모자 + 망토 | HP +30, 공격력 +5 | — | — |
+| `set_beanstalk` | 잭과 콩나무의 모험 | 무기 + 장갑 | 공격력 +10, 공속 +0.15 | — | — |
+| `set_alice` | 앨리스의 호기심 | 귀걸이 + 안경 + 목걸이 | XP +10%, 별가루 +10% | XP +20%, 별가루 +20%, 크리 +5% | — |
+| `set_full_outfit` ✦ | 작은 영웅의 정장 | 모자 + 상의 + 하의 + 망토 + 신발 | HP +20 | HP +50, 공격력 +5 | HP +120, 공격력 +15, 이동속도 +0.3 |
+
+**원칙**:
+- **챕터 테마 세트**(빨간모자/잭과콩나무/앨리스)는 **서로 다른 챕터의 보스 보상**으로 일부 멤버를 드롭 → 챕터를 골고루 돌아야 완성.
+- **`set_full_outfit`(작은 영웅의 정장)은 의류 5피스 세트** → 풀 정장 코스메틱 자부심 보상. 모든 슬롯이 같은 등급 이상이면 외형이 빛난다.
+- 장신구 트리오 세트(앨리스)는 **3피스 단계가 핵심 보너스** — 장신구만으로 큰 효과를 낼 수 있어 빌드 다양성에 기여.
 
 ### 3.7. 신화 옵션 — 아빠의 마법
 
@@ -262,30 +287,38 @@ public static class EffectResolver
 }
 ```
 
-### 4.4. 마이그레이션 — 기존 16종 EquipmentData
+### 4.4. 마이그레이션 — 기존 16종 EquipmentData (✦ 12슬롯 재매핑)
 
 기존 `EquipmentData` 16종을 `EquipmentTemplate`으로 변환하는 1회성 에디터 스크립트.
 
-```
-Equip_StarWand        → Template_StarWand        (Hand, Common, Projectile)
-Equip_MeteorRod       → Template_MeteorRod       (Hand, Rare, Projectile)
-Equip_HaloLight       → Template_HaloLight       (Head, Common, Aura)
-Equip_StarlightHalo   → Template_StarlightHalo   (Head, Rare, Aura)
-Equip_BraveHat        → Template_BraveHat        (Head, Uncommon, None) → set_red_hood
-Equip_FairyFriend     → Template_FairyFriend     (Acc1, Uncommon, Orbit)
-Equip_DancingStarDust → Template_DancingStarDust (Acc1, Rare, Orbit)
-Equip_DragonflyWings  → Template_DragonflyWings  (Acc2, Uncommon, None)
-Equip_PetalCloak      → Template_PetalCloak      (Top, Common, None) → set_red_hood
-Equip_HeroOutfit      → Template_HeroOutfit      (Top, Epic, None)
-Equip_RunShoes        → Template_RunShoes        (Foot, Common, None) → set_beanstalk
-Equip_RainBoots       → Template_RainBoots       (Foot, Rare, Rain)
-Equip_SparkleTrail    → Template_SparkleTrail    (Foot, Uncommon, Trail) → set_beanstalk
-Equip_MagicBag        → Template_MagicBag        (Bag, Common, None) → set_alice
-Equip_PulseBag        → Template_PulseBag        (Bag, Uncommon, Pulse)
-Equip_SummonBuddy     → Template_SummonBuddy    (Acc2, Rare, Summon)
-```
+| 기존 ID | 신규 슬롯 | 등급 | 패턴 | 세트 | 비고 |
+|---|---|---|---|---|---|
+| `Equip_StarWand` | Weapon | Common | Projectile | — | |
+| `Equip_MeteorRod` | Weapon | Rare | Projectile | `set_beanstalk` | |
+| `Equip_HaloLight` | Hat | Common | Aura | — | 머리 위 후광 |
+| `Equip_StarlightHalo` | Hat | Rare | Aura | — | |
+| `Equip_BraveHat` | Hat | Uncommon | None | `set_red_hood` | |
+| `Equip_PetalCloak` | Cloak | Common | None | `set_red_hood` | 꽃잎 망토 → 망토 슬롯 |
+| `Equip_DragonflyWings` | Cloak | Uncommon | None | — | 잠자리 날개 → 망토 슬롯 |
+| `Equip_HeroOutfit` | Top | Epic | None | `set_full_outfit` | |
+| `Equip_RunShoes` | Shoes | Common | None | — | |
+| `Equip_RainBoots` | Shoes | Rare | Rain | — | |
+| `Equip_SparkleTrail` | Shoes | Uncommon | Trail | — | |
+| `Equip_FairyFriend` | Pet | Uncommon | Orbit | — | 요정 친구 → 펫 |
+| `Equip_SummonBuddy` | Pet | Rare | Summon | — | 아기 별친구 → 펫 |
+| `Equip_DancingStarDust` | Necklace | Rare | Orbit | `set_alice` | 춤추는 별가루 → 목걸이 |
+| `Equip_MagicBag` ✦ | **Necklace** | Common | None | `set_alice` | 가방 슬롯 폐기 → 목걸이 트리거형 효과로 흡수 (xp_gain MUL) |
+| `Equip_PulseBag` ✦ | **Necklace** | Uncommon | Pulse | — | 가방 폐기 → 목걸이 트리거형으로 (목걸이가 발동하는 광역 폭발) |
 
-기존 SO의 `statBonus`/`attackPattern`/`attackConfig`은 그대로 복사 (베이스 스탯 = 현재 statBonus). `setId`는 위 표대로 새로 부여 (`set_red_hood` / `set_beanstalk` / `set_alice`).
+**커버 안 된 슬롯**: 하의(Bottom), 장갑(Gloves), 귀걸이(Earring), 안경(Glasses), 반지(Ring) — 합계 5슬롯.
+- MVP는 위 5슬롯을 비워두고 진행 가능 (선택 슬롯).
+- 후속에서 이 5슬롯을 채우는 신규 16~20종을 추가하는 게 자연스러운 콘텐츠 패치 (Phase 1.x).
+
+**가방 슬롯 폐기 처리**:
+- `Equip_MagicBag`(xp_gain +20%) → 목걸이로 이전. 효과 그대로.
+- `Equip_PulseBag`(Pulse 패턴) → 목걸이로 이전. 패턴은 "목걸이가 빛날 때 광역 폭발"이라는 트리거형 컨셉으로 재해석.
+
+기존 SO의 `statBonus`/`attackPattern`/`attackConfig`은 그대로 복사 (베이스 스탯 = 현재 statBonus). `setId`는 위 표대로 새로 부여.
 
 ---
 
@@ -327,24 +360,35 @@ Equip_SummonBuddy     → Template_SummonBuddy    (Acc2, Rare, Summon)
 
 ---
 
-## 6. MVP 범위 (Little Hero v1)
+## 6. MVP 범위 (Little Hero v1) ✦ 12슬롯 정합
 
-> Part 8 MVP에 Little Hero 컨텍스트를 더한 범위.
+> Part 8 MVP + 12슬롯 재구성. 모든 슬롯을 한 번에 채우려 하지 않고, **핵심 7슬롯 + 펫 = 8슬롯 활성**으로 시작한다.
+
+**MVP 활성 슬롯 (8개)**:
+- 모자, 상의, 망토, 무기, 신발 (의류·무기 5)
+- 펫 (장신구 대표 1)
+- (선택) 장갑·하의 — 신규 콘텐츠가 충분히 준비되면 포함
+
+**MVP 비활성 슬롯 (4~5개)**: 귀걸이 / 안경 / 목걸이 / 반지 / (장갑·하의 중 미포함분)
+- UI에 슬롯은 보이되 "잠금"으로 처리. 후속 패치에서 해제.
 
 **MVP 포함**:
-- 7슬롯 + 16종 `EquipmentTemplate` 마이그레이션
+- 12슬롯 정의 + 16종 `EquipmentTemplate` 마이그레이션 (위 매핑표대로)
 - 5층 아키텍처: 베이스 + 강화 +0 ~ +15 (결정론) + 옵션 라인 3개 (리롤/잠금)
 - 등급 5단계 시각 적용
+- 세트: `set_red_hood`(2피스) + `set_beanstalk`(2피스) — 챕터 1·2에서 자연 발생
 - 챕터 1 (빨간 모자) + 보스(큰 늑대) — 이미 구현됨, 강화 비용 곡선과 동조 검증
-- 별가루(`★`)·별 조각(`✦`) 두 화폐 (이미 구현됨) + 강화석(신규)
+- 별가루(`★`)·별 조각(`✦`) 두 화폐 + 강화석(신규)
 - 강화 모달 + 카드 5단 위계 UI
 
 **MVP 제외 (후속 도입)**:
 - 강화 +16 ~ +25 (천장)
-- 신화 옵션 (Layer 5)
-- 세트 효과 4피스 보너스
+- 신화 옵션 (Layer 5) — 추억 4종 모두 발견 + 시즌 콘텐츠 패치 후
+- `set_alice` 장신구 트리오 — 장신구 슬롯이 활성된 후속 패치
+- `set_full_outfit` 5피스 — 의류 풀세트 보유 가능해진 후
 - 시즌제·듀얼 실현 (당분간 영구 제외 검토)
 - 거래소 (당분간 영구 제외 — 키즈)
+- 비활성 슬롯 5종을 채우는 신규 16~20종 — Phase 1.x 콘텐츠 패치
 
 ---
 
@@ -354,10 +398,35 @@ Equip_SummonBuddy     → Template_SummonBuddy    (Acc2, Rare, Summon)
 - 별가루 비용 곡선의 정확한 수치 (시뮬 필요)
 - 옵션 라인 리롤 비용 (라인당 별가루 30이 맞는지)
 - 신화 옵션 4종의 정확한 효과 수치
-- 세트 4피스 보너스 컨셉
+- ✦ `set_full_outfit` 5피스 보너스의 정확한 수치
+- ✦ 비활성 슬롯 5종(귀걸이/안경/목걸이/반지/하의·장갑 일부)을 채울 신규 16~20종 카탈로그
+- ✦ 펫 슬롯이 외형 노출에서 차지하는 비중 (캐릭터 옆에 따라다니는 시각)
 - 분해 → 별가루 환산 비율
 - 굴림 히스토리에 어떤 항목까지 노출할지 (자랑 대상 vs 인지부담)
 - 강화 보호석 (Part 2의 보호 아이템)을 Little Hero에 넣을지
+
+### UX 메모: 인벤토리 화면 12슬롯 레이아웃
+
+```
+┌─────────────────────── 캐릭터 외형 (좌)  /  슬롯 그리드 (우) ──────────────────┐
+│                                                                             │
+│   [캐릭터 풀바디]              ┌───────── 주 슬롯 (7) ─────────┐              │
+│   ┌─ 모자                     │ 모자  | 상의  | 하의           │              │
+│   │ 안경                      │ 망토  | 장갑  | 무기  | 신발   │              │
+│   │ 귀걸이                    └────────────────────────────┘              │
+│   │ 목걸이                    ┌────── 장신구 슬롯 (5) ───────┐              │
+│   │ 망토 (등 뒤)              │ 귀걸이 | 안경 | 목걸이         │              │
+│   │ 상의                      │ 반지   | 펫                  │              │
+│   │ 장갑                      └─────────────────────────┘              │
+│   │ 반지                                                              │
+│   │ 하의                      [잠금 슬롯은 자물쇠 + "후속 패치" 배지]  │
+│   │ 신발                                                              │
+│   │ 펫 (옆에 동행)                                                     │
+│   └─                                                                  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+세로 모드 모바일에서는 캐릭터 풀바디 위, 슬롯 그리드 아래 배치.
 
 ---
 
