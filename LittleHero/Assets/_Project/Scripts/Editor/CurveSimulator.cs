@@ -116,10 +116,11 @@ namespace LittleHero.EditorTools
                 float dust = (ENEMIES_PER_CHAPTER * REGULAR_DUST_BASE
                     + 3 * MINI_DUST_BASE
                     + 1 * BOSS_DUST_BASE) * dropMul + n * 50;
-                float xpReg = ENEMIES_PER_CHAPTER * 5 * dropMul;
-                float xpMini = 3 * 50 * dropMul;
-                float xpBoss = 1 * 200 * dropMul;
-                float xpClear = n * 100;
+                // ✦ XP 베이스 5/50/200/N×100 → 2/20/80/N×40 (40%, 시뮬 §8 반영)
+                float xpReg = ENEMIES_PER_CHAPTER * 2 * dropMul;
+                float xpMini = 3 * 20 * dropMul;
+                float xpBoss = 1 * 80 * dropMul;
+                float xpClear = n * 40;
                 float xp = xpReg + xpMini + xpBoss + xpClear;
 
                 int gem = Mathf.RoundToInt(5f * Mathf.Pow(1.10f, n - 1));
@@ -318,10 +319,10 @@ namespace LittleHero.EditorTools
             for (int n = 1; n <= CHAPTER_COUNT; n++)
             {
                 float dropMul = Mathf.Pow(DROP_GROWTH, n - 1);
-                cumXp += ENEMIES_PER_CHAPTER * 5 * dropMul
-                    + 3 * 50 * dropMul
-                    + 200 * dropMul
-                    + n * 100;
+                cumXp += ENEMIES_PER_CHAPTER * 2 * dropMul
+                    + 3 * 20 * dropMul
+                    + 80 * dropMul
+                    + n * 40;
 
                 if (n != 1 && n % 5 != 0 && n != CHAPTER_COUNT) continue;
 
@@ -376,7 +377,7 @@ namespace LittleHero.EditorTools
             for (int n = 1; n <= 5; n++)
             {
                 float dropMul = Mathf.Pow(DROP_GROWTH, n - 1);
-                cumXpAt5 += ENEMIES_PER_CHAPTER * 5 * dropMul + 3 * 50 * dropMul + 200 * dropMul + n * 100;
+                cumXpAt5 += ENEMIES_PER_CHAPTER * 2 * dropMul + 3 * 20 * dropMul + 80 * dropMul + n * 40;
             }
             int reachedAt5 = LevelFromXp((int)cumXpAt5);
             int expectedAt5 = 18;  // character_progression §6: CH5 클리어 후 L13~L18
