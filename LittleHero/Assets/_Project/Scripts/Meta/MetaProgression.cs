@@ -10,6 +10,9 @@ namespace LittleHero
         public SaveData Data { get; private set; }
         public int StarFragments => Data?.starFragments ?? 0;
         public ChapterData SelectedChapter { get; set; }
+        public CharacterData SelectedCharacter { get; private set; }
+
+        public event System.Action<CharacterData> OnCharacterChanged;
 
         public event Action<int> OnStarFragmentsChanged;
 
@@ -52,6 +55,14 @@ namespace LittleHero
             OnStarFragmentsChanged?.Invoke(Data.starFragments);
             SaveSystem.Save(Data);
             return true;
+        }
+
+        public void SelectCharacter(CharacterData character)
+        {
+            SelectedCharacter = character;
+            Data.selectedCharacterId = character != null ? character.id : null;
+            SaveSystem.Save(Data);
+            OnCharacterChanged?.Invoke(character);
         }
     }
 }

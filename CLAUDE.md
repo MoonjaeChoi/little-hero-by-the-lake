@@ -307,6 +307,12 @@ public interface IAttackPattern
 - `Chapter_02_Beanstalk` — 잭과 콩나무 (boss: 구름 위 큰 거인, miniBoss: 콩알 거인)
 - `Chapter_03_Alice` — 이상한 나라의 앨리스 (boss: 하트 여왕, miniBoss: 카드 병정)
 
+### 캐릭터 SO
+- `Char_DefaultBoy` — 용감한 소년 (HP 100, Speed 5, Dmg 10, free)
+- `Char_BraveGirl` — 씩씩한 소녀 (HP 130, Speed 4.5, Dmg 9, 10 별 조각)
+- `Char_QuietFriend` — 조용한 친구 (HP 90, Speed 6, Dmg 11, AtkSpd 1.1, 25 별 조각)
+- 캐릭터 선택 흐름: `MetaProgression.SelectCharacter` (Save 자동) → `PlayerStats.Initialize`가 BalanceConfig 대신 캐릭터 스탯 사용 → `PlayerController`가 캐릭터 tint 적용
+
 ### 에셋
 - `Prefabs/UI/ShopSlot.prefab`
 - `Art/Generated/Icon_Equip_*.png` × 16 — 장비 아이콘 자동 생성
@@ -329,7 +335,7 @@ public interface IAttackPattern
 ## 13. Phase 3 다음 작업 목록
 
 1. ~~**챕터 2/3** — 잭과 콩나무, 이상한 나라의 앨리스~~ ✅ 완료 (2026-04-30)
-2. **캐릭터 시스템** — `CharacterData` 활용, 캐릭터 선택, 시작 스탯 차별화
+2. ~~**캐릭터 시스템** — `CharacterData` 활용, 캐릭터 선택, 시작 스탯 차별화~~ ✅ 완료 (2026-04-30)
 3. **추억 시스템** — `MemoryPickup` (월드 픽업) + 다락방 일기장 UI + 모든 추억 모으면 히든 챕터
 4. **메타 업그레이드** — 별 조각으로 영구 스탯 강화 (HP, 데미지, 별가루 획득량)
 5. **컬렉션/도감** — 처치한 적 자동 등록, 100% 채우면 펫
@@ -344,3 +350,4 @@ public interface IAttackPattern
 - 2026-04-30: **Phase 2 완료** — 상점 UI, 7종 공격 패턴, 적 7종, 장비 16종, totalWaves=20 + 보스, GameOver/ChapterCleared 패널, CameraFollow, 풀 cleanup 강화. 메타 진행 골격(MetaProgression + Attic 허브) 추가.
 - 2026-04-30: 검증 인프라 도입 — `SmokeTest`(자동 스크린샷·상태 덤프) + `ProjectValidator`(에디터 메뉴 일괄 점검).
 - 2026-04-30: 챕터 2/3 추가 — 콩알 거인·구름 거인·카드 병정·하트 여왕 SO, `MetaProgression.SelectedChapter`로 챕터 선택 흐름, Attic 3버튼 UI.
+- 2026-04-30: 캐릭터 시스템 — CharacterData에 tintColor, MetaProgression.SelectedCharacter(영구 저장), PlayerStats가 캐릭터 스탯 적용, Attic에 3캐릭터 선택 UI, 3종 SO(용감한 소년/씩씩한 소녀/조용한 친구).

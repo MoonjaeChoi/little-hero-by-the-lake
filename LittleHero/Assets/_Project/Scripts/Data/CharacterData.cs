@@ -18,6 +18,9 @@ namespace LittleHero
         public float attackSpeed;
         public float range;
 
+        [Header("외형")]
+        public Color tintColor = Color.white;
+
         [Header("언락 조건")]
         public int starFragmentCost;
     }

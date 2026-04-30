@@ -39,8 +39,15 @@ namespace LittleHero
 
         private void Start()
         {
-            _stats.Initialize(GameManager.Instance.Balance);
+            CharacterData character = MetaProgression.Instance != null ? MetaProgression.Instance.SelectedCharacter : null;
+            _stats.Initialize(GameManager.Instance.Balance, character);
             _health.Initialize(_stats);
+
+            if (character != null)
+            {
+                SpriteRenderer sr = GetComponent<SpriteRenderer>();
+                if (sr != null) sr.color = character.tintColor;
+            }
         }
 
         private void OnDestroy()

@@ -7,6 +7,7 @@ namespace LittleHero
     public class SaveData
     {
         public int starFragments;
+        public string selectedCharacterId;
         public string[] unlockedCharacterIds = new string[0];
         public string[] unlockedEquipmentIds = new string[0];
         public string[] discoveredMemoryIds = new string[0];

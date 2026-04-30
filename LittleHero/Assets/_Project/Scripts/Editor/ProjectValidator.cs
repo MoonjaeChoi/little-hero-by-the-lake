@@ -28,6 +28,7 @@ namespace LittleHero.EditorTools
             ValidateBalance(issues);
             ValidateShopPool(issues);
             ValidateChapters(issues);
+            ValidateCharacters(issues);
             ValidateActiveScene(issues);
             Print(issues);
         }
@@ -100,6 +101,22 @@ namespace LittleHero.EditorTools
             }
         }
 
+        private static void ValidateCharacters(List<Issue> issues)
+        {
+            string[] guids = AssetDatabase.FindAssets("t:LittleHero.CharacterData");
+            if (guids.Length == 0) issues.Add(new Issue(Severity.Warning, "CharacterData", "CharacterData 인스턴스가 없음"));
+            foreach (var g in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(g);
+                var c = AssetDatabase.LoadAssetAtPath<CharacterData>(path);
+                if (c == null) continue;
+                if (string.IsNullOrEmpty(c.id)) issues.Add(new Issue(Severity.Warning, "CharacterData", $"{path}: id 비어있음"));
+                if (c.maxHealth <= 0)    issues.Add(new Issue(Severity.Error,   "CharacterData", $"{path}: maxHealth={c.maxHealth}"));
+                if (c.moveSpeed <= 0)    issues.Add(new Issue(Severity.Error,   "CharacterData", $"{path}: moveSpeed={c.moveSpeed}"));
+                if (c.attackDamage <= 0) issues.Add(new Issue(Severity.Error,   "CharacterData", $"{path}: attackDamage={c.attackDamage}"));
+            }
+        }
+
         private static void ValidateActiveScene(List<Issue> issues)
         {
             var scene = EditorSceneManager.GetActiveScene();
@@ -138,16 +155,37 @@ namespace LittleHero.EditorTools
 
             var so = new SerializedObject(atticCtl);
             CheckRef(issues, "Attic", so, "_starFragmentsText");
+            CheckRef(issues, "Attic", so, "_selectedCharacterText");
+            CheckRef(issues, "Attic", so, "_defaultCharacter");
+
             var arr = so.FindProperty("_chapterButtons");
-            if (arr == null || !arr.isArray) { issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 배열 미존재")); return; }
-            if (arr.arraySize == 0) issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 비어있음"));
-            for (int i = 0; i < arr.arraySize; i++)
+            if (arr == null || !arr.isArray) issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 배열 미존재"));
+            else
             {
-                var elem = arr.GetArrayElementAtIndex(i);
-                var ch = elem.FindPropertyRelative("chapter");
-                var bt = elem.FindPropertyRelative("button");
-                if (ch == null || ch.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].chapter 미연결"));
-                if (bt == null || bt.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].button 미연결"));
+                if (arr.arraySize == 0) issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 비어있음"));
+                for (int i = 0; i < arr.arraySize; i++)
+                {
+                    var elem = arr.GetArrayElementAtIndex(i);
+                    var ch = elem.FindPropertyRelative("chapter");
+                    var bt = elem.FindPropertyRelative("button");
+                    if (ch == null || ch.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].chapter 미연결"));
+                    if (bt == null || bt.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].button 미연결"));
+                }
+            }
+
+            var carr = so.FindProperty("_characterButtons");
+            if (carr == null || !carr.isArray) issues.Add(new Issue(Severity.Error, "Attic", "_characterButtons 배열 미존재"));
+            else
+            {
+                if (carr.arraySize == 0) issues.Add(new Issue(Severity.Error, "Attic", "_characterButtons 비어있음"));
+                for (int i = 0; i < carr.arraySize; i++)
+                {
+                    var elem = carr.GetArrayElementAtIndex(i);
+                    var ch = elem.FindPropertyRelative("character");
+                    var bt = elem.FindPropertyRelative("button");
+                    if (ch == null || ch.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"characterButtons[{i}].character 미연결"));
+                    if (bt == null || bt.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"characterButtons[{i}].button 미연결"));
+                }
             }
         }
 

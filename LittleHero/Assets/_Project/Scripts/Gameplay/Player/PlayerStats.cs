@@ -5,6 +5,7 @@ namespace LittleHero
     public class PlayerStats : MonoBehaviour
     {
         private BalanceConfig _config;
+        private CharacterData _character;
         private StatModifiers _equipmentBonus = new StatModifiers();
 
         public float MaxHealth { get; private set; }
@@ -14,9 +15,10 @@ namespace LittleHero
         public float Range { get; private set; }
         public float XpGainMultiplier { get; private set; }
 
-        public void Initialize(BalanceConfig config)
+        public void Initialize(BalanceConfig config, CharacterData character = null)
         {
             _config = config;
+            _character = character;
             RecalculateStats();
         }
 
@@ -47,11 +49,18 @@ namespace LittleHero
             // Initialize() 이전에 장비가 장착되면 config가 없으므로 대기
             if (_config == null) return;
 
-            MaxHealth = _config.baseMaxHealth + _equipmentBonus.maxHealthBonus;
-            MoveSpeed = _config.baseMoveSpeed + _equipmentBonus.speedBonus;
-            AttackDamage = _config.baseAttackDamage + _equipmentBonus.attackDamageBonus;
-            AttackSpeed = _config.baseAttackSpeed + _equipmentBonus.attackSpeedBonus;
-            Range = _config.baseRange + _equipmentBonus.rangeBonus;
+            // 캐릭터 선택 시 그 스탯을 base로, 미선택 시 BalanceConfig 기본값
+            float baseHp  = _character != null ? _character.maxHealth     : _config.baseMaxHealth;
+            float baseSpd = _character != null ? _character.moveSpeed     : _config.baseMoveSpeed;
+            float baseDmg = _character != null ? _character.attackDamage  : _config.baseAttackDamage;
+            float baseAs  = _character != null ? _character.attackSpeed   : _config.baseAttackSpeed;
+            float baseR   = _character != null ? _character.range         : _config.baseRange;
+
+            MaxHealth = baseHp  + _equipmentBonus.maxHealthBonus;
+            MoveSpeed = baseSpd + _equipmentBonus.speedBonus;
+            AttackDamage = baseDmg + _equipmentBonus.attackDamageBonus;
+            AttackSpeed = baseAs  + _equipmentBonus.attackSpeedBonus;
+            Range = baseR + _equipmentBonus.rangeBonus;
             XpGainMultiplier = 1f + _equipmentBonus.xpGainBonus;
         }
     }
