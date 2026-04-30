@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc1f29280459c4ff1a963f208658204f, type: 3}
+  m_Name: affix_final_dmg
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AffixDefinition
+  id: affix_final_dmg
+  displayName: "\uCD5C\uC885 \uB370\uBBF8\uC9C0 +%"
+  target: 0
+  op: 1
+  minByRarity:
+  - 1
+  - 3
+  - 5
+  - 8
+  - 12
+  maxByRarity:
+  - 3
+  - 5
+  - 8
+  - 12
+  - 18
+  suffix: '%'
+  displayDecimals: 1
