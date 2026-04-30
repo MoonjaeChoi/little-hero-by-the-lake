@@ -56,6 +56,7 @@
 | [`endgame_v1.md`](./endgame_v1.md) | **활성** | L51~L100 endgame 콘텐츠 — 일일/주간/무한 보스 + 고난도 챕터 (CH 36~50) |
 | [`monetization_v1.md`](./monetization_v1.md) | **활성** | 별빛 ⋆ 캐시 화폐 + 장비 강화 중심 과금 (가챠 ❌, 4+ 적합, 비과금 100% 클리어 가능) |
 | [`ui_v1.md`](./ui_v1.md) | **활성** | 모바일 UI 통합 — 카드 6단 + 12슬롯 인벤토리 + 신기한 지도 + 강화 모달 + 색·폰트·사운드 |
+| [`implementation_plan_v1.md`](./implementation_plan_v1.md) | **활성** | 구현 작업 계획서 — Phase A~G + 5 Sprint MVP 6주 일정 + 의존성 그래프 |
 
 ---
 
