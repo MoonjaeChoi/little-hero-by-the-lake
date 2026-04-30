@@ -15,7 +15,11 @@
 - **등급 5단계 유지** (기존 `Rarity` enum: Common/Uncommon/Rare/Epic/Legendary)
 - **강화 자원**: 별가루(`★`, 런 내) + 강화 보호석(별 조각 ✦로 구매)
 - **신화 옵션은 "아빠의 마법"** — 추억 4종(MemoryData)을 다 모으면 신화 풀 언락. 잭팟 ARPG의 마일리지 공식은 그대로 사용.
-- **세트 효과는 동화 챕터 테마 + 장신구 트리오**: 빨간모자 / 잭과 콩나무 / 앨리스(장신구 3피스)
+- ✦ **세트 효과 전면 삭제 (2026-04-30)**: 추가 능력치 시너지 없이 **순수 능력치 합산**. 잭팟 ARPG Part 4의 세트 멤버십 카운트 단계는 Little Hero에서 적용하지 않는다. 장비 차별화는 **공격 모션·이펙트·외형**의 다양성으로만 표현.
+- ✦ **장신구 슬롯은 챕터 보스 처치로 해방 (메이플 키우기 영감)**:
+  - 게임 시작 시 장신구 5개 슬롯은 모두 **잠금** 상태.
+  - 각 챕터 보스를 처치하면 **그 챕터에 연결된 장신구 슬롯 1개**가 영구 해방.
+  - CH1=목걸이 / CH2=반지 / CH3=귀걸이 / CH4=안경 / CH5=펫 (상세는 §3.7).
 - **마이그레이션 모델**: `EquipmentData`(현 SO) → `EquipmentTemplate`(마스터) + `EquipmentInstance`(런타임/세이브)
 - **`Bag` 슬롯 폐기**: 기존 가방 2종(`Equip_MagicBag`, `Equip_PulseBag`)은 효과를 다른 슬롯으로 이전하거나 폐기 (마이그레이션 표 참조).
 
@@ -157,21 +161,83 @@ type Affix = {
 - 잠금된 라인은 자물쇠 아이콘 + 황금 테두리.
 - 미잠금 라인은 점선 테두리 + 리롤 버튼 옆에 별가루 비용 표시.
 
-### 3.6. 세트 효과 (챕터 테마 + 장신구 트리오) ✦ 재설계
+### 3.6. 세트 효과 — ✦ 폐기 (2026-04-30)
 
-12슬롯 확장에 맞춰 세트 멤버 슬롯을 재정의.
+> 이전 초안의 `set_red_hood` / `set_beanstalk` / `set_alice` / `set_full_outfit` 4종 세트는 **모두 삭제**한다.
 
-| 세트 ID | 이름 | 멤버 슬롯 | 2피스 | 3피스 | 5피스 (해당 시) |
-|---|---|---|---|---|---|
-| `set_red_hood` | 빨간 모자의 용기 | 모자 + 망토 | HP +30, 공격력 +5 | — | — |
-| `set_beanstalk` | 잭과 콩나무의 모험 | 무기 + 장갑 | 공격력 +10, 공속 +0.15 | — | — |
-| `set_alice` | 앨리스의 호기심 | 귀걸이 + 안경 + 목걸이 | XP +10%, 별가루 +10% | XP +20%, 별가루 +20%, 크리 +5% | — |
-| `set_full_outfit` ✦ | 작은 영웅의 정장 | 모자 + 상의 + 하의 + 망토 + 신발 | HP +20 | HP +50, 공격력 +5 | HP +120, 공격력 +15, 이동속도 +0.3 |
+**이유**: 게임의 정체성을 **순수 능력치 합산 + 외형/이펙트 다양성**으로 잡았기 때문. 세트 시너지 보너스(2/3/4/5피스 단계 추가 효과)는 도입하지 않는다.
 
-**원칙**:
-- **챕터 테마 세트**(빨간모자/잭과콩나무/앨리스)는 **서로 다른 챕터의 보스 보상**으로 일부 멤버를 드롭 → 챕터를 골고루 돌아야 완성.
-- **`set_full_outfit`(작은 영웅의 정장)은 의류 5피스 세트** → 풀 정장 코스메틱 자부심 보상. 모든 슬롯이 같은 등급 이상이면 외형이 빛난다.
-- 장신구 트리오 세트(앨리스)는 **3피스 단계가 핵심 보너스** — 장신구만으로 큰 효과를 낼 수 있어 빌드 다양성에 기여.
+**영향**:
+- `EquipmentTemplate.setId` 필드는 **사용하지 않음** (모델에 남겨두되 항상 `null`/empty).
+- 잭팟 ARPG Part 4의 리졸버 알고리즘에서 **세트 멤버십 카운트·세트 효과 합산 단계 생략**. 장착 장비의 베이스 + 옵션 라인 + 신화 옵션만 합산.
+- 빌드 차별화는 다음 채널로:
+  - **공격 모션·이펙트** — 같은 슬롯이라도 무기·장신구마다 모션이 다름
+  - **시각 외형** — 캐릭터 풀바디 + 펫 동행 + 망토 펄럭임
+  - **옵션 라인 3개** — 같은 등급도 굴림에 따라 빌드가 달라짐
+  - **신화 옵션 (아빠의 마법)** — 빌드 정의 효과는 신화에만
+
+### 3.7. 장신구 슬롯 해방 시스템 ✦ (메이플 키우기 영감)
+
+**원칙**: 게임 진입 시 장신구 5슬롯은 **모두 잠금**. 각 챕터의 보스를 처치하면 **그 챕터에 연결된 장신구 슬롯 1개가 영구 해방**된다. 슬롯이 열리는 순간 자체가 **챕터 클리어 보상의 시각적 정점**.
+
+#### 챕터 ↔ 장신구 슬롯 매핑
+
+| 챕터 | 동화 | 보스 | 해방되는 슬롯 | 컨셉 |
+|---|---|---|---|---|
+| 1 | 빨간 모자 | 큰 늑대 아저씨 | **목걸이** | 빨간 모자의 메달 — 첫 장신구, 가장 자연스러운 시작 |
+| 2 | 잭과 콩나무 | 구름 위 큰 거인 | **반지** | 잭이 거인에게 빼앗아 온 황금 반지 |
+| 3 | 이상한 나라의 앨리스 | 하트 여왕 | **귀걸이** | 흰토끼의 회중시계 귀걸이 |
+| 4 | 헨젤과 그레텔 | (마녀) | **안경** | 마녀가 쓰던 진실을 보는 안경 |
+| 5 | 오즈의 마법사 | (서쪽 마녀) | **펫** | 도로시의 토토 — 작은 영웅의 동행 |
+| 6 | 인어공주 | (해마왕) | (이미 5종 해방됨, 추가 슬롯 없음) | 후속 패치에서 6번째 장신구 슬롯 도입 검토 |
+| 7 | 피노키오 | (고래 몬스터) | (동일) | |
+| 히든 | 아빠의 마지막 페이지 | (히든 보스) | — | 신화 옵션 풀 모두 언락(별도 보상) |
+
+#### 해방 흐름
+
+```
+챕터 1 보스 처치 (큰 늑대 아저씨)
+    ↓
+GameEvents.OnChapterCleared 발행 (기존 시스템 그대로)
+    ↓
+MetaProgression.UnlockAccessorySlot(chapterId, slot)
+    ↓
+SaveData.unlockedAccessorySlots[]에 슬롯 추가
+    ↓
+인벤토리 모달의 "목걸이" 슬롯이 자물쇠 → 빈 슬롯으로 변경
+연출: 자물쇠가 별이 되어 흩어지며 "목걸이 슬롯이 열렸어요!" 알림
+```
+
+#### 해방 후 그 슬롯에 장착할 장신구는 어디서 오나
+
+세 가지 경로 (메이플 키우기의 멀티-소스 모델 차용):
+
+1. **챕터 클리어 첫 보상**: 슬롯이 열릴 때 그 슬롯에 맞는 **Common 등급 시작 장신구 1개** 자동 지급. 비어 있으면 아무 효과 없으니 첫 한 개는 즉시 장착할 수 있어야 함.
+2. **챕터 보스 반복 처치**: 같은 보스를 다시 처치하면 그 슬롯의 장신구가 **드롭 풀**로 들어옴 (Common~Rare 무작위, 옵션 굴림).
+3. **별 조각 상점 (다락방)**: 영구 자원으로 직접 구매 가능 — 하지만 옵션은 미굴림 상태로 시작, 이후 별가루로 리롤. **자부심 코어**: 보스를 직접 잡아서 굴리는 길과 별 조각으로 사는 길 둘 다 존재.
+
+#### 데이터 모델 보강
+
+```csharp
+// SaveData에 추가
+public string[] unlockedAccessorySlots = new string[0];   // 해방된 슬롯 ID 목록
+
+// MetaProgression
+public bool IsAccessorySlotUnlocked(string slotId);
+public void UnlockAccessorySlot(string slotId);  // OnChapterCleared 핸들러에서 호출
+
+// 챕터 ↔ 슬롯 매핑은 ChapterData에 필드 추가
+public class ChapterData : ScriptableObject {
+    // ... 기존 필드
+    public string accessorySlotUnlockedOnClear;   // "Necklace" | "Ring" | "Earring" | "Glasses" | "Pet" | null
+}
+```
+
+#### MVP에서의 해방 흐름
+
+- **MVP는 챕터 1만 다룬다** → 클리어 시 목걸이 슬롯만 해방.
+- 나머지 4슬롯(반지/귀걸이/안경/펫)은 잠금 유지. 챕터 2/3/4/5 콘텐츠 추가 시 자동으로 해방 흐름이 작동.
+- 펫은 게임 외형의 큰 부분이라, 챕터 5까지 미루지 말고 **MVP에서 펫 슬롯도 처음부터 해방하는 안**도 고려 가능 (미해결).
 
 ### 3.7. 신화 옵션 — 아빠의 마법
 
@@ -271,15 +337,15 @@ public static class EffectResolver
         CharacterProgress character,             // Part 1b
         IReadOnlyList<EquipmentInstance> equipped,
         IReadOnlyDictionary<string, EquipmentTemplate> templates,
-        IReadOnlyDictionary<string, MythicDefinition> mythics,
-        IReadOnlyDictionary<string, SetDefinition> sets)
+        IReadOnlyDictionary<string, MythicDefinition> mythics)
+        // ✦ Little Hero에선 세트 폐기로 SetDefinition 입력 제거
     {
         // 0. 캐릭터 베이스 (Part 1b의 base_stats)
         // 1. 장착 아이템에서 모든 Effect 수집:
         //    - template.baseStats
         //    - instance.affixes (옵션 3개)
         //    - mythics[instance.mythicId]?.effects
-        // 2. 세트 멤버십 카운트 → 충족된 threshold 효과 추가
+        // 2. (✦ 세트 멤버십 단계 생략 — 세트 효과 폐기)
         // 3. target별 그룹핑
         // 4. ADD → MUL → OVERRIDE 순으로 적용
         // 5. FinalStats 반환
@@ -287,38 +353,38 @@ public static class EffectResolver
 }
 ```
 
-### 4.4. 마이그레이션 — 기존 16종 EquipmentData (✦ 12슬롯 재매핑)
+### 4.4. 마이그레이션 — 기존 16종 EquipmentData (✦ 12슬롯 재매핑 + 세트 폐기)
 
-기존 `EquipmentData` 16종을 `EquipmentTemplate`으로 변환하는 1회성 에디터 스크립트.
+기존 `EquipmentData` 16종을 `EquipmentTemplate`으로 변환하는 1회성 에디터 스크립트. **세트 효과가 모두 폐기**되었으므로 `setId` 컬럼은 표에서 제거.
 
-| 기존 ID | 신규 슬롯 | 등급 | 패턴 | 세트 | 비고 |
-|---|---|---|---|---|---|
-| `Equip_StarWand` | Weapon | Common | Projectile | — | |
-| `Equip_MeteorRod` | Weapon | Rare | Projectile | `set_beanstalk` | |
-| `Equip_HaloLight` | Hat | Common | Aura | — | 머리 위 후광 |
-| `Equip_StarlightHalo` | Hat | Rare | Aura | — | |
-| `Equip_BraveHat` | Hat | Uncommon | None | `set_red_hood` | |
-| `Equip_PetalCloak` | Cloak | Common | None | `set_red_hood` | 꽃잎 망토 → 망토 슬롯 |
-| `Equip_DragonflyWings` | Cloak | Uncommon | None | — | 잠자리 날개 → 망토 슬롯 |
-| `Equip_HeroOutfit` | Top | Epic | None | `set_full_outfit` | |
-| `Equip_RunShoes` | Shoes | Common | None | — | |
-| `Equip_RainBoots` | Shoes | Rare | Rain | — | |
-| `Equip_SparkleTrail` | Shoes | Uncommon | Trail | — | |
-| `Equip_FairyFriend` | Pet | Uncommon | Orbit | — | 요정 친구 → 펫 |
-| `Equip_SummonBuddy` | Pet | Rare | Summon | — | 아기 별친구 → 펫 |
-| `Equip_DancingStarDust` | Necklace | Rare | Orbit | `set_alice` | 춤추는 별가루 → 목걸이 |
-| `Equip_MagicBag` ✦ | **Necklace** | Common | None | `set_alice` | 가방 슬롯 폐기 → 목걸이 트리거형 효과로 흡수 (xp_gain MUL) |
-| `Equip_PulseBag` ✦ | **Necklace** | Uncommon | Pulse | — | 가방 폐기 → 목걸이 트리거형으로 (목걸이가 발동하는 광역 폭발) |
+| 기존 ID | 신규 슬롯 | 등급 | 패턴 | 비고 |
+|---|---|---|---|---|
+| `Equip_StarWand` | Weapon | Common | Projectile | |
+| `Equip_MeteorRod` | Weapon | Rare | Projectile | |
+| `Equip_HaloLight` | Hat | Common | Aura | 머리 위 후광 |
+| `Equip_StarlightHalo` | Hat | Rare | Aura | |
+| `Equip_BraveHat` | Hat | Uncommon | None | |
+| `Equip_PetalCloak` | Cloak | Common | None | 꽃잎 망토 → 망토 슬롯 |
+| `Equip_DragonflyWings` | Cloak | Uncommon | None | 잠자리 날개 → 망토 슬롯 |
+| `Equip_HeroOutfit` | Top | Epic | None | |
+| `Equip_RunShoes` | Shoes | Common | None | |
+| `Equip_RainBoots` | Shoes | Rare | Rain | |
+| `Equip_SparkleTrail` | Shoes | Uncommon | Trail | |
+| `Equip_FairyFriend` | Pet | Uncommon | Orbit | 요정 친구 → 펫 (CH5 클리어 후 활성) |
+| `Equip_SummonBuddy` | Pet | Rare | Summon | 아기 별친구 → 펫 (CH5 클리어 후 활성) |
+| `Equip_DancingStarDust` | Necklace | Rare | Orbit | 춤추는 별가루 → 목걸이 (CH1 클리어 후 활성) |
+| `Equip_MagicBag` ✦ | **Necklace** | Common | None | 가방 슬롯 폐기 → 목걸이로. 효과 그대로(xp_gain MUL) |
+| `Equip_PulseBag` ✦ | **Necklace** | Uncommon | Pulse | 가방 폐기 → 목걸이로. "목걸이가 빛날 때 광역 폭발" 트리거 컨셉 |
 
 **커버 안 된 슬롯**: 하의(Bottom), 장갑(Gloves), 귀걸이(Earring), 안경(Glasses), 반지(Ring) — 합계 5슬롯.
-- MVP는 위 5슬롯을 비워두고 진행 가능 (선택 슬롯).
+- MVP는 위 5슬롯을 비워두고 진행 가능 (장신구는 챕터 보스 해방 전까지는 잠금).
 - 후속에서 이 5슬롯을 채우는 신규 16~20종을 추가하는 게 자연스러운 콘텐츠 패치 (Phase 1.x).
 
 **가방 슬롯 폐기 처리**:
 - `Equip_MagicBag`(xp_gain +20%) → 목걸이로 이전. 효과 그대로.
 - `Equip_PulseBag`(Pulse 패턴) → 목걸이로 이전. 패턴은 "목걸이가 빛날 때 광역 폭발"이라는 트리거형 컨셉으로 재해석.
 
-기존 SO의 `statBonus`/`attackPattern`/`attackConfig`은 그대로 복사 (베이스 스탯 = 현재 statBonus). `setId`는 위 표대로 새로 부여.
+기존 SO의 `statBonus`/`attackPattern`/`attackConfig`은 그대로 복사 (베이스 스탯 = 현재 statBonus). `setId` 필드는 모두 빈 문자열로 둔다 (세트 폐기).
 
 ---
 
@@ -360,35 +426,53 @@ public static class EffectResolver
 
 ---
 
-## 6. MVP 범위 (Little Hero v1) ✦ 12슬롯 정합
+## 6. MVP 범위 (Little Hero v1) ✦ 12슬롯 + 슬롯 해방 정합
 
-> Part 8 MVP + 12슬롯 재구성. 모든 슬롯을 한 번에 채우려 하지 않고, **핵심 7슬롯 + 펫 = 8슬롯 활성**으로 시작한다.
+> Part 8 MVP + 12슬롯 재구성 + 챕터 보스 해방 흐름. 모든 슬롯을 한 번에 채우려 하지 않고, **주 슬롯은 처음부터 모두 활성**, **장신구 슬롯은 챕터 클리어로 점진 해방**.
 
-**MVP 활성 슬롯 (8개)**:
-- 모자, 상의, 망토, 무기, 신발 (의류·무기 5)
-- 펫 (장신구 대표 1)
-- (선택) 장갑·하의 — 신규 콘텐츠가 충분히 준비되면 포함
+### 시작 시점 (게임 첫 진입)
 
-**MVP 비활성 슬롯 (4~5개)**: 귀걸이 / 안경 / 목걸이 / 반지 / (장갑·하의 중 미포함분)
-- UI에 슬롯은 보이되 "잠금"으로 처리. 후속 패치에서 해제.
+**활성 슬롯 (7개)** — 주 슬롯 전체:
+- 모자 / 상의 / 하의 / 망토 / 장갑 / 무기 / 신발
 
-**MVP 포함**:
-- 12슬롯 정의 + 16종 `EquipmentTemplate` 마이그레이션 (위 매핑표대로)
+**잠금 슬롯 (5개)** — 장신구 전체:
+- 목걸이 (CH1 클리어 시 해방)
+- 반지 (CH2 클리어 시 해방)
+- 귀걸이 (CH3 클리어 시 해방)
+- 안경 (CH4 클리어 시 해방)
+- 펫 (CH5 클리어 시 해방)
+
+> UI에 잠금 슬롯은 자물쇠 + "1챕터 큰 늑대를 처치하면 해방돼요!" 안내 툴팁.
+
+### MVP 컨텐츠 범위
+
+**포함**:
+- 12슬롯 정의 + 16종 `EquipmentTemplate` 마이그레이션 (§4.4)
 - 5층 아키텍처: 베이스 + 강화 +0 ~ +15 (결정론) + 옵션 라인 3개 (리롤/잠금)
 - 등급 5단계 시각 적용
-- 세트: `set_red_hood`(2피스) + `set_beanstalk`(2피스) — 챕터 1·2에서 자연 발생
-- 챕터 1 (빨간 모자) + 보스(큰 늑대) — 이미 구현됨, 강화 비용 곡선과 동조 검증
+- ✦ **순수 능력치 합산** — 세트 효과 없음
+- 챕터 1 (빨간 모자) + 보스(큰 늑대) — 이미 구현됨
+- ✦ **챕터 1 클리어로 목걸이 슬롯 해방 + Common 시작 목걸이 1개 자동 지급**
 - 별가루(`★`)·별 조각(`✦`) 두 화폐 + 강화석(신규)
-- 강화 모달 + 카드 5단 위계 UI
+- 강화 모달 + 카드 5단 위계 UI (모바일)
+- 인벤토리 12슬롯 그리드 (잠금 슬롯 시각 처리 포함)
 
 **MVP 제외 (후속 도입)**:
 - 강화 +16 ~ +25 (천장)
-- 신화 옵션 (Layer 5) — 추억 4종 모두 발견 + 시즌 콘텐츠 패치 후
-- `set_alice` 장신구 트리오 — 장신구 슬롯이 활성된 후속 패치
-- `set_full_outfit` 5피스 — 의류 풀세트 보유 가능해진 후
+- 신화 옵션 (Layer 5) — 추억 4종 모두 발견 + 후속 패치 후
+- 챕터 2~7 콘텐츠 + 슬롯 해방 (반지/귀걸이/안경/펫)
+- 비활성 슬롯 5종(귀걸이/안경/반지/하의·장갑 일부)을 채울 신규 16~20종 카탈로그 — Phase 1.x 콘텐츠 패치
+- 별 조각 상점에서 장신구 직구매 — 챕터 5 이후 도입
 - 시즌제·듀얼 실현 (당분간 영구 제외 검토)
 - 거래소 (당분간 영구 제외 — 키즈)
-- 비활성 슬롯 5종을 채우는 신규 16~20종 — Phase 1.x 콘텐츠 패치
+
+### 펫 슬롯의 특수 케이스
+
+펫은 **외형 노출의 큰 부분**이라 CH5까지 미루면 인지적 손실이 있다. 두 안 중 결정 필요 (미해결 §7):
+- **A안**: 원안 그대로 CH5 클리어 시 해방. CH1~CH5는 펫 없이 진행.
+- **B안**: MVP에서 펫 슬롯은 처음부터 활성, CH5는 다른 보상(예: 신화 옵션 1종 보장)으로 대체.
+
+> 추천: 키즈 게임의 정서를 고려하면 **B안**이 자연스럽다 (작은 영웅 옆에 항상 친구가 있는 정서).
 
 ---
 
@@ -398,9 +482,11 @@ public static class EffectResolver
 - 별가루 비용 곡선의 정확한 수치 (시뮬 필요)
 - 옵션 라인 리롤 비용 (라인당 별가루 30이 맞는지)
 - 신화 옵션 4종의 정확한 효과 수치
-- ✦ `set_full_outfit` 5피스 보너스의 정확한 수치
 - ✦ 비활성 슬롯 5종(귀걸이/안경/목걸이/반지/하의·장갑 일부)을 채울 신규 16~20종 카탈로그
 - ✦ 펫 슬롯이 외형 노출에서 차지하는 비중 (캐릭터 옆에 따라다니는 시각)
+- ✦ MVP에 펫 슬롯을 처음부터 해방하는가? (CH5까지 보류 vs 처음부터 활성)
+- ✦ 챕터 보스 반복 처치 시 장신구 드롭률·등급 분포
+- ✦ 별 조각 상점에서 직접 구매 가능한 장신구의 등급 상한 (Common~Uncommon 권장)
 - 분해 → 별가루 환산 비율
 - 굴림 히스토리에 어떤 항목까지 노출할지 (자랑 대상 vs 인지부담)
 - 강화 보호석 (Part 2의 보호 아이템)을 Little Hero에 넣을지
