@@ -49,7 +49,10 @@ namespace LittleHero
         private void HandleEnemyKilled(EnemyData data)
         {
             if (data == null) return;
-            int drop = Mathf.RoundToInt(data.starDustDrop);
+            float dustMult = 1f + (MetaProgression.Instance != null
+                ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.StarDustGain)
+                : 0f);
+            int drop = Mathf.RoundToInt(data.starDustDrop * dustMult);
             if (drop > 0) AddStarDust(drop);
         }
 

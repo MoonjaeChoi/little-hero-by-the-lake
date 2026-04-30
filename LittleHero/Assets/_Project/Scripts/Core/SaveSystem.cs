@@ -4,6 +4,13 @@ using UnityEngine;
 namespace LittleHero
 {
     [System.Serializable]
+    public class MetaUpgradeEntry
+    {
+        public string id;
+        public int level;
+    }
+
+    [System.Serializable]
     public class SaveData
     {
         public int starFragments;
@@ -12,6 +19,7 @@ namespace LittleHero
         public string[] unlockedEquipmentIds = new string[0];
         public string[] discoveredMemoryIds = new string[0];
         public int[] clearedChapterWaves = new int[0];
+        public MetaUpgradeEntry[] metaUpgrades = new MetaUpgradeEntry[0];
     }
 
     public static class SaveSystem

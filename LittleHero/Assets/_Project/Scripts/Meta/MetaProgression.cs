@@ -9,16 +9,19 @@ namespace LittleHero
         public static MetaProgression Instance { get; private set; }
 
         [SerializeField] private MemoryPool _memoryPool;
+        [SerializeField] private MetaUpgradePool _upgradePool;
 
         public SaveData Data { get; private set; }
         public int StarFragments => Data?.starFragments ?? 0;
         public ChapterData SelectedChapter { get; set; }
         public CharacterData SelectedCharacter { get; private set; }
         public MemoryPool MemoryPool => _memoryPool;
+        public MetaUpgradePool UpgradePool => _upgradePool;
         public int MemoryDiscoveredCount => Data?.discoveredMemoryIds?.Length ?? 0;
         public int MemoryTotalCount => _memoryPool?.memories?.Length ?? 0;
 
         public event System.Action<CharacterData> OnCharacterChanged;
+        public event System.Action<MetaUpgradeData> OnUpgradeChanged;
 
         public event Action<int> OnStarFragmentsChanged;
 
@@ -95,6 +98,71 @@ namespace LittleHero
             Data.selectedCharacterId = character != null ? character.id : null;
             SaveSystem.Save(Data);
             OnCharacterChanged?.Invoke(character);
+        }
+
+        public int GetUpgradeLevel(string id)
+        {
+            if (Data?.metaUpgrades == null || string.IsNullOrEmpty(id)) return 0;
+            for (int i = 0; i < Data.metaUpgrades.Length; i++)
+                if (Data.metaUpgrades[i] != null && Data.metaUpgrades[i].id == id)
+                    return Data.metaUpgrades[i].level;
+            return 0;
+        }
+
+        public int GetUpgradeCost(MetaUpgradeData u)
+        {
+            if (u == null) return int.MaxValue;
+            int level = GetUpgradeLevel(u.id);
+            return u.baseCost + u.costPerLevel * level;
+        }
+
+        public bool CanUpgrade(MetaUpgradeData u)
+        {
+            if (u == null) return false;
+            int level = GetUpgradeLevel(u.id);
+            if (level >= u.maxLevel) return false;
+            return StarFragments >= GetUpgradeCost(u);
+        }
+
+        public bool TryUpgrade(MetaUpgradeData u)
+        {
+            if (!CanUpgrade(u)) return false;
+            int cost = GetUpgradeCost(u);
+            if (!SpendStarFragments(cost)) return false;
+            SetUpgradeLevel(u.id, GetUpgradeLevel(u.id) + 1);
+            OnUpgradeChanged?.Invoke(u);
+            return true;
+        }
+
+        private void SetUpgradeLevel(string id, int level)
+        {
+            if (Data.metaUpgrades == null) Data.metaUpgrades = new MetaUpgradeEntry[0];
+            for (int i = 0; i < Data.metaUpgrades.Length; i++)
+            {
+                if (Data.metaUpgrades[i] != null && Data.metaUpgrades[i].id == id)
+                {
+                    Data.metaUpgrades[i].level = level;
+                    SaveSystem.Save(Data);
+                    return;
+                }
+            }
+            var list = new List<MetaUpgradeEntry>(Data.metaUpgrades);
+            list.Add(new MetaUpgradeEntry { id = id, level = level });
+            Data.metaUpgrades = list.ToArray();
+            SaveSystem.Save(Data);
+        }
+
+        public float GetMetaBonus(MetaUpgradeStat stat)
+        {
+            if (_upgradePool == null || _upgradePool.upgrades == null) return 0f;
+            float total = 0f;
+            for (int i = 0; i < _upgradePool.upgrades.Length; i++)
+            {
+                var u = _upgradePool.upgrades[i];
+                if (u == null || u.targetStat != stat) continue;
+                total += u.bonusPerLevel * GetUpgradeLevel(u.id);
+            }
+            return total;
         }
     }
 }

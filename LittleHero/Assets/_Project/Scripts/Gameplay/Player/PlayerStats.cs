@@ -56,9 +56,12 @@ namespace LittleHero
             float baseAs  = _character != null ? _character.attackSpeed   : _config.baseAttackSpeed;
             float baseR   = _character != null ? _character.range         : _config.baseRange;
 
-            MaxHealth = baseHp  + _equipmentBonus.maxHealthBonus;
+            float metaHp  = MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.MaxHealth) : 0f;
+            float metaDmg = MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.AttackDamage) : 0f;
+
+            MaxHealth = baseHp  + metaHp  + _equipmentBonus.maxHealthBonus;
             MoveSpeed = baseSpd + _equipmentBonus.speedBonus;
-            AttackDamage = baseDmg + _equipmentBonus.attackDamageBonus;
+            AttackDamage = baseDmg + metaDmg + _equipmentBonus.attackDamageBonus;
             AttackSpeed = baseAs  + _equipmentBonus.attackSpeedBonus;
             Range = baseR + _equipmentBonus.rangeBonus;
             XpGainMultiplier = 1f + _equipmentBonus.xpGainBonus;
