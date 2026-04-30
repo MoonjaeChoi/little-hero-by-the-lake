@@ -31,19 +31,26 @@
 
 ---
 
+## 상위 지침 (충돌 시 우선)
+
+- [`direction_v2.md`](./direction_v2.md) — **2026-04-30 사용자 결정**. 4대 방향성: 모바일 전용 / 캐릭터 XP 시스템 / 캐릭터·장비 자부심 / 챕터 진행+동조 성장. 영향 받은 파트는 ✦ 표기.
+
 ## 파트 인덱스
+
+> ✦ = `direction_v2.md` 반영 갱신 (2026-04-30)
 
 | Part | 제목 | 파일 |
 |---|---|---|
-| 0 | 프로젝트 개요 | [`part_0_overview.md`](./part_0_overview.md) |
-| 1 | 장비 시스템 정체성 | [`part_1_equipment_identity.md`](./part_1_equipment_identity.md) |
-| 2 | 아이템 구조와 강화 | [`part_2_item_enhancement.md`](./part_2_item_enhancement.md) |
-| 3 | 경제 시스템 | [`part_3_economy.md`](./part_3_economy.md) |
-| 4 | 옵션 라이브러리 (세트 · 신화) | [`part_4_options_library.md`](./part_4_options_library.md) |
-| 5 | UI/UX 설계 | [`part_5_ui_ux.md`](./part_5_ui_ux.md) |
-| 6 | 시즌제 · 캐치업 | [`part_6_season_catchup.md`](./part_6_season_catchup.md) |
-| 7 | 시스템 아키텍처 | [`part_7_architecture.md`](./part_7_architecture.md) |
-| 8 | MVP 우선순위와 다음 단계 | [`part_8_mvp_roadmap.md`](./part_8_mvp_roadmap.md) |
+| 0 | 프로젝트 개요 ✦ | [`part_0_overview.md`](./part_0_overview.md) |
+| 1 | 장비 시스템 정체성 ✦ | [`part_1_equipment_identity.md`](./part_1_equipment_identity.md) |
+| 1b | 캐릭터 진행 (XP·레벨) ✦ | [`part_1b_character_progression.md`](./part_1b_character_progression.md) |
+| 2 | 아이템 구조와 강화 ✦ | [`part_2_item_enhancement.md`](./part_2_item_enhancement.md) |
+| 3 | 경제 시스템 ✦ | [`part_3_economy.md`](./part_3_economy.md) |
+| 4 | 옵션 라이브러리 (세트 · 신화) ✦ | [`part_4_options_library.md`](./part_4_options_library.md) |
+| 5 | UI/UX 설계 ✦ | [`part_5_ui_ux.md`](./part_5_ui_ux.md) |
+| 6 | 시즌제 · 캐치업 ✦ | [`part_6_season_catchup.md`](./part_6_season_catchup.md) |
+| 7 | 시스템 아키텍처 ✦ | [`part_7_architecture.md`](./part_7_architecture.md) |
+| 8 | MVP 우선순위와 다음 단계 ✦ | [`part_8_mvp_roadmap.md`](./part_8_mvp_roadmap.md) |
 
 원본 설계서: [`잭팟_ARPG_게임디자인_설계서.docx`](./잭팟_ARPG_게임디자인_설계서.docx)
 

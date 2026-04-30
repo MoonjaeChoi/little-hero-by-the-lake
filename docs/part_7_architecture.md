@@ -1,6 +1,8 @@
 # Part 7. 시스템 아키텍처
 
 > [← Part 6](./part_6_season_catchup.md) · [README](./README.md) · [다음: Part 8 →](./part_8_mvp_roadmap.md)
+>
+> ✦ `direction_v2.md` 1번 항목(모바일 전용) 반영. 웹 스택(Next.js, ui-web) 제거.
 
 ---
 
@@ -10,12 +12,12 @@
 
 | 계층 | 구성요소 | 역할 |
 |---|---|---|
-| 클라이언트 | React Native (모바일) + Next.js (웹) | UI 렌더링, 사용자 입력 |
+| 클라이언트 | ✦ React Native (Expo) — 모바일 단일 | UI 렌더링, 사용자 입력 |
 | 엣지 | API Gateway | 인증, 레이트 리밋, 라우팅 |
 | 서비스 | Player Service, Game Service, Realtime Service | 비즈니스 로직 |
 | 데이터 | PostgreSQL + Redis | 영구 저장 + 캐시/pub-sub |
 
-운영 도구(CMS, 어드민, 분석)는 사이드카로 분리하여 게임 서버와 같은 DB를 보지만 **별도 인증·별도 IP 화이트리스트로 격리**한다.
+운영 도구(CMS, 어드민, 분석)는 사이드카로 분리하여 게임 서버와 같은 DB를 보지만 **별도 인증·별도 IP 화이트리스트로 격리**한다. 운영 도구 자체는 내부용 웹(Next.js 가능)이지만 게임 클라이언트와 무관하다.
 
 ---
 
@@ -45,22 +47,19 @@ backend/
 - WebSocket 핸들러: `async`
 - 일반 게임 도메인 트랜잭션: **동기 권장** (디버깅 단순, 일관된 성능)
 
-### 프론트엔드 — 모노레포 + 공유 타입
-
-웹과 모바일이 같은 백엔드를 쓴다면 모노레포(pnpm workspaces 또는 Turborepo)로 묶는 게 압도적으로 좋다. 핵심은 **타입 공유**.
+### 프론트엔드 — 모노레포 + 공유 타입 (✦ 모바일 단일)
 
 ```
 frontend/
 ├─ apps/
-│  ├─ web/           # Next.js
 │  └─ mobile/        # React Native (Expo)
-├─ packages/
-│  ├─ api-client/    # 백엔드 호출 함수 + 타입
-│  ├─ ui-core/       # 플랫폼 무관 컴포넌트 (ItemCard 등)
-│  ├─ ui-web/        # 웹 전용 (인벤토리 그리드)
-│  ├─ ui-mobile/     # 모바일 전용 (스와이프 비교)
-│  └─ game-types/    # 백엔드 OpenAPI에서 자동 생성된 타입
+└─ packages/
+   ├─ api-client/    # 백엔드 호출 함수 + 타입
+   ├─ ui-core/       # 컴포넌트 라이브러리 (ItemCard 등)
+   └─ game-types/    # 백엔드 OpenAPI에서 자동 생성된 타입
 ```
+
+> 단일 앱이라 모노레포가 과한 구성처럼 보일 수 있으나, `game-types`/`api-client`를 패키지로 분리해두면 운영 어드민 웹앱(`ops/`)이 같은 OpenAPI 타입을 공유할 수 있어 그대로 둔다.
 
 `game-types/`를 백엔드 OpenAPI 스키마에서 자동 생성(`openapi-typescript` 사용)하면 응답 타입이 항상 백엔드 진실에 동기화된다. 백엔드 스키마 변경이 프론트의 컴파일 에러로 즉시 잡혀 유지보수 비용이 크게 줄어든다.
 
@@ -73,7 +72,7 @@ frontend/
 ### 핵심 데이터 흐름 — 강화 요청 1회
 
 ```
-1. 사용자가 강화 버튼 클릭 (모바일/웹)
+1. 사용자가 강화 버튼 클릭 (모바일)
 2. 클라이언트: POST /items/{id}/enhance + JWT
 3. API Gateway: JWT 검증, 레이트 리밋, Player Service로 라우팅
 4. Player Service 단일 트랜잭션 처리
