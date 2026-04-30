@@ -38,6 +38,11 @@ namespace LittleHero
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Data = SaveSystem.Load();
+            // E3 — 별빛 무료 출처 자동 부트스트랩 (일일 로그인 + 이벤트 구독)
+            StarlightGrantService.Bootstrap();
+            // E1+E2 — IAP 백그라운드 초기화 (Editor·Services 미설정 시 에러 로그만, 게임플레이는 영향 X)
+            try { IAPService.Bootstrap(); }
+            catch (System.Exception e) { Debug.LogWarning($"[MetaProgression] IAP bootstrap skip: {e.Message}"); }
         }
 
         private void OnEnable()

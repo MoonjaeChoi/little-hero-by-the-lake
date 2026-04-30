@@ -41,6 +41,19 @@ namespace LittleHero
         public long lastWeeklyBossClearTime;                         // Unix 초
         public int infiniteModeMaxDepth;                             // 무한 모드 최고 깊이
         public bool[] hardcoreChaptersCleared = new bool[15];        // CH 36~50 (인덱스 0~14)
+
+        // ✦ E3 — 별빛 무료 출처 추적 (monetization_v1 §3.1)
+        public long lastDailyLoginUnix;                              // 일일 로그인 5⋆ 보상 일자 (KST 0시)
+        public bool[] chapterStarlightGranted = new bool[35];        // 챕터 N×2⋆ 1회 보상 비트
+        public bool[] memoryStarlightGranted = new bool[8];          // 추억 발견 10⋆ 1회 보상 비트 (4 + 여유)
+        public bool[] bestiaryFullStarlightGranted = new bool[35];   // 챕터별 도감 100% 50⋆ 비트
+
+        // ✦ E4 — 시즌 패스 (monetization_v1 §3.3)
+        public int seasonId;                                         // 현재 시즌 ID
+        public bool seasonPassPremium;                               // 프리미엄 구매 여부
+        public int seasonPoints;                                     // 시즌 진행도
+        public int seasonRewardClaimedFreeMask;                      // 무료 선 보상 수령 비트
+        public int seasonRewardClaimedPremiumMask;                   // 프리미엄 보상 수령 비트
     }
 
     [System.Serializable]

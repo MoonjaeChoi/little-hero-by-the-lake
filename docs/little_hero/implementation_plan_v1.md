@@ -123,7 +123,7 @@
 
 | ID | 작업 | 참조 | 의존 |
 |---|---|---|---|
-| **D9** | `StarlightShopPanel` — 별빛 상점 (마법 결정 직구매·강화 보장 등) | monetization §8 | E1 | (Phase E 보류) |
+| **D9** | `StarlightShopPanel` — 별빛 상점 (마법 결정 직구매·강화 보장 등) | monetization §8 | E1 | ✅ 2026-05-01 (Phase E 사이클에서 동시 추가) |
 | **D10** | `EndgameMenuPanel` 풀 — 일일/주간/무한/고난도 진입 | endgame §9 | C6, B8 | ✅ 2026-05-01 |
 | **D11** | `MythicEffectOverlay` — 신화 발현 무지개 연출 | equipment §3.7 + ui_v1 §13 | C7 | ✅ 2026-05-01 |
 | **D12** | `RecommendedLevelWarningModal` — 챕터 진입 시 권장 미달 경고 | ui_v1 §7.2 | D3 | ✅ 2026-05-01 |
@@ -138,11 +138,11 @@
 
 | ID | 작업 | 참조 | 의존 | 복잡도 |
 |---|---|---|---|---|
-| **E1** | Unity IAP 패키지 통합 + 5 패키지 등록 | monetization §7.4 | A5 | 복잡 |
-| **E2** | `IAPService` + App Store Connect 설정 | monetization §7.4 | E1 | 중 |
-| **E3** | 별빛 무료 출처 핸들러 — 일일 로그인 + 챕터 첫 클리어 + 추억 + 도감 100% | monetization §3.1 | A5, A7 | 중 |
-| **E4** | `SeasonPassService` — 무료 선 + 프리미엄 선 (출시 후 3개월차) | monetization §3.3 | E1 | 복잡 |
-| **E5** | 영수증 검증 (서버리스 Unity IAP 자체 검증) | monetization §7.4 | E2 | 중 |
+| **E1** | Unity IAP 패키지 통합 + 5 패키지 등록 | monetization §7.4 | A5 | 복잡 | ✅ 2026-05-01 |
+| **E2** | `IAPService` + App Store Connect 설정 | monetization §7.4 | E1 | 중 | ✅ 2026-05-01 (코드 / 스토어 등록은 후속) |
+| **E3** | 별빛 무료 출처 핸들러 — 일일 로그인 + 챕터 첫 클리어 + 추억 + 도감 100% | monetization §3.1 | A5, A7 | 중 | ✅ 2026-05-01 |
+| **E4** | `SeasonPassService` — 무료 선 + 프리미엄 선 (출시 후 3개월차) | monetization §3.3 | E1 | 복잡 | ✅ 2026-05-01 (스캐폴드, 코스메틱·시즌 로테이션 후속) |
+| **E5** | 영수증 검증 (서버리스 Unity IAP 자체 검증) | monetization §7.4 | E2 | 중 | ✅ 2026-05-01 (Tangle 키 생성은 Window > Services > IAP) |
 
 **총 5 작업. 예상 7~10일.**
 

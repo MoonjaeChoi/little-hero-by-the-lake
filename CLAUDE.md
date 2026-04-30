@@ -284,6 +284,10 @@ public interface IAttackPattern
 - `CurrencyService.cs` — A5 4 화폐 정적 facade. Grant/Spend 통합 + 챕터/일일/추억 보상 계산식 (`CalcChapterStarFragmentReward` 등)
 - `ConversionForge.cs` — C5 변환 모루 정적 서비스. `ConvertDustToCrystal`(1,000 ★ : 1 ◇) / `ConvertOrbToCrystal`(5 ✦ : 1 ◇) + 시뮬용 `CalcDustCost/CalcOrbCost`. 다락방 메뉴에서만 호출. 역방향 미지원 (마법 결정은 영구 가치 자원).
 - `EndgameResetService.cs` — C6 Endgame 일일/주간 가용성 + 무한·고난도 진행 기록. KST 0시 / 월요일 0시 기준. `IsDailyAvailable/IsWeeklyAvailable` + `MarkDailyCleared/MarkWeeklyCleared` + `GetSecondsUntilNextDailyReset/Weekly` + `RecordInfiniteDepth/GetInfiniteMaxDepth` + `IsHardcoreChapterCleared(N)/MarkHardcoreChapterCleared(N)`. 시간 헬퍼는 순수 함수, 상태는 SaveData 직접 R/W (MetaProgression.Instance.Data).
+- `StarlightGrantService.cs` — E3 별빛 ⋆ 무료 출처 자동 적립. 일일 로그인 5⋆(KST 0시) / 챕터 첫 클리어 N×2⋆ / 추억 발견 10⋆ / 챕터 도감 100% 50⋆ / 일일 보스 5⋆ / 주간 보스 20⋆. `Bootstrap()` 으로 GameEvents 구독 + 일일 로그인 자동 시도. SaveData 비트로 1회성 보장. F4·F5 보스 처치 매니저는 `GrantDailyBossFirstClear/Weekly` 호출.
+- `IAPService.cs` — E1+E2 Unity IAP 통합 (`com.unity.purchasing` 5.0.0, manifest.json 추가). 5 별빛 패키지 + 1 시즌 패스 등록. `Bootstrap` 시 `UnityPurchasing.Initialize`, 구매 성공 시 `ApplyGrant` 가 별빛 적립 또는 시즌 패스 프리미엄. `OnReady`/`OnPurchaseSucceededEvent`/`OnPurchaseFailedEvent` 이벤트. 영수증 검증은 ReceiptValidator 호출 — 검증 실패해도 grant 진행(MVP 관용; 운영 단계 엄격화).
+- `ReceiptValidator.cs` — E5 `CrossPlatformValidator` 래퍼. Tangle 키(`AppleTangle`/`GooglePlayTangle`) 는 Window > Services > IAP 에서 생성. Editor·키 미생성 시 검증 스킵(true). 위·변조 감지 시 false.
+- `SeasonPassService.cs` — E4 시즌 패스 (출시 3개월차 도입). 4 단계 점수 임계값(100/250/500/1000), free·premium 보상 분리, `AddPoints/TryClaimFree/TryClaimPremium/RotateSeason` API. 코스메틱·칭호는 후속.
 - 카메라 추적: Cinemachine 3.x `CinemachineCamera` + `CinemachineFollow` (Chapter 씬에서 Player를 추적)
 
 ### Data (ScriptableObject)
@@ -451,5 +455,16 @@ public interface IAttackPattern
   - 모든 패널은 Legacy `UnityEngine.UI.Text` 사용 (CLAUDE.md §12 규칙). 씬 wiring(Canvas hierarchy + 프리팹 [SerializeField] 연결)은 Unity Editor 작업으로 후속(ProjectValidator 룰 추가 권장).
   - **D9 별빛 상점은 Phase E (Unity IAP) 후 진행** — 현재 별빛 ⋆ 적립 경로(챕터 첫 클리어)는 동작하지만 소비 UI 미구현.
   - **MVP UI 8/8 + Phase 2 UI 3/4 완료. Phase D 11/12.**
+- 2026-05-01: **Phase E (E1~E5) 5/5 + D9 완료** — 수익화 인프라 일괄.
+  - **E1** Unity IAP 패키지 (`com.unity.purchasing` 5.0.0) manifest.json 추가. 패키지 캐시 자동 fetch 확인 (Library/PackageCache).
+  - **E2** IAPService — IDetailedStoreListener 구현, 6 productId(STARLIGHT_100/500/1100/3500/12000 + SEASON_PASS) 등록. `Bootstrap`/`InitiatePurchase`/`GetLocalizedPrice`. 구매 완료 시 `ApplyGrant` 가 별빛 ⋆ 적립 or `SeasonPassService.GrantPremium`. 이벤트 시그니처 충돌 회피로 `OnReady`/`OnPurchaseSucceededEvent`/`OnPurchaseFailedEvent` 명명. App Store Connect / Google Play Console 의 productId 등록은 출시 전 후속.
+  - **E3** StarlightGrantService — 별빛 무료 출처 자동 적립. 일일 로그인 5⋆ + 챕터 첫 클리어 N×2⋆ + 추억 10⋆ + 도감 100% 50⋆ + 일일/주간 보스. SaveData 비트로 1회성 보장. MetaProgression.Awake 에서 자동 Bootstrap. SaveData 확장: `lastDailyLoginUnix`/`chapterStarlightGranted[35]`/`memoryStarlightGranted[8]`/`bestiaryFullStarlightGranted[35]`.
+  - **E4** SeasonPassService — 4 단계(100/250/500/1000 pt) free + premium 보상 비트마스크. `AddPoints/TryClaimFree/TryClaimPremium/RotateSeason/GrantPremium`. SaveData 확장: `seasonId`/`seasonPassPremium`/`seasonPoints`/`seasonRewardClaimedFreeMask`/`seasonRewardClaimedPremiumMask`. UI 패널·코스메틱·시즌 로테이션 트리거는 후속.
+  - **E5** ReceiptValidator — Unity IAP `CrossPlatformValidator` 래퍼. AppleTangle/GooglePlayTangle 키는 reflection 으로 우회 로드 (키 미생성 상태에서도 컴파일 OK). Editor 모드·키 미생성·미지원 플랫폼 → 검증 스킵 (true 반환). 운영 단계 권장: App Store Server API 서버 검증으로 보강.
+  - **D9 StarlightShopPanel** — E1+E2 의존 해제 후 D9 동시 추가. 별빛 → 마법 결정 변환(5⋆/22⋆/40⋆) + 5 패키지 구매 버튼. IAPService.GetLocalizedPrice 우선, fallback 한국 원화. 강화 보장권/영구 잠금 등은 인스턴스 컨텍스트 필요 — D5 카드 패널에서 직접 호출 (후속 wiring).
+  - **출시 전 후속 작업**:
+    - App Store Connect/Google Play Console 에 6 productId 등록
+    - Window > Services > In-App Purchasing 에서 Unity Gaming Services 활성화 + Tangle 키 생성
+    - 시즌 로테이션 cron/scheduler (출시 3개월차 도입 시점)
 - 2026-05-01: C3 EnhancementService — 강화 +0~+25 정적 서비스(`Gameplay/Equipment/EnhancementService.cs`). `TryEnhance(instance, config, rng)` → `EnhanceResult{outcome=Success/Failure/AtMaxLevel/InsufficientDust/InsufficientCrystal/InvalidInstance, newLevel, dustCost, crystalCost, wasPityTriggered, rolledChance}`. +0~+15 결정론(1.0). +16~+25 RNG: `0.50 × 0.85^(L-16)` + 소프트 천장 `failCount≥5: +0.05/회` + 하드 천장 `failCount≥20: 1.0`. 비용은 시도 시점에 차감(실패해도 환불 없음, dust↗crystal 순 pre-check). `CalcSuccessRate(L, failCount)` 헬퍼로 UI에 미리보기. 상수: MAX_ENHANCE_LEVEL=25, DETERMINISTIC_LEVEL_CAP=16, HARD_PITY_FAILS=20. 참조: equipment §3.3·§3.4 + economy §4.1·§7.3.
 - 2026-05-01: C2 ItemDropService — 정적 드랍 결정 트리(`Gameplay/Items/ItemDropService.cs`). DropContext(source/chapterNumber/forcedSlot/forcedRarity) → ① 확률 굴림(Enemy 0.5% / Mini 8% / Boss 100% / BossRepeat 30% / Shop 100%) → ② 슬롯(CH≤10 주 7, CH11+ 12 균등 / forcedSlot 우선) → ③ 등급(affix_pool §5 챕터 묶음 분포 + Mini/Boss +1 가중 / forcedRarity 우선) → ④ 템플릿 매칭(slot+rarity 정확→슬롯 폴백) → ⑤ AffixRoller로 주 3 + 부 3 일괄 굴림 → ⑥ history.mileage += 1(C7 신화 발현 보류). `Initialize(slotPools, globalPool, templates, config)` 부트스트랩 필요. DropSource enum 5종(Enemy/MiniBoss/Boss/BossRepeat/Shop). 참조: item_drop §4·§5.3.
