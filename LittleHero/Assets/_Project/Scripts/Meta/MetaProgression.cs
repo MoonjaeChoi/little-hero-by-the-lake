@@ -14,6 +14,8 @@ namespace LittleHero
 
         public SaveData Data { get; private set; }
         public int StarFragments => Data?.starFragments ?? 0;
+        public int MagicCrystals => Data?.magicCrystals ?? 0;   // ◇ A5
+        public int Starlight     => Data?.starlight ?? 0;       // ⋆ A5
         public ChapterData SelectedChapter { get; set; }
         public CharacterData SelectedCharacter { get; private set; }
         public MemoryPool MemoryPool => _memoryPool;
@@ -115,6 +117,42 @@ namespace LittleHero
             if (amount <= 0 || Data.starFragments < amount) return false;
             Data.starFragments -= amount;
             OnStarFragmentsChanged?.Invoke(Data.starFragments);
+            SaveSystem.Save(Data);
+            return true;
+        }
+
+        // ✦ A5 — 마법 결정 ◇
+        public void AddMagicCrystals(int amount)
+        {
+            if (amount <= 0) return;
+            Data.magicCrystals += amount;
+            GameEvents.RaiseMagicCrystalChanged(Data.magicCrystals);
+            SaveSystem.Save(Data);
+        }
+
+        public bool SpendMagicCrystals(int amount)
+        {
+            if (amount <= 0 || Data.magicCrystals < amount) return false;
+            Data.magicCrystals -= amount;
+            GameEvents.RaiseMagicCrystalChanged(Data.magicCrystals);
+            SaveSystem.Save(Data);
+            return true;
+        }
+
+        // ✦ A5 — 별빛 ⋆
+        public void AddStarlight(int amount)
+        {
+            if (amount <= 0) return;
+            Data.starlight += amount;
+            GameEvents.RaiseStarlightChanged(Data.starlight);
+            SaveSystem.Save(Data);
+        }
+
+        public bool SpendStarlight(int amount)
+        {
+            if (amount <= 0 || Data.starlight < amount) return false;
+            Data.starlight -= amount;
+            GameEvents.RaiseStarlightChanged(Data.starlight);
             SaveSystem.Save(Data);
             return true;
         }
