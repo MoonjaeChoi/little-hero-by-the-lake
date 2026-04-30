@@ -287,11 +287,13 @@ public interface IAttackPattern
 - `EnemyData`에 tintColor / scaleMultiplier 필드 추가
 - `BalanceConfig`에 priceByRarity 추가
 - `CharacterData`에 4 코어 비중(`strengthMultiplier`/`agilityMultiplier`/`wisdomMultiplier`/`spiritMultiplier`) 추가 (stats_v1 §3.3)
+- `ChapterData`에 `chapterNumber` 필드 추가 (A2: PlayerProgress XP 모디파이어용. 기본 0, B7가 1~35 채움)
 - 인스턴스: 적 7종 (Basic/Rabbit/Bear/Firefly/Pumpkin/StarCloud/BigWolf), 장비 16종, BalanceConfig, Chapter_01_RedHood (totalWaves=20), ShopPool_Default
 
 ### Gameplay
-- **Player**: `PlayerController`, `PlayerStats`, `PlayerHealth`, `PlayerDamageReceiver`
-  - A1 PlayerStats 확장: 4 코어 스탯(힘/빠름/슬기/마음, raw + rounded) + 11 신규 파생(CritChance/CritDamage/Armor/DamageReduction/DustGainMultiplier/DropRateMultiplier/FinalDamageBonus/ExtraAttackTargets/ArmorPenetration/CompanionDurationBonus/AdditiveDamageBonus) + 코어 100점당 효과(stats_v1 §3.2) + `ApplyLevelUp()` (A2 PlayerProgress 호출 대기)
+- **Player**: `PlayerController`, `PlayerStats`, `PlayerHealth`, `PlayerDamageReceiver`, `PlayerProgress`(A2)
+  - A1 PlayerStats 확장: 4 코어 스탯(힘/빠름/슬기/마음, raw + rounded) + 11 신규 파생(CritChance/CritDamage/Armor/DamageReduction/DustGainMultiplier/DropRateMultiplier/FinalDamageBonus/ExtraAttackTargets/ArmorPenetration/CompanionDurationBonus/AdditiveDamageBonus) + 코어 100점당 효과(stats_v1 §3.2). `SetLevel(int)` 절대 동기화 API + `ApplyLevelUp()` 래퍼.
+  - A2 PlayerProgress: 싱글턴(RuntimeInitializeOnLoadMethod 자동 부트스트랩), L100 piecewise XP 곡선(L1~50 1.15^L, L51~100 1.05^(L-50)), XP 적립 핸들러(적/챕터/추억) + 시뮬 §5.1 베이스(2/20/80/N×40/40), L51+ 둔화(HP+5·공격력+0·부수 0), 사망 시 XP 후퇴 없음, SaveData.level/xp 영구
 - **Enemies**: `EnemyController` (외형 적용), `EnemyAI`, `EnemySpawner`
 - **Waves**: `WaveManager` (보스 플레이어 기준 spawn), `ChapterRunner`
 - **Equipment**: `IAttackPattern`, 7종 패턴 (`ProjectileAttack`, `AuraAttack`, `OrbitAttack`, `RainAttack`, `TrailAttack`, `PulseAttack`, `SummonAttack`), `OrbitOrb`, `TrailField`, `PulseVisual`, `EquipmentManager`, `TestEquip`
@@ -390,3 +392,4 @@ public interface IAttackPattern
 - 2026-04-30: A6 SaveData 확장 — `magicCrystals` ◇, `starlight` ⋆, `level`(=1), `xp`, `firstClearedChapters`(35비트) 추가. A2/A5/E3가 의존. `permanentlyLockedAffixes`/`mythicMileageBonus`는 B2 EquipmentInstance와 함께 도입 (참조: economy §9.2 + character_progression §7.4 + monetization §7.1).
 - 2026-04-30: A7 GameEvents 신규 이벤트 — `OnMagicCrystalChanged(int)` ◇, `OnStarlightChanged(int)` ⋆ 추가. `OnLevelUp(int)`은 기존 시그니처 유지. `OnAffixRolled`는 B2 EquipmentInstance 시그니처 결합으로 B2와 함께 도입. CLAUDE.md §4 EventBus 목록도 갱신.
 - 2026-04-30: A5 CurrencyService — 4 화폐(★/✦/◇/⋆) 통합 정적 facade. MetaProgression에 `MagicCrystals`/`Starlight` 보관·Add·Spend·이벤트 발행. 챕터 보상 공식(`CalcChapterStarFragmentReward = 5×1.10^(N-1)` / `CalcChapterMagicCrystalReward = 1+N/3` / `CalcChapterStarlightReward = N×2`) + 일일 로그인 5⋆ + 추억 발견 10⋆.
+- 2026-05-01: A2 PlayerProgress — 싱글턴(자동 부트스트랩), L100 piecewise XP 곡선(L1~50 1.15^L / L51~100 1.05^(L-50), L1→L2=50 하드코드), XP 적립(적 2/미니 20/보스 80/챕터 N×40/추억 40 + 챕터 모디파이어 1+N×0.1), 사망 시 XP 후퇴 없음, SaveData.level/xp 영구. PlayerStats에 `SetLevel(int)` 절대 동기화 API + L51+ 둔화(HP+5·공격력+0·부수 0). ChapterData에 `chapterNumber` 필드 추가(B7가 1~35 채움). PlayerController.Start에서 SyncStatsToCurrentLevel 호출.

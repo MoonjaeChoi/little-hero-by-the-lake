@@ -41,6 +41,8 @@ namespace LittleHero
         {
             CharacterData character = MetaProgression.Instance != null ? MetaProgression.Instance.SelectedCharacter : null;
             _stats.Initialize(GameManager.Instance.Balance, character);
+            // A2 — PlayerProgress 의 SaveData Level 을 stats 에 절대 동기화
+            PlayerProgress.Instance?.SyncStatsToCurrentLevel(_stats);
             _health.Initialize(_stats);
 
             if (character != null)

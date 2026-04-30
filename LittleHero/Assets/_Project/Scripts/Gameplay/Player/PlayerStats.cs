@@ -90,24 +90,28 @@ namespace LittleHero
             RecalculateStats();
         }
 
-        // A2 PlayerProgress 가 OnLevelUp 시 호출. character_progression §7 의 L100 piecewise 곡선과
-        // 결합되며, 본 메서드는 1 레벨씩 적용한다(여러 레벨업 시 호출 N회).
-        public void ApplyLevelUp()
+        // 절대 동기화 — 씬 진입 시점에 PlayerProgress 가 SaveData 의 Level 을 그대로 적용.
+        // 코어 스탯은 `Level × character.multiplier` 로 절대 재계산되므로
+        // 같은 Level 을 두 번 호출해도 누적되지 않는다 (안전).
+        public void SetLevel(int level)
         {
-            Level++;
+            Level = Mathf.Max(1, level);
 
-            // 코어 스탯 +1 × character multiplier (stats_v1 §3.3)
+            // 코어 스탯 = level × character multiplier (절대값, character_progression §7.3)
             float sm = _character != null ? _character.strengthMultiplier : 1f;
             float am = _character != null ? _character.agilityMultiplier  : 1f;
             float wm = _character != null ? _character.wisdomMultiplier   : 1f;
             float pm = _character != null ? _character.spiritMultiplier   : 1f;
-            StrengthRaw += sm;
-            AgilityRaw  += am;
-            WisdomRaw   += wm;
-            SpiritRaw   += pm;
+            StrengthRaw = Level * sm;
+            AgilityRaw  = Level * am;
+            WisdomRaw   = Level * wm;
+            SpiritRaw   = Level * pm;
 
             RecalculateStats();
         }
+
+        // A1 호환 — 1 레벨 증가 헬퍼. SetLevel 의 단순 래퍼.
+        public void ApplyLevelUp() => SetLevel(Level + 1);
 
         private void RecalculateStats()
         {
@@ -125,12 +129,14 @@ namespace LittleHero
             float metaDmg = MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.AttackDamage) : 0f;
             float metaDust= MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.StarDustGain) : 0f;
 
-            // 레벨업 자동 증가 (stats_v1 §3.1) — 캐릭터 레벨에 비례
+            // 레벨업 자동 증가 (character_progression §4.1·§4.3) — L1~L50 빠름, L51+ 둔화
             int lvOffset = Mathf.Max(0, Level - 1);
-            float lvHp  = lvOffset * 10f;          // +10 / Lv
-            float lvDmg = lvOffset * 1f;           // +1 / Lv
-            float lvSpd = (lvOffset / 5) * 0.05f;  // +0.05 / 5Lv
-            float lvCrit= (lvOffset / 5) * 0.01f;  // +1% / 5Lv
+            int lvFast = Mathf.Min(lvOffset, 49);          // L1~L50 구간 (최대 49)
+            int lvSlow = Mathf.Max(0, lvOffset - 49);      // L51+ 구간
+            float lvHp  = lvFast * 10f + lvSlow * 5f;       // +10/Lv → L51+ +5/Lv
+            float lvDmg = lvFast * 1f;                      // L51+ +0
+            float lvSpd = (lvFast / 5) * 0.05f;             // L51+ 동결
+            float lvCrit= (lvFast / 5) * 0.01f;             // L51+ 동결
 
             // 코어 스탯 100점당 효과 (stats_v1 §3.2)
             float coreHp   = SpiritRaw   * 0.5f;     // 마음 100 → +50 HP
