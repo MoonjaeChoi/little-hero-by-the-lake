@@ -8,13 +8,15 @@ namespace LittleHero.EditorTools
 {
     public static class CurveSimulator
     {
-        const int LEVEL_CAP = 50;
+        const int LEVEL_CAP = 100;            // ✦ L50 → L100 (endgame 포함)
+        const int LEVEL_CURVE_BREAK = 50;    // L51+ 가파름 변경
         const int CHAPTER_COUNT = 35;
         const string REPORT_PATH = "../../docs/little_hero/simulation_report.md";
 
         // ── 곡선 상수 (각 docs와 정합) ─────────────────────────────────────
         const float XP_BASE = 50f;
-        const float XP_GROWTH = 1.15f;       // character_progression §3.1
+        const float XP_GROWTH = 1.15f;       // character_progression §3.1 (L1~L50)
+        const float XP_GROWTH_LATE = 1.05f;  // L51~L100 둔화 곡선
         const int L1_FLOOR = 50;             // L1→L2 하드코딩
 
         const float ENEMY_STAT_GROWTH = 1.10f; // chapter_curve §2.1
@@ -43,10 +45,13 @@ namespace LittleHero.EditorTools
             sb.AppendLine($"> By: `Tools > LittleHero > Curve Simulator`");
             sb.AppendLine();
             sb.AppendLine("**상수**:");
-            sb.AppendLine($"- XP 곡선: `round({XP_BASE} × {XP_GROWTH}^L)`, L1 하드 = {L1_FLOOR}");
-            sb.AppendLine($"- 적 스탯: `× {ENEMY_STAT_GROWTH}^(N-1)`");
+            sb.AppendLine($"- XP 곡선 L1~L{LEVEL_CURVE_BREAK}: `round({XP_BASE} × {XP_GROWTH}^L)`, L1 하드 = {L1_FLOOR}");
+            sb.AppendLine($"- XP 곡선 L{LEVEL_CURVE_BREAK + 1}~L{LEVEL_CAP}: 둔화 곡선 `× {XP_GROWTH_LATE}^(L-{LEVEL_CURVE_BREAK})`");
+            sb.AppendLine($"- 적 스탯: `× {ENEMY_STAT_GROWTH}^(N-1)` (35 챕터)");
             sb.AppendLine($"- 별가루 드랍: `× {DROP_GROWTH}^(N-1)`");
             sb.AppendLine($"- 챕터당 적: {ENEMIES_PER_CHAPTER} + 미니 3 + 보스 1");
+            sb.AppendLine($"- 변환 모루: 1000 ★ : 1 ◇ / 5 ✦ : 1 ◇");
+            sb.AppendLine($"- 별빛 ⋆ (캐시): monetization_v1 — 본 시뮬에서는 별도 트래킹 안 함 (수입은 endgame §8 표 참조)");
             sb.AppendLine();
             sb.AppendLine("---");
             sb.AppendLine();
@@ -57,6 +62,8 @@ namespace LittleHero.EditorTools
             SimulatePlayerDps(sb);
             SimulateTtk(sb);
             SimulateCurrencyBalance(sb);
+            SimulateConversionForge(sb);     // ✦ 변환 모루
+            SimulateEndgameMonthly(sb);      // ✦ endgame 월간
             SimulateLevelChapterAlignment(sb);
             SimulateAlerts(sb);
 
@@ -73,19 +80,21 @@ namespace LittleHero.EditorTools
         // ── §1. 레벨 곡선 ─────────────────────────────────────────────────
         static void SimulateLevelCurve(StringBuilder sb)
         {
-            sb.AppendLine("## 1. 레벨 곡선 (L1~L50)");
+            sb.AppendLine("## 1. 레벨 곡선 (L1~L100, piecewise)");
             sb.AppendLine();
-            sb.AppendLine("| Lv | 다음 레벨 XP | 누적 XP |");
-            sb.AppendLine("|---|---|---|");
+            sb.AppendLine("| Lv | 다음 레벨 XP | 누적 XP | 영역 |");
+            sb.AppendLine("|---|---|---|---|");
 
-            int cumul = 0;
+            long cumul = 0;
             for (int lv = 1; lv <= LEVEL_CAP; lv++)
             {
                 int needed = NextLevelXp(lv);
                 cumul += needed;
-                if (lv % 5 == 0 || lv == 1 || lv == LEVEL_CAP)
+                bool show = lv == 1 || lv == LEVEL_CURVE_BREAK || lv == LEVEL_CAP || lv % 10 == 0;
+                if (show)
                 {
-                    sb.AppendLine($"| L{lv} → L{lv + 1} | {needed:N0} | {cumul:N0} |");
+                    string region = lv <= LEVEL_CURVE_BREAK ? "스토리 (1.15)" : "Endgame (1.05)";
+                    sb.AppendLine($"| L{lv} → L{lv + 1} | {needed:N0} | {cumul:N0} | {region} |");
                 }
             }
             sb.AppendLine();
@@ -94,7 +103,11 @@ namespace LittleHero.EditorTools
         static int NextLevelXp(int currentLevel)
         {
             if (currentLevel == 1) return L1_FLOOR;
-            return Mathf.RoundToInt(XP_BASE * Mathf.Pow(XP_GROWTH, currentLevel));
+            if (currentLevel <= LEVEL_CURVE_BREAK)
+                return Mathf.RoundToInt(XP_BASE * Mathf.Pow(XP_GROWTH, currentLevel));
+            // L51~L100: 1.05 둔화 곡선, L50 값에서 연속
+            float at50 = XP_BASE * Mathf.Pow(XP_GROWTH, LEVEL_CURVE_BREAK);
+            return Mathf.RoundToInt(at50 * Mathf.Pow(XP_GROWTH_LATE, currentLevel - LEVEL_CURVE_BREAK));
         }
 
         // ── §2. 챕터별 별가루 + XP 수익 ───────────────────────────────────
@@ -305,10 +318,80 @@ namespace LittleHero.EditorTools
             return "✅ 여유";
         }
 
-        // ── §7. 레벨 ↔ 챕터 정합 ─────────────────────────────────────────
+        // ── §7. 변환 모루 (별가루 → 마법 결정) ────────────────────────────
+        static void SimulateConversionForge(StringBuilder sb)
+        {
+            sb.AppendLine("## 7. 변환 모루 — 마법 결정 적자 자체 해결");
+            sb.AppendLine();
+
+            float cumDust = 0;
+            int cumGem = 0;
+            int cumCrystal = 0;
+            for (int n = 1; n <= CHAPTER_COUNT; n++)
+            {
+                float dropMul = Mathf.Pow(DROP_GROWTH, n - 1);
+                cumDust += (ENEMIES_PER_CHAPTER * REGULAR_DUST_BASE
+                    + 3 * MINI_DUST_BASE + 1 * BOSS_DUST_BASE) * dropMul + n * 50;
+                cumGem += Mathf.RoundToInt(5f * Mathf.Pow(1.10f, n - 1));
+                cumCrystal += Mathf.RoundToInt(1f + n / 3f);
+            }
+            const int DUST_PER_CRYSTAL = 1000;
+            const int ORB_PER_CRYSTAL = 5;
+            const int FULL_PLUS_20_DUST = 59760;
+            const int META_GEM = 215, ACCESSORY_GEM = 150, SUB_UPGRADE_GEM = 720;
+            const int FULL_PLUS_20_CRYSTAL = 396;
+            const int REROLL_DUST = 5240;
+
+            int dustSurplus = (int)cumDust - FULL_PLUS_20_DUST - REROLL_DUST;
+            int orbSurplus = cumGem - (META_GEM + ACCESSORY_GEM + SUB_UPGRADE_GEM);
+            int dustToCrystal = dustSurplus / DUST_PER_CRYSTAL;
+            int orbToCrystal = orbSurplus / ORB_PER_CRYSTAL;
+            int crystalDeficit = FULL_PLUS_20_CRYSTAL - cumCrystal;
+
+            sb.AppendLine($"- 별가루 잔여 {dustSurplus:N0} ★ → 변환 가능 **{dustToCrystal} ◇** (1000 ★ : 1 ◇)");
+            sb.AppendLine($"- 무지개 구슬 잔여 {orbSurplus} ✦ → 변환 가능 **{orbToCrystal} ◇** (5 ✦ : 1 ◇)");
+            sb.AppendLine($"- 총 변환 가능 {dustToCrystal + orbToCrystal} ◇ vs 마법 결정 적자 **{crystalDeficit} ◇**");
+            int afterConversion = cumCrystal + dustToCrystal + orbToCrystal - FULL_PLUS_20_CRYSTAL;
+            string flag = afterConversion >= 0 ? "✅ 자체 해결" : "❌ 부족";
+            sb.AppendLine($"- 변환 후 잔여: **{afterConversion} ◇** → {flag}");
+            sb.AppendLine();
+        }
+
+        // ── §8. Endgame 월간 수익 ────────────────────────────────────────
+        static void SimulateEndgameMonthly(StringBuilder sb)
+        {
+            sb.AppendLine("## 8. Endgame 월간 수익 (L51+ 가용)");
+            sb.AppendLine();
+            sb.AppendLine("> endgame_v1 §7 정합. 매일·매주 활용 가정.");
+            sb.AppendLine();
+            sb.AppendLine("| 모드 | 횟수/월 | 마법 결정 ◇ | 별빛 ⋆ | 무지개 구슬 ✦ | XP |");
+            sb.AppendLine("|---|---|---|---|---|---|");
+            sb.AppendLine("| 일일 보스 | 30 | 150 | 150 | 300 | 1,500,000 |");
+            sb.AppendLine("| 주간 보스 | 4 | 120 | 80 | 200 | 800,000 |");
+            sb.AppendLine("| 무한 모드 | 4 | 50 | 50 | 0 | 400,000 |");
+            sb.AppendLine("| 챕터 반복 (가변) | — | 30 | 0 | 50 | 200,000 |");
+            sb.AppendLine("| **월 합계** | — | **350** | **280** | **550** | **2,900,000** |");
+            sb.AppendLine();
+
+            // L51~L100 도달 시간
+            long l50Cum = 0, l100Cum = 0;
+            for (int lv = 1; lv <= LEVEL_CAP; lv++)
+            {
+                int n = NextLevelXp(lv);
+                if (lv <= LEVEL_CURVE_BREAK) l50Cum += n;
+                l100Cum += n;
+            }
+            long endgameXp = l100Cum - l50Cum;
+            float monthsToL100 = endgameXp / 2_900_000f;
+            sb.AppendLine($"**L51~L100 누적 XP**: {endgameXp:N0}");
+            sb.AppendLine($"**도달 시간 (월 endgame 활용)**: 약 **{monthsToL100:F1}개월**");
+            sb.AppendLine();
+        }
+
+        // ── §9. 레벨 ↔ 챕터 정합 ─────────────────────────────────────────
         static void SimulateLevelChapterAlignment(StringBuilder sb)
         {
-            sb.AppendLine("## 7. 레벨 ↔ 챕터 정합");
+            sb.AppendLine("## 9. 레벨 ↔ 챕터 정합");
             sb.AppendLine();
             sb.AppendLine("> 챕터 N 클리어 시점 누적 XP로 도달 가능한 레벨 vs 권장 레벨.");
             sb.AppendLine();
@@ -348,10 +431,10 @@ namespace LittleHero.EditorTools
             return lv;
         }
 
-        // ── §8. 경고 ─────────────────────────────────────────────────────
+        // ── §10. 경고 ────────────────────────────────────────────────────
         static void SimulateAlerts(StringBuilder sb)
         {
-            sb.AppendLine("## 8. 경고·플래그");
+            sb.AppendLine("## 10. 경고·플래그");
             sb.AppendLine();
 
             var alerts = new System.Collections.Generic.List<string>();
@@ -386,13 +469,32 @@ namespace LittleHero.EditorTools
             else if (reachedAt5 > expectedAt5)
                 alerts.Add($"⚠️ XP 약간 과잉: CH 5 클리어 후 L{reachedAt5} 도달 (권장 L{expectedAt5})");
 
-            // (3) 마법 결정 적자 검증
+            // (3) 마법 결정 적자 검증 (변환 모루 후)
             int cumCrystal = 0;
             for (int n = 1; n <= CHAPTER_COUNT; n++)
                 cumCrystal += Mathf.RoundToInt(1f + n / 3f);
             const int CRYSTAL_FOR_FULL_PLUS_20 = 396;
-            if (cumCrystal < CRYSTAL_FOR_FULL_PLUS_20)
-                alerts.Add($"❌ 마법 결정 적자: 35 챕터 첫 클리어 ◇ {cumCrystal} < 풀 +20 ({CRYSTAL_FOR_FULL_PLUS_20}). 적자 {CRYSTAL_FOR_FULL_PLUS_20 - cumCrystal} ◇ — 반복 파밍 + economy §8.2 곡선 조정 권장");
+            const int DUST_PER_CRYSTAL = 1000;
+            const int ORB_PER_CRYSTAL = 5;
+
+            // 잔여 별가루·구슬 계산
+            float cumDust2 = 0; int cumGem2 = 0;
+            for (int n = 1; n <= CHAPTER_COUNT; n++)
+            {
+                float dropMul = Mathf.Pow(DROP_GROWTH, n - 1);
+                cumDust2 += (ENEMIES_PER_CHAPTER * REGULAR_DUST_BASE
+                    + 3 * MINI_DUST_BASE + 1 * BOSS_DUST_BASE) * dropMul + n * 50;
+                cumGem2 += Mathf.RoundToInt(5f * Mathf.Pow(1.10f, n - 1));
+            }
+            int dustSurplus2 = (int)cumDust2 - 59760 - 5240;
+            int orbSurplus2 = cumGem2 - (215 + 150 + 720);
+            int convertibleCrystal = (dustSurplus2 / DUST_PER_CRYSTAL) + (orbSurplus2 / ORB_PER_CRYSTAL);
+            int totalCrystalAvailable = cumCrystal + convertibleCrystal;
+
+            if (totalCrystalAvailable < CRYSTAL_FOR_FULL_PLUS_20)
+                alerts.Add($"❌ 마법 결정 적자: 변환 모루 활용 후도 {totalCrystalAvailable} ◇ < 풀 +20 ({CRYSTAL_FOR_FULL_PLUS_20}) — 별빛 직구매 또는 endgame 추가 필요");
+            else if (cumCrystal < CRYSTAL_FOR_FULL_PLUS_20)
+                alerts.Add($"✅ 마법 결정: 직접 ◇ {cumCrystal} 부족하지만 변환 모루로 +{convertibleCrystal} → 총 {totalCrystalAvailable} ◇ 가용 (잉여 {totalCrystalAvailable - CRYSTAL_FOR_FULL_PLUS_20} ◇)");
 
             if (alerts.Count == 0)
             {

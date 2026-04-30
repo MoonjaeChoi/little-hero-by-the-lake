@@ -50,9 +50,11 @@
 | [`stats_v1.md`](./stats_v1.md) | **활성** | 4 코어 스탯·3 데미지 버킷·부위별 옵션 매트릭스 (Diablo 4 + 메이플 키우기, 스킬 시스템 미채용) |
 | [`affix_pool_v1.md`](./affix_pool_v1.md) | **활성** | L4 주옵션 풀 카탈로그 — Affix 23종 + 슬롯 12 풀 매핑 + 등급별 정확한 수치 |
 | [`item_drop_v1.md`](./item_drop_v1.md) | **활성** | 주옵션 3줄 + 부옵션 3줄(글로벌) + 드랍 결정 트리 + 분리 리롤 |
-| [`character_progression_v1.md`](./character_progression_v1.md) | **활성** | XP·레벨업 곡선 — L50 캡, 50×1.15^L, 35 챕터 권장 레벨 매트릭스 (Part 1b 적용) |
+| [`character_progression_v1.md`](./character_progression_v1.md) | **활성** | XP·레벨업 곡선 — **L100 캡** (piecewise: L1~50 빠름 / L51~100 둔화), 35 챕터 권장 레벨 |
 | [`chapter_curve_v1.md`](./chapter_curve_v1.md) | **활성** | 35 챕터 적 스탯 곡선 + 플레이어 DPS·HP 추정 + TTK 검증 (v2 §5 placeholder 대체) |
-| [`economy_v1.md`](./economy_v1.md) | **활성** | 3 화폐(별가루 ★ / 무지개 구슬 ✦ / 마법 결정 ◇) 곡선 + 35 챕터 풀빌드 정합 시뮬 |
+| [`economy_v1.md`](./economy_v1.md) | **활성** | **4 화폐**(별가루 ★ / 무지개 구슬 ✦ / 마법 결정 ◇ / 별빛 ⋆) 곡선 + 변환 모루 + 풀빌드 정합 |
+| [`endgame_v1.md`](./endgame_v1.md) | **활성** | L51~L100 endgame 콘텐츠 — 일일/주간/무한 보스 + 고난도 챕터 (CH 36~50) |
+| [`monetization_v1.md`](./monetization_v1.md) | **활성** | 별빛 ⋆ 캐시 화폐 + 장비 강화 중심 과금 (가챠 ❌, 4+ 적합, 비과금 100% 클리어 가능) |
 | [`ui_v1.md`](./ui_v1.md) | **활성** | 모바일 UI 통합 — 카드 6단 + 12슬롯 인벤토리 + 신기한 지도 + 강화 모달 + 색·폰트·사운드 |
 
 ---
@@ -63,12 +65,14 @@
 2. **`stats_v1.md`** ✅ — 데미지 버킷·코어 스탯·부위별 옵션 채널
 3. **`affix_pool_v1.md`** ✅ — L4 주옵션 23종 + 슬롯 풀 + 수치
 4. **`item_drop_v1.md`** ✅ — 주옵션 3줄 + 부옵션 3줄 + 드랍 트리
-5. **`character_progression_v1.md`** ✅ — XP 곡선 + 레벨업 자동 보상 + 권장 레벨
+5. **`character_progression_v1.md`** ✅ — XP 곡선 + 레벨업 자동 보상 (**L100 캡, piecewise**)
 6. **`chapter_curve_v1.md`** ✅ — 적 곡선·DPS·TTK 정합 검증
-7. **`economy_v1.md`** ✅ — 3 화폐 곡선·풀빌드 정합 시뮬
-8. **`ui_v1.md`** ✅ — 모바일 UI 통합 (모든 시스템 와이어프레임 합본)
+7. **`economy_v1.md`** ✅ — **4 화폐** 곡선·변환 모루·풀빌드 정합
+8. **`endgame_v1.md`** ✅ — L51~L100 콘텐츠 (일일/주간/무한/고난도)
+9. **`monetization_v1.md`** ✅ — 별빛 ⋆ 캐시 + 장비 강화 중심 과금
+10. **`ui_v1.md`** ✅ — 모바일 UI 통합
 
-> **모든 설계 문서 1차 완성**. 다음 단계는 구현 (PlayerStats 확장 → AffixDefinition SO → InventoryPanel ...) 또는 시뮬레이터 검증.
+> **10 설계 문서 완성** + `simulation_report.md` 자동 검증. `Tools > LittleHero > Curve Simulator` 메뉴로 재실행 가능.
 
 ---
 

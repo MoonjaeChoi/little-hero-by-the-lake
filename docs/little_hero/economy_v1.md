@@ -1,24 +1,29 @@
 # Little Hero — 경제 곡선 v1
 
-> [← Little Hero 인덱스](./README.md) · [장비 v1](./equipment_v1.md) · [주옵션 풀 v1](./affix_pool_v1.md) · [드랍 v1](./item_drop_v1.md) · [챕터 곡선 v1](./chapter_curve_v1.md)
+> [← Little Hero 인덱스](./README.md) · [장비 v1](./equipment_v1.md) · [주옵션 풀 v1](./affix_pool_v1.md) · [드랍 v1](./item_drop_v1.md) · [챕터 곡선 v1](./chapter_curve_v1.md) · [수익화 v1](./monetization_v1.md) · [Endgame v1](./endgame_v1.md)
 >
-> 3 화폐(별가루 ★ / 무지개 구슬 ✦ / 마법 결정 ◇) 흐름 + 35 챕터 진행과 동조한 수익·지출 매트릭스 + 풀빌드 누적 비용 시뮬.
+> **4 화폐**(별가루 ★ / 무지개 구슬 ✦ / 마법 결정 ◇ / 별빛 ⋆) 흐름 + 35 챕터 진행과 동조한 수익·지출 매트릭스 + 풀빌드 누적 비용 시뮬.
+>
+> ✦ **별빛 ⋆ (캐시)**는 [수익화 v1](./monetization_v1.md)이 정의. 본 문서는 별빛 → 마법 결정 환전 + 변환 모루 통합만 다룬다.
 
 ---
 
 ## 1. 핵심 결정
 
-- **3 화폐 분리**:
+- **4 화폐 분리**:
   - **별가루 ★** (런 내, 휘발) — 적 처치, 챕터 보상. 챕터 단위로 0 리셋.
   - **무지개 구슬 ✦** (영구) — 챕터 첫 클리어, 일부 반복.
-  - **마법 결정 ◇** (영구, 신규) — 보스 처치 시. **+16 이상 강화 전용**.
+  - **마법 결정 ◇** (영구) — 보스 처치 시. **+16 이상 강화 전용**.
+  - **별빛 ⋆** (영구, 캐시) — 실금 + 일일 보너스 + endgame 보스. **장비 강화 가속** ([monetization_v1](./monetization_v1.md)).
 - **이름 결정**: 강화석 = **"마법 결정"** (equipment_v1 §7 미해결 → 본 문서가 결정). UI 심볼 `◇`.
 - **소비 원칙**:
-  - 별가루 → 강화 +0~+25 + 주/부 리롤 + 인게임 상점 (현 ShopController)
+  - 별가루 → 강화 +0~+25 + 주/부 리롤 + 인게임 상점 + 변환 모루 (§ 11)
   - 무지개 구슬 → 메타 업그레이드 + 장신구 직구매 + 부옵션 등급 향상권
   - 마법 결정 → 강화 +16 이상에만
+  - 별빛 → 마법 결정 직구매 + 강화 보호·잠금·신화 가속 (monetization_v1 §4)
 - **수입 곡선**: chapter_curve_v1 §2 의 `1.08^(N-1)` 곱셈을 그대로 채용 (별가루·무지개 구슬 동일).
-- **장기 균형**: 35 챕터 첫 클리어로 **메인 슬롯 풀 +20 + 일부 +25** 빌드 가능. 풀 +25 12 슬롯은 반복 파밍 필요 (장기 동기).
+- **장기 균형**: 35 챕터 첫 클리어로 **메인 슬롯 풀 +20 + 일부 +25** 빌드 가능. 풀 +25 12 슬롯은 반복 파밍 + endgame + 별빛 가속 (장기 동기).
+- ✦ **마법 결정 적자 해결**: 변환 모루 (별가루 → 마법 결정) + endgame 보스 + 별빛 직구매 (3중 안전망).
 
 ---
 
@@ -469,9 +474,90 @@ public static class CurrencyService
 
 ---
 
-## 11. MVP 범위
+## 11. 변환 모루 — 별가루·무지개 구슬 → 마법 결정 ✦ (신규)
 
-### 11.1. MVP 포함
+> 잉여 화폐를 부족 화폐로 변환하는 **다락방 신규 메뉴**. 마법 결정 적자 해결 + 별가루 인플레이션 흡수.
+
+### 11.1. 환율
+
+| 변환 방향 | 환율 | 35 챕터 잉여로 가능한 ◇ |
+|---|---|---|
+| 별가루 ★ → 마법 결정 ◇ | **1,000 ★ : 1 ◇** | 254k ★ → 254 ◇ |
+| 무지개 구슬 ✦ → 마법 결정 ◇ | **5 ✦ : 1 ◇** | 270 ✦ → 54 ◇ |
+
+> 환율은 **시작점 가설**. 시뮬·테스트로 보정.
+> 역방향 (◇ → ★ / ◇ → ✦) 미도입 — 마법 결정은 영구 가치 자원.
+
+### 11.2. 정합 검증 (35 챕터 첫 클리어)
+
+| 항목 | 값 |
+|---|---|
+| 별가루 잔여 | 254,441 ★ |
+| 무지개 구슬 잔여 | 273 ✦ |
+| 변환 가능 ◇ (별가루) | 254 ◇ |
+| 변환 가능 ◇ (구슬) | 54 ◇ |
+| **총 변환 가능** | **308 ◇** |
+| 마법 결정 적자 | -151 ◇ |
+| **변환 후 잔여** | **+157 ◇** ✓ |
+
+→ 변환 모루만으로 **마법 결정 적자 자체 해결** + 잉여 157 ◇ (반복 파밍 가속).
+
+### 11.3. UI
+
+```
+┌── 마법의 변환 모루 ──────────────────────────┐
+│                                                │
+│  ★ 1,243           ✦ 142          ◇ 28        │
+│                                                │
+│  ┌─── 별가루 → 마법 결정 ────────────────┐    │
+│  │  1,000 ★  →  1 ◇   [변환]              │    │
+│  │  5,000 ★  →  5 ◇   [변환]              │    │
+│  └────────────────────────────────────────┘    │
+│                                                │
+│  ┌─── 무지개 구슬 → 마법 결정 ──────────┐     │
+│  │  5 ✦   →  1 ◇   [변환]                │     │
+│  │  25 ✦  →  5 ◇   [변환]                │     │
+│  └────────────────────────────────────────┘    │
+│                                                │
+│  ⓘ 변환은 영구. 되돌릴 수 없습니다.            │
+└────────────────────────────────────────────────┘
+```
+
+### 11.4. 데이터 모델
+
+```csharp
+public static class ConversionForge
+{
+    public const int DUST_PER_CRYSTAL = 1000;
+    public const int ORB_PER_CRYSTAL = 5;
+
+    public static bool ConvertDustToCrystal(int crystalCount)
+    {
+        int dustCost = crystalCount * DUST_PER_CRYSTAL;
+        if (GameManager.Instance.StarDust < dustCost) return false;
+        GameManager.Instance.SpendStarDust(dustCost);
+        MetaProgression.Instance.AddMagicCrystals(crystalCount);
+        return true;
+    }
+
+    public static bool ConvertOrbToCrystal(int crystalCount)
+    {
+        int orbCost = crystalCount * ORB_PER_CRYSTAL;
+        if (MetaProgression.Instance.StarFragments < orbCost) return false;
+        MetaProgression.Instance.SpendStarFragments(orbCost);
+        MetaProgression.Instance.AddMagicCrystals(crystalCount);
+        return true;
+    }
+}
+```
+
+> ConversionForge 는 정적. 다락방 메뉴에서만 호출.
+
+---
+
+## 12. MVP 범위
+
+### 12.1. MVP 포함
 
 - 별가루 ★ + 무지개 구슬 ✦ + 마법 결정 ◇ 3 화폐
 - 챕터 1~10 수익 곡선 (1.08^(N-1))
@@ -482,7 +568,7 @@ public static class CurrencyService
 - 챕터 첫 클리어 보상: ✦ + ◇
 - 다락방 3 화폐 동시 노출
 
-### 11.2. MVP 제외 (후속)
+### 12.2. MVP 제외 (후속)
 
 - 강화 +21 ~ +25 (정점, 시즌 콘텐츠)
 - 장신구 직구매 (Rare/Epic — 챕터 10+ 도입)
@@ -493,7 +579,7 @@ public static class CurrencyService
 
 ---
 
-## 12. 미해결 질문
+## 13. 미해결 질문
 
 - 챕터당 1,000 적 가정의 검증 (실제 WaveManager 데이터)
 - 무지개 구슬 보상 1.10 vs 다른 곡선 (선형 vs 지수)
@@ -508,7 +594,7 @@ public static class CurrencyService
 
 ---
 
-## 13. 다음 단계
+## 14. 다음 단계
 
 1. **BalanceConfig SO 확장** — `enhanceCostByLevel`·`enhanceCrystalByLevel`·리롤·상점 가격 필드 (마법 결정 = MagicCrystal)
 2. **CurrencyService 정적 클래스** — Grant·Calc 헬퍼
@@ -520,7 +606,7 @@ public static class CurrencyService
 
 ---
 
-## 14. 출처
+## 15. 출처
 
 - [equipment_v1 §3.4](./equipment_v1.md) (강화 비용 곡선 — 본 문서가 마법 결정 추가)
 - [affix_pool_v1 §4](./affix_pool_v1.md) (주옵션 리롤 ★30)
