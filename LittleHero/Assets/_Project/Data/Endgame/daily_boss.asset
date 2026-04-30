@@ -30,7 +30,14 @@ MonoBehaviour:
     amount: 50000
     chapterScaleMul: 0
   repeatRewards: []
-  bossPool: []
+  bossPool:
+  - {fileID: 11400000, guid: 2d07675d7ab5147188618b36c14b8fc8, type: 2}
+  - {fileID: 11400000, guid: d31f5b03c1a374696834ed3a7dd7f864, type: 2}
+  - {fileID: 11400000, guid: 6c4f5d5f768304724813cd1a24db9b72, type: 2}
+  - {fileID: 11400000, guid: 10ae25cd0c03c48ab80d7bbf7fa4d090, type: 2}
+  - {fileID: 11400000, guid: 8dc81db7ce76742a9bc7938d6d9222cd, type: 2}
+  - {fileID: 11400000, guid: 5c78c82187f8f44ec875931ca6f1bc35, type: 2}
+  - {fileID: 11400000, guid: 3f04dd46a9e4a4f9ab54fdbf3f73e5ee, type: 2}
   depthScaling:
     serializedVersion: 2
     m_Curve:

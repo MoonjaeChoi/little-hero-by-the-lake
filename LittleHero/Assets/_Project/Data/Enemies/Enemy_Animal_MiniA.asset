@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52698276b7e542c588accfb9ce7b062, type: 3}
+  m_Name: Enemy_Animal_MiniA
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
+  id: Enemy_Animal_MiniA
+  displayName: "\uB3D9\uBB3C \uCE5C\uAD6C \uC218\uD638\uC790"
+  description: 
+  icon: {fileID: 0}
+  prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
+  maxHealth: 200
+  moveSpeed: 2.2
+  damage: 20
+  xpDrop: 12
+  starDustDrop: 8
+  armor: 15
+  tintColor: {r: 0.95, g: 0.78, b: 0.5, a: 1}
+  scaleMultiplier: 1.3649999
+  isMiniB: 1
+  isBoss: 0

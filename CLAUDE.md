@@ -310,14 +310,16 @@ public interface IAttackPattern
   - A1 PlayerStats 확장: 4 코어 스탯(힘/빠름/슬기/마음, raw + rounded) + 11 신규 파생(CritChance/CritDamage/Armor/DamageReduction/DustGainMultiplier/DropRateMultiplier/FinalDamageBonus/ExtraAttackTargets/ArmorPenetration/CompanionDurationBonus/AdditiveDamageBonus) + 코어 100점당 효과(stats_v1 §3.2). `SetLevel(int)` 절대 동기화 API + `ApplyLevelUp()` 래퍼.
   - A2 PlayerProgress: 싱글턴(RuntimeInitializeOnLoadMethod 자동 부트스트랩), L100 piecewise XP 곡선(L1~50 1.15^L, L51~100 1.05^(L-50)), XP 적립 핸들러(적/챕터/추억) + 시뮬 §5.1 베이스(2/20/80/N×40/40), L51+ 둔화(HP+5·공격력+0·부수 0), 사망 시 XP 후퇴 없음, SaveData.level/xp 영구
 - **Enemies**: `EnemyController` (외형 + A4 챕터 곱셈 캐시: MaxHealth/AttackDamage), `EnemyAI`, `EnemySpawner` (A4+C9: ActiveChapter→SelectedChapter→1f 우선순위로 enemyStatMultiplier 자동 적용. ChapterRunner 가 Start 에서 `SetActiveChapter` 호출하여 인스펙터 직접 챕터에서도 곱셈 작동)
-- **Waves**: `WaveManager` (보스 플레이어 기준 spawn), `ChapterRunner`
+- **Waves**: `WaveManager` (보스 플레이어 기준 spawn), `ChapterRunner`, `InfiniteTowerRunner`(F6)
+  - F6 InfiniteTowerRunner: 무제한 깊이, 깊이↑마다 적 스탯 곱셈 누적(`baseStatMultiplier × depthScaling^(depth-1)`, 기본 25.55 × 1.05^d). 미니보스/보스 주기(5/10층). 가상 ChapterData 를 매 깊이 spawner.SetActiveChapter 로 주입. 사망 시 EndgameResetService.RecordInfiniteDepth 영구 저장.
 - **Equipment**: `IAttackPattern`(C8 갱신), 7종 패턴 (`ProjectileAttack`, `AuraAttack`, `OrbitAttack`, `RainAttack`, `TrailAttack`, `PulseAttack`, `SummonAttack`), `AttackPatternUtil`(C8), `OrbitOrb`, `TrailField`, `PulseVisual`, `EquipmentManager`, `TestEquip`, `AffixRoller`(C1), `EnhancementService`(C3), `EffectResolver`(C4), `MythicMileageService`(C7)
   - C7 MythicMileageService: 정적 신화 옵션 발현. `TryRoll(instance, pool, rng)` → 마일리지 +1, p = `0.005 + effective/200`(클램프 1.0), 통과 시 슬롯 매칭 신화 1종 추출 → `instance.mythicId` 설정 + 마일리지 0 리셋. 발현 보장 `ForceRoll`(별빛 ⋆ 300, 마일리지 50+ 한정). `IsUnlocked()` = `MetaProgression.AllMemoriesDiscovered()` — 추억 4종 미수집 시 false. effectiveMileage = `instance.history.mileage + lookup(SaveData.mythicMileageBonus[instanceId])`. `AddMileageBonus(instanceId, amount)` — 별빛 ⋆ 100/+20 monetization §4.4 누적용. C2 ItemDropService.Initialize 가 mythics 인자를 받아 굴림마다 호출.
   - C8 IAttackPattern 갱신: `Initialize` 시그니처에 `PlayerStats stats` 추가. 7개 패턴 모두 `_stats` 보관 + `AttackPatternUtil.EffectiveInterval(baseInterval, stats)`(공격 속도) / `EffectiveCount(baseCount, stats)`(추가 타겟) 사용. EquipmentManager 가 `_stats` 주입. AttackSpeed=1, ExtraAttackTargets=0 기본값에서 기존 동작 보존.
   - C1 AffixRoller: 정적 서비스. `RollMain`(슬롯 풀 6:3:1) + `RollSub`(글로벌 풀 globalWeight 합산) + `RollMainSet/RollSubSet` 일괄 + `RerollMain/RerollSub`(잠금 안 한 라인만 갱신, 끝나면 OnAffixRolled 발행) + `CalcRerollCostMain/Sub`(BalanceConfig.rerollCostMain/Sub × (1 + lockedCount × lockMultiplier)). RNG 주입형(System.Random) — 테스트성 ↑.
   - C4 EffectResolver: `Resolve(equipped, templates, mythics)` → `ResolvedEquipmentBonus`(코어 ADD 4 + 전투 ADD/MUL 분리 + 메이플 채널 + 메타·드랍 + ActiveMythicIds 리스트). 각 인스턴스의 baseStats(StatModifiers) → 주옵션 3 + 부옵션 3 → 신화 ID 수집. AffixLine.targetName 을 StatTarget enum 으로 파싱 후 채널 가산. AllStats 는 4 코어 동시. 세트 효과 단계는 생략(폐기). 신화 옵션 발동(HP<30% 등 조건)은 게임플레이 측 책임 — 본 결과의 ActiveMythicIds 만 노출. PlayerStats 와의 통합 결합은 후속(D5/D8 카드 UI 작업과 함께).
   - C3 EnhancementService: 정적 강화 +0~+25. `TryEnhance(instance, config, rng)` → `EnhanceResult{outcome, newLevel, dustCost, crystalCost, wasPityTriggered, rolledChance}`. 성공률 = `+0~+15: 1.0` / `+16~+25: 0.50 × 0.85^(L-16) + softPity (failCount≥5: +0.05/회)` / `failCount≥20: 1.0`(하드 천장). 비용은 시도 시점에 차감(실패해도 환불 없음, dust↗crystal 순 pre-check). 상수: `MAX_ENHANCE_LEVEL=25 / DETERMINISTIC_LEVEL_CAP=16 / HARD_PITY_FAILS=20`. UI(D6)는 `CalcSuccessRate(L, fc)` 로 표기.
-- **Combat**: `DamageSystem`, `Projectile`, `DamageCalculator`(A3: 3 버킷 + 방어 관통, 평균/RNG 두 모드)
+- **Combat**: `DamageSystem`(F8 신화 곱셈 통합), `Projectile`, `DamageCalculator`(A3: 3 버킷 + 방어 관통, 평균/RNG 두 모드), `MythicEffectRuntime`(F8)
+  - F8 MythicEffectRuntime: 4 신화 효과 런타임 곱셈. **mythic_dad_compass** 보스 ×1.20 / **mythic_dad_lullaby** HP<30% 시 받는 데미지 ×0.50 / **mythic_dad_courage** 적 HP<15% 일 때 ×1.50 / **mythic_dad_promise** Trail ×2 + 무료 리롤 1회. `HasMythic(id)` 가 SaveData.equipmentInstances 의 isEquipped+mythicId 인스턴스 검사. DamageSystem.DealDamage 가 자동 호출.
 
 ### Meta / Hub
 - `Meta/ShopController.cs` — 6칸 롤/구매/새로고침
@@ -455,6 +457,19 @@ public interface IAttackPattern
   - 모든 패널은 Legacy `UnityEngine.UI.Text` 사용 (CLAUDE.md §12 규칙). 씬 wiring(Canvas hierarchy + 프리팹 [SerializeField] 연결)은 Unity Editor 작업으로 후속(ProjectValidator 룰 추가 권장).
   - **D9 별빛 상점은 Phase E (Unity IAP) 후 진행** — 현재 별빛 ⋆ 적립 경로(챕터 첫 클리어)는 동작하지만 소비 UI 미구현.
   - **MVP UI 8/8 + Phase 2 UI 3/4 완료. Phase D 11/12.**
+- 2026-05-01: **Phase F (F1~F8) 8/8 완료** — 콘텐츠 스캐폴드 + 런타임 hook.
+  - **F1+F2+F3 챕터 4~35 적 풀 와이어링**: `Editor/PhaseFContentSeed.cs` 메뉴(`Tools > LittleHero > Seed Phase F Content`)로 5 카테고리(MetaMemory/Nature/Animal/Civilization/Fantasy) × 6 archetype(레귤러 3 + 미니 2 + 보스 1) = 30 generic enemy SO 생성. 35 ChapterData V2 의 enemyPool/miniBossPool/bossEnemy 자동 매핑(카테고리별). archetype 베이스 스탯 1세트만 유지 — 챕터 곱셈은 EnemySpawner(C9) 가 자동 적용. **실 콘텐츠(고유 적 이름·아트·BGM·정밀 밸런싱)는 후속 디자인 패스**.
+  - **F4 일일 보스 7종**: 7 enemy SO(`Enemy_DailyBoss_00~06`, 요일 라벨), `daily_boss.asset.bossPool` 와이어링. 요일별 회전 로직은 보스 처치 매니저에서 `DateTime.Now.DayOfWeek` 로 인덱스.
+  - **F5 주간 보스 4종**: 4 enemy SO(`Enemy_WeeklyBoss_00~03`, 4주 사이클), `weekly_boss.asset.bossPool` 와이어링. 신화 발현 보장은 보스 처치 매니저가 `MythicMileageService.ForceRoll` 호출 (후속 wiring).
+  - **F6 InfiniteTowerRunner**: `Gameplay/Waves/InfiniteTowerRunner.cs` — 무제한 깊이, 가상 ChapterData 동적 생성·spawner 주입. 사망 시 `EndgameResetService.RecordInfiniteDepth` 영구 저장. 별도 Scene 또는 Chapter.unity 의 ChapterRunner 교체로 사용.
+  - **F7 고난도 챕터 36~50**: CH 21~35 클론 15종(`CH_36~50_Hardcore_*.asset`), enemyStatMultiplier × 2.0, starFragmentReward × 2. `hardcoreChaptersCleared[15]` SaveData 비트 (C6 도입분)와 연동.
+  - **F8 신화 옵션 발현 효과**: `Gameplay/Combat/MythicEffectRuntime.cs` 신설. 4 신화(나침반/자장가/용기/약속) 의 조건부 곱셈을 정적 헬퍼로 노출. **DamageSystem.DealDamage/DealDamageToPlayer** 가 자동 호출 — 베이스 데미지 × `CalcOutgoingDamageMultiplier(target)` / × `CalcIncomingDamageMultiplier(player)`. `mythic_dad_promise` 의 Trail 길이 ×2 와 무료 리롤은 호출자(TrailAttack/EquipmentCardPanel) 별도 호출.
+  - **알려진 후속 작업**:
+    - F1~F3 placeholder 적 → 디자인 패스에서 챕터별 고유 명·외형·밸런싱
+    - F4 보스 처치 매니저(요일 인덱스 → bossPool[idx] spawn)
+    - F5 보스 처치 매니저 + 신화 보장 ForceRoll
+    - F6 InfiniteTowerScene 분리 (현재는 Chapter.unity 에서 컴포넌트 교체로 사용)
+    - F8 mythic_dad_promise 의 무료 리롤 wiring (D5 EquipmentCardPanel)
 - 2026-05-01: **Phase E (E1~E5) 5/5 + D9 완료** — 수익화 인프라 일괄.
   - **E1** Unity IAP 패키지 (`com.unity.purchasing` 5.0.0) manifest.json 추가. 패키지 캐시 자동 fetch 확인 (Library/PackageCache).
   - **E2** IAPService — IDetailedStoreListener 구현, 6 productId(STARLIGHT_100/500/1100/3500/12000 + SEASON_PASS) 등록. `Bootstrap`/`InitiatePurchase`/`GetLocalizedPrice`. 구매 완료 시 `ApplyGrant` 가 별빛 ⋆ 적립 or `SeasonPassService.GrantPremium`. 이벤트 시그니처 충돌 회피로 `OnReady`/`OnPurchaseSucceededEvent`/`OnPurchaseFailedEvent` 명명. App Store Connect / Google Play Console 의 productId 등록은 출시 전 후속.

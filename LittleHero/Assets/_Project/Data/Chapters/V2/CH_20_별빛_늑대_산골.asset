@@ -20,7 +20,12 @@ MonoBehaviour:
   enemyStatMultiplier: 6.1159115
   totalWaves: 20
   waveDuration: 45
-  enemyPool: []
-  miniBossPool: []
-  bossEnemy: {fileID: 0}
+  enemyPool:
+  - {fileID: 11400000, guid: 51ba45188d72b49b78e9dccad77367ad, type: 2}
+  - {fileID: 11400000, guid: 021ac994812ec4500a6a5aa071753b75, type: 2}
+  - {fileID: 11400000, guid: 486bbb394365c43ceb29b5821a37e1e5, type: 2}
+  miniBossPool:
+  - {fileID: 11400000, guid: 4211ceca28589402fbf568463786d270, type: 2}
+  - {fileID: 11400000, guid: 900e278d64800480185cd6601bd5eced, type: 2}
+  bossEnemy: {fileID: 11400000, guid: 0c56344ebba484f8ca145a7c260cee7f, type: 2}
   starFragmentReward: 31

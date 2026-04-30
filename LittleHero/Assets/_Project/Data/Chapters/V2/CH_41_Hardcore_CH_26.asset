@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894aa28f53f4e4dc68789942632dafa5, type: 3}
+  m_Name: CH_41_Hardcore_CH_26
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ChapterData
+  id: CH_41_Hardcore_CH_26
+  displayName: "\uC5B4\uB460\uC758 \uC74C\uC545 \uB3D9\uAD74"
+  description: "\uACE0\uB09C\uB3C4 \uCC55\uD130 \u2014 \uC74C\uC545 \uB3D9\uAD74
+    \uC758 \uC5B4\uB460 \uBCC0\uD615"
+  coverArt: {fileID: 0}
+  chapterNumber: 41
+  enemyStatMultiplier: 21.669424
+  totalWaves: 20
+  waveDuration: 45
+  enemyPool:
+  - {fileID: 11400000, guid: 5bb42307ca8b649b8a329e426d32b5a5, type: 2}
+  - {fileID: 11400000, guid: 22e1559b8ff964592874eb3bc04c2420, type: 2}
+  - {fileID: 11400000, guid: 8f1b052c2b6a04704a31df7fce02b392, type: 2}
+  miniBossPool:
+  - {fileID: 11400000, guid: 551cfb5f5d78f4703a9471fb6da6484a, type: 2}
+  - {fileID: 11400000, guid: a9e348fbfc92247b7821984e33ee3373, type: 2}
+  bossEnemy: {fileID: 11400000, guid: 73d7066791dbf490aa708015fd33c4d2, type: 2}
+  starFragmentReward: 108
