@@ -35,6 +35,13 @@
 
 - [`direction_v2.md`](./direction_v2.md) — **2026-04-30 사용자 결정**. 4대 방향성: 모바일 전용 / 캐릭터 XP 시스템 / 캐릭터·장비 자부심 / 챕터 진행+동조 성장. 영향 받은 파트는 ✦ 표기.
 
+## Little Hero 적용 (구현 직접 활용 문서)
+
+> Jackpot ARPG 설계서를 Little Hero 게임에 통합한 적용 문서들.
+
+- [`little_hero/README.md`](./little_hero/README.md) — Little Hero 적용 인덱스 + 톤 매핑 + 기존 시스템 결합 방안
+- [`little_hero/equipment_v1.md`](./little_hero/equipment_v1.md) — 장비 시스템 v1 초안 (7슬롯 × 5층 아키텍처 + 16종 매핑 + 강화·옵션·세트·신화)
+
 ## 파트 인덱스
 
 > ✦ = `direction_v2.md` 반영 갱신 (2026-04-30)
