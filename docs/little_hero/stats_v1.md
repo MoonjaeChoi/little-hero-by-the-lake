@@ -23,6 +23,8 @@
 
 ### 파생 스탯 (코어 + 장비 + 메타 업그레이드 합산)
 
+> ✦ 메이플 키우기 옵션 완전 채용. 명중·회피 제거. 보스/일몹 데미지 분리 제거.
+
 | 스탯 | 단위 | 주 채널 |
 |---|---|---|
 | 최대 HP | 절대값 | 마음·장비·메타 |
@@ -31,54 +33,70 @@
 | 이동 속도 | 절대값 | 빠름·장비 |
 | 사거리 | 절대값 | 슬기·장비 |
 | 크리티컬 확률 | % | 슬기·장비 |
-| 크리티컬 피해 | 배수 | 장비 (+자체 100% 시작) |
+| 크리티컬 피해 | 배수 | 장갑 고유 (+자체 100% 시작) |
+| **최종 데미지** ✦ | % (곱) | 망토·하의·안경 고유 (메이플 키우기 핵심 채널) |
+| **스킬 레벨** ✦ | 절대값 | 목걸이·반지 고유 (모든 패턴의 데미지 배수) |
+| **스킬 쿨감** ✦ | % | 모자 고유 (attackInterval 감소) |
+| **공격 대상 수** ✦ | 절대값 | 상의 고유 (Projectile count 등) |
+| **방어 관통력** ✦ | % | 무기·어깨 (적 방어력 무시) |
+| **버프 지속시간** ✦ | % | (벨트 슬롯 없음, 다른 슬롯에 분산) |
 | 방어력 | 절대값 | 힘·장비 |
 | 데미지 감소 | % | 장비·메타 |
 | xp 획득량 | 배수 | 마음·장비 |
 | 별가루 획득량 | 배수 | 장비·메타 |
+| 동행 지속시간 ✦ | % | 신발·펫 (Summon/Orbit 패턴) |
+| 드랍률 | % | 펫 |
 
-### 데미지 버킷 (Diablo 4 + 메이플 키우기 영향)
+### 데미지 버킷 ✦ 메이플 키우기 옵션 완전 채용
 
-> Diablo 4의 5 버킷 모델은 키즈에 복잡 → **3 버킷으로 단순화**. 메이플 키우기의 "데미지% 합산" 패턴 차용.
+> Diablo 4의 5 버킷 모델은 키즈에 복잡 → **3 버킷으로 단순화**. 보스/일몹 분리는 폐기, 대신 **메이플 키우기의 "최종 데미지%"** 채널 채용.
 
 ```
 최종 데미지 = 공격력
-            × (1 + 합산_데미지%)              ← 버킷 1
-            × (1 + 보스_또는_일몹_데미지%)    ← 버킷 2
-            × (1 + 크리피해 × 크리확률)        ← 버킷 3
+            × (1 + 합산_데미지%)              ← 버킷 1 (additive)
+            × (1 + 최종_데미지%)              ← 버킷 2 (메이플 키우기 핵심)
+            × (1 + 크리피해 × 크리확률)        ← 버킷 3 (크리티컬)
 ```
 
 각 버킷 안의 옵션은 **합산**(additive), 버킷끼리는 **곱셈**(multiplicative).
 
 #### 버킷별 채널 예시
 
-**버킷 1 (합산 데미지%)** — 모든 옵션이 더해진 후 1번 곱:
+**버킷 1 (합산 데미지%)** — 옵션 라인·신화·메타 업그레이드의 일반 + 데미지%:
 - 옵션 라인 "공격력 +5%"
 - 신화 옵션 "공격력 +20%"
 - 메타 업그레이드 "공격력 강화 Lv 5 = +5"
-- 코어 스탯 힘 보너스
+- 코어 스탯 힘 보너스 (코어 → 공격력 가산)
+- 무기·반지 등의 일반 데미지%
 
-**버킷 2 (보스/일반 데미지%)** — 적 종류에 따라 곱:
-- 옵션 라인 "보스에게 +10%"
-- 메인 보스 vs 일반 적 별도 적용 (메이플 키우기 모델)
+**버킷 2 (최종 데미지%)** — 메이플 키우기의 가장 강력한 채널:
+- **망토** 고유: "최종 데미지 +%" (Epic 이상)
+- **하의** 고유: "최종 데미지 +%" (Epic 이상)
+- **안경** 고유: "최종 데미지 +%" (Epic 이상, 메이플 키우기 얼굴장식 매칭)
+- **반지/목걸이** 고유: "스킬 레벨 +1" → 패턴 데미지 배수로 변환
+- 신화 옵션의 "최종 데미지" 류
+- 두 번째 곱연산 채널이 빌드 차별화의 핵심
 
 **버킷 3 (크리티컬)** — 자체 곱셈:
-- 크리피해 1.5x (베이스) + 추가 % = 총 크리피해 배수
-- 크리확률 N%
-- 합쳐서 `(1 + crit_dmg × crit_chance)`
+- 크리피해 1.5x (베이스) + **장갑** 고유 "크리티컬 데미지" 추가 %
+- 크리확률 N% (장갑·반지 옵션)
+- `(1 + crit_dmg × crit_chance)`
 
-#### Diablo 4 vs Little Hero 단순화
+#### Diablo 4 vs 메이플 키우기 vs Little Hero
 
-| 채널 | Diablo 4 | Little Hero |
-|---|---|---|
-| Additive Damage | ✓ 1 버킷 | ✓ 버킷 1 |
-| Multiplicative Damage | ✓ 1 버킷 (xValue%) | ❌ 폐기 — 키즈 복잡 |
-| Vulnerable | ✓ 1 버킷 | ❌ 폐기 — 상태 효과 미도입 |
-| Critical Damage | ✓ 1 버킷 | ✓ 버킷 3 |
-| Attribute Bonus | ✓ 1 버킷 | 버킷 1에 흡수 (코어 스탯 → +Attack/HP 가산) |
-| Boss/일몹 분리 | ❌ | ✓ 버킷 2 (메이플 키우기 모델) |
+| 채널 | Diablo 4 | 메이플 키우기 | Little Hero |
+|---|---|---|---|
+| Additive Damage | ✓ 1 버킷 | ✓ "데미지%" 합산 | ✓ 버킷 1 |
+| Multiplicative Damage | ✓ 1 버킷 | ✓ "최종 데미지%" 별도 곱 | ✓ 버킷 2 (메이플 키우기 모델 채용) |
+| Vulnerable | ✓ 1 버킷 | ❌ | ❌ 폐기 |
+| Critical Damage | ✓ 1 버킷 | ✓ (크리피해×크확) | ✓ 버킷 3 |
+| Attribute Bonus | ✓ 1 버킷 | ❌ | 버킷 1에 흡수 |
+| Boss/일몹 분리 | ❌ | ✓ (보공·일몹뎀) | ❌ ✦ **제거 (사용자 결정)** |
+| 명중/회피 | ❌ | ✓ (PvP·아레나) | ❌ ✦ **제거 (사용자 결정)** |
+| 스킬 레벨 | ❌ | ✓ (스킬계수 곱) | ✓ 버킷 2에 흡수 (목걸이/반지 고유) |
+| 스킬 쿨감 | ❌ | ✓ (모자 고유) | ✓ 버킷 외 — attackInterval 직접 감소 |
 
-→ 결과: **3 버킷, 키즈가 직관적으로 이해 가능**. 후속 패치에서 버킷 1개 추가 (예: 원소 데미지)는 유연.
+→ 결과: **3 버킷, 메이플 키우기의 "최종 데미지%" 채널이 빌드 시너지의 핵심**. 망토+하의+안경 트리오의 시너지가 자연스럽게 나옴 (세트 효과 없이도).
 
 ---
 
@@ -152,43 +170,65 @@
 
 ---
 
-## 4. 장비 부위별 고유 옵션 매트릭스 (메이플 키우기 차용)
+## 4. 장비 부위별 고유 옵션 매트릭스 ✦ 메이플 키우기 완전 채용
 
-> 같은 슬롯이라도 **권장 옵션이 다름**. 각 슬롯의 정체성을 강화. 옵션 라인 3개 중 일부는 슬롯 고유, 일부는 자유.
+> 메이플 키우기의 부위별 고유옵션을 그대로 매핑. **명중·회피 제거**, **보스데미지/일몹데미지 제거**. Little Hero 12 슬롯에 맞춰 어깨/벨트는 폐기, 펫 슬롯은 신규.
 
-### 주 슬롯 7개
+### 주 슬롯 7개 — 메이플 키우기 매칭
 
-| 슬롯 | 1차 옵션 (베이스 스탯 강조) | 2차 옵션 (자주 등장) | 3차 옵션 (가끔) |
-|---|---|---|---|
-| 모자 | 사거리 | 슬기 +N | 시야 |
-| 상의 | 최대 HP | 마음 +N | 동시 공격 수 |
-| 하의 | 방어력 | 마음 +N | 이동 속도 |
-| 망토 | 회피 % | 데미지 감소 % | 빠름 +N |
-| 장갑 | 공격 속도 | 크리티컬 확률 | 빠름 +N |
-| 무기 | 공격력 | 크리티컬 피해 | 힘 +N |
-| 신발 | 이동 속도 | 빠름 +N | 자취 효과 |
+| Little Hero 슬롯 | 메이플 키우기 매칭 | **고유 옵션 (1차)** | 2차 옵션 | 3차 옵션 |
+|---|---|---|---|---|
+| 모자 | 모자(투구) | **스킬 쿨감 %** | 슬기 +N | 사거리 |
+| 상의 | 상의 | **공격 대상 수 +N** | 마음 +N | 최대 HP +% |
+| 하의 | 하의 | **최종 데미지 +%** ★ | 마음 +N | 방어력 |
+| 망토 | 망토 | **최종 데미지 +%** ★ | 데미지 감소 % | 빠름 +N |
+| 장갑 | 장갑 | **크리티컬 피해 +%** ★ | 크리티컬 확률 | 빠름 +N |
+| 무기 | 무기 | **공격력 +%** | 힘 +N | 방어 관통력 % |
+| 신발 | 신발 | **이동 속도 / 동행 지속시간 +%** | 빠름 +N | 자취 효과 |
 
-### 장신구 슬롯 5개
+★ = 메이플 키우기 우선 큐브 4부위 (망토·하의·장갑·반지) 중 3개. 스펙업 핵심 부위.
 
-| 슬롯 | 1차 옵션 | 2차 옵션 | 3차 옵션 |
-|---|---|---|---|
-| 귀걸이 | 마음 +N | 최대 HP +% | 자원 회복 |
-| 안경 | 명중 (시야) | 슬기 +N | 보스 표시 |
-| 목걸이 | 데미지 % | 모든 스탯 +N | xp 획득 +% |
-| 반지 | 모든 스탯 +% | 크리티컬 확률 | 별가루 획득 +% |
-| 펫 | 자동 회복 | 드랍률 +% | 동행 데미지 |
+### 장신구 슬롯 5개 — 메이플 키우기 매칭
+
+| Little Hero 슬롯 | 메이플 키우기 매칭 | **고유 옵션 (1차)** | 2차 옵션 | 3차 옵션 |
+|---|---|---|---|---|
+| 귀걸이 | 귀걸이 | **최대 HP +%** | 마음 +N | 자원 회복 |
+| 안경 | 얼굴장식 | **최종 데미지 +%** ★ | 슬기 +N | 시야 확장 |
+| 목걸이 | 펜던트 | **스킬 레벨 +1** ★ | 데미지 % | 모든 스탯 +N |
+| 반지 | 반지 | **스킬 레벨 +1** ★ | 모든 스탯 +N | 크리티컬 확률 |
+| 펫 | 동료/펫 | **동행 지속시간 +%** | 드랍률 +% | 자동 회복 |
+
+★ = 메이플 키우기 우선 큐브 4부위(망토·하의·장갑·**반지**) 중 1개 + 펜던트 메인 옵션 + 얼굴장식 최종 데미지.
+
+### 메이플 키우기 옵션 → Little Hero 메커닉 매핑
+
+| 메이플 키우기 옵션 | Little Hero 적용 |
+|---|---|
+| **최종 데미지 +%** | 데미지 버킷 2 곱연산 (망토·하의·안경) |
+| **크리티컬 피해 +%** | 버킷 3에 가산 (장갑) |
+| **스킬 레벨 +1** | 모든 `IAttackPattern.attackConfig.damage` × (1 + 0.1 × skillLevel) |
+| **스킬 쿨감 %** | `IAttackPattern.attackConfig.attackInterval` × (1 - reduction) |
+| **공격 대상 수 +N** | `ProjectileAttack.count` 또는 `OrbitAttack.count` 가산 |
+| **방어 관통력 %** | 적 방어력에 (1 - penetration) 적용 |
+| **동행 지속시간 +%** | `SummonAttack`/`OrbitAttack` 동료의 lifetime 가산 (※ Little Hero는 영구라 미적용 가능) |
+| **드랍률 +%** | 적 처치 시 별가루·xp·장신구 드랍 배수 |
+| 보스 데미지 +% | ❌ **제거 (사용자 결정)** |
+| 일몹 데미지 +% | ❌ **제거 (사용자 결정)** |
+| 명중·회피 | ❌ **제거 (사용자 결정)** |
 
 ### 옵션 풀 등급별 분포 (3-티어 정합)
 
 장신구 3-티어와 정합 (chapter_structure_v2 §4):
 
-| 등급 | 옵션 라인 수치 범위 |
-|---|---|
-| Common (티어 1, 챕터 6~10) | 1차: 작은 값 / 2차·3차: 미약 |
-| Uncommon (티어 2, 16~20) | 1차: 중간 / 2차: 작은 / 3차: 미약 |
-| Rare (티어 2~3) | 1차: 큰 / 2차: 중간 / 3차: 작은 |
-| Epic (티어 3, 26~30) | 1차: 매우 큰 / 2차: 큰 / 3차: 중간 |
-| Legendary (시즌·신화 옵션) | 모든 라인 큰 + 신화 옵션 발현 |
+| 등급 | 1차 옵션 | 2차 옵션 | 3차 옵션 | 비고 |
+|---|---|---|---|---|
+| Common (티어 1, 챕터 6~10) | 작은 값 (예: 최종뎀 +1%) | 미약 | 미약 | 슬롯 첫 해방 |
+| Uncommon (티어 2, 16~20) | 중간 (최종뎀 +3%) | 작은 | 미약 | |
+| Rare (티어 2~3) | 큰 (최종뎀 +5%) | 중간 | 작은 | |
+| Epic (티어 3, 26~30) | 매우 큰 (최종뎀 +8%) | 큰 | 중간 | 메이플 키우기 "에픽 이상부터 핵심 고유옵션" 패턴 |
+| Legendary | 정점 (최종뎀 +12%) + 신화 옵션 발현 | 큰 | 큰 | |
+
+> 메이플 키우기 패턴: **에픽 이상부터 고유옵션의 위력이 비약적**으로 상승. 1차 옵션은 등급에 따라 거의 지수적으로 증가.
 
 ---
 
@@ -214,7 +254,7 @@
 
 ## 6. 데이터 모델
 
-### `PlayerStats` 확장
+### `PlayerStats` 확장 ✦ 메이플 키우기 옵션 반영
 
 ```csharp
 public class PlayerStats : MonoBehaviour
@@ -233,17 +273,25 @@ public class PlayerStats : MonoBehaviour
     public int Wisdom { get; private set; }
     public int Spirit { get; private set; }
 
-    // ✦ 신규 — 파생 스탯
+    // ✦ 신규 — 파생 스탯 (메이플 키우기 채용)
     public float CritChance { get; private set; }      // 0.0 ~ 1.0
     public float CritDamage { get; private set; }      // 1.5 = 베이스
     public float Armor { get; private set; }
     public float DamageReduction { get; private set; } // 0.0 ~ 1.0
     public float DustGainMultiplier { get; private set; }
+    public float DropRateMultiplier { get; private set; }     // 펫 고유
+
+    // ✦ 메이플 키우기 핵심 채널
+    public float FinalDamageBonus { get; private set; }       // 망토·하의·안경 (버킷 2)
+    public int   SkillLevelBonus { get; private set; }        // 목걸이·반지 (스킬 데미지 배수)
+    public float SkillCooldownReduction { get; private set; } // 모자 (attackInterval × (1-CDR))
+    public int   ExtraAttackTargets { get; private set; }     // 상의 (Projectile.count 가산)
+    public float ArmorPenetration { get; private set; }       // 무기 (적 방어력 무시)
+    public float CompanionDurationBonus { get; private set; } // 신발·펫 (Summon/Orbit lifetime)
 
     // 데미지 버킷 % 합산값
     public float AdditiveDamageBonus { get; private set; }    // 버킷 1
-    public float BossDamageBonus { get; private set; }        // 버킷 2 (보스 시)
-    public float NormalEnemyDamageBonus { get; private set; } // 버킷 2 (일반 시)
+    // BossDamageBonus, NormalEnemyDamageBonus 폐기 (사용자 결정)
 }
 ```
 
@@ -252,23 +300,45 @@ public class PlayerStats : MonoBehaviour
 ```csharp
 public static class DamageCalculator
 {
-    public static float CalculateDamage(PlayerStats stats, EnemyController target)
+    public static float CalculateDamage(PlayerStats stats, EnemyController target, AttackPatternConfig pattern)
     {
-        float baseAttack = stats.AttackDamage;
+        // 베이스 = 공격력 × (1 + skill_level × 0.1) — 스킬 레벨 곱
+        float baseAttack = stats.AttackDamage * (1f + stats.SkillLevelBonus * 0.1f);
 
         // 버킷 1: 합산 데미지%
         float bucket1 = 1f + stats.AdditiveDamageBonus;
 
-        // 버킷 2: 보스/일반 분리
-        float bucket2 = 1f + (target.Data.isBoss || target.Data.isMiniB
-            ? stats.BossDamageBonus
-            : stats.NormalEnemyDamageBonus);
+        // 버킷 2: 최종 데미지% (메이플 키우기 핵심)
+        float bucket2 = 1f + stats.FinalDamageBonus;
 
         // 버킷 3: 크리티컬 (확률 × 피해 곱셈)
         float bucket3 = 1f + stats.CritChance * (stats.CritDamage - 1f);
-        // 또는 실제 발생 시: bucket3_actual = isCrit ? stats.CritDamage : 1f
 
-        return baseAttack * bucket1 * bucket2 * bucket3;
+        float dmg = baseAttack * bucket1 * bucket2 * bucket3;
+
+        // 적 방어력 적용 (방어 관통력 반영)
+        float effectiveArmor = target.Data.armor * (1f - stats.ArmorPenetration);
+        dmg = dmg / (1f + effectiveArmor / 100f);
+
+        return dmg;
+    }
+}
+```
+
+### 패턴 연동 (스킬 쿨감·공격 대상 수)
+
+```csharp
+// IAttackPattern 구현 시 PlayerStats 참조
+public class ProjectileAttack : IAttackPattern
+{
+    public void Tick(float deltaTime)
+    {
+        float interval = _config.attackInterval * (1f - _stats.SkillCooldownReduction);
+        _timer += deltaTime;
+        if (_timer < interval) return;
+        // ...
+        int count = _config.count + _stats.ExtraAttackTargets;  // 상의 고유 옵션 가산
+        // ...
     }
 }
 ```
@@ -306,10 +376,15 @@ public class CharacterData : ScriptableObject {
 │   공격력         145    (+45 장비)         │
 │   공격 속도      1.2     (+20%)            │
 │   크리티컬       12%  ×  165%              │
+│   최종 데미지    +18%   (망토·하의·안경)   │
+│   스킬 레벨      Lv 3   (+30% 패턴 데미지) │
+│   스킬 쿨감      8%     (모자)             │
+│   공격 대상 수   2       (기본+1, 상의)    │
 │   이동 속도      5.5                       │
 │   방어력         24                        │
+│   방어 관통력    12%    (무기)             │
 │                                            │
-│   별가루 획득 +10%   xp 획득 +5%          │
+│   별가루 획득 +10%   xp 획득 +5%   드랍률 +20% │
 └────────────────────────────────────────────┘
 ```
 
@@ -343,9 +418,15 @@ public class CharacterData : ScriptableObject {
 - 코어 스탯 100점당 효과 수치 (시뮬 필요)
 - 레벨업 시 코어 스탯 +1이 키즈 게임에 충분한가? (Diablo 4도 +1)
 - 옵션 라인 1차/2차/3차 비율 (예: 1차 60% / 2차 30% / 3차 10%)
-- 부위별 옵션 매트릭스의 정확한 수치
+- 등급별 1차 옵션 정확한 수치 (Common 최종뎀+1% / Epic 최종뎀+8% 등)
 - 캐릭터 클래스 보너스 비중 (1.2/0.9 가설 검증)
-- 명중·회피를 도입할지 (현재는 미도입 권장)
+- ✅ 명중·회피 → **제거 결정 (사용자)**
+- ✅ 보스/일몹 데미지 분리 → **제거 결정 (사용자)**
+- ✅ 메이플 키우기 옵션 → **완전 채용 결정 (사용자)**
+- 스킬 레벨 1당 데미지 배수 (10% 가설 — 메이플 키우기는 약 5~10%)
+- 스킬 쿨감 상한 (메이플 키우기는 30~50% 권장)
+- 공격 대상 수 상한 (모든 적 동시 공격 방지)
+- 동행 지속시간 — Little Hero는 영구 동행이라 의미 약함 (펫 이펙트 지속시간으로 대체?)
 - 상태 효과 도입 가능성 (비폭력 톤 호환)
 
 ---
@@ -379,3 +460,6 @@ public class CharacterData : ScriptableObject {
 - [(분석) 스탯 효율 분석 - 메이플 키우기 마이너 갤러리](https://m.dcinside.com/board/maplerpg/138389)
 - [메이플 키우기 잠재능력 부위별 고유옵션 - 게임 팁 저장소](https://game.savetip.co.kr/%EB%A9%94%EC%9D%B4%ED%94%8C-%ED%82%A4%EC%9A%B0%EA%B8%B0-%EC%9E%A0%EC%9E%AC%EB%8A%A5%EB%A0%A5-%EB%B6%80%EC%9C%84%EB%B3%84-%EA%B3%A0%EC%9C%A0%EC%98%B5%EC%85%98-%EC%99%84%EB%B2%BD-%EA%B3%B5%EB%9E%B5/)
 - [전투력과 특수 스탯 - 메이플스토리 가이드](https://maplestory.nexon.com/Guide/N23GameInformation/377406)
+- [잠재능력/옵션 목록 - 나무위키](https://namu.wiki/w/%EC%9E%A0%EC%9E%AC%EB%8A%A5%EB%A0%A5/%EC%98%B5%EC%85%98%20%EB%AA%A9%EB%A1%9D)
+- [잠재 부위별 고유옵션 정보 - 메이플 키우기 마이너 갤러리](https://gall.dcinside.com/mgallery/board/view/?id=maplerpg&no=26893)
+- [어떤장비가 더 쌔지는지 구별법이랑 데미지관련팁 - 메이플 키우기 갤러리](https://m.dcinside.com/board/maplerpg/47961)
