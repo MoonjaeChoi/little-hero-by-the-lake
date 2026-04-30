@@ -1,8 +1,10 @@
-# Little Hero — L4 옵션 풀 카탈로그 v1
+# Little Hero — L4 주옵션 풀 카탈로그 v1
 
-> [← Little Hero 인덱스](./README.md) · [장비 v1](./equipment_v1.md) · [스탯 v1](./stats_v1.md) · [챕터 v2](./chapter_structure_v2.md)
+> [← Little Hero 인덱스](./README.md) · [장비 v1](./equipment_v1.md) · [스탯 v1](./stats_v1.md) · [챕터 v2](./chapter_structure_v2.md) · [드랍 v1](./item_drop_v1.md)
 >
-> 5층 아이템 아키텍처의 **Layer 4 (옵션 라인 × 3)** 정의. 슬롯별 affix 풀 + 등급별 정확한 수치 + 굴림/리롤 규칙.
+> 5층 아이템 아키텍처의 **Layer 4 주옵션 (주옵션 3줄)** 정의. 슬롯별 affix 풀 + 등급별 정확한 수치 + 굴림/리롤 규칙.
+>
+> ✦ **부옵션 3줄은 별도 문서** ([item_drop_v1 §3](./item_drop_v1.md)) — 글로벌 공용 풀, 본 문서 시점 이후 신설.
 
 ---
 
