@@ -29,6 +29,7 @@ namespace LittleHero.EditorTools
             ValidateShopPool(issues);
             ValidateChapters(issues);
             ValidateCharacters(issues);
+            ValidateMemoryPool(issues);
             ValidateActiveScene(issues);
             Print(issues);
         }
@@ -114,6 +115,28 @@ namespace LittleHero.EditorTools
                 if (c.maxHealth <= 0)    issues.Add(new Issue(Severity.Error,   "CharacterData", $"{path}: maxHealth={c.maxHealth}"));
                 if (c.moveSpeed <= 0)    issues.Add(new Issue(Severity.Error,   "CharacterData", $"{path}: moveSpeed={c.moveSpeed}"));
                 if (c.attackDamage <= 0) issues.Add(new Issue(Severity.Error,   "CharacterData", $"{path}: attackDamage={c.attackDamage}"));
+            }
+        }
+
+        private static void ValidateMemoryPool(List<Issue> issues)
+        {
+            string[] guids = AssetDatabase.FindAssets("t:LittleHero.MemoryPool");
+            if (guids.Length == 0) { issues.Add(new Issue(Severity.Warning, "MemoryPool", "MemoryPool 인스턴스가 없음")); return; }
+            foreach (var g in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(g);
+                var p = AssetDatabase.LoadAssetAtPath<MemoryPool>(path);
+                if (p == null || p.memories == null) continue;
+                var seenIds = new HashSet<string>();
+                for (int i = 0; i < p.memories.Length; i++)
+                {
+                    var m = p.memories[i];
+                    if (m == null) { issues.Add(new Issue(Severity.Error, "MemoryPool", $"{path}: memories[{i}] null")); continue; }
+                    if (string.IsNullOrEmpty(m.id)) issues.Add(new Issue(Severity.Error, "MemoryPool", $"{m.name}: id 비어있음 (저장 키)"));
+                    else if (!seenIds.Add(m.id))    issues.Add(new Issue(Severity.Error, "MemoryPool", $"{m.name}: id 중복 '{m.id}'"));
+                    if (string.IsNullOrEmpty(m.chapterId)) issues.Add(new Issue(Severity.Warning, "MemoryPool", $"{m.name}: chapterId 비어있음 (어떤 챕터에서도 spawn 안됨)"));
+                    if (m.spawnChance <= 0f) issues.Add(new Issue(Severity.Warning, "MemoryPool", $"{m.name}: spawnChance={m.spawnChance}"));
+                }
             }
         }
 

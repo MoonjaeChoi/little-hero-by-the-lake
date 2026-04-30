@@ -313,6 +313,14 @@ public interface IAttackPattern
 - `Char_QuietFriend` — 조용한 친구 (HP 90, Speed 6, Dmg 11, AtkSpd 1.1, 25 별 조각)
 - 캐릭터 선택 흐름: `MetaProgression.SelectCharacter` (Save 자동) → `PlayerStats.Initialize`가 BalanceConfig 대신 캐릭터 스탯 사용 → `PlayerController`가 캐릭터 tint 적용
 
+### 추억 SO
+- `Memory_DadPhoto` (Photo, ch_01_redhood)
+- `Memory_DadMemo` (Memo, ch_02_beanstalk)
+- `Memory_DadSticker` (Sticker, ch_03_alice)
+- `Memory_DadDoodle` (Doodle, ch_03_alice, 낮은 spawn 확률 — 마지막 페이지 단서)
+- `MemoryPool_Default` SO가 위 4종을 묶어 보관, MetaProgression이 참조
+- 추억 흐름: 챕터 진행 중 `MemorySpawner`가 OnWaveCleared마다 챕터 ID 매칭 + 미발견 + spawnChance 통과 시 플레이어 주변에 별 픽업 spawn → 플레이어 트리거 시 `RaiseMemoryDiscovered` → MetaProgression이 영구 저장 → 다락방 `DiaryPanel`이 발견/미발견 그리드로 표시
+
 ### 에셋
 - `Prefabs/UI/ShopSlot.prefab`
 - `Art/Generated/Icon_Equip_*.png` × 16 — 장비 아이콘 자동 생성
@@ -336,7 +344,7 @@ public interface IAttackPattern
 
 1. ~~**챕터 2/3** — 잭과 콩나무, 이상한 나라의 앨리스~~ ✅ 완료 (2026-04-30)
 2. ~~**캐릭터 시스템** — `CharacterData` 활용, 캐릭터 선택, 시작 스탯 차별화~~ ✅ 완료 (2026-04-30)
-3. **추억 시스템** — `MemoryPickup` (월드 픽업) + 다락방 일기장 UI + 모든 추억 모으면 히든 챕터
+3. ~~**추억 시스템** — `MemoryPickup` (월드 픽업) + 다락방 일기장 UI~~ ✅ 부분 완료 (2026-04-30, 히든 챕터 unlock UI는 추후)
 4. **메타 업그레이드** — 별 조각으로 영구 스탯 강화 (HP, 데미지, 별가루 획득량)
 5. **컬렉션/도감** — 처치한 적 자동 등록, 100% 채우면 펫
 6. **사운드** — Unity Audio 효과음 + BGM
@@ -351,3 +359,4 @@ public interface IAttackPattern
 - 2026-04-30: 검증 인프라 도입 — `SmokeTest`(자동 스크린샷·상태 덤프) + `ProjectValidator`(에디터 메뉴 일괄 점검).
 - 2026-04-30: 챕터 2/3 추가 — 콩알 거인·구름 거인·카드 병정·하트 여왕 SO, `MetaProgression.SelectedChapter`로 챕터 선택 흐름, Attic 3버튼 UI.
 - 2026-04-30: 캐릭터 시스템 — CharacterData에 tintColor, MetaProgression.SelectedCharacter(영구 저장), PlayerStats가 캐릭터 스탯 적용, Attic에 3캐릭터 선택 UI, 3종 SO(용감한 소년/씩씩한 소녀/조용한 친구).
+- 2026-04-30: 추억 시스템 — MemoryPool SO + 4종 추억 데이터(사진/메모/스티커/낙서), MemoryPickup 프리팹·MemorySpawner(웨이브 클리어 시 챕터 매칭+확률), MetaProgression 발견 영구 저장, 다락방 DiaryPanel(4슬롯 그리드 + n/4 카운트). 히든 챕터 unlock은 미구현.

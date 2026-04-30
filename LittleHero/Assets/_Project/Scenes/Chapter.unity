@@ -379,6 +379,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &259629794
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 259629796}
+  - component: {fileID: 259629795}
+  m_Layer: 0
+  m_Name: MemorySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &259629795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259629794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c5a6a0fe488d43a9bf215697f4646d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MemorySpawner
+  _pickupPrefab: {fileID: 6961564437656908880, guid: 7e28d99f6970f4fdc839f26a2b4a59a3, type: 3}
+  _spawnRadius: 5
+  _initialPoolSize: 4
+--- !u!4 &259629796
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259629794}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &268353499
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,6 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee9be3d4eab764679becd3f9f5ef509d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MetaProgression
+  _memoryPool: {fileID: 11400000, guid: 32722289751b942d5afb9c45caa05493, type: 2}
 --- !u!4 &268353501
 Transform:
   m_ObjectHideFlags: 0
@@ -3434,3 +3482,4 @@ SceneRoots:
   - {fileID: 1859337879}
   - {fileID: 389841659}
   - {fileID: 528356637}
+  - {fileID: 259629796}

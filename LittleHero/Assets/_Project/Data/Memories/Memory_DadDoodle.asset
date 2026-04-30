@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa0cdd0f0a4834494bc3290ff772861b, type: 3}
+  m_Name: Memory_DadDoodle
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MemoryData
+  id: dad_doodle
+  displayName: "\uB9C8\uC9C0\uB9C9 \uD398\uC774\uC9C0\uC758 \uB099\uC11C"
+  description: "\uBBF8\uC644\uC131 \uADF8\uB9BC \u2014 \uB204\uAD70\uAC00 \uC644\uC131\uD558\uAE30\uB97C
+    \uAE30\uB2E4\uB9AC\uB294 \uC911."
+  image: {fileID: 0}
+  memoryType: 3
+  chapterId: ch_03_alice
+  spawnChance: 0.2

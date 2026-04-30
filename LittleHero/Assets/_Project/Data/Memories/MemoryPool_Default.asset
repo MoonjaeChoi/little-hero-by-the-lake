@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59a301f8a4874b388b28f74bcaaae1f, type: 3}
+  m_Name: MemoryPool_Default
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MemoryPool
+  memories:
+  - {fileID: 11400000, guid: 5e66e45e935d84c72b32d945e251ee83, type: 2}
+  - {fileID: 11400000, guid: e968064324feb47b79961215854f915e, type: 2}
+  - {fileID: 11400000, guid: 9ac533a8be1024b63940e7586ad9fba7, type: 2}
+  - {fileID: 11400000, guid: 19fe97b37ad58492cb0372d2578de186, type: 2}
