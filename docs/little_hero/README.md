@@ -53,7 +53,7 @@
 | [`character_progression_v1.md`](./character_progression_v1.md) | **활성** | XP·레벨업 곡선 — L50 캡, 50×1.15^L, 35 챕터 권장 레벨 매트릭스 (Part 1b 적용) |
 | [`chapter_curve_v1.md`](./chapter_curve_v1.md) | **활성** | 35 챕터 적 스탯 곡선 + 플레이어 DPS·HP 추정 + TTK 검증 (v2 §5 placeholder 대체) |
 | [`economy_v1.md`](./economy_v1.md) | **활성** | 3 화폐(별가루 ★ / 무지개 구슬 ✦ / 마법 결정 ◇) 곡선 + 35 챕터 풀빌드 정합 시뮬 |
-| `ui_v1.md` | 미작성 | 모바일 카드 5단 위계 + 강화 모달 + 12슬롯 인벤토리 + 지도 모달 |
+| [`ui_v1.md`](./ui_v1.md) | **활성** | 모바일 UI 통합 — 카드 6단 + 12슬롯 인벤토리 + 신기한 지도 + 강화 모달 + 색·폰트·사운드 |
 
 ---
 
@@ -66,7 +66,9 @@
 5. **`character_progression_v1.md`** ✅ — XP 곡선 + 레벨업 자동 보상 + 권장 레벨
 6. **`chapter_curve_v1.md`** ✅ — 적 곡선·DPS·TTK 정합 검증
 7. **`economy_v1.md`** ✅ — 3 화폐 곡선·풀빌드 정합 시뮬
-8. **`ui_v1.md`** — 위 시스템들이 안정된 후 UI 구현
+8. **`ui_v1.md`** ✅ — 모바일 UI 통합 (모든 시스템 와이어프레임 합본)
+
+> **모든 설계 문서 1차 완성**. 다음 단계는 구현 (PlayerStats 확장 → AffixDefinition SO → InventoryPanel ...) 또는 시뮬레이터 검증.
 
 ---
 
