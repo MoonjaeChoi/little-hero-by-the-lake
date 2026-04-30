@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b7775b8ef3e54a1ab4502a3d345f6ca, type: 3}
+  m_Name: infinite_tower
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EndgameModeData
+  id: infinite_tower
+  displayName: "\uBB34\uD55C \uB2E4\uB77D\uBC29"
+  type: 4
+  cooldownSeconds: 0
+  firstClearRewards:
+  - currency: 2
+    amount: 1
+    chapterScaleMul: 1
+  - currency: 3
+    amount: 1
+    chapterScaleMul: 1
+  - currency: 0
+    amount: 500
+    chapterScaleMul: 50
+  repeatRewards: []
+  bossPool: []
+  depthScaling:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0.09090909
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 100
+      value: 10
+      inSlope: 0.09090909
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa5bb821431c2471f96e91fb6986bf8f, type: 3}
+  m_Name: mythic_dad_courage
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MythicDefinition
+  id: mythic_dad_courage
+  displayName: "\uC544\uBE60\uC758 \uC6A9\uAE30"
+  flavorText: "\uB9C8\uC9C0\uB9C9 \uC21C\uAC04 \uD3ED\uBC1C"
+  icon: {fileID: 0}
+  effectDescription: "\uC801 \uCC98\uCE58 \uC9C1\uC804 \uC77C\uC815 \uC2DC\uAC04
+    \uACF5\uACA9\uB825 +50%"
+  slotRestriction: 

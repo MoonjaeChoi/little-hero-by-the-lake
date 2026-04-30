@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa5bb821431c2471f96e91fb6986bf8f, type: 3}
+  m_Name: mythic_dad_lullaby
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MythicDefinition
+  id: mythic_dad_lullaby
+  displayName: "\uC544\uBE60\uC758 \uC790\uC7A5\uAC00"
+  flavorText: "\uC704\uD5D8\uD560 \uB54C \uC9C4\uC815\uC2DC\uCF1C\uC900\uB2E4"
+  icon: {fileID: 0}
+  effectDescription: "HP 30% \uC774\uD558 \uC2DC \uBC1B\uB294 \uB370\uBBF8\uC9C0
+    -50% (when_hp_below_30)"
+  slotRestriction: 

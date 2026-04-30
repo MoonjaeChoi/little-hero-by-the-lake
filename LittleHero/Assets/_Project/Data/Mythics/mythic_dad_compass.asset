@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa5bb821431c2471f96e91fb6986bf8f, type: 3}
+  m_Name: mythic_dad_compass
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MythicDefinition
+  id: mythic_dad_compass
+  displayName: "\uC544\uBE60\uC758 \uB098\uCE68\uBC18"
+  flavorText: "\uC544\uBE60\uAC00 \uAE38\uC744 \uC54C\uB824\uC900\uB2E4"
+  icon: {fileID: 0}
+  effectDescription: "\uBCF4\uC2A4 \uC704\uCE58 \uBBF8\uB2C8\uB9F5 \uD45C\uC2DC +
+    \uBCF4\uC2A4 \uB370\uBBF8\uC9C0 +20% (MUL)"
+  slotRestriction: 
