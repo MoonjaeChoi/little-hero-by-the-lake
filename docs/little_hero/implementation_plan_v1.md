@@ -88,7 +88,7 @@
 
 | ID | 작업 | 참조 | 의존 | 복잡도 |
 |---|---|---|---|---|
-| **C1** | `AffixRoller` 정적 — 슬롯 풀 + 글로벌 풀 굴림 | affix_pool §7.3 + item_drop §5.4 | B3, B4, B5, B6 | 중 |
+| **C1** | `AffixRoller` 정적 — 슬롯 풀 + 글로벌 풀 굴림 | affix_pool §7.3 + item_drop §5.4 | B3, B4, B5, B6 | 중 | ✅ 2026-05-01 |
 | **C2** | `ItemDropService` — 4 드랍원 + 슬롯·등급·6줄 결정 트리 | item_drop §4 + §5.3 | C1, B1 | 복잡 |
 | **C3** | `EnhancementService` — +0~+25 결정론·천장·실패 로직 | equipment §3.3 + §3.4 | A5, A7, B9 | 복잡 |
 | **C4** | `EffectResolver` — 캐릭터 + 인스턴스 + 신화 통합 stats 계산 | equipment §4.3 | A1, B1, B2 | 중 |

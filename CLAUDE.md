@@ -130,6 +130,7 @@ public static class GameEvents
     public static event Action<ChapterData> OnChapterCleared;
     public static event Action<int> OnMagicCrystalChanged;      // ◇ 마법 결정 (영구)
     public static event Action<int> OnStarlightChanged;         // ⋆ 별빛 (캐시)
+    public static event Action<EquipmentInstance> OnAffixRolled; // C1 굴림/리롤 결과
 }
 ```
 
@@ -274,7 +275,7 @@ public interface IAttackPattern
 > Claude Code와 함께 작성한 스크립트/에셋 (2026-04-30 기준)
 
 ### Core
-- `GameEvents.cs` — 정적 EventBus, 13개 이벤트 (A7: OnMagicCrystalChanged ◇·OnStarlightChanged ⋆ 추가; OnAffixRolled 는 B2와 함께)
+- `GameEvents.cs` — 정적 EventBus, 14개 이벤트 (A7: OnMagicCrystalChanged ◇·OnStarlightChanged ⋆ 추가; **C1: OnAffixRolled(EquipmentInstance) 추가** — AffixRoller 가 RerollMain/RerollSub 후 발행)
 - `GameManager.cs` — 싱글턴, GameState, CurrentWave, StarDust + 사망/챕터클리어 핸들러
 - `ObjectPool.cs` — 제네릭 `ObjectPool<T>`
 - `SaveSystem.cs` — JSON 영구 저장 (무지개 구슬 등)
@@ -303,7 +304,8 @@ public interface IAttackPattern
   - A2 PlayerProgress: 싱글턴(RuntimeInitializeOnLoadMethod 자동 부트스트랩), L100 piecewise XP 곡선(L1~50 1.15^L, L51~100 1.05^(L-50)), XP 적립 핸들러(적/챕터/추억) + 시뮬 §5.1 베이스(2/20/80/N×40/40), L51+ 둔화(HP+5·공격력+0·부수 0), 사망 시 XP 후퇴 없음, SaveData.level/xp 영구
 - **Enemies**: `EnemyController` (외형 + A4 챕터 곱셈 캐시: MaxHealth/AttackDamage), `EnemyAI`, `EnemySpawner` (A4: SelectedChapter.enemyStatMultiplier 자동 적용)
 - **Waves**: `WaveManager` (보스 플레이어 기준 spawn), `ChapterRunner`
-- **Equipment**: `IAttackPattern`, 7종 패턴 (`ProjectileAttack`, `AuraAttack`, `OrbitAttack`, `RainAttack`, `TrailAttack`, `PulseAttack`, `SummonAttack`), `OrbitOrb`, `TrailField`, `PulseVisual`, `EquipmentManager`, `TestEquip`
+- **Equipment**: `IAttackPattern`, 7종 패턴 (`ProjectileAttack`, `AuraAttack`, `OrbitAttack`, `RainAttack`, `TrailAttack`, `PulseAttack`, `SummonAttack`), `OrbitOrb`, `TrailField`, `PulseVisual`, `EquipmentManager`, `TestEquip`, `AffixRoller`(C1)
+  - C1 AffixRoller: 정적 서비스. `RollMain`(슬롯 풀 6:3:1) + `RollSub`(글로벌 풀 globalWeight 합산) + `RollMainSet/RollSubSet` 일괄 + `RerollMain/RerollSub`(잠금 안 한 라인만 갱신, 끝나면 OnAffixRolled 발행) + `CalcRerollCostMain/Sub`(BalanceConfig.rerollCostMain/Sub × (1 + lockedCount × lockMultiplier)). RNG 주입형(System.Random) — 테스트성 ↑.
 - **Combat**: `DamageSystem`, `Projectile`, `DamageCalculator`(A3: 3 버킷 + 방어 관통, 평균/RNG 두 모드)
 
 ### Meta / Hub
@@ -409,3 +411,4 @@ public interface IAttackPattern
 - 2026-05-01: B7 V2 ChapterData 35종 SO — chapter_structure_v2 §3 displayName + chapterNumber + `enemyStatMultiplier=1.10^(N-1)` + `starFragmentReward=round(5×1.10^(N-1))`. `Editor/ChapterDataSeed.cs` 메뉴(`Tools > LittleHero > Seed 35 Chapter SOs`)로 일괄 시드 (`Assets/_Project/Data/Chapters/V2/`). 기존 동화책 3개(빨간모자/잭과콩나무/앨리스)는 폐기 모델로 보존. 적/보스 풀은 F1+ 콘텐츠 작업에서 채움.
 - 2026-05-01: B8 EndgameModeData 4종 SO — daily_boss/weekly_boss/infinite_tower/hardcore_chapter (endgame §3·§4·§5·§6). ModeType/CurrencyType/RewardEntry 인프라. `Editor/EndgameModeSeed.cs` 메뉴. 보스 풀(bossPool)은 F4·F5 콘텐츠.
 - 2026-05-01: B10 MythicDefinition 4종 SO — 아빠의 나침반/자장가/용기/약속 (equipment §3.7). 발현 로직은 C4 EffectResolver / C7 MythicMileageService에서. **Phase B (B1~B10) 10/10 완료**.
+- 2026-05-01: C1 AffixRoller — 정적 굴림·리롤 서비스 (`Gameplay/Equipment/AffixRoller.cs`). `RollMain`(SlotAffixPool 가중 6:3:1) + `RollSub`(GlobalSubAffixPool globalWeight 합산) + `RollMainSet/Set`(일괄) + `RerollMain/Sub`(잠금 안 한 라인만 갱신, 끝나면 OnAffixRolled 발행) + `CalcRerollCostMain/Sub`(BalanceConfig.rerollCostMain/Sub × (1 + lockedCount × lockMultiplier)). RNG는 System.Random 주입형(테스트성). GameEvents에 `OnAffixRolled(EquipmentInstance)` 신규 추가 (A7 보류분 해소). 참조: affix_pool §4·§7.3 + item_drop §5.4·§6.
