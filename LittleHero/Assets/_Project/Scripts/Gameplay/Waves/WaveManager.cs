@@ -29,6 +29,33 @@ namespace LittleHero
             _spawner = spawner;
         }
 
+        private void OnEnable()
+        {
+            GameEvents.OnPlayerDied     += ClearAll;
+            GameEvents.OnChapterCleared += HandleChapterCleared;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.OnPlayerDied     -= ClearAll;
+            GameEvents.OnChapterCleared -= HandleChapterCleared;
+        }
+
+        private void HandleChapterCleared(ChapterData _) => ClearAll();
+
+        private void ClearAll()
+        {
+            if (_spawnCoroutine != null) { StopCoroutine(_spawnCoroutine); _spawnCoroutine = null; }
+            foreach (var e in _activeEnemies)
+            {
+                if (e == null) continue;
+                e.OnDied -= HandleEnemyDied;
+                if (_spawner != null) _spawner.ReturnToPool(e);
+            }
+            _activeEnemies.Clear();
+            _onWaveComplete = null;
+        }
+
         public void StartWave(WaveConfig config, Action onComplete)
         {
             _onWaveComplete = onComplete;
@@ -74,13 +101,28 @@ namespace LittleHero
             }
         }
 
+        private const float BossSpawnRadius = 4f;
+
         private void SpawnEnemy(EnemyData data)
         {
             EnemyController enemy = _spawner.Spawn(data);
-            if (enemy == null) return;
-
+            if (enemy == null)
+            {
+                Debug.LogError($"[WaveManager] SpawnEnemy returned null for '{(data ? data.displayName : "<null>")}' (id='{(data ? data.id : "")}')");
+                return;
+            }
+            if (data.isMiniB || data.isBoss)
+                enemy.transform.position = GetBossSpawnPosition();
             _activeEnemies.Add(enemy);
             enemy.OnDied += HandleEnemyDied;
+        }
+
+        private static Vector3 GetBossSpawnPosition()
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            Vector3 origin = player != null ? player.transform.position : Vector3.zero;
+            float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+            return origin + new Vector3(Mathf.Cos(angle) * BossSpawnRadius, Mathf.Sin(angle) * BossSpawnRadius, 0f);
         }
 
         private void HandleEnemyDied(EnemyController enemy)

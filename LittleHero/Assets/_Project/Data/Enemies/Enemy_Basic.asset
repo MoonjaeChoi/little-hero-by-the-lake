@@ -22,5 +22,7 @@ MonoBehaviour:
   damage: 5
   xpDrop: 10
   starDustDrop: 1
+  tintColor: {r: 0.5, g: 0.85, b: 0.55, a: 1}
+  scaleMultiplier: 1
   isMiniB: 0
   isBoss: 0

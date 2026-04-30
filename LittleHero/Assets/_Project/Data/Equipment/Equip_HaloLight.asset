@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b61866188b1004d38bcb15cb181f9170, type: 3}
+  m_Name: Equip_HaloLight
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EquipmentData
+  id: halo_light
+  displayName: "\uBC18\uC9DD\uC774\uB294 \uD6C4\uAD11"
+  description: 
+  icon: {fileID: -7473132296661859926, guid: 8a3e1b6fb0f4a4cdb9e723641484e22f, type: 3}
+  slot: 0
+  rarity: 0
+  statBonus:
+    maxHealthBonus: 0
+    speedBonus: 0
+    attackDamageBonus: 0
+    attackSpeedBonus: 0
+    rangeBonus: 0
+    xpGainBonus: 0
+  attackPattern: 2
+  attackConfig:
+    damage: 4
+    attackInterval: 0.6
+    range: 2.5
+    projectileSpeed: 0
+    count: 1
+    projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+  setId: 

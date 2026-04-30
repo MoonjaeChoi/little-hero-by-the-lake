@@ -18,6 +18,10 @@ namespace LittleHero
         public float xpDrop;
         public float starDustDrop;
 
+        [Header("외형")]
+        public Color tintColor = Color.white;
+        public float scaleMultiplier = 1f;
+
         [Header("분류")]
         public bool isMiniB;
         public bool isBoss;

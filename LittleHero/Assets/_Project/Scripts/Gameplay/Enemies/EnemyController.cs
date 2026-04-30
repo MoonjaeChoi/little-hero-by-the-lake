@@ -20,6 +20,15 @@ namespace LittleHero
             _data = data;
             _currentHealth = data.maxHealth;
             _isDead = false;
+            ApplyAppearance(data);
+        }
+
+        private void ApplyAppearance(EnemyData data)
+        {
+            SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+            if (sr != null) sr.color = data.tintColor;
+            float s = data.scaleMultiplier > 0f ? data.scaleMultiplier : 1f;
+            transform.localScale = new Vector3(s, s, 1f);
         }
 
         public void TakeDamage(float damage)

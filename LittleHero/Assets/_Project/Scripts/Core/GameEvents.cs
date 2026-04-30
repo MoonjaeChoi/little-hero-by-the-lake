@@ -12,6 +12,7 @@ namespace LittleHero
         public static event Action OnShopClosed;
         public static event Action<int> OnStarDustChanged;
         public static event Action<int> OnPlayerHealthChanged;
+        public static event Action OnPlayerDied;
         public static event Action<MemoryData> OnMemoryDiscovered;
         public static event Action<ChapterData> OnChapterCleared;
 
@@ -23,6 +24,7 @@ namespace LittleHero
         public static void RaiseShopClosed() => OnShopClosed?.Invoke();
         public static void RaiseStarDustChanged(int amount) => OnStarDustChanged?.Invoke(amount);
         public static void RaisePlayerHealthChanged(int health) => OnPlayerHealthChanged?.Invoke(health);
+        public static void RaisePlayerDied() => OnPlayerDied?.Invoke();
         public static void RaiseMemoryDiscovered(MemoryData data) => OnMemoryDiscovered?.Invoke(data);
         public static void RaiseChapterCleared(ChapterData data) => OnChapterCleared?.Invoke(data);
     }

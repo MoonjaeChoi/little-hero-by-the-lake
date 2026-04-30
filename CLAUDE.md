@@ -125,6 +125,7 @@ public static class GameEvents
     public static event Action OnShopClosed;
     public static event Action<int> OnStarDustChanged;
     public static event Action<int> OnPlayerHealthChanged;
+    public static event Action OnPlayerDied;                    // 플레이어 사망
     public static event Action<MemoryData> OnMemoryDiscovered;  // 아빠 추억 발견
     public static event Action<ChapterData> OnChapterCleared;
 }
@@ -246,7 +247,7 @@ public interface IAttackPattern
 |---|---|---|
 | 애니메이션 | DOTween (무료) | 커스텀 |
 | 입력 | Unity Input System (공식) | Unity |
-| 카메라 | Cinemachine (공식) | Unity |
+| 카메라 | Cinemachine 3.1.6 (공식, 활성) | Unity |
 | UI | uGUI (공식) | Unity |
 | 사운드 | Unity Audio (필요시 FMOD) | Unity |
 
@@ -258,50 +259,76 @@ public interface IAttackPattern
 |---|---|---|---|
 | 0 환경 | 1주 | Unity + Xcode + iOS 빌드 성공 | ✅ 완료 (2026-04-29) |
 | 1 프로토타입 | 3주 | 다락방 → 1챕터 3웨이브 + 상점 1회 동작 | ✅ 완료 (2026-04-30) |
-| 2 확장 | 4주 | 1챕터 20웨이브 완성 + 장비 12종 + 적 6종 | 🔄 진행 예정 |
-| 3 콘텐츠 | 4주 | 챕터 3권 + 캐릭터 3명 + 메타 진행 + 추억 시스템 | ⏳ 대기 |
+| 2 확장 | 4주 | 1챕터 20웨이브 완성 + 장비 12종 + 적 6종 | ✅ 완료 (2026-04-30) |
+| 3 콘텐츠 | 4주 | 챕터 3권 + 캐릭터 3명 + 메타 진행 + 추억 시스템 | 🔄 진행 중 (메타 진행 골격 완료) |
 | 4 출시 | 3주 | TestFlight + App Store 심사 | ⏳ 대기 |
 
-## 12. Phase 1 구현 완료 목록
+## 12. Phase 1+2 구현 완료 목록
 
-> Claude Code와 함께 작성한 스크립트 목록 (2026-04-30 기준)
+> Claude Code와 함께 작성한 스크립트/에셋 (2026-04-30 기준)
 
 ### Core
-- `GameEvents.cs` — 정적 EventBus, 10개 이벤트
-- `GameManager.cs` — 싱글턴, GameState, CurrentWave, StarDust
+- `GameEvents.cs` — 정적 EventBus, 11개 이벤트 (OnPlayerDied 포함)
+- `GameManager.cs` — 싱글턴, GameState, CurrentWave, StarDust + 사망/챕터클리어 핸들러
 - `ObjectPool.cs` — 제네릭 `ObjectPool<T>`
-- `SaveSystem.cs` — JSON 영구 저장
+- `SaveSystem.cs` — JSON 영구 저장 (별 조각 등)
+- 카메라 추적: Cinemachine 3.x `CinemachineCamera` + `CinemachineFollow` (Chapter 씬에서 Player를 추적)
 
 ### Data (ScriptableObject)
-- `EquipmentData.cs`, `EnemyData.cs`, `ChapterData.cs`, `CharacterData.cs`, `MemoryData.cs`, `BalanceConfig.cs`
+- 클래스: `EquipmentData`, `EnemyData`, `ChapterData`, `CharacterData`, `MemoryData`, `BalanceConfig`, `ShopPool`
+- `EnemyData`에 tintColor / scaleMultiplier 필드 추가
+- `BalanceConfig`에 priceByRarity 추가
+- 인스턴스: 적 7종 (Basic/Rabbit/Bear/Firefly/Pumpkin/StarCloud/BigWolf), 장비 16종, BalanceConfig, Chapter_01_RedHood (totalWaves=20), ShopPool_Default
 
 ### Gameplay
 - **Player**: `PlayerController`, `PlayerStats`, `PlayerHealth`, `PlayerDamageReceiver`
-- **Enemies**: `EnemyController`, `EnemyAI`, `EnemySpawner`
-- **Waves**: `WaveManager`, `ChapterRunner`
-- **Equipment**: `IAttackPattern`, `ProjectileAttack`, `EquipmentManager`, `TestEquip`
+- **Enemies**: `EnemyController` (외형 적용), `EnemyAI`, `EnemySpawner`
+- **Waves**: `WaveManager` (보스 플레이어 기준 spawn), `ChapterRunner`
+- **Equipment**: `IAttackPattern`, 7종 패턴 (`ProjectileAttack`, `AuraAttack`, `OrbitAttack`, `RainAttack`, `TrailAttack`, `PulseAttack`, `SummonAttack`), `OrbitOrb`, `TrailField`, `PulseVisual`, `EquipmentManager`, `TestEquip`
 - **Combat**: `DamageSystem`, `Projectile`
 
+### Meta / Hub
+- `Meta/ShopController.cs` — 6칸 롤/구매/새로고침
+- `Meta/MetaProgression.cs` — 별 조각 영구 저장
+- `Hub/AtticController.cs` — 다락방 허브
+
 ### UI
-- `HUDController` — Slider(체력바) + Legacy Text(웨이브, 별가루, 체력 수치)
+- `HUDController` — 체력바·웨이브·별가루 (OnShopClosed 구독)
+- `ShopPanel`, `ShopSlotView` — 상점 UI
+- `GameOverPanel` — 사망 시 다락방 복귀
+- `ChapterClearedPanel` — 챕터 클리어 + 별 조각 보상 + 다락방 복귀
+
+### 씬
+- `Scenes/Attic.unity` — 다락방 허브 (별 조각 표시, 1챕터 시작 버튼)
+- `Scenes/Chapter.unity` — 챕터 플레이 (Canvas / ShopPanel / GameOverPanel / ChapterClearedPanel)
+
+### 에셋
+- `Prefabs/UI/ShopSlot.prefab`
+- `Art/Generated/Icon_Equip_*.png` × 16 — 장비 아이콘 자동 생성
 
 ### 중요 구현 주의사항
 - UI 텍스트: `UnityEngine.UI.Text` (Legacy) — TMP는 URP 셰이더 깨짐
 - Rigidbody2D: `linearVelocity` (Unity 6에서 `velocity` deprecated)
-- ProjectileAttack.range(15) > EnemySpawner.spawnRadius(10) 유지
 - EquipmentManager는 `OnEquipmentChanged` 자기 구독 금지 (무한루프)
 - `GameManager.CloseShop()`: `StartWave()` 먼저, `RaiseShopClosed()` 나중에
+- HUD 웨이브 라벨은 `OnShopClosed` 구독 (OnWaveCleared는 CurrentWave 증가 전 발행)
+- 보스/미니보스는 player 기준 4f 반경 spawn (spawner 기준이면 카메라 밖 가능)
+- 모든 공격 패턴 Cleanup은 풀 루트 GameObject Destroy로 잔상 방지
+- ShopPool/ChapterData 등 SO 인스턴스는 `execute_code`로 생성 (manage_asset이 LittleHero.* 타입 미지원)
 
-## 13. Phase 2 다음 작업 목록
+## 13. Phase 3 다음 작업 목록
 
-1. **상점 UI** — `UI/ShopPanel.cs`, 6칸 슬롯, 별가루 소비, "출발" 버튼
-2. **추가 공격 패턴** — `AuraAttack`, `OrbitAttack` (IAttackPattern 구현)
-3. **적 추가** — 현재 1종, 6종 목표
-4. **장비 SO 데이터** — 현재 1종(테스트용), 12종 목표
-5. **Unity MCP 활용** — Claude Code ↔ Unity Editor 실시간 연동
+1. **챕터 2/3** — 잭과 콩나무, 이상한 나라의 앨리스 — ChapterData + 보스 SO + 미니보스 SO
+2. **캐릭터 시스템** — `CharacterData` 활용, 캐릭터 선택, 시작 스탯 차별화
+3. **추억 시스템** — `MemoryPickup` (월드 픽업) + 다락방 일기장 UI + 모든 추억 모으면 히든 챕터
+4. **메타 업그레이드** — 별 조각으로 영구 스탯 강화 (HP, 데미지, 별가루 획득량)
+5. **컬렉션/도감** — 처치한 적 자동 등록, 100% 채우면 펫
+6. **사운드** — Unity Audio 효과음 + BGM
+7. **아트** — 단색 더미 → 실 스프라이트 교체
 
 ## 14. 변경 이력
 
 - 2026-04-29: 초기 작성 (다락방 동화책)
 - 2026-04-29: **프로젝트명 확정 — Little Hero by the Lake**, 호숫가 학교 + 아빠 동화책 스토리 추가
 - 2026-04-30: Phase 0/1 완료. 26개 스크립트 작성, Chapter.unity 씬 동작 확인
+- 2026-04-30: **Phase 2 완료** — 상점 UI, 7종 공격 패턴, 적 7종, 장비 16종, totalWaves=20 + 보스, GameOver/ChapterCleared 패널, CameraFollow, 풀 cleanup 강화. 메타 진행 골격(MetaProgression + Attic 허브) 추가.

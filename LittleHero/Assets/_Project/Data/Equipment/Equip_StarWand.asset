@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 
   displayName: "\uBCC4 \uC9C0\uD321\uC774"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 6616322432424907181, guid: bf8b5f00f74984f479918743ec57c63e, type: 3}
   slot: 2
   rarity: 0
   statBonus:

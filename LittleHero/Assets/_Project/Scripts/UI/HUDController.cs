@@ -15,14 +15,14 @@ namespace LittleHero
         private void OnEnable()
         {
             GameEvents.OnPlayerHealthChanged += UpdateHealth;
-            GameEvents.OnWaveCleared += UpdateWave;
+            GameEvents.OnShopClosed += RefreshWave;
             GameEvents.OnStarDustChanged += UpdateStarDust;
         }
 
         private void OnDisable()
         {
             GameEvents.OnPlayerHealthChanged -= UpdateHealth;
-            GameEvents.OnWaveCleared -= UpdateWave;
+            GameEvents.OnShopClosed -= RefreshWave;
             GameEvents.OnStarDustChanged -= UpdateStarDust;
         }
 
@@ -47,11 +47,6 @@ namespace LittleHero
 
             if (_healthText != null)
                 _healthText.text = $"{currentHealth} / {Mathf.RoundToInt(maxHealth)}";
-        }
-
-        private void UpdateWave(int wave)
-        {
-            RefreshWave();
         }
 
         private void RefreshWave()

@@ -52,10 +52,12 @@ namespace LittleHero
 
         private Vector2 GetSpawnPosition()
         {
+            GameObject player = GameObject.FindWithTag("Player");
+            Vector3 origin = player != null ? player.transform.position : transform.position;
             float angle = Random.Range(0f, Mathf.PI * 2f);
             return new Vector2(
-                transform.position.x + Mathf.Cos(angle) * _spawnRadius,
-                transform.position.y + Mathf.Sin(angle) * _spawnRadius
+                origin.x + Mathf.Cos(angle) * _spawnRadius,
+                origin.y + Mathf.Sin(angle) * _spawnRadius
             );
         }
     }

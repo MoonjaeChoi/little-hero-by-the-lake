@@ -41,6 +41,7 @@ namespace LittleHero
         {
             IsDead = true;
             GameEvents.RaisePlayerHealthChanged(0);
+            GameEvents.RaisePlayerDied();
         }
     }
 }

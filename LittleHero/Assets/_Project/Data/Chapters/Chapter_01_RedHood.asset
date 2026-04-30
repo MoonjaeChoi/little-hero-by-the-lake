@@ -16,10 +16,15 @@ MonoBehaviour:
   displayName: "\uBE68\uAC04 \uBAA8\uC790"
   description: 
   coverArt: {fileID: 0}
-  totalWaves: 3
+  totalWaves: 20
   waveDuration: 20
   enemyPool:
   - {fileID: 11400000, guid: 3960d7831305743b093bd38d7a15a861, type: 2}
-  miniBossPool: []
-  bossEnemy: {fileID: 0}
+  - {fileID: 11400000, guid: 099357e2cf73e49cfada41b8598516a0, type: 2}
+  - {fileID: 11400000, guid: 626439952aba6467a8256fa7e447ef25, type: 2}
+  - {fileID: 11400000, guid: 361709ea70ef24368b4c0283750561f2, type: 2}
+  - {fileID: 11400000, guid: af83576af4397411ea22ea748a49d5f3, type: 2}
+  miniBossPool:
+  - {fileID: 11400000, guid: 068c0360f6d1f4f1480f61bde85b561c, type: 2}
+  bossEnemy: {fileID: 11400000, guid: f3a5c59c73ce54a8eb93ab1d5053e39c, type: 2}
   starFragmentReward: 5

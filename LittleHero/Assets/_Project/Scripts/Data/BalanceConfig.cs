@@ -20,6 +20,9 @@ namespace LittleHero
         public int shopRefreshBaseCost = 2;
         public float shopRefreshCostMultiplier = 1.5f;
 
+        [Tooltip("희귀도별 가격: Common, Uncommon, Rare, Epic, Legendary")]
+        public int[] priceByRarity = { 3, 6, 12, 25, 50 };
+
         [Header("웨이브 스케일링")]
         public float waveScalingFactor = 0.1f;
         public int miniBossWaveInterval = 5;

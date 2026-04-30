@@ -26,6 +26,47 @@ namespace LittleHero
             DontDestroyOnLoad(gameObject);
         }
 
+        private void OnEnable()
+        {
+            GameEvents.OnEnemyKilled    += HandleEnemyKilled;
+            GameEvents.OnPlayerDied     += HandlePlayerDied;
+            GameEvents.OnChapterCleared += HandleChapterCleared;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.OnEnemyKilled    -= HandleEnemyKilled;
+            GameEvents.OnPlayerDied     -= HandlePlayerDied;
+            GameEvents.OnChapterCleared -= HandleChapterCleared;
+        }
+
+        private void HandleChapterCleared(ChapterData data)
+        {
+            SetState(GameState.Paused);
+            Time.timeScale = 0f;
+        }
+
+        private void HandleEnemyKilled(EnemyData data)
+        {
+            if (data == null) return;
+            int drop = Mathf.RoundToInt(data.starDustDrop);
+            if (drop > 0) AddStarDust(drop);
+        }
+
+        private void HandlePlayerDied()
+        {
+            SetState(GameState.GameOver);
+            Time.timeScale = 0f;
+        }
+
+        public void RestartCurrentScene()
+        {
+            Time.timeScale = 1f;
+            ResetRun();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        }
+
         public void StartWave()
         {
             CurrentWave++;

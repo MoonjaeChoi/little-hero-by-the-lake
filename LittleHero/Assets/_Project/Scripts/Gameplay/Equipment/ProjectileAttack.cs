@@ -7,6 +7,7 @@ namespace LittleHero
         private AttackPatternConfig _config;
         private Transform _owner;
         private ObjectPool<Projectile> _pool;
+        private Transform _poolRoot;
         private float _timer;
 
         // Physics2D 오버랩 버퍼 — 매 호출마다 new 하지 않도록 재사용
@@ -30,8 +31,8 @@ namespace LittleHero
                 return;
             }
 
-            Transform poolRoot = new GameObject("ProjectilePool_Projectile").transform;
-            _pool = new ObjectPool<Projectile>(prefabComp, poolRoot, 20);
+            _poolRoot = new GameObject("ProjectilePool_Projectile").transform;
+            _pool = new ObjectPool<Projectile>(prefabComp, _poolRoot, 20);
             Debug.Log("[ProjectileAttack] 초기화 성공. 풀 생성 완료.");
         }
 
@@ -46,6 +47,8 @@ namespace LittleHero
 
         public void Cleanup()
         {
+            if (_poolRoot != null) Object.Destroy(_poolRoot.gameObject);
+            _poolRoot = null;
             _pool = null;
         }
 

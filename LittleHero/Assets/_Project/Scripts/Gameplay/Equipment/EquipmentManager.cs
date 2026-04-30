@@ -18,6 +18,27 @@ namespace LittleHero
             _stats = GetComponent<PlayerStats>();
         }
 
+        private void OnEnable()
+        {
+            GameEvents.OnPlayerDied     += ClearAllPatterns;
+            GameEvents.OnChapterCleared += HandleChapterCleared;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.OnPlayerDied     -= ClearAllPatterns;
+            GameEvents.OnChapterCleared -= HandleChapterCleared;
+        }
+
+        private void HandleChapterCleared(ChapterData _) => ClearAllPatterns();
+
+        private void ClearAllPatterns()
+        {
+            for (int i = 0; i < _activePatterns.Count; i++)
+                _activePatterns[i].Cleanup();
+            _activePatterns.Clear();
+            enabled = false;
+        }
 
         private void Update()
         {
@@ -78,6 +99,12 @@ namespace LittleHero
             return type switch
             {
                 AttackPatternType.Projectile => new ProjectileAttack(),
+                AttackPatternType.Aura       => new AuraAttack(),
+                AttackPatternType.Orbit      => new OrbitAttack(),
+                AttackPatternType.Rain       => new RainAttack(),
+                AttackPatternType.Trail      => new TrailAttack(),
+                AttackPatternType.Pulse      => new PulseAttack(),
+                AttackPatternType.Summon     => new SummonAttack(),
                 _ => null
             };
         }
@@ -87,6 +114,12 @@ namespace LittleHero
             return type switch
             {
                 AttackPatternType.Projectile => typeof(ProjectileAttack),
+                AttackPatternType.Aura       => typeof(AuraAttack),
+                AttackPatternType.Orbit      => typeof(OrbitAttack),
+                AttackPatternType.Rain       => typeof(RainAttack),
+                AttackPatternType.Trail      => typeof(TrailAttack),
+                AttackPatternType.Pulse      => typeof(PulseAttack),
+                AttackPatternType.Summon     => typeof(SummonAttack),
                 _ => null
             };
         }

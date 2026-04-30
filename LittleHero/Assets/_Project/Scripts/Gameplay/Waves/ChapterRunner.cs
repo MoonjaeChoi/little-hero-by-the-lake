@@ -20,7 +20,8 @@ namespace LittleHero
             GameEvents.OnShopClosed += OnShopClosed;
             RegisterEnemyPool();
             _waveManager.Initialize(_spawner);
-            GameManager.Instance.StartWave();
+            GameManager.Instance.ResetRun();   // 새 런: CurrentWave=0, StarDust=0
+            GameManager.Instance.StartWave();  // 0 → 1
             StartNextWave();
         }
 
@@ -60,15 +61,18 @@ namespace LittleHero
             int spawnCount = Mathf.RoundToInt(
                 10f * (1f + balance.waveScalingFactor * waveNumber));
 
+            EnemyData mb = isMiniB && _chapterData.miniBossPool != null && _chapterData.miniBossPool.Length > 0
+                           ? _chapterData.miniBossPool[Random.Range(0, _chapterData.miniBossPool.Length)]
+                           : null;
+            EnemyData bs = isBoss ? _chapterData.bossEnemy : null;
+
             return new WaveConfig
             {
                 enemyPool  = _chapterData.enemyPool,
                 spawnCount = spawnCount,
                 duration   = _chapterData.waveDuration,
-                miniBoss   = isMiniB && _chapterData.miniBossPool.Length > 0
-                             ? _chapterData.miniBossPool[Random.Range(0, _chapterData.miniBossPool.Length)]
-                             : null,
-                boss = isBoss ? _chapterData.bossEnemy : null,
+                miniBoss   = mb,
+                boss       = bs,
             };
         }
 
