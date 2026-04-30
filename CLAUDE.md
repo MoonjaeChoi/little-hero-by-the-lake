@@ -305,6 +305,11 @@ public interface IAttackPattern
 ### 에셋
 - `Prefabs/UI/ShopSlot.prefab`
 - `Art/Generated/Icon_Equip_*.png` × 16 — 장비 아이콘 자동 생성
+- `Art/Generated/Sprite_Circle.png`, `Sprite_GroundTile.png`
+
+### 검증 인프라
+- `Core/SmokeTest.cs` — Play 모드 1·5·15·30s 자동 스크린샷 + 상태 덤프 (Chapter 씬에 부착, 기본 비활성, `_enabledOnStart=true`로 토글)
+- `Editor/ProjectValidator.cs` — 메뉴 `Tools > LittleHero > Validate Project`. Build Settings, BalanceConfig, ShopPool, ChapterData, Camera Lens(Cinemachine 포함), 패널 와이어링 등 일괄 점검
 
 ### 중요 구현 주의사항
 - UI 텍스트: `UnityEngine.UI.Text` (Legacy) — TMP는 URP 셰이더 깨짐
@@ -332,3 +337,4 @@ public interface IAttackPattern
 - 2026-04-29: **프로젝트명 확정 — Little Hero by the Lake**, 호숫가 학교 + 아빠 동화책 스토리 추가
 - 2026-04-30: Phase 0/1 완료. 26개 스크립트 작성, Chapter.unity 씬 동작 확인
 - 2026-04-30: **Phase 2 완료** — 상점 UI, 7종 공격 패턴, 적 7종, 장비 16종, totalWaves=20 + 보스, GameOver/ChapterCleared 패널, CameraFollow, 풀 cleanup 강화. 메타 진행 골격(MetaProgression + Attic 허브) 추가.
+- 2026-04-30: 검증 인프라 도입 — `SmokeTest`(자동 스크린샷·상태 덤프) + `ProjectValidator`(에디터 메뉴 일괄 점검).
