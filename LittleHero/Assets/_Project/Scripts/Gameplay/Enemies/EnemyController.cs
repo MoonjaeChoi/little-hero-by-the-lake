@@ -9,16 +9,24 @@ namespace LittleHero
 
         private EnemyData _data;
         private float _currentHealth;
+        private float _maxHealth;
+        private float _attackDamage;
         private bool _isDead;
 
         public EnemyData Data => _data;
         public bool IsDead => _isDead;
-        public float HealthRatio => _currentHealth / _data.maxHealth;
+        public float MaxHealth => _maxHealth;
+        public float AttackDamage => _attackDamage;
+        public float HealthRatio => _maxHealth > 0f ? _currentHealth / _maxHealth : 0f;
 
-        public void Initialize(EnemyData data)
+        // A4 — chapter_curve §9.1: HP/공격력에 챕터 곱셈 적용. multiplier=1f면 영향 없음.
+        public void Initialize(EnemyData data, float statMultiplier = 1f)
         {
             _data = data;
-            _currentHealth = data.maxHealth;
+            float m = Mathf.Max(0.01f, statMultiplier);
+            _maxHealth     = data.maxHealth * m;
+            _attackDamage  = data.damage    * m;
+            _currentHealth = _maxHealth;
             _isDead = false;
             ApplyAppearance(data);
         }

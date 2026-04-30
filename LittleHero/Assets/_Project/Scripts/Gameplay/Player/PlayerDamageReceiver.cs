@@ -22,7 +22,8 @@ namespace LittleHero
             EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
             if (enemy == null || enemy.IsDead) return;
 
-            DamageSystem.DealDamageToPlayer(_health, enemy.Data.damage);
+            // A4 — 챕터 곱셈이 적용된 공격력 사용 (enemy.Data.damage는 SO 베이스값이라 사용 금지)
+            DamageSystem.DealDamageToPlayer(_health, enemy.AttackDamage);
             _lastDamageTime = Time.time;
         }
     }

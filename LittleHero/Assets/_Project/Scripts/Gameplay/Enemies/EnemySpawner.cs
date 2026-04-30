@@ -40,7 +40,9 @@ namespace LittleHero
 
             EnemyController enemy = pool.Get();
             enemy.transform.position = GetSpawnPosition();
-            enemy.Initialize(data);
+            // A4 — 현재 챕터의 enemyStatMultiplier 자동 적용 (HP/공격력)
+            float multi = MetaProgression.Instance?.SelectedChapter?.enemyStatMultiplier ?? 1f;
+            enemy.Initialize(data, multi);
             return enemy;
         }
 
