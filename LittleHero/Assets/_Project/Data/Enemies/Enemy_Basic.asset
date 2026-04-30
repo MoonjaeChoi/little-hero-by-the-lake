@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e52698276b7e542c588accfb9ce7b062, type: 3}
   m_Name: Enemy_Basic
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
-  id: 
+  id: basic_slime
   displayName: "\uAF2C\uB9C8 \uC2AC\uB77C\uC784"
   description: 
   icon: {fileID: 0}

@@ -10,6 +10,7 @@ namespace LittleHero
 
         [SerializeField] private MemoryPool _memoryPool;
         [SerializeField] private MetaUpgradePool _upgradePool;
+        [SerializeField] private EnemyPool _enemyPool;
 
         public SaveData Data { get; private set; }
         public int StarFragments => Data?.starFragments ?? 0;
@@ -17,11 +18,15 @@ namespace LittleHero
         public CharacterData SelectedCharacter { get; private set; }
         public MemoryPool MemoryPool => _memoryPool;
         public MetaUpgradePool UpgradePool => _upgradePool;
+        public EnemyPool EnemyPool => _enemyPool;
         public int MemoryDiscoveredCount => Data?.discoveredMemoryIds?.Length ?? 0;
         public int MemoryTotalCount => _memoryPool?.memories?.Length ?? 0;
+        public int EnemyDefeatedCount => Data?.defeatedEnemyIds?.Length ?? 0;
+        public int EnemyTotalCount => _enemyPool?.enemies?.Length ?? 0;
 
         public event System.Action<CharacterData> OnCharacterChanged;
         public event System.Action<MetaUpgradeData> OnUpgradeChanged;
+        public event System.Action<EnemyData> OnEnemyDefeated;
 
         public event Action<int> OnStarFragmentsChanged;
 
@@ -37,12 +42,34 @@ namespace LittleHero
         {
             GameEvents.OnChapterCleared    += HandleChapterCleared;
             GameEvents.OnMemoryDiscovered  += HandleMemoryDiscovered;
+            GameEvents.OnEnemyKilled       += HandleEnemyKilled;
         }
 
         private void OnDisable()
         {
             GameEvents.OnChapterCleared    -= HandleChapterCleared;
             GameEvents.OnMemoryDiscovered  -= HandleMemoryDiscovered;
+            GameEvents.OnEnemyKilled       -= HandleEnemyKilled;
+        }
+
+        private void HandleEnemyKilled(EnemyData data)
+        {
+            if (data == null || string.IsNullOrEmpty(data.id)) return;
+            if (IsEnemyDefeated(data.id)) return;
+
+            var list = new List<string>(Data.defeatedEnemyIds ?? new string[0]);
+            list.Add(data.id);
+            Data.defeatedEnemyIds = list.ToArray();
+            SaveSystem.Save(Data);
+            OnEnemyDefeated?.Invoke(data);
+        }
+
+        public bool IsEnemyDefeated(string id)
+        {
+            if (Data?.defeatedEnemyIds == null) return false;
+            for (int i = 0; i < Data.defeatedEnemyIds.Length; i++)
+                if (Data.defeatedEnemyIds[i] == id) return true;
+            return false;
         }
 
         private void HandleMemoryDiscovered(MemoryData memory)

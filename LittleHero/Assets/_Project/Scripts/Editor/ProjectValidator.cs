@@ -31,6 +31,7 @@ namespace LittleHero.EditorTools
             ValidateCharacters(issues);
             ValidateMemoryPool(issues);
             ValidateMetaUpgradePool(issues);
+            ValidateEnemyPool(issues);
             ValidateActiveScene(issues);
             Print(issues);
         }
@@ -160,6 +161,27 @@ namespace LittleHero.EditorTools
                     if (u.maxLevel <= 0)            issues.Add(new Issue(Severity.Error, "MetaUpgradePool", $"{u.name}: maxLevel={u.maxLevel}"));
                     if (u.bonusPerLevel == 0f)      issues.Add(new Issue(Severity.Warning, "MetaUpgradePool", $"{u.name}: bonusPerLevel=0"));
                     if (u.baseCost < 0)             issues.Add(new Issue(Severity.Error, "MetaUpgradePool", $"{u.name}: baseCost={u.baseCost}"));
+                }
+            }
+        }
+
+        private static void ValidateEnemyPool(List<Issue> issues)
+        {
+            string[] guids = AssetDatabase.FindAssets("t:LittleHero.EnemyPool");
+            if (guids.Length == 0) { issues.Add(new Issue(Severity.Warning, "EnemyPool", "EnemyPool 인스턴스가 없음")); return; }
+            foreach (var g in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(g);
+                var p = AssetDatabase.LoadAssetAtPath<EnemyPool>(path);
+                if (p == null || p.enemies == null) continue;
+                var seenIds = new HashSet<string>();
+                for (int i = 0; i < p.enemies.Length; i++)
+                {
+                    var e = p.enemies[i];
+                    if (e == null) { issues.Add(new Issue(Severity.Error, "EnemyPool", $"{path}: enemies[{i}] null")); continue; }
+                    if (string.IsNullOrEmpty(e.id)) issues.Add(new Issue(Severity.Error, "EnemyPool", $"{e.name}: id 비어있음 (도감 키)"));
+                    else if (!seenIds.Add(e.id))    issues.Add(new Issue(Severity.Error, "EnemyPool", $"{e.name}: id 중복 '{e.id}'"));
+                    if (e.prefab == null)           issues.Add(new Issue(Severity.Error, "EnemyPool", $"{e.name}: prefab null"));
                 }
             }
         }

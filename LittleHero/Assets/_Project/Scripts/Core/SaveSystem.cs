@@ -18,6 +18,7 @@ namespace LittleHero
         public string[] unlockedCharacterIds = new string[0];
         public string[] unlockedEquipmentIds = new string[0];
         public string[] discoveredMemoryIds = new string[0];
+        public string[] defeatedEnemyIds = new string[0];
         public int[] clearedChapterWaves = new int[0];
         public MetaUpgradeEntry[] metaUpgrades = new MetaUpgradeEntry[0];
     }

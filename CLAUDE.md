@@ -329,6 +329,11 @@ public interface IAttackPattern
 - `UpgradePool_Default` SO가 위 3종을 묶어 보관, MetaProgression이 참조
 - 흐름: Attic의 `MetaUpgradePanel`에서 강화 버튼 클릭 → `MetaProgression.TryUpgrade` (별 조각 차감 + level 영구 저장) → `PlayerStats.RecalculateStats`가 base 스탯에 메타 보너스 가산, `GameManager.HandleEnemyKilled`가 별가루 드롭에 (1+dustMult) 곱셈
 
+### 도감 (적)
+- `EnemyPool_Default` — 11종 적 마스터 풀 (정규 5 + 미니보스/보스 6)
+- `MetaProgression`이 `OnEnemyKilled` 구독 → `SaveData.defeatedEnemyIds`에 영구 추가, `OnEnemyDefeated` 이벤트 발행
+- `BestiaryPanel`(다락방) — 6열 그리드, 발견 시 색·이름·HP/공격 표시, 미발견 시 회색 "???". `Enemy_Basic.id`는 빈 문자열에서 `basic_slime`으로 보강(저장 키 충돌 방지).
+
 ### 에셋
 - `Prefabs/UI/ShopSlot.prefab`
 - `Art/Generated/Icon_Equip_*.png` × 16 — 장비 아이콘 자동 생성
@@ -354,7 +359,7 @@ public interface IAttackPattern
 2. ~~**캐릭터 시스템** — `CharacterData` 활용, 캐릭터 선택, 시작 스탯 차별화~~ ✅ 완료 (2026-04-30)
 3. ~~**추억 시스템** — `MemoryPickup` (월드 픽업) + 다락방 일기장 UI~~ ✅ 부분 완료 (2026-04-30, 히든 챕터 unlock UI는 추후)
 4. ~~**메타 업그레이드** — 별 조각으로 영구 스탯 강화 (HP, 데미지, 별가루 획득량)~~ ✅ 완료 (2026-04-30)
-5. **컬렉션/도감** — 처치한 적 자동 등록, 100% 채우면 펫
+5. ~~**컬렉션/도감** — 처치한 적 자동 등록~~ ✅ 부분 완료 (2026-04-30, 100% 채우면 펫 동행 기능은 추후)
 6. **사운드** — Unity Audio 효과음 + BGM
 7. **아트** — 단색 더미 → 실 스프라이트 교체
 
@@ -370,3 +375,4 @@ public interface IAttackPattern
 - 2026-04-30: 추억 시스템 — MemoryPool SO + 4종 추억 데이터(사진/메모/스티커/낙서), MemoryPickup 프리팹·MemorySpawner(웨이브 클리어 시 챕터 매칭+확률), MetaProgression 발견 영구 저장, 다락방 DiaryPanel(4슬롯 그리드 + n/4 카운트). 히든 챕터 unlock은 미구현.
 - 2026-04-30: 메타 업그레이드 — MetaUpgradeData/Pool SO + 3종(체력/공격력/별가루), SaveData.metaUpgrades 영구화, PlayerStats가 base에 메타 보너스 가산, GameManager가 별가루 드롭에 ×(1+bonus), Attic MetaUpgradePanel(3행 + 강화 버튼).
 - 2026-04-30: UI 화폐 구분 — 별가루 `★`(런 내) / 별 조각 `✦`(영구) 라벨·아이콘 분리. HUD `별가루 ★ N`, 상점 새로고침 `(별가루 ★ N)`, 마음 단련 강화 `(✦ N)`.
+- 2026-04-30: 도감 시스템 — EnemyPool SO + 11종 적 등록, SaveData.defeatedEnemyIds 영구화, MetaProgression이 OnEnemyKilled 자동 추적, 다락방 BestiaryPanel(6열 그리드 + n/N 카운트). Enemy_Basic.id 보강(basic_slime).

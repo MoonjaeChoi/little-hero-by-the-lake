@@ -457,6 +457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.MetaProgression
   _memoryPool: {fileID: 11400000, guid: 32722289751b942d5afb9c45caa05493, type: 2}
   _upgradePool: {fileID: 11400000, guid: c884bf4966bf046d697289f5bed764fe, type: 2}
+  _enemyPool: {fileID: 11400000, guid: b38d1b77d5fcb400fab80305c6e2564e, type: 2}
 --- !u!4 &268353501
 Transform:
   m_ObjectHideFlags: 0
