@@ -39,7 +39,9 @@ namespace LittleHero
     public static class EnhancementService
     {
         public const int MAX_ENHANCE_LEVEL = 25;
-        public const int DETERMINISTIC_LEVEL_CAP = 16;   // [0, 16) = 결정론
+        // [0, 15) = 결정론 (15회 시도: +0→+1 ~ +14→+15 모두 100%).
+        // level 15 = 첫 RNG 시도 (+15→+16, 마법 결정 ◇3 소비). p = 0.50 × 0.85^0 = 0.50.
+        public const int DETERMINISTIC_LEVEL_CAP = 15;
         public const int SOFT_PITY_START_FAILS = 5;
         public const float SOFT_PITY_BONUS_PER_FAIL = 0.05f;
         public const int HARD_PITY_FAILS = 20;
