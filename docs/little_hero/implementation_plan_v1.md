@@ -67,8 +67,8 @@
 
 | ID | 작업 | 참조 | 의존 | 복잡도 |
 |---|---|---|---|---|
-| **B1** | `EquipmentTemplate` SO 클래스 정의 + 16종 마이그레이션 (기존 EquipmentData → Template) | equipment §4.1 + §4.4 | — | 중 |
-| **B2** | `EquipmentInstance` 직렬화 — 6줄 affix (주 3 + 부 3) | equipment §4.2 + item_drop §5.1 | B1 | 중 |
+| **B1** | `EquipmentTemplate` SO 클래스 정의 + 16종 마이그레이션 (기존 EquipmentData → Template) | equipment §4.1 + §4.4 | — | 중 | ✅ 2026-05-01 |
+| **B2** | `EquipmentInstance` 직렬화 — 6줄 affix (주 3 + 부 3) | equipment §4.2 + item_drop §5.1 | B1 | 중 | ✅ 2026-05-01 (SaveData affix 필드 함께 도입) |
 | **B3** | `AffixDefinition` SO 23종 일괄 생성 (Editor 스크립트) | affix_pool §2 | A1 | 중 | ✅ 2026-05-01 (실제 unique 22, 문서 오류) |
 | **B4** | `SubAffixDefinition` SO 12종 일괄 생성 | item_drop §3.1 | A1 | 중 | ✅ 2026-05-01 |
 | **B5** | `SlotAffixPool` SO 12종 (슬롯별 1차/2차/3차 매핑) | affix_pool §3 | B3 | 간단 | ✅ 2026-05-01 |

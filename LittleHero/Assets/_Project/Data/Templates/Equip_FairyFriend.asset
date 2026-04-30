@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77dc62b5207834b08818fbd59085232a, type: 3}
+  m_Name: Equip_FairyFriend
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EquipmentTemplate
+  id: Equip_FairyFriend
+  displayName: "\uC694\uC815 \uCE5C\uAD6C"
+  description: 
+  icon: {fileID: -1854112368490917219, guid: ab024c08103d54b44ac6682f3fc394dd, type: 3}
+  slot: 11
+  rarity: 1
+  baseStats:
+    maxHealthBonus: 0
+    speedBonus: 0
+    attackDamageBonus: 0
+    attackSpeedBonus: 0
+    rangeBonus: 0
+    xpGainBonus: 0
+  attackPattern: 3
+  attackConfig:
+    damage: 8
+    attackInterval: 0
+    range: 1.8
+    projectileSpeed: 3
+    count: 2
+    projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+  maxEnhanceLevel: 25
+  mainAffixLineCount: 3
+  subAffixLineCount: 3

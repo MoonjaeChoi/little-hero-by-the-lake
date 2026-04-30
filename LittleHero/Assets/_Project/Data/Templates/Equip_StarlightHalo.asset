@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77dc62b5207834b08818fbd59085232a, type: 3}
+  m_Name: Equip_StarlightHalo
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EquipmentTemplate
+  id: Equip_StarlightHalo
+  displayName: "\uBCC4\uBE5B \uD6C4\uAD11"
+  description: 
+  icon: {fileID: 2723365453023647494, guid: 22123510294174772b96b96207506564, type: 3}
+  slot: 0
+  rarity: 2
+  baseStats:
+    maxHealthBonus: 0
+    speedBonus: 0
+    attackDamageBonus: 0
+    attackSpeedBonus: 0
+    rangeBonus: 0
+    xpGainBonus: 0
+  attackPattern: 2
+  attackConfig:
+    damage: 9
+    attackInterval: 0.4
+    range: 3.5
+    projectileSpeed: 0
+    count: 1
+    projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+  maxEnhanceLevel: 25
+  mainAffixLineCount: 3
+  subAffixLineCount: 3

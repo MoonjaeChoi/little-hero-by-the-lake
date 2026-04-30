@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77dc62b5207834b08818fbd59085232a, type: 3}
+  m_Name: Equip_MagicBag
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EquipmentTemplate
+  id: Equip_MagicBag
+  displayName: "\uB9C8\uBC95 \uAC00\uBC29"
+  description: 
+  icon: {fileID: -4971171723176077403, guid: 31966698a69754d73a22818f12b7f6a7, type: 3}
+  slot: 9
+  rarity: 0
+  baseStats:
+    maxHealthBonus: 0
+    speedBonus: 0
+    attackDamageBonus: 0
+    attackSpeedBonus: 0
+    rangeBonus: 0
+    xpGainBonus: 0.2
+  attackPattern: 0
+  attackConfig:
+    damage: 0
+    attackInterval: 0
+    range: 0
+    projectileSpeed: 0
+    count: 1
+    projectilePrefab: {fileID: 0}
+  maxEnhanceLevel: 25
+  mainAffixLineCount: 3
+  subAffixLineCount: 3

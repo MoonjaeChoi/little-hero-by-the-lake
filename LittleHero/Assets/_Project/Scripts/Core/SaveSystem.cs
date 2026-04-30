@@ -28,7 +28,20 @@ namespace LittleHero
         public int level = 1;                                        // 캐릭터 레벨 (L100 캡)
         public int xp;                                               // 누적 XP (현 레벨 내 진행도는 BalanceConfig.xpThresholds로 환산)
         public int firstClearedChapters;                             // 35 챕터 첫 클리어 비트마스크 (별빛 1회 보상용)
-        // permanentlyLockedAffixes / mythicMileageBonus 는 B2 EquipmentInstance 직렬화와 함께 도입.
+
+        // ✦ B2 — 장비 인스턴스 영구 저장 (equipment §4.2)
+        public EquipmentInstance[] equipmentInstances = new EquipmentInstance[0];
+
+        // monetization §7.1 — 별빛으로 영구 잠금/마일리지 산 결과 (인스턴스ID 기반)
+        public string[] permanentlyLockedInstanceIds = new string[0];
+        public MythicMileageEntry[] mythicMileageBonus = new MythicMileageEntry[0];
+    }
+
+    [System.Serializable]
+    public class MythicMileageEntry
+    {
+        public string instanceId;
+        public int bonus;
     }
 
     public static class SaveSystem
