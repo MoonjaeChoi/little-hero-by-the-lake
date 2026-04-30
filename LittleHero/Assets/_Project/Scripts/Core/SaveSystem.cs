@@ -35,6 +35,12 @@ namespace LittleHero
         // monetization §7.1 — 별빛으로 영구 잠금/마일리지 산 결과 (인스턴스ID 기반)
         public string[] permanentlyLockedInstanceIds = new string[0];
         public MythicMileageEntry[] mythicMileageBonus = new MythicMileageEntry[0];
+
+        // ✦ C6 — Endgame 진행 상태 (endgame_v1 §8.2 + §8.3)
+        public long lastDailyBossClearTime;                          // Unix 초. 0 = 미클리어
+        public long lastWeeklyBossClearTime;                         // Unix 초
+        public int infiniteModeMaxDepth;                             // 무한 모드 최고 깊이
+        public bool[] hardcoreChaptersCleared = new bool[15];        // CH 36~50 (인덱스 0~14)
     }
 
     [System.Serializable]
