@@ -23,23 +23,20 @@
 
 ### 파생 스탯 (코어 + 장비 + 메타 업그레이드 합산)
 
-> ✦ 메이플 키우기 옵션 완전 채용. 명중·회피 제거. 보스/일몹 데미지 분리 제거.
+> ✦ 메이플 키우기 옵션 채용. **단, 스킬 시스템(스킬 레벨·스킬 쿨감)은 미채용** — Little Hero는 자동 공격(`IAttackPattern` 틱) 모델이라 액티브 스킬 추상화 불필요. 명중·회피 제거. 보스/일몹 데미지 분리 제거.
 
 | 스탯 | 단위 | 주 채널 |
 |---|---|---|
 | 최대 HP | 절대값 | 마음·장비·메타 |
 | 공격력 | 절대값 | 힘·장비·메타 |
-| 공격 속도 | 배수 | 빠름·장비 |
+| 공격 속도 | 배수 | 빠름·장비·**모자 고유** |
 | 이동 속도 | 절대값 | 빠름·장비 |
 | 사거리 | 절대값 | 슬기·장비 |
 | 크리티컬 확률 | % | 슬기·장비 |
 | 크리티컬 피해 | 배수 | 장갑 고유 (+자체 100% 시작) |
 | **최종 데미지** ✦ | % (곱) | 망토·하의·안경 고유 (메이플 키우기 핵심 채널) |
-| **스킬 레벨** ✦ | 절대값 | 목걸이·반지 고유 (모든 패턴의 데미지 배수) |
-| **스킬 쿨감** ✦ | % | 모자 고유 (attackInterval 감소) |
 | **공격 대상 수** ✦ | 절대값 | 상의 고유 (Projectile count 등) |
-| **방어 관통력** ✦ | % | 무기·어깨 (적 방어력 무시) |
-| **버프 지속시간** ✦ | % | (벨트 슬롯 없음, 다른 슬롯에 분산) |
+| **방어 관통력** ✦ | % | 무기 고유 (적 방어력 무시) |
 | 방어력 | 절대값 | 힘·장비 |
 | 데미지 감소 | % | 장비·메타 |
 | xp 획득량 | 배수 | 마음·장비 |
@@ -73,7 +70,6 @@
 - **망토** 고유: "최종 데미지 +%" (Epic 이상)
 - **하의** 고유: "최종 데미지 +%" (Epic 이상)
 - **안경** 고유: "최종 데미지 +%" (Epic 이상, 메이플 키우기 얼굴장식 매칭)
-- **반지/목걸이** 고유: "스킬 레벨 +1" → 패턴 데미지 배수로 변환
 - 신화 옵션의 "최종 데미지" 류
 - 두 번째 곱연산 채널이 빌드 차별화의 핵심
 
@@ -93,10 +89,10 @@
 | Attribute Bonus | ✓ 1 버킷 | ❌ | 버킷 1에 흡수 |
 | Boss/일몹 분리 | ❌ | ✓ (보공·일몹뎀) | ❌ ✦ **제거 (사용자 결정)** |
 | 명중/회피 | ❌ | ✓ (PvP·아레나) | ❌ ✦ **제거 (사용자 결정)** |
-| 스킬 레벨 | ❌ | ✓ (스킬계수 곱) | ✓ 버킷 2에 흡수 (목걸이/반지 고유) |
-| 스킬 쿨감 | ❌ | ✓ (모자 고유) | ✓ 버킷 외 — attackInterval 직접 감소 |
+| 스킬 레벨 | ❌ | ✓ (스킬계수 곱) | ❌ ✦ **제거 (사용자 결정)** — 자동공격 모델, 액티브 스킬 미도입 |
+| 스킬 쿨감 | ❌ | ✓ (모자 고유) | ❌ ✦ **제거** — 모자는 "공격 속도 +%"로 대체 |
 
-→ 결과: **3 버킷, 메이플 키우기의 "최종 데미지%" 채널이 빌드 시너지의 핵심**. 망토+하의+안경 트리오의 시너지가 자연스럽게 나옴 (세트 효과 없이도).
+→ 결과: **3 버킷, 메이플 키우기의 "최종 데미지%" 채널이 빌드 시너지의 핵심**. 망토+하의+안경 트리오의 시너지가 자연스럽게 나옴 (세트 효과 없이도). **스킬 시스템 미도입** — Brotato/Vampire Survivors처럼 자동공격(`IAttackPattern` 틱) 모델이라 액티브 스킬·쿨다운 추상화 불필요.
 
 ---
 
@@ -170,15 +166,15 @@
 
 ---
 
-## 4. 장비 부위별 고유 옵션 매트릭스 ✦ 메이플 키우기 완전 채용
+## 4. 장비 부위별 고유 옵션 매트릭스 ✦ 메이플 키우기 채용 (스킬 제외)
 
-> 메이플 키우기의 부위별 고유옵션을 그대로 매핑. **명중·회피 제거**, **보스데미지/일몹데미지 제거**. Little Hero 12 슬롯에 맞춰 어깨/벨트는 폐기, 펫 슬롯은 신규.
+> 메이플 키우기의 부위별 고유옵션을 매핑. **명중·회피 제거**, **보스데미지/일몹데미지 제거**, **스킬 레벨·스킬 쿨감 제거** (Little Hero는 자동공격 모델). Little Hero 12 슬롯에 맞춰 어깨/벨트는 폐기, 펫 슬롯은 신규.
 
 ### 주 슬롯 7개 — 메이플 키우기 매칭
 
 | Little Hero 슬롯 | 메이플 키우기 매칭 | **고유 옵션 (1차)** | 2차 옵션 | 3차 옵션 |
 |---|---|---|---|---|
-| 모자 | 모자(투구) | **스킬 쿨감 %** | 슬기 +N | 사거리 |
+| 모자 | 모자(투구) | **공격 속도 +%** | 슬기 +N | 사거리 |
 | 상의 | 상의 | **공격 대상 수 +N** | 마음 +N | 최대 HP +% |
 | 하의 | 하의 | **최종 데미지 +%** ★ | 마음 +N | 방어력 |
 | 망토 | 망토 | **최종 데미지 +%** ★ | 데미지 감소 % | 빠름 +N |
@@ -188,17 +184,21 @@
 
 ★ = 메이플 키우기 우선 큐브 4부위 (망토·하의·장갑·반지) 중 3개. 스펙업 핵심 부위.
 
+> 모자: 메이플 키우기 원본은 "스킬 쿨감"이 핵심. Little Hero는 액티브 스킬 미도입이라 **공격 속도 +%**로 대체 — `IAttackPattern.attackInterval` 단축 효과는 동일.
+
 ### 장신구 슬롯 5개 — 메이플 키우기 매칭
 
 | Little Hero 슬롯 | 메이플 키우기 매칭 | **고유 옵션 (1차)** | 2차 옵션 | 3차 옵션 |
 |---|---|---|---|---|
 | 귀걸이 | 귀걸이 | **최대 HP +%** | 마음 +N | 자원 회복 |
 | 안경 | 얼굴장식 | **최종 데미지 +%** ★ | 슬기 +N | 시야 확장 |
-| 목걸이 | 펜던트 | **스킬 레벨 +1** ★ | 데미지 % | 모든 스탯 +N |
-| 반지 | 반지 | **스킬 레벨 +1** ★ | 모든 스탯 +N | 크리티컬 확률 |
+| 목걸이 | 펜던트 | **데미지 +%** | 모든 스탯 +N | xp 획득 +% |
+| 반지 | 반지 | **모든 스탯 +N** | 크리티컬 확률 | 별가루 획득 +% |
 | 펫 | 동료/펫 | **동행 지속시간 +%** | 드랍률 +% | 자동 회복 |
 
-★ = 메이플 키우기 우선 큐브 4부위(망토·하의·장갑·**반지**) 중 1개 + 펜던트 메인 옵션 + 얼굴장식 최종 데미지.
+★ = 메이플 키우기 우선 큐브 핵심 옵션(최종 데미지) 매칭.
+
+> 목걸이/반지: 메이플 키우기 원본은 "스킬 레벨 +1"이 핵심. Little Hero는 자동공격이라 스킬 추상화 없음 → 데미지 % 와 모든 스탯 +N 으로 대체. 결과적으로 **버킷 1(데미지%) 강화 슬롯**으로 정체성 부여.
 
 ### 메이플 키우기 옵션 → Little Hero 메커닉 매핑
 
@@ -206,12 +206,13 @@
 |---|---|
 | **최종 데미지 +%** | 데미지 버킷 2 곱연산 (망토·하의·안경) |
 | **크리티컬 피해 +%** | 버킷 3에 가산 (장갑) |
-| **스킬 레벨 +1** | 모든 `IAttackPattern.attackConfig.damage` × (1 + 0.1 × skillLevel) |
-| **스킬 쿨감 %** | `IAttackPattern.attackConfig.attackInterval` × (1 - reduction) |
-| **공격 대상 수 +N** | `ProjectileAttack.count` 또는 `OrbitAttack.count` 가산 |
-| **방어 관통력 %** | 적 방어력에 (1 - penetration) 적용 |
-| **동행 지속시간 +%** | `SummonAttack`/`OrbitAttack` 동료의 lifetime 가산 (※ Little Hero는 영구라 미적용 가능) |
-| **드랍률 +%** | 적 처치 시 별가루·xp·장신구 드랍 배수 |
+| **공격 속도 +%** | `IAttackPattern.attackConfig.attackInterval` 단축 (모자·빠름 코어) |
+| **공격 대상 수 +N** | `ProjectileAttack.count` 또는 `OrbitAttack.count` 가산 (상의) |
+| **방어 관통력 %** | 적 방어력에 (1 - penetration) 적용 (무기) |
+| **동행 지속시간 +%** | `SummonAttack`/`OrbitAttack` 동료의 lifetime 가산 (신발·펫, ※ 영구 동행 시 이펙트 지속시간으로 대체 가능) |
+| **드랍률 +%** | 적 처치 시 별가루·xp·장신구 드랍 배수 (펫) |
+| 스킬 레벨 +1 | ❌ **제거 (사용자 결정)** — 자동공격 모델, 스킬 추상화 미도입 |
+| 스킬 쿨감 % | ❌ **제거** — 공격 속도 %로 대체 |
 | 보스 데미지 +% | ❌ **제거 (사용자 결정)** |
 | 일몹 데미지 +% | ❌ **제거 (사용자 결정)** |
 | 명중·회피 | ❌ **제거 (사용자 결정)** |
@@ -281,13 +282,12 @@ public class PlayerStats : MonoBehaviour
     public float DustGainMultiplier { get; private set; }
     public float DropRateMultiplier { get; private set; }     // 펫 고유
 
-    // ✦ 메이플 키우기 핵심 채널
+    // ✦ 메이플 키우기 핵심 채널 (스킬 시스템 제외)
     public float FinalDamageBonus { get; private set; }       // 망토·하의·안경 (버킷 2)
-    public int   SkillLevelBonus { get; private set; }        // 목걸이·반지 (스킬 데미지 배수)
-    public float SkillCooldownReduction { get; private set; } // 모자 (attackInterval × (1-CDR))
     public int   ExtraAttackTargets { get; private set; }     // 상의 (Projectile.count 가산)
     public float ArmorPenetration { get; private set; }       // 무기 (적 방어력 무시)
     public float CompanionDurationBonus { get; private set; } // 신발·펫 (Summon/Orbit lifetime)
+    // SkillLevelBonus, SkillCooldownReduction 폐기 — 자동공격 모델, 공격 속도/공격력%로 흡수
 
     // 데미지 버킷 % 합산값
     public float AdditiveDamageBonus { get; private set; }    // 버킷 1
@@ -302,9 +302,6 @@ public static class DamageCalculator
 {
     public static float CalculateDamage(PlayerStats stats, EnemyController target, AttackPatternConfig pattern)
     {
-        // 베이스 = 공격력 × (1 + skill_level × 0.1) — 스킬 레벨 곱
-        float baseAttack = stats.AttackDamage * (1f + stats.SkillLevelBonus * 0.1f);
-
         // 버킷 1: 합산 데미지%
         float bucket1 = 1f + stats.AdditiveDamageBonus;
 
@@ -314,7 +311,7 @@ public static class DamageCalculator
         // 버킷 3: 크리티컬 (확률 × 피해 곱셈)
         float bucket3 = 1f + stats.CritChance * (stats.CritDamage - 1f);
 
-        float dmg = baseAttack * bucket1 * bucket2 * bucket3;
+        float dmg = stats.AttackDamage * bucket1 * bucket2 * bucket3;
 
         // 적 방어력 적용 (방어 관통력 반영)
         float effectiveArmor = target.Data.armor * (1f - stats.ArmorPenetration);
@@ -325,7 +322,7 @@ public static class DamageCalculator
 }
 ```
 
-### 패턴 연동 (스킬 쿨감·공격 대상 수)
+### 패턴 연동 (공격 속도·공격 대상 수)
 
 ```csharp
 // IAttackPattern 구현 시 PlayerStats 참조
@@ -333,7 +330,8 @@ public class ProjectileAttack : IAttackPattern
 {
     public void Tick(float deltaTime)
     {
-        float interval = _config.attackInterval * (1f - _stats.SkillCooldownReduction);
+        // 공격 속도% (모자 고유 + 빠름 코어)는 attackInterval 직접 단축
+        float interval = _config.attackInterval / Mathf.Max(0.1f, _stats.AttackSpeed);
         _timer += deltaTime;
         if (_timer < interval) return;
         // ...
@@ -374,11 +372,9 @@ public class CharacterData : ScriptableObject {
 │                                            │
 │   체력           220 / 220                 │
 │   공격력         145    (+45 장비)         │
-│   공격 속도      1.2     (+20%)            │
+│   공격 속도      1.2     (+20%, 모자)      │
 │   크리티컬       12%  ×  165%              │
 │   최종 데미지    +18%   (망토·하의·안경)   │
-│   스킬 레벨      Lv 3   (+30% 패턴 데미지) │
-│   스킬 쿨감      8%     (모자)             │
 │   공격 대상 수   2       (기본+1, 상의)    │
 │   이동 속도      5.5                       │
 │   방어력         24                        │
@@ -399,8 +395,8 @@ public class CharacterData : ScriptableObject {
 
 **MVP 포함**:
 - 4 코어 스탯 + 레벨업 자동 증가
-- 11개 파생 스탯 모두 (HP·공격력·공격속도·이동속도·사거리·크리확률·크리피해·방어력·데미지감소·xp획득·별가루획득)
-- 3 데미지 버킷
+- 파생 스탯 (HP·공격력·공격속도·이동속도·사거리·크리확률·크리피해·방어력·데미지감소·xp획득·별가루획득·**최종 데미지%·공격 대상 수·방어 관통력·동행 지속시간·드랍률**)
+- 3 데미지 버킷 (합산 / 최종 데미지% / 크리티컬)
 - 부위별 옵션 매트릭스 (12 슬롯)
 - 캐릭터 정보 화면
 - 적 스탯 4종 (HP·공격력·이동속도·방어력)
@@ -409,7 +405,7 @@ public class CharacterData : ScriptableObject {
 - 원소 데미지 (불·얼음 등) — 4번째 데미지 버킷
 - 회피·반사 메커니즘 (망토 슬롯의 옵션은 보유하되 효과 발동은 단순화)
 - 상태 효과 (Bleed·Stun) — 비폭력 톤 위반 가능성
-- 클래스별 스킬 시스템 — 현재는 자동 사격만
+- **액티브 스킬 시스템 (스킬 레벨·쿨다운·쿨감)** — 자동 사격 모델 유지, 빌드 깊이는 12 슬롯·옵션·강화로 확보
 
 ---
 
@@ -422,10 +418,10 @@ public class CharacterData : ScriptableObject {
 - 캐릭터 클래스 보너스 비중 (1.2/0.9 가설 검증)
 - ✅ 명중·회피 → **제거 결정 (사용자)**
 - ✅ 보스/일몹 데미지 분리 → **제거 결정 (사용자)**
-- ✅ 메이플 키우기 옵션 → **완전 채용 결정 (사용자)**
-- 스킬 레벨 1당 데미지 배수 (10% 가설 — 메이플 키우기는 약 5~10%)
-- 스킬 쿨감 상한 (메이플 키우기는 30~50% 권장)
+- ✅ 메이플 키우기 옵션 → **부분 채용 결정 (사용자)** — 스킬 레벨/쿨감 제외
+- ✅ 스킬 시스템(스킬 레벨·스킬 쿨감) → **미채용 결정 (사용자)** — Brotato/VS 스타일 자동공격, 빌드 깊이는 12 슬롯·옵션·강화로 확보
 - 공격 대상 수 상한 (모든 적 동시 공격 방지)
+- 공격 속도 상한 (`attackInterval` 최소값, 예: 0.05초)
 - 동행 지속시간 — Little Hero는 영구 동행이라 의미 약함 (펫 이펙트 지속시간으로 대체?)
 - 상태 효과 도입 가능성 (비폭력 톤 호환)
 
