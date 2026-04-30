@@ -49,7 +49,7 @@
 
 | ID | 작업 | 참조 | 의존 | 복잡도 |
 |---|---|---|---|---|
-| **A1** | `PlayerStats` 확장 — 7 신규 필드 + 4 코어 + L100 통합 | stats_v1 §6 | — | 중 |
+| **A1** | `PlayerStats` 확장 — 7 신규 필드 + 4 코어 + L100 통합 | stats_v1 §6 | — | 중 | ✅ 2026-04-30 |
 | **A2** | `PlayerProgress` 신규 — XP 적립 + L100 piecewise + Save | character_progression §7 | A1 | 중 |
 | **A3** | `DamageCalculator` 신규 — 3 버킷 공식 + 방어 관통 | stats_v1 §6 | A1 | 간단 |
 | **A4** | `EnemyController` 챕터 곱셈 — 1.10^(N-1) 자동 적용 | chapter_curve §9.1 | — | 간단 |

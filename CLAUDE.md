@@ -282,10 +282,12 @@ public interface IAttackPattern
 - 클래스: `EquipmentData`, `EnemyData`, `ChapterData`, `CharacterData`, `MemoryData`, `BalanceConfig`, `ShopPool`
 - `EnemyData`에 tintColor / scaleMultiplier 필드 추가
 - `BalanceConfig`에 priceByRarity 추가
+- `CharacterData`에 4 코어 비중(`strengthMultiplier`/`agilityMultiplier`/`wisdomMultiplier`/`spiritMultiplier`) 추가 (stats_v1 §3.3)
 - 인스턴스: 적 7종 (Basic/Rabbit/Bear/Firefly/Pumpkin/StarCloud/BigWolf), 장비 16종, BalanceConfig, Chapter_01_RedHood (totalWaves=20), ShopPool_Default
 
 ### Gameplay
 - **Player**: `PlayerController`, `PlayerStats`, `PlayerHealth`, `PlayerDamageReceiver`
+  - A1 PlayerStats 확장: 4 코어 스탯(힘/빠름/슬기/마음, raw + rounded) + 11 신규 파생(CritChance/CritDamage/Armor/DamageReduction/DustGainMultiplier/DropRateMultiplier/FinalDamageBonus/ExtraAttackTargets/ArmorPenetration/CompanionDurationBonus/AdditiveDamageBonus) + 코어 100점당 효과(stats_v1 §3.2) + `ApplyLevelUp()` (A2 PlayerProgress 호출 대기)
 - **Enemies**: `EnemyController` (외형 적용), `EnemyAI`, `EnemySpawner`
 - **Waves**: `WaveManager` (보스 플레이어 기준 spawn), `ChapterRunner`
 - **Equipment**: `IAttackPattern`, 7종 패턴 (`ProjectileAttack`, `AuraAttack`, `OrbitAttack`, `RainAttack`, `TrailAttack`, `PulseAttack`, `SummonAttack`), `OrbitOrb`, `TrailField`, `PulseVisual`, `EquipmentManager`, `TestEquip`
@@ -380,3 +382,4 @@ public interface IAttackPattern
 - 2026-04-30: UI 화폐 구분 — 별가루 `★`(런 내) / 무지개 구슬 `✦`(영구) 라벨·아이콘 분리. HUD `별가루 ★ N`, 상점 새로고침 `(별가루 ★ N)`, 마음 단련 강화 `(✦ N)`.
 - 2026-04-30: 도감 시스템 — EnemyPool SO + 11종 적 등록, SaveData.defeatedEnemyIds 영구화, MetaProgression이 OnEnemyKilled 자동 추적, 다락방 BestiaryPanel(6열 그리드 + n/N 카운트). Enemy_Basic.id 보강(basic_slime).
 - 2026-04-30: 화폐 명칭 일괄 갱신 — `별 조각` → `무지개 구슬` ✦ (영구), 신규 `마법 결정` ◇ (강화 전용, +16 이상). 영문 필드명(`StarFragments` 등)은 유지. 다른 게임 사례 조사 기반 차별화 (메이플 키우기·디아블로 4·로스트 아크 참조).
+- 2026-04-30: A1 PlayerStats 확장 — 4 코어 스탯(힘/빠름/슬기/마음) + 11 신규 파생(메이플 키우기 채널 4 + 데미지 버킷 1 + 크리/방어/배수 6) + 코어 100점당 효과 통합 + `ApplyLevelUp()` 메서드 (A2 호출 대기). `CharacterData`에 4 코어 비중 필드 추가. 신규 필드 기본값 0/베이스로 기존 게임플레이 영향 0 (참조: docs/little_hero/stats_v1.md §6).

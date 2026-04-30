@@ -21,6 +21,12 @@ namespace LittleHero
         [Header("외형")]
         public Color tintColor = Color.white;
 
+        [Header("코어 스탯 비중 (stats_v1 §3.3)")]
+        public float strengthMultiplier = 1f;
+        public float agilityMultiplier = 1f;
+        public float wisdomMultiplier = 1f;
+        public float spiritMultiplier = 1f;
+
         [Header("언락 조건")]
         public int starFragmentCost;
     }
