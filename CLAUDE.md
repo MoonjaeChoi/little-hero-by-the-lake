@@ -205,8 +205,9 @@ public interface IAttackPattern
 - "출발" 버튼으로 다음 웨이브
 
 ### 메타 시스템
-- **별가루 (런 내)**: 상점 구매
-- **별 조각 (영구)**: 챕터 클리어 시 획득 → 메타 업그레이드, 캐릭터/장비 언락
+- **별가루 (런 내)**: `★` 아이콘. 적 처치로 획득, 상점에서 소비. 사망/클리어 시 0으로 리셋. HUD 표시 `별가루 ★ N`, 상점 `새로고침 (별가루 ★ N)` / 슬롯 `★ N`.
+- **별 조각 (영구)**: `✦` 아이콘. 챕터 클리어 보상으로만 획득(CH1=5/CH2=8/CH3=12), 마음 단련에서 소비. SaveSystem에 영구 저장. UI 표시 `별 조각 ✦ N` / 강화 비용 `(✦ N)`.
+- 두 화폐는 **아이콘과 라벨로 명확히 구분**한다. ★(별가루)와 ✦(별 조각)을 혼용하지 않는다.
 - **도감**: 처치한 적 자동 등록, 100% 채우면 펫으로 동행 가능
 
 ### 아빠의 추억 시스템 (스토리 코어)
@@ -368,3 +369,4 @@ public interface IAttackPattern
 - 2026-04-30: 캐릭터 시스템 — CharacterData에 tintColor, MetaProgression.SelectedCharacter(영구 저장), PlayerStats가 캐릭터 스탯 적용, Attic에 3캐릭터 선택 UI, 3종 SO(용감한 소년/씩씩한 소녀/조용한 친구).
 - 2026-04-30: 추억 시스템 — MemoryPool SO + 4종 추억 데이터(사진/메모/스티커/낙서), MemoryPickup 프리팹·MemorySpawner(웨이브 클리어 시 챕터 매칭+확률), MetaProgression 발견 영구 저장, 다락방 DiaryPanel(4슬롯 그리드 + n/4 카운트). 히든 챕터 unlock은 미구현.
 - 2026-04-30: 메타 업그레이드 — MetaUpgradeData/Pool SO + 3종(체력/공격력/별가루), SaveData.metaUpgrades 영구화, PlayerStats가 base에 메타 보너스 가산, GameManager가 별가루 드롭에 ×(1+bonus), Attic MetaUpgradePanel(3행 + 강화 버튼).
+- 2026-04-30: UI 화폐 구분 — 별가루 `★`(런 내) / 별 조각 `✦`(영구) 라벨·아이콘 분리. HUD `별가루 ★ N`, 상점 새로고침 `(별가루 ★ N)`, 마음 단련 강화 `(✦ N)`.

@@ -53,7 +53,7 @@ namespace LittleHero
             }
 
             int cost = MetaProgression.Instance.GetUpgradeCost(_data);
-            if (_costText != null) _costText.text = $"강화 (★ {cost})";
+            if (_costText != null) _costText.text = $"강화 (✦ {cost})";
             if (_upgradeButton != null) _upgradeButton.interactable = MetaProgression.Instance.CanUpgrade(_data);
         }
 

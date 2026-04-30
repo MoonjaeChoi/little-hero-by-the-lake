@@ -59,7 +59,7 @@ namespace LittleHero
         private void UpdateStarDust(int amount)
         {
             if (_starDustText == null) return;
-            _starDustText.text = $"★ {amount}";
+            _starDustText.text = $"별가루 ★ {amount}";
         }
     }
 }

@@ -100,7 +100,7 @@ namespace LittleHero
         private void UpdateRefreshButton(int starDust)
         {
             int cost = _shopController != null ? _shopController.CurrentRefreshCost : 0;
-            if (_refreshCostText != null) _refreshCostText.text = $"새로고침 (★ {cost})";
+            if (_refreshCostText != null) _refreshCostText.text = $"새로고침 (별가루 ★ {cost})";
             if (_refreshButton   != null) _refreshButton.interactable = starDust >= cost;
         }
     }
