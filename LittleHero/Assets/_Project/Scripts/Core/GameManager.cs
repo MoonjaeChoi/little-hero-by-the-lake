@@ -1,0 +1,74 @@
+using UnityEngine;
+
+namespace LittleHero
+{
+    public enum GameState { Hub, Wave, Shop, Paused, GameOver }
+
+    public class GameManager : MonoBehaviour
+    {
+        public static GameManager Instance { get; private set; }
+
+        [SerializeField] private BalanceConfig _balanceConfig;
+
+        public GameState CurrentState { get; private set; }
+        public int CurrentWave { get; private set; }
+        public int StarDust { get; private set; }
+        public BalanceConfig Balance => _balanceConfig;
+
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        public void StartWave()
+        {
+            CurrentWave++;
+            SetState(GameState.Wave);
+        }
+
+        public void EndWave()
+        {
+            GameEvents.RaiseWaveCleared(CurrentWave);
+            SetState(GameState.Shop);
+            GameEvents.RaiseShopOpened();
+        }
+
+        public void CloseShop()
+        {
+            StartWave();                  // CurrentWave++ 먼저
+            GameEvents.RaiseShopClosed(); // 이후 이벤트 발행
+        }
+
+        public void AddStarDust(int amount)
+        {
+            StarDust += amount;
+            GameEvents.RaiseStarDustChanged(StarDust);
+        }
+
+        public bool SpendStarDust(int amount)
+        {
+            if (StarDust < amount) return false;
+            StarDust -= amount;
+            GameEvents.RaiseStarDustChanged(StarDust);
+            return true;
+        }
+
+        public void ResetRun()
+        {
+            CurrentWave = 0;
+            StarDust = 0;
+            SetState(GameState.Hub);
+        }
+
+        private void SetState(GameState state)
+        {
+            CurrentState = state;
+        }
+    }
+}
