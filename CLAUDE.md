@@ -254,15 +254,54 @@ public interface IAttackPattern
 
 ## 11. 마일스톤
 
-| Phase | 기간 | 핵심 산출물 |
-|---|---|---|
-| 0 환경 | 1주 | Unity + Xcode + iOS 빌드 성공 |
-| 1 프로토타입 | 3주 | 다락방 → 1챕터 3웨이브 + 상점 1회 동작 |
-| 2 확장 | 4주 | 1챕터 20웨이브 완성 + 장비 12종 + 적 6종 |
-| 3 콘텐츠 | 4주 | 챕터 3권 + 캐릭터 3명 + 메타 진행 + 추억 시스템 |
-| 4 출시 | 3주 | TestFlight + App Store 심사 |
+| Phase | 기간 | 핵심 산출물 | 상태 |
+|---|---|---|---|
+| 0 환경 | 1주 | Unity + Xcode + iOS 빌드 성공 | ✅ 완료 (2026-04-29) |
+| 1 프로토타입 | 3주 | 다락방 → 1챕터 3웨이브 + 상점 1회 동작 | ✅ 완료 (2026-04-30) |
+| 2 확장 | 4주 | 1챕터 20웨이브 완성 + 장비 12종 + 적 6종 | 🔄 진행 예정 |
+| 3 콘텐츠 | 4주 | 챕터 3권 + 캐릭터 3명 + 메타 진행 + 추억 시스템 | ⏳ 대기 |
+| 4 출시 | 3주 | TestFlight + App Store 심사 | ⏳ 대기 |
 
-## 12. 변경 이력
+## 12. Phase 1 구현 완료 목록
+
+> Claude Code와 함께 작성한 스크립트 목록 (2026-04-30 기준)
+
+### Core
+- `GameEvents.cs` — 정적 EventBus, 10개 이벤트
+- `GameManager.cs` — 싱글턴, GameState, CurrentWave, StarDust
+- `ObjectPool.cs` — 제네릭 `ObjectPool<T>`
+- `SaveSystem.cs` — JSON 영구 저장
+
+### Data (ScriptableObject)
+- `EquipmentData.cs`, `EnemyData.cs`, `ChapterData.cs`, `CharacterData.cs`, `MemoryData.cs`, `BalanceConfig.cs`
+
+### Gameplay
+- **Player**: `PlayerController`, `PlayerStats`, `PlayerHealth`, `PlayerDamageReceiver`
+- **Enemies**: `EnemyController`, `EnemyAI`, `EnemySpawner`
+- **Waves**: `WaveManager`, `ChapterRunner`
+- **Equipment**: `IAttackPattern`, `ProjectileAttack`, `EquipmentManager`, `TestEquip`
+- **Combat**: `DamageSystem`, `Projectile`
+
+### UI
+- `HUDController` — Slider(체력바) + Legacy Text(웨이브, 별가루, 체력 수치)
+
+### 중요 구현 주의사항
+- UI 텍스트: `UnityEngine.UI.Text` (Legacy) — TMP는 URP 셰이더 깨짐
+- Rigidbody2D: `linearVelocity` (Unity 6에서 `velocity` deprecated)
+- ProjectileAttack.range(15) > EnemySpawner.spawnRadius(10) 유지
+- EquipmentManager는 `OnEquipmentChanged` 자기 구독 금지 (무한루프)
+- `GameManager.CloseShop()`: `StartWave()` 먼저, `RaiseShopClosed()` 나중에
+
+## 13. Phase 2 다음 작업 목록
+
+1. **상점 UI** — `UI/ShopPanel.cs`, 6칸 슬롯, 별가루 소비, "출발" 버튼
+2. **추가 공격 패턴** — `AuraAttack`, `OrbitAttack` (IAttackPattern 구현)
+3. **적 추가** — 현재 1종, 6종 목표
+4. **장비 SO 데이터** — 현재 1종(테스트용), 12종 목표
+5. **Unity MCP 활용** — Claude Code ↔ Unity Editor 실시간 연동
+
+## 14. 변경 이력
 
 - 2026-04-29: 초기 작성 (다락방 동화책)
 - 2026-04-29: **프로젝트명 확정 — Little Hero by the Lake**, 호숫가 학교 + 아빠 동화책 스토리 추가
+- 2026-04-30: Phase 0/1 완료. 26개 스크립트 작성, Chapter.unity 씬 동작 확인
