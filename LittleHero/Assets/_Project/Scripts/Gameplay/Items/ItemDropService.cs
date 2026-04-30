@@ -28,6 +28,7 @@ namespace LittleHero
         private static SlotAffixPool[] _slotPools;
         private static GlobalSubAffixPool _globalPool;
         private static EquipmentTemplate[] _templates;
+        private static MythicDefinition[] _mythics;
         private static BalanceConfig _config;
         private static readonly System.Random _defaultRng = new System.Random();
         private static bool _initialized;
@@ -38,11 +39,13 @@ namespace LittleHero
         /// 게임 부트스트랩 시점에 1회 호출. 미호출 상태에서 TryDrop 시 null 반환 + 경고.
         /// </summary>
         public static void Initialize(SlotAffixPool[] slotPools, GlobalSubAffixPool globalPool,
-                                      EquipmentTemplate[] templates, BalanceConfig config)
+                                      EquipmentTemplate[] templates, BalanceConfig config,
+                                      MythicDefinition[] mythics = null)
         {
             _slotPools = slotPools;
             _globalPool = globalPool;
             _templates = templates;
+            _mythics = mythics;
             _config = config;
             _initialized = true;
         }
@@ -52,6 +55,7 @@ namespace LittleHero
             _slotPools = null;
             _globalPool = null;
             _templates = null;
+            _mythics = null;
             _config = null;
             _initialized = false;
         }
@@ -105,9 +109,11 @@ namespace LittleHero
                     instance.subAffixes[i] = AffixRoller.RollSub(_globalPool, rarity, rng);
             }
 
-            // 6. 신화 시도 — C7 MythicMileageService 가 마일리지 누적 + 발현 처리.
-            //    여기서는 instance.history.mileage += 1 만 두고 발현 풀은 C7 에서 호출.
-            instance.history.mileage += 1;
+            // 6. 신화 시도 — C7 MythicMileageService 가 마일리지 +1 + 발현 시도.
+            //    추억 4종 미수집 시 IsUnlocked()=false 이므로 마일리지만 증가시키지 못함;
+            //    잠금 상태에서 마일리지를 누적하려면 별도 호출 — 본 서비스는 잠금 시점에는 굴리지 않음.
+            if (_mythics != null && _mythics.Length > 0)
+                MythicMileageService.TryRoll(instance, _mythics, rng);
 
             GameEvents.RaiseAffixRolled(instance);
             return instance;
