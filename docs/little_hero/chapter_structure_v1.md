@@ -1,4 +1,12 @@
-# Little Hero — 챕터 구조 v1 (메이플 키우기 모델 영감)
+# Little Hero — 챕터 구조 v1 (메이플 키우기 모델 영감) — ⚠️ ARCHIVED
+
+> ✦ 2026-04-30: **이 문서는 폐기됨**. [`chapter_structure_v2.md`](./chapter_structure_v2.md)로 대체됐다.
+>
+> 폐기 사유: 동화책 8권 직렬 시리즈가 지루하고 다양성 부족. v2는 "다락방의 신기한 지도" 프레임으로 35 장소를 자유 테마로 재구성.
+>
+> 아래 내용은 **기록 보존용**. 신규 작업은 v2를 참조한다.
+
+---
 
 > [← Little Hero 인덱스](./README.md) · [장비 v1](./equipment_v1.md)
 >
