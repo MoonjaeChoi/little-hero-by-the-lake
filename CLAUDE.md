@@ -321,10 +321,20 @@ public interface IAttackPattern
 - `Hub/AtticController.cs` — 다락방 허브
 
 ### UI
-- `HUDController` — 체력바·웨이브·별가루 (OnShopClosed 구독)
+- `HUDController` — 체력바·웨이브·별가루 (OnShopClosed 구독). **D1**: XP 바·레벨 텍스트 + 레벨업 0.8s 색상 강조 연출 추가
 - `ShopPanel`, `ShopSlotView` — 상점 UI
 - `GameOverPanel` — 사망 시 다락방 복귀
 - `ChapterClearedPanel` — 챕터 클리어 + 무지개 구슬 보상 + 다락방 복귀
+- **D2 AtticController 갱신** — 4 화폐 표시(★/✦/◇/⋆) + Endgame 메뉴 placeholder(일일/주간/무한 cooldown 텍스트). 추억 4종 발견 시 endgame root 활성
+- **D7 ConversionForgePanel** — 변환 모루 UI(★/✦ → ◇), x1·x5 버튼 + 잔액 부족 시 disabled
+- **D8 CharacterInfoPanel** — 4 코어(힘/빠름/슬기/마음) + 11 파생 스탯 + 레벨/XP. PlayerStats 우선, 미존재 시 캐릭터 SO+level 폴백
+- **D6 EnhanceModalPanel** — +N→+N+1 비용(★/◇) + 성공률 + 천장 게이지(failCount/20). EnhancementService.TryEnhance 결과 텍스트(성공/실패/천장 발동/잔액 부족)
+- **D5 EquipmentCardPanel + EquipmentCardRow** — 6단 풀스크린(정체성/베이스/강화 진입/주옵션 보라/부옵션 청록/신화). 라인별 잠금 토글 + 리롤 버튼(주 ★N / 부 ★N). EnhanceModal 연결.
+- **D4 InventoryPanel + InventorySlotView** — 12 슬롯 그리드. 주 7 항상 해방 / 장신구 5 = 챕터 6~10 첫 클리어 비트 매핑(귀걸이=6/안경=7/목걸이=8/반지=9/펫=10). 슬롯 클릭 → EquipmentCardPanel.Show
+- **D3 WondrousMapPanel + WondrousMapNode** — 35 챕터 선형 지도. CH N 해방 = CH N-1 첫 클리어. 진입 모달(이름/설명/보상=✦+◇+⋆ 첫클리어). 권장 레벨 미달 시 D12 경고 → 사용자 확인 후 진입
+- **D10 EndgameMenuPanel** — 일일/주간 보스 cooldown + 무한 다락방 최고 깊이 + 고난도 챕터 진입 4 버튼. EndgameResetService 가용성 → 버튼 interactable. 보스 처치는 placeholder (F4·F5)
+- **D11 MythicEffectOverlay** — 신화 발현 무지개 fade-in/hold/out (0.4s/1.4s/0.6s). MythicMileageService.TryRoll 성공 시 호출. 비폭력 톤 — 무지개 휘감음만
+- **D12 RecommendedLevelWarningModal** — "권장 레벨 X, 현재 Y. 그래도 도전?" — 도전/취소 2 버튼. WondrousMapPanel 이 OnConfirm 콜백으로 진입 처리
 
 ### 씬
 - `Scenes/Attic.unity` — 다락방 허브 (무지개 구슬 표시, 3챕터 선택 버튼)
@@ -426,5 +436,20 @@ public interface IAttackPattern
 - 2026-05-01: C8 IAttackPattern 갱신 — `Initialize(config, owner, PlayerStats stats)` 로 시그니처 확장. 7개 패턴(ProjectileAttack/AuraAttack/OrbitAttack/RainAttack/TrailAttack/PulseAttack/SummonAttack) 모두 `_stats` 보관. 새 헬퍼 `AttackPatternUtil.EffectiveInterval(base, stats) = base / max(0.1, AttackSpeed)` / `EffectiveCount(base, stats) = max(1, base) + ExtraAttackTargets`. `EquipmentManager.ActivatePattern` 가 `_stats` 주입. `AttackSpeed=1`, `ExtraAttackTargets=0` 기본값에서 기존 동작 보존. Orbit 의 orb 개수는 init 시점 1회 반영(런타임 추가 안 함). 참조: stats_v1 §6 + ui_v1 §9.
 - 2026-05-01: C9 EnemySpawner 챕터 곱셈 명시적 통합 — `EnemySpawner` 에 `ActiveChapter` 프로퍼티·`SetActiveChapter(ChapterData)` API 추가. `Spawn` 우선순위: ActiveChapter → SelectedChapter → 1f. `ChapterRunner.Start` 에서 `_spawner.SetActiveChapter(_chapterData)` 호출 — 인스펙터 직접 지정 챕터에서도 enemyStatMultiplier 가 정상 작동(A4 보강). 참조: chapter_curve §9.1.
 - 2026-05-01: C4 EffectResolver — 장비·affix·신화 통합 stats 해석 정적 서비스(`Gameplay/Equipment/EffectResolver.cs`). `Resolve(equipped, templates, mythics)` → `ResolvedEquipmentBonus`(코어 ADD 4 + ADD/MUL 분리 전투 채널 + 메이플 채널(FinalDamage/ExtraTargets/ArmorPen 등) + 메타(Xp/Dust/Drop) + ActiveMythicIds 리스트). 각 인스턴스: baseStats → mainAffixes 3 → subAffixes 3 → mythicId 수집. AffixLine.targetName → StatTarget enum 파싱 후 채널 가산(AllStats 는 4 코어 동시). 세트 효과 단계 생략(폐기). 신화 효과는 대부분 조건부(HP<30%, 보스 등)이므로 ActiveMythicIds 만 노출 — 발동 책임은 DamageSystem/PlayerHealth 등 게임플레이 측. PlayerStats 통합 결합은 후속. 참조: equipment §4.3. **Phase C (C1~C9) 9/9 완료**.
+- 2026-05-01: D1~D12 Phase D UI 패널 일괄 — D9(별빛 상점, E1 Unity IAP 의존)만 보류, 나머지 11/12 완료.
+  - **D1** HUDController 갱신: XP 바 + 레벨 텍스트 + 레벨업 0.8s 색상 강조 fx (Coroutine, OnLevelUp 구독).
+  - **D2** AtticController 갱신: 4 화폐 표시(★/✦/◇/⋆) + Endgame 메뉴 placeholder(일일/주간/무한 cooldown). OnMagicCrystalChanged·OnStarlightChanged 구독. CH35 클리어 검증은 firstClearedChapters int 32bit 한계로 임시 AllMemoriesDiscovered 대용 (long 승격은 후속).
+  - **D3** WondrousMapPanel + WondrousMapNode: 35 챕터 선형 지도, CH N 해방 = CH(N-1) 첫 클리어 비트. 진입 모달(이름·설명·보상). 권장 레벨 매트릭스(1~5:lvl1, 6~10:5, 11~15:10, 16~20:18, 21~25:28, 26~30:38, 31~35:48). 미달 시 D12 경고 → 사용자 확인 후 SceneManager.LoadScene("Chapter").
+  - **D4** InventoryPanel + InventorySlotView: 12 슬롯 그리드. 주 7 항상 해방, 장신구 5 = 챕터 6~10 비트 매핑(귀걸이=6/안경=7/목걸이=8/반지=9/펫=10, equipment §3.7). 슬롯 클릭 → EquipmentCardPanel.Show. 자물쇠 오버레이.
+  - **D5** EquipmentCardPanel + EquipmentCardRow: 6단(정체성+베이스+강화진입+주옵션 보라+부옵션 청록+신화). 라인별 잠금 토글 + 리롤(주 ★N/부 ★N). AffixRoller.RerollMain/Sub 호출, GameManager.SpendStarDust 차감. EnhanceModal 진입.
+  - **D6** EnhanceModalPanel: 비용(★/◇) + 성공률(`CalcSuccessRate`) + 천장 게이지(`failCount/20`) + 결과 텍스트(성공/실패/천장 발동/잔액). EnhancementService.TryEnhance 결과 분기.
+  - **D7** ConversionForgePanel: ★→◇ x1·x5 + ✦→◇ x1·x5 버튼. 잔액 부족 시 disabled. ConversionForge 호출.
+  - **D8** CharacterInfoPanel: 4 코어 + 11 파생 + 레벨/XP. PlayerStats 우선, 다락방에서는 캐릭터 SO + level 시뮬 폴백.
+  - **D10** EndgameMenuPanel: 일일/주간 cooldown + 무한 깊이 + 고난도 4 버튼. EndgameResetService 가용성 → interactable. 진입은 F4·F5 placeholder.
+  - **D11** MythicEffectOverlay: 무지개 fade-in/hold/out 0.4/1.4/0.6s. WaitForSecondsRealtime — Time.timeScale 영향 없음.
+  - **D12** RecommendedLevelWarningModal: WondrousMapPanel 이 OnConfirm 콜백 패스. 도전/취소 2 버튼.
+  - 모든 패널은 Legacy `UnityEngine.UI.Text` 사용 (CLAUDE.md §12 규칙). 씬 wiring(Canvas hierarchy + 프리팹 [SerializeField] 연결)은 Unity Editor 작업으로 후속(ProjectValidator 룰 추가 권장).
+  - **D9 별빛 상점은 Phase E (Unity IAP) 후 진행** — 현재 별빛 ⋆ 적립 경로(챕터 첫 클리어)는 동작하지만 소비 UI 미구현.
+  - **MVP UI 8/8 + Phase 2 UI 3/4 완료. Phase D 11/12.**
 - 2026-05-01: C3 EnhancementService — 강화 +0~+25 정적 서비스(`Gameplay/Equipment/EnhancementService.cs`). `TryEnhance(instance, config, rng)` → `EnhanceResult{outcome=Success/Failure/AtMaxLevel/InsufficientDust/InsufficientCrystal/InvalidInstance, newLevel, dustCost, crystalCost, wasPityTriggered, rolledChance}`. +0~+15 결정론(1.0). +16~+25 RNG: `0.50 × 0.85^(L-16)` + 소프트 천장 `failCount≥5: +0.05/회` + 하드 천장 `failCount≥20: 1.0`. 비용은 시도 시점에 차감(실패해도 환불 없음, dust↗crystal 순 pre-check). `CalcSuccessRate(L, failCount)` 헬퍼로 UI에 미리보기. 상수: MAX_ENHANCE_LEVEL=25, DETERMINISTIC_LEVEL_CAP=16, HARD_PITY_FAILS=20. 참조: equipment §3.3·§3.4 + economy §4.1·§7.3.
 - 2026-05-01: C2 ItemDropService — 정적 드랍 결정 트리(`Gameplay/Items/ItemDropService.cs`). DropContext(source/chapterNumber/forcedSlot/forcedRarity) → ① 확률 굴림(Enemy 0.5% / Mini 8% / Boss 100% / BossRepeat 30% / Shop 100%) → ② 슬롯(CH≤10 주 7, CH11+ 12 균등 / forcedSlot 우선) → ③ 등급(affix_pool §5 챕터 묶음 분포 + Mini/Boss +1 가중 / forcedRarity 우선) → ④ 템플릿 매칭(slot+rarity 정확→슬롯 폴백) → ⑤ AffixRoller로 주 3 + 부 3 일괄 굴림 → ⑥ history.mileage += 1(C7 신화 발현 보류). `Initialize(slotPools, globalPool, templates, config)` 부트스트랩 필요. DropSource enum 5종(Enemy/MiniBoss/Boss/BossRepeat/Shop). 참조: item_drop §4·§5.3.

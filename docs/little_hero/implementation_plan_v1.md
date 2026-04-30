@@ -110,23 +110,23 @@
 
 | ID | 작업 | 참조 | 의존 | 복잡도 |
 |---|---|---|---|---|
-| **D1** | `HUDController` 갱신 — XP 바·체력·별가루 + 레벨업 0.8s 연출 | ui_v1 §4 | A2, A7 | 중 |
-| **D2** | `AtticController` 갱신 — 4 화폐 + endgame 메뉴 (placeholder) | ui_v1 §6 | A5, A7 | 중 |
-| **D3** | `WondrousMapPanel` 신규 — 35 챕터 선형 지도 + 진입 모달 | ui_v1 §7 | B7 | 복잡 |
-| **D4** | `InventoryPanel` 신규 — 12 슬롯 그리드 + 캐릭터 풀바디 + 잠금 | ui_v1 §8 | B1, B2 | 복잡 |
-| **D5** | `EquipmentCardPanel` 신규 — 6단 풀스크린 (정체성·스탯·강화·주·부·신화) | ui_v1 §9 | B1, B2, C1, C3, C4 | 복잡 |
-| **D6** | `EnhanceModalPanel` 신규 — +0~+25 + 마법 결정 + 천장 게이지 | ui_v1 §9.3 + economy §10.3 | C3, A5 | 중 |
-| **D7** | `ConversionForgePanel` 신규 — 변환 모루 UI | economy §11.3 | C5 | 간단 |
-| **D8** | `CharacterInfoPanel` 신규 — 4 코어 + 파생 스탯 풀스크린 | ui_v1 §11.2 | A1, A2 | 중 |
+| **D1** | `HUDController` 갱신 — XP 바·체력·별가루 + 레벨업 0.8s 연출 | ui_v1 §4 | A2, A7 | 중 | ✅ 2026-05-01 |
+| **D2** | `AtticController` 갱신 — 4 화폐 + endgame 메뉴 (placeholder) | ui_v1 §6 | A5, A7 | 중 | ✅ 2026-05-01 |
+| **D3** | `WondrousMapPanel` 신규 — 35 챕터 선형 지도 + 진입 모달 | ui_v1 §7 | B7 | 복잡 | ✅ 2026-05-01 |
+| **D4** | `InventoryPanel` 신규 — 12 슬롯 그리드 + 캐릭터 풀바디 + 잠금 | ui_v1 §8 | B1, B2 | 복잡 | ✅ 2026-05-01 |
+| **D5** | `EquipmentCardPanel` 신규 — 6단 풀스크린 (정체성·스탯·강화·주·부·신화) | ui_v1 §9 | B1, B2, C1, C3, C4 | 복잡 | ✅ 2026-05-01 |
+| **D6** | `EnhanceModalPanel` 신규 — +0~+25 + 마법 결정 + 천장 게이지 | ui_v1 §9.3 + economy §10.3 | C3, A5 | 중 | ✅ 2026-05-01 |
+| **D7** | `ConversionForgePanel` 신규 — 변환 모루 UI | economy §11.3 | C5 | 간단 | ✅ 2026-05-01 |
+| **D8** | `CharacterInfoPanel` 신규 — 4 코어 + 파생 스탯 풀스크린 | ui_v1 §11.2 | A1, A2 | 중 | ✅ 2026-05-01 |
 
 ### Phase 2
 
 | ID | 작업 | 참조 | 의존 |
 |---|---|---|---|
-| **D9** | `StarlightShopPanel` — 별빛 상점 (마법 결정 직구매·강화 보장 등) | monetization §8 | E1 |
-| **D10** | `EndgameMenuPanel` 풀 — 일일/주간/무한/고난도 진입 | endgame §9 | C6, B8 |
-| **D11** | `MythicEffectOverlay` — 신화 발현 무지개 연출 | equipment §3.7 + ui_v1 §13 | C7 |
-| **D12** | `RecommendedLevelWarningModal` — 챕터 진입 시 권장 미달 경고 | ui_v1 §7.2 | D3 |
+| **D9** | `StarlightShopPanel` — 별빛 상점 (마법 결정 직구매·강화 보장 등) | monetization §8 | E1 | (Phase E 보류) |
+| **D10** | `EndgameMenuPanel` 풀 — 일일/주간/무한/고난도 진입 | endgame §9 | C6, B8 | ✅ 2026-05-01 |
+| **D11** | `MythicEffectOverlay` — 신화 발현 무지개 연출 | equipment §3.7 + ui_v1 §13 | C7 | ✅ 2026-05-01 |
+| **D12** | `RecommendedLevelWarningModal` — 챕터 진입 시 권장 미달 경고 | ui_v1 §7.2 | D3 | ✅ 2026-05-01 |
 
 **MVP 8 작업 + Phase 2 4 작업. MVP 예상 10~14일.**
 
