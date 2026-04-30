@@ -44,10 +44,11 @@
 
 | 문서 | 상태 | 비고 |
 |---|---|---|
-| [`equipment_v1.md`](./equipment_v1.md) | 초안 | 12슬롯·5층 아키텍처·강화·옵션·신화 + 16종 매핑 + 슬롯 해방 |
-| [`chapter_structure_v2.md`](./chapter_structure_v2.md) | **활성** | 다락방 신기한 지도 + 35 장소 선형 진행 + 핵심 5 슬롯 해방 |
+| [`equipment_v1.md`](./equipment_v1.md) | 초안 | 12슬롯·5층 아키텍처·강화·옵션·신화 + 16종 매핑 + 3-티어 장신구 |
+| [`chapter_structure_v2.md`](./chapter_structure_v2.md) | **활성** | 다락방 신기한 지도 + 35 장소 선형 진행 + 3-티어 슬롯 시스템 |
 | [`chapter_structure_v1.md`](./chapter_structure_v1.md) | ⚠️ archived | (폐기) 동화 8권 직렬 모델 — 보존용 |
-| `character_progression_v1.md` | 미작성 | XP·레벨업·베이스 스탯 (Part 1b를 Little Hero에 적용) |
+| [`stats_v1.md`](./stats_v1.md) | **활성** | 4 코어 스탯·3 데미지 버킷·부위별 옵션 매트릭스 (Diablo 4 + 메이플 키우기) |
+| `character_progression_v1.md` | 미작성 | XP·레벨업 곡선 (Part 1b를 Little Hero에 적용, stats_v1과 통합 검토) |
 | `economy_v1.md` | 미작성 | 별가루/별 조각 + 강화석 등 신규 재화 |
 | `chapter_curve_v1.md` | 미작성 | 챕터 깊이별 적 HP/공격·권장 레벨·강화 단계 (v2의 §5 곡선과 통합) |
 | `ui_v1.md` | 미작성 | 모바일 카드 5단 위계 + 강화 모달 + 12슬롯 인벤토리 + 지도 모달 |
