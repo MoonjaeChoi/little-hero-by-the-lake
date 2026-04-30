@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd5066f85e724563904aac61cc52143, type: 3}
+  m_Name: SlotPool_Bottom
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.SlotAffixPool
+  slot: 2
+  tier1: {fileID: 11400000, guid: 2b391e7d3cbc9412d8804651f0833c2d, type: 2}
+  tier2: {fileID: 11400000, guid: 459ca8608b3cd4b3ab6c6120abfe1ed2, type: 2}
+  tier3: {fileID: 11400000, guid: 0556e07dea07049ef966a995d9f032bc, type: 2}
+  weightTier1: 0.6
+  weightTier2: 0.3
+  weightTier3: 0.1

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd5066f85e724563904aac61cc52143, type: 3}
+  m_Name: SlotPool_Gloves
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.SlotAffixPool
+  slot: 4
+  tier1: {fileID: 11400000, guid: 404c5a3bf38fb4682a157d71cb123da2, type: 2}
+  tier2: {fileID: 11400000, guid: 1e32167b956324d9199df60f44456381, type: 2}
+  tier3: {fileID: 11400000, guid: 5c356c3c671d34d248ad973220ea2d0f, type: 2}
+  weightTier1: 0.6
+  weightTier2: 0.3
+  weightTier3: 0.1

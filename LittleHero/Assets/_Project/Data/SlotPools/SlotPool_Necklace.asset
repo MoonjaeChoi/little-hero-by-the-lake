@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd5066f85e724563904aac61cc52143, type: 3}
+  m_Name: SlotPool_Necklace
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.SlotAffixPool
+  slot: 9
+  tier1: {fileID: 11400000, guid: 3f50a8a54cfce45a09f7552ae0f5c01e, type: 2}
+  tier2: {fileID: 11400000, guid: 6903391beefb34b8cb3fcdb4c5c4eaa8, type: 2}
+  tier3: {fileID: 11400000, guid: 333aaa45df9f64d47b1d5c5270a38b87, type: 2}
+  weightTier1: 0.6
+  weightTier2: 0.3
+  weightTier3: 0.1

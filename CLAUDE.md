@@ -285,6 +285,7 @@ public interface IAttackPattern
 ### Data (ScriptableObject)
 - 클래스: `EquipmentData`, `EnemyData`, `ChapterData`, `CharacterData`, `MemoryData`, `BalanceConfig`, `ShopPool`, `AffixDefinition`(B3), `SubAffixDefinition`(B4)
 - B3+B4 SO 인스턴스: Affix 22종(`Assets/_Project/Data/Affixes/`) + SubAffix 12종(`Assets/_Project/Data/SubAffixes/`). `Editor/AffixSeed.cs` 메뉴(`Tools > LittleHero > Seed Affix SOs`)로 멱등 일괄 생성. 설계 문서 §7.4의 "23종"은 §2 표·§3 슬롯 풀 매핑 unique 합과 다름 — 실제 unique 22로 정확
+- B5+B6 SO 인스턴스: SlotAffixPool 12종(`Assets/_Project/Data/SlotPools/SlotPool_Hat.asset` 등) + GlobalSubAffixPool 1종(`Assets/_Project/Data/GlobalPools/GlobalSubAffixPool_Default.asset`). 신규 `EquipSlot` enum 12개(주 7 + 장신구 5). `Editor/PoolSeed.cs` 메뉴(`Tools > LittleHero > Seed Pool SOs`)
 - `EnemyData`에 tintColor / scaleMultiplier / armor (A3, 기본 0) 필드 추가
 - `BalanceConfig`에 priceByRarity 추가
 - `CharacterData`에 4 코어 비중(`strengthMultiplier`/`agilityMultiplier`/`wisdomMultiplier`/`spiritMultiplier`) 추가 (stats_v1 §3.3)
@@ -397,3 +398,4 @@ public interface IAttackPattern
 - 2026-05-01: A3 DamageCalculator — 3 데미지 버킷(합산/최종/크리) × 적 방어력÷(1+effective/100) + 방어 관통. `CalculateExpectedDamage`(평균, UI/시뮬용)와 `RollDamage`(RNG, 런타임 1회 공격, isCrit out) 두 시그니처. EnemyData에 `armor` 필드 추가(기본 0). 호출처 통합은 C8 IAttackPattern 갱신에서.
 - 2026-05-01: A4 EnemyController 챕터 곱셈 — ChapterData에 `enemyStatMultiplier`(기본 1f, B7가 `1.10^(N-1)` 채움) 추가. EnemyController.Initialize 시그니처에 `statMultiplier` 옵션 인자, MaxHealth/AttackDamage 캐시 프로퍼티. EnemySpawner가 SelectedChapter.enemyStatMultiplier 자동 적용. PlayerDamageReceiver는 `enemy.AttackDamage` 참조로 변경(기존 `enemy.Data.damage` 직접 참조는 SO 베이스값이라 곱셈 누락). xpDrop 곱셈은 PlayerProgress의 1+N×0.1 모디파이어와 충돌하므로 미도입. **Sprint 1 (Foundation) 완료**.
 - 2026-05-01: B3+B4 Affix/SubAffix SO 시드 — AffixDefinition·SubAffixDefinition 클래스 + StatTarget 22종·AffixOp(ADD/MUL) enum + Editor 시드 메뉴 `Tools > LittleHero > Seed Affix SOs`로 22+12 = 34 SO 일괄 생성. 등급별 [min,max] 수치는 affix_pool §2 / item_drop §3.1 표 그대로. 설계 §7.4의 "23종"은 표 합계와 차이 — 실제 unique 22 (문서 오류 확인).
+- 2026-05-01: B5+B6 Pool SO 시드 — SlotAffixPool 12종 + GlobalSubAffixPool 1종 (Editor 메뉴 `Tools > LittleHero > Seed Pool SOs`). 신규 `EquipSlot` enum 12개(주 7 Hat~Shoes + 장신구 5 Earring~Pet, 메이플 키우기 매칭). 가중치 6:3:1, 글로벌 부옵션 가중치는 SubAffixDefinition.globalWeight 합 1.0.

@@ -71,8 +71,8 @@
 | **B2** | `EquipmentInstance` 직렬화 — 6줄 affix (주 3 + 부 3) | equipment §4.2 + item_drop §5.1 | B1 | 중 |
 | **B3** | `AffixDefinition` SO 23종 일괄 생성 (Editor 스크립트) | affix_pool §2 | A1 | 중 | ✅ 2026-05-01 (실제 unique 22, 문서 오류) |
 | **B4** | `SubAffixDefinition` SO 12종 일괄 생성 | item_drop §3.1 | A1 | 중 | ✅ 2026-05-01 |
-| **B5** | `SlotAffixPool` SO 12종 (슬롯별 1차/2차/3차 매핑) | affix_pool §3 | B3 | 간단 |
-| **B6** | `GlobalSubAffixPool` SO 1종 (글로벌 부옵션 풀) | item_drop §3.2 | B4 | 간단 |
+| **B5** | `SlotAffixPool` SO 12종 (슬롯별 1차/2차/3차 매핑) | affix_pool §3 | B3 | 간단 | ✅ 2026-05-01 |
+| **B6** | `GlobalSubAffixPool` SO 1종 (글로벌 부옵션 풀) | item_drop §3.2 | B4 | 간단 | ✅ 2026-05-01 |
 | **B7** | `ChapterData` 35개 SO 일괄 생성 (`enemyStatMultiplier` 미리 계산) | chapter_curve §9.2 | — | 중 |
 | **B8** | `EndgameModeData` SO 4종 (daily/weekly/infinite/hardcore) | endgame §8.1 | — | 간단 |
 | **B9** | `BalanceConfig` 확장 — enhanceCostByLevel·rerollCost 등 | economy §9.1 | — | 간단 |

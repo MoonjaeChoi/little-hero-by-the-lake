@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4921a51511dd04b0e9da367d40acc93a, type: 3}
+  m_Name: GlobalSubAffixPool_Default
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.GlobalSubAffixPool
+  entries:
+  - {fileID: 11400000, guid: 02ffbef4179ee417e8c6f14491dd3344, type: 2}
+  - {fileID: 11400000, guid: b9d6313da116443bebb4984c6d0e549c, type: 2}
+  - {fileID: 11400000, guid: 27530a57e803b4fbfaac7dd35127a388, type: 2}
+  - {fileID: 11400000, guid: 3496151b723124c5c83fae9e8123b336, type: 2}
+  - {fileID: 11400000, guid: c283176d82bc94ff5bec158aa08b7565, type: 2}
+  - {fileID: 11400000, guid: 51f5d0150133f4981b73bd0b4f6c2e10, type: 2}
+  - {fileID: 11400000, guid: 9711098eda52b4723ba2dcb5665b7d82, type: 2}
+  - {fileID: 11400000, guid: ead46af24fb9a4035992b5c5266a4289, type: 2}
+  - {fileID: 11400000, guid: 82af980533cee4ca1ad794a6f8c6afa9, type: 2}
+  - {fileID: 11400000, guid: 67822058a64334382aa612539f3b18e8, type: 2}
+  - {fileID: 11400000, guid: a9a72d8af1a54457099a194bbe191301, type: 2}
+  - {fileID: 11400000, guid: ba4f45b5860b34ffaa54049a6a72f76b, type: 2}
