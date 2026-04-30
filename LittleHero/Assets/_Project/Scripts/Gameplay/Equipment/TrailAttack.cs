@@ -6,6 +6,7 @@ namespace LittleHero
     {
         private AttackPatternConfig _config;
         private Transform _owner;
+        private PlayerStats _stats;
         private ObjectPool<TrailField> _pool;
         private Transform _poolRoot;
         private Vector3 _lastDropPosition;
@@ -14,10 +15,11 @@ namespace LittleHero
         private const float TrailLifetime = 2.0f;
         private const float HitInterval = 0.4f;
 
-        public void Initialize(AttackPatternConfig config, Transform owner)
+        public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
             _config = config;
             _owner = owner;
+            _stats = stats;
             if (config.projectilePrefab == null) return;
 
             // Reuse Projectile prefab visual; ensure TrailField component exists

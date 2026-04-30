@@ -6,16 +6,18 @@ namespace LittleHero
     {
         private AttackPatternConfig _config;
         private Transform _owner;
+        private PlayerStats _stats;
         private ObjectPool<Projectile> _pool;
         private Transform _poolRoot;
         private float _timer;
 
         private const float DropHeight = 6f;
 
-        public void Initialize(AttackPatternConfig config, Transform owner)
+        public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
             _config = config;
             _owner = owner;
+            _stats = stats;
             if (config.projectilePrefab == null) return;
 
             Projectile p = config.projectilePrefab.GetComponent<Projectile>();
@@ -28,7 +30,7 @@ namespace LittleHero
         public void Tick(float deltaTime)
         {
             _timer += deltaTime;
-            if (_timer < _config.attackInterval) return;
+            if (_timer < AttackPatternUtil.EffectiveInterval(_config.attackInterval, _stats)) return;
             _timer = 0f;
             DropAll();
         }
@@ -43,7 +45,7 @@ namespace LittleHero
         private void DropAll()
         {
             if (_pool == null || _owner == null) return;
-            int count = Mathf.Max(1, _config.count);
+            int count = AttackPatternUtil.EffectiveCount(_config.count, _stats);
             float r = Mathf.Max(0.1f, _config.range);
             float speed = Mathf.Max(0.1f, _config.projectileSpeed);
 

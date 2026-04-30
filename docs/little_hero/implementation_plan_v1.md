@@ -95,7 +95,7 @@
 | **C5** | `ConversionForge` 정적 — 별가루·구슬 → 마법 결정 변환 | economy §11.4 | A5 | 간단 | ✅ 2026-05-01 |
 | **C6** | `EndgameResetService` 정적 — 일일/주간 가용성 (UTC+9 기준) | endgame §8.3 | A6 | 간단 |
 | **C7** | `MythicMileageService` — 마일리지 누적 + 발현 시도 | equipment §3.7 + monetization §4.4 | C3 | 중 |
-| **C8** | `IAttackPattern` 갱신 — `ExtraAttackTargets`·`AttackSpeed` 통합 | stats_v1 §6 + ui_v1 §9 | A1 | 중 |
+| **C8** | `IAttackPattern` 갱신 — `ExtraAttackTargets`·`AttackSpeed` 통합 | stats_v1 §6 + ui_v1 §9 | A1 | 중 | ✅ 2026-05-01 |
 | **C9** | `EnemySpawner` 챕터 곱셈 통합 | chapter_curve §9.1 | A4, B7 | 간단 | ✅ 2026-05-01 |
 
 **총 9 작업. 예상 8~10일.**

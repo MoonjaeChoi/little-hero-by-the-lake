@@ -6,6 +6,7 @@ namespace LittleHero
     {
         private AttackPatternConfig _config;
         private Transform _owner;
+        private PlayerStats _stats;
         private ObjectPool<Projectile> _pool;
         private Transform _poolRoot;
         private float _timer;
@@ -13,10 +14,11 @@ namespace LittleHero
         // Physics2D 오버랩 버퍼 — 매 호출마다 new 하지 않도록 재사용
         private readonly Collider2D[] _overlapBuffer = new Collider2D[64];
 
-        public void Initialize(AttackPatternConfig config, Transform owner)
+        public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
             _config = config;
             _owner = owner;
+            _stats = stats;
 
             if (config.projectilePrefab == null)
             {
@@ -39,7 +41,7 @@ namespace LittleHero
         public void Tick(float deltaTime)
         {
             _timer += deltaTime;
-            if (_timer < _config.attackInterval) return;
+            if (_timer < AttackPatternUtil.EffectiveInterval(_config.attackInterval, _stats)) return;
 
             _timer = 0f;
             Fire();
@@ -60,7 +62,7 @@ namespace LittleHero
             if (target == null) return;
 
             Vector2 dir = ((Vector2)target.transform.position - (Vector2)_owner.position).normalized;
-            int count = Mathf.Max(1, _config.count);
+            int count = AttackPatternUtil.EffectiveCount(_config.count, _stats);
 
             for (int i = 0; i < count; i++)
             {

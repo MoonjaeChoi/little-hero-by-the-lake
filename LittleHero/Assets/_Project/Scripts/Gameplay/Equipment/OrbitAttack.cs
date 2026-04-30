@@ -7,20 +7,22 @@ namespace LittleHero
     {
         private AttackPatternConfig _config;
         private Transform _owner;
+        private PlayerStats _stats;
         private float _angle;
         private readonly List<Transform> _orbs = new List<Transform>();
 
-        public void Initialize(AttackPatternConfig config, Transform owner)
+        public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
             _config = config;
             _owner = owner;
+            _stats = stats;
             if (config.projectilePrefab == null)
             {
                 Debug.LogError("[OrbitAttack] projectilePrefab 이 null 입니다.");
                 return;
             }
 
-            int count = Mathf.Max(1, config.count);
+            int count = AttackPatternUtil.EffectiveCount(config.count, _stats);
             for (int i = 0; i < count; i++)
             {
                 GameObject go = Object.Instantiate(config.projectilePrefab, owner);

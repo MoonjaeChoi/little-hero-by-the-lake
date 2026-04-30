@@ -6,6 +6,7 @@ namespace LittleHero
     {
         private AttackPatternConfig _config;
         private Transform _owner;
+        private PlayerStats _stats;
         private float _timer;
         private ObjectPool<PulseVisual> _visualPool;
         private Transform _poolRoot;
@@ -13,10 +14,11 @@ namespace LittleHero
         private const float PulseDuration = 0.35f;
         private readonly Collider2D[] _overlapBuffer = new Collider2D[64];
 
-        public void Initialize(AttackPatternConfig config, Transform owner)
+        public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
             _config = config;
             _owner = owner;
+            _stats = stats;
             if (config.projectilePrefab != null)
             {
                 _poolRoot = new GameObject("PulsePool").transform;
@@ -28,7 +30,7 @@ namespace LittleHero
         public void Tick(float deltaTime)
         {
             _timer += deltaTime;
-            if (_timer < _config.attackInterval) return;
+            if (_timer < AttackPatternUtil.EffectiveInterval(_config.attackInterval, _stats)) return;
             _timer = 0f;
             Pulse();
         }

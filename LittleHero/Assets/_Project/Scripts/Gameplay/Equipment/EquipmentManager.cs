@@ -76,7 +76,7 @@ namespace LittleHero
             IAttackPattern pattern = CreatePattern(data.attackPattern);
             if (pattern == null) return;
 
-            pattern.Initialize(data.attackConfig, transform);
+            pattern.Initialize(data.attackConfig, transform, _stats);
             _activePatterns.Add(pattern);
         }
 

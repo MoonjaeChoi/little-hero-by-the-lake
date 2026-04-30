@@ -7,6 +7,7 @@ namespace LittleHero
     {
         private AttackPatternConfig _config;
         private Transform _owner;
+        private PlayerStats _stats;
         private ObjectPool<Projectile> _projectilePool;
         private Transform _projRoot;
         private readonly List<Transform> _companions = new List<Transform>();
@@ -16,10 +17,11 @@ namespace LittleHero
         private const float CompanionRadius = 1.4f;
         private const float CompanionLag = 4f;
 
-        public void Initialize(AttackPatternConfig config, Transform owner)
+        public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
             _config = config;
             _owner = owner;
+            _stats = stats;
             if (config.projectilePrefab == null) return;
 
             Projectile p = config.projectilePrefab.GetComponent<Projectile>();
@@ -28,7 +30,7 @@ namespace LittleHero
             _projRoot = new GameObject("ProjectilePool_Summon").transform;
             _projectilePool = new ObjectPool<Projectile>(p, _projRoot, 12);
 
-            int count = Mathf.Max(1, config.count);
+            int count = AttackPatternUtil.EffectiveCount(config.count, _stats);
             for (int i = 0; i < count; i++)
             {
                 GameObject clone = Object.Instantiate(config.projectilePrefab);
@@ -64,7 +66,7 @@ namespace LittleHero
                 c.position = Vector3.Lerp(c.position, desired, CompanionLag * deltaTime);
 
                 _timers[i] += deltaTime;
-                if (_timers[i] < _config.attackInterval) continue;
+                if (_timers[i] < AttackPatternUtil.EffectiveInterval(_config.attackInterval, _stats)) continue;
                 _timers[i] = 0f;
                 FireFrom(c.position);
             }
