@@ -92,7 +92,7 @@
 | **C2** | `ItemDropService` — 4 드랍원 + 슬롯·등급·6줄 결정 트리 | item_drop §4 + §5.3 | C1, B1 | 복잡 | ✅ 2026-05-01 |
 | **C3** | `EnhancementService` — +0~+25 결정론·천장·실패 로직 | equipment §3.3 + §3.4 | A5, A7, B9 | 복잡 |
 | **C4** | `EffectResolver` — 캐릭터 + 인스턴스 + 신화 통합 stats 계산 | equipment §4.3 | A1, B1, B2 | 중 |
-| **C5** | `ConversionForge` 정적 — 별가루·구슬 → 마법 결정 변환 | economy §11.4 | A5 | 간단 |
+| **C5** | `ConversionForge` 정적 — 별가루·구슬 → 마법 결정 변환 | economy §11.4 | A5 | 간단 | ✅ 2026-05-01 |
 | **C6** | `EndgameResetService` 정적 — 일일/주간 가용성 (UTC+9 기준) | endgame §8.3 | A6 | 간단 |
 | **C7** | `MythicMileageService` — 마일리지 누적 + 발현 시도 | equipment §3.7 + monetization §4.4 | C3 | 중 |
 | **C8** | `IAttackPattern` 갱신 — `ExtraAttackTargets`·`AttackSpeed` 통합 | stats_v1 §6 + ui_v1 §9 | A1 | 중 |

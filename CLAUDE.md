@@ -281,6 +281,7 @@ public interface IAttackPattern
 - `SaveSystem.cs` — JSON 영구 저장 (무지개 구슬 등)
   - A6 SaveData 확장: `magicCrystals` ◇, `starlight` ⋆, `level=1`, `xp`, `firstClearedChapters` (35비트마스크). `permanentlyLockedAffixes`·`mythicMileageBonus`는 B2와 함께 도입 예정
 - `CurrencyService.cs` — A5 4 화폐 정적 facade. Grant/Spend 통합 + 챕터/일일/추억 보상 계산식 (`CalcChapterStarFragmentReward` 등)
+- `ConversionForge.cs` — C5 변환 모루 정적 서비스. `ConvertDustToCrystal`(1,000 ★ : 1 ◇) / `ConvertOrbToCrystal`(5 ✦ : 1 ◇) + 시뮬용 `CalcDustCost/CalcOrbCost`. 다락방 메뉴에서만 호출. 역방향 미지원 (마법 결정은 영구 가치 자원).
 - 카메라 추적: Cinemachine 3.x `CinemachineCamera` + `CinemachineFollow` (Chapter 씬에서 Player를 추적)
 
 ### Data (ScriptableObject)
@@ -413,4 +414,5 @@ public interface IAttackPattern
 - 2026-05-01: B8 EndgameModeData 4종 SO — daily_boss/weekly_boss/infinite_tower/hardcore_chapter (endgame §3·§4·§5·§6). ModeType/CurrencyType/RewardEntry 인프라. `Editor/EndgameModeSeed.cs` 메뉴. 보스 풀(bossPool)은 F4·F5 콘텐츠.
 - 2026-05-01: B10 MythicDefinition 4종 SO — 아빠의 나침반/자장가/용기/약속 (equipment §3.7). 발현 로직은 C4 EffectResolver / C7 MythicMileageService에서. **Phase B (B1~B10) 10/10 완료**.
 - 2026-05-01: C1 AffixRoller — 정적 굴림·리롤 서비스 (`Gameplay/Equipment/AffixRoller.cs`). `RollMain`(SlotAffixPool 가중 6:3:1) + `RollSub`(GlobalSubAffixPool globalWeight 합산) + `RollMainSet/Set`(일괄) + `RerollMain/Sub`(잠금 안 한 라인만 갱신, 끝나면 OnAffixRolled 발행) + `CalcRerollCostMain/Sub`(BalanceConfig.rerollCostMain/Sub × (1 + lockedCount × lockMultiplier)). RNG는 System.Random 주입형(테스트성). GameEvents에 `OnAffixRolled(EquipmentInstance)` 신규 추가 (A7 보류분 해소). 참조: affix_pool §4·§7.3 + item_drop §5.4·§6.
+- 2026-05-01: C5 ConversionForge — 변환 모루 정적 서비스(`Core/ConversionForge.cs`). `ConvertDustToCrystal(N)` 1,000★:1◇ / `ConvertOrbToCrystal(N)` 5✦:1◇ + `CalcDustCost/CalcOrbCost` 시뮬 헬퍼. GameManager.SpendStarDust 와 CurrencyService.SpendStarFragment 를 거쳐 차감, CurrencyService.GrantMagicCrystal 로 적립. 역방향 미지원. UI(D7)는 후속. 참조: economy §11.4.
 - 2026-05-01: C2 ItemDropService — 정적 드랍 결정 트리(`Gameplay/Items/ItemDropService.cs`). DropContext(source/chapterNumber/forcedSlot/forcedRarity) → ① 확률 굴림(Enemy 0.5% / Mini 8% / Boss 100% / BossRepeat 30% / Shop 100%) → ② 슬롯(CH≤10 주 7, CH11+ 12 균등 / forcedSlot 우선) → ③ 등급(affix_pool §5 챕터 묶음 분포 + Mini/Boss +1 가중 / forcedRarity 우선) → ④ 템플릿 매칭(slot+rarity 정확→슬롯 폴백) → ⑤ AffixRoller로 주 3 + 부 3 일괄 굴림 → ⑥ history.mileage += 1(C7 신화 발현 보류). `Initialize(slotPools, globalPool, templates, config)` 부트스트랩 필요. DropSource enum 5종(Enemy/MiniBoss/Boss/BossRepeat/Shop). 참조: item_drop §4·§5.3.
