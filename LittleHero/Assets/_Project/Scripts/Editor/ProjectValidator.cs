@@ -134,11 +134,20 @@ namespace LittleHero.EditorTools
             ValidateRequired<MetaProgression>(issues, "MetaProgression");
             ValidateRequired<AtticController>(issues, "AtticController");
             var atticCtl = Object.FindFirstObjectByType<AtticController>();
-            if (atticCtl != null)
+            if (atticCtl == null) return;
+
+            var so = new SerializedObject(atticCtl);
+            CheckRef(issues, "Attic", so, "_starFragmentsText");
+            var arr = so.FindProperty("_chapterButtons");
+            if (arr == null || !arr.isArray) { issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 배열 미존재")); return; }
+            if (arr.arraySize == 0) issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 비어있음"));
+            for (int i = 0; i < arr.arraySize; i++)
             {
-                var so = new SerializedObject(atticCtl);
-                CheckRef(issues, "Attic", so, "_starFragmentsText");
-                CheckRef(issues, "Attic", so, "_startChapterButton");
+                var elem = arr.GetArrayElementAtIndex(i);
+                var ch = elem.FindPropertyRelative("chapter");
+                var bt = elem.FindPropertyRelative("button");
+                if (ch == null || ch.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].chapter 미연결"));
+                if (bt == null || bt.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].button 미연결"));
             }
         }
 

@@ -299,8 +299,13 @@ public interface IAttackPattern
 - `ChapterClearedPanel` — 챕터 클리어 + 별 조각 보상 + 다락방 복귀
 
 ### 씬
-- `Scenes/Attic.unity` — 다락방 허브 (별 조각 표시, 1챕터 시작 버튼)
-- `Scenes/Chapter.unity` — 챕터 플레이 (Canvas / ShopPanel / GameOverPanel / ChapterClearedPanel)
+- `Scenes/Attic.unity` — 다락방 허브 (별 조각 표시, 3챕터 선택 버튼)
+- `Scenes/Chapter.unity` — 챕터 플레이 (Canvas / ShopPanel / GameOverPanel / ChapterClearedPanel). `MetaProgression.SelectedChapter`가 설정되어 있으면 그것을 사용, 아니면 ChapterRunner 인스펙터의 _chapterData 사용
+
+### 챕터 SO
+- `Chapter_01_RedHood` — 빨간 모자 (boss: 큰 늑대 아저씨, miniBoss: 밤하늘 별구름)
+- `Chapter_02_Beanstalk` — 잭과 콩나무 (boss: 구름 위 큰 거인, miniBoss: 콩알 거인)
+- `Chapter_03_Alice` — 이상한 나라의 앨리스 (boss: 하트 여왕, miniBoss: 카드 병정)
 
 ### 에셋
 - `Prefabs/UI/ShopSlot.prefab`
@@ -323,7 +328,7 @@ public interface IAttackPattern
 
 ## 13. Phase 3 다음 작업 목록
 
-1. **챕터 2/3** — 잭과 콩나무, 이상한 나라의 앨리스 — ChapterData + 보스 SO + 미니보스 SO
+1. ~~**챕터 2/3** — 잭과 콩나무, 이상한 나라의 앨리스~~ ✅ 완료 (2026-04-30)
 2. **캐릭터 시스템** — `CharacterData` 활용, 캐릭터 선택, 시작 스탯 차별화
 3. **추억 시스템** — `MemoryPickup` (월드 픽업) + 다락방 일기장 UI + 모든 추억 모으면 히든 챕터
 4. **메타 업그레이드** — 별 조각으로 영구 스탯 강화 (HP, 데미지, 별가루 획득량)
@@ -338,3 +343,4 @@ public interface IAttackPattern
 - 2026-04-30: Phase 0/1 완료. 26개 스크립트 작성, Chapter.unity 씬 동작 확인
 - 2026-04-30: **Phase 2 완료** — 상점 UI, 7종 공격 패턴, 적 7종, 장비 16종, totalWaves=20 + 보스, GameOver/ChapterCleared 패널, CameraFollow, 풀 cleanup 강화. 메타 진행 골격(MetaProgression + Attic 허브) 추가.
 - 2026-04-30: 검증 인프라 도입 — `SmokeTest`(자동 스크린샷·상태 덤프) + `ProjectValidator`(에디터 메뉴 일괄 점검).
+- 2026-04-30: 챕터 2/3 추가 — 콩알 거인·구름 거인·카드 병정·하트 여왕 SO, `MetaProgression.SelectedChapter`로 챕터 선택 흐름, Attic 3버튼 UI.

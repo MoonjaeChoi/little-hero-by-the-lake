@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52698276b7e542c588accfb9ce7b062, type: 3}
+  m_Name: Enemy_QueenHearts
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
+  id: queen_hearts
+  displayName: "\uD558\uD2B8 \uC5EC\uC655"
+  description: 
+  icon: {fileID: 0}
+  prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
+  maxHealth: 1100
+  moveSpeed: 1.1
+  damage: 32
+  xpDrop: 260
+  starDustDrop: 40
+  tintColor: {r: 0.85, g: 0.3, b: 0.45, a: 1}
+  scaleMultiplier: 2.3
+  isMiniB: 0
+  isBoss: 1

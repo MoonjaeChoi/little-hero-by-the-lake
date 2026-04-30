@@ -9,6 +9,7 @@ namespace LittleHero
 
         public SaveData Data { get; private set; }
         public int StarFragments => Data?.starFragments ?? 0;
+        public ChapterData SelectedChapter { get; set; }
 
         public event Action<int> OnStarFragmentsChanged;
 
