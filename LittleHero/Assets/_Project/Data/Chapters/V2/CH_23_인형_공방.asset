@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894aa28f53f4e4dc68789942632dafa5, type: 3}
+  m_Name: "CH_23_\uC778\uD615_\uACF5\uBC29"
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ChapterData
+  id: CH_23
+  displayName: "\uC778\uD615 \uACF5\uBC29"
+  description: "\uCC55\uD130 23 \u2014 \uC778\uD615 \uACF5\uBC29"
+  coverArt: {fileID: 0}
+  chapterNumber: 23
+  enemyStatMultiplier: 8.140279
+  totalWaves: 20
+  waveDuration: 45
+  enemyPool: []
+  miniBossPool: []
+  bossEnemy: {fileID: 0}
+  starFragmentReward: 41

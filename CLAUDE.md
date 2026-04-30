@@ -293,6 +293,7 @@ public interface IAttackPattern
 - `CharacterData`에 4 코어 비중(`strengthMultiplier`/`agilityMultiplier`/`wisdomMultiplier`/`spiritMultiplier`) 추가 (stats_v1 §3.3)
 - `ChapterData`에 `chapterNumber`(A2, 기본 0) + `enemyStatMultiplier`(A4, 기본 1f, 보통 `1.10^(N-1)`) 필드 추가. B7가 1~35 채움
 - 인스턴스: 적 7종 (Basic/Rabbit/Bear/Firefly/Pumpkin/StarCloud/BigWolf), 장비 16종, BalanceConfig, Chapter_01_RedHood (totalWaves=20), ShopPool_Default
+- B7 V2 ChapterData 35종 SO (`Assets/_Project/Data/Chapters/V2/CH_01~35_*.asset`) — chapter_structure_v2 §3 35 챕터 displayName + chapterNumber + enemyStatMultiplier=1.10^(N-1) + starFragmentReward=round(5×1.10^(N-1)). 적/보스 풀은 F1+ 콘텐츠 작업에서 채움. 기존 Chapter_01_RedHood 등 3종은 폐기 동화 모델로 보존
 
 ### Gameplay
 - **Player**: `PlayerController`, `PlayerStats`, `PlayerHealth`, `PlayerDamageReceiver`, `PlayerProgress`(A2)
@@ -403,3 +404,4 @@ public interface IAttackPattern
 - 2026-05-01: B5+B6 Pool SO 시드 — SlotAffixPool 12종 + GlobalSubAffixPool 1종 (Editor 메뉴 `Tools > LittleHero > Seed Pool SOs`). 신규 `EquipSlot` enum 12개(주 7 Hat~Shoes + 장신구 5 Earring~Pet, 메이플 키우기 매칭). 가중치 6:3:1, 글로벌 부옵션 가중치는 SubAffixDefinition.globalWeight 합 1.0.
 - 2026-05-01: B1+B2 EquipmentTemplate/Instance 인프라 — EquipmentTemplate SO 클래스(EquipSlot/Rarity/baseStats/attackPattern/maxEnhanceLevel=25/mainAffixLineCount=3/subAffixLineCount=3). EquipmentInstance/AffixLine/InstanceHistory 직렬화. SaveData에 `equipmentInstances` 배열·`permanentlyLockedInstanceIds`·`mythicMileageBonus`(MythicMileageEntry) 추가(A6에서 보류한 affix 관련 필드 통합). 기존 EquipmentData 16종 → EquipmentTemplate 16종 마이그레이션(§4.4 표 그대로, Editor 메뉴 `Tools > LittleHero > Migrate Equipment Templates`). 레거시 EquipmentData는 보존 — C8 통합 시점까지 병존.
 - 2026-05-01: B9 BalanceConfig 확장 — enhanceCostByLevel[25] 별가루 곡선(+0→+25, 5~4000) + enhanceCrystalByLevel[25] 마법 결정(+15→+16부터 3, +24→+25 40, 누적 165) + 리롤 30★ 주/15★ 부 + 잠금 ×1.5 + 무지개 구슬 상점가(Common 5 ~ Epic 80) + 드랍 곡선 베이스. `Editor/BalanceConfigSeed.cs` 메뉴로 기존 BalanceConfig.asset 갱신. AnimationCurve 보상 필드는 B7와 함께 도입 예정.
+- 2026-05-01: B7 V2 ChapterData 35종 SO — chapter_structure_v2 §3 displayName + chapterNumber + `enemyStatMultiplier=1.10^(N-1)` + `starFragmentReward=round(5×1.10^(N-1))`. `Editor/ChapterDataSeed.cs` 메뉴(`Tools > LittleHero > Seed 35 Chapter SOs`)로 일괄 시드 (`Assets/_Project/Data/Chapters/V2/`). 기존 동화책 3개(빨간모자/잭과콩나무/앨리스)는 폐기 모델로 보존. 적/보스 풀은 F1+ 콘텐츠 작업에서 채움.

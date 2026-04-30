@@ -73,7 +73,7 @@
 | **B4** | `SubAffixDefinition` SO 12종 일괄 생성 | item_drop §3.1 | A1 | 중 | ✅ 2026-05-01 |
 | **B5** | `SlotAffixPool` SO 12종 (슬롯별 1차/2차/3차 매핑) | affix_pool §3 | B3 | 간단 | ✅ 2026-05-01 |
 | **B6** | `GlobalSubAffixPool` SO 1종 (글로벌 부옵션 풀) | item_drop §3.2 | B4 | 간단 | ✅ 2026-05-01 |
-| **B7** | `ChapterData` 35개 SO 일괄 생성 (`enemyStatMultiplier` 미리 계산) | chapter_curve §9.2 | — | 중 |
+| **B7** | `ChapterData` 35개 SO 일괄 생성 (`enemyStatMultiplier` 미리 계산) | chapter_curve §9.2 | — | 중 | ✅ 2026-05-01 |
 | **B8** | `EndgameModeData` SO 4종 (daily/weekly/infinite/hardcore) | endgame §8.1 | — | 간단 |
 | **B9** | `BalanceConfig` 확장 — enhanceCostByLevel·rerollCost 등 | economy §9.1 | — | 간단 | ✅ 2026-05-01 (AnimationCurve는 B7와 함께) |
 | **B10** | `MythicDefinition` SO 4종 (아빠의 마법) | equipment §3.7 | — | 간단 |

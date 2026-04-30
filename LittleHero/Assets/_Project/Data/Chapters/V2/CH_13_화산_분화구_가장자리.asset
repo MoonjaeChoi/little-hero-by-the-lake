@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894aa28f53f4e4dc68789942632dafa5, type: 3}
+  m_Name: "CH_13_\uD654\uC0B0_\uBD84\uD654\uAD6C_\uAC00\uC7A5\uC790\uB9AC"
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ChapterData
+  id: CH_13
+  displayName: "\uD654\uC0B0 \uBD84\uD654\uAD6C \uAC00\uC7A5\uC790\uB9AC"
+  description: "\uCC55\uD130 13 \u2014 \uD654\uC0B0 \uBD84\uD654\uAD6C \uAC00\uC7A5\uC790\uB9AC"
+  coverArt: {fileID: 0}
+  chapterNumber: 13
+  enemyStatMultiplier: 3.1384292
+  totalWaves: 20
+  waveDuration: 45
+  enemyPool: []
+  miniBossPool: []
+  bossEnemy: {fileID: 0}
+  starFragmentReward: 16
