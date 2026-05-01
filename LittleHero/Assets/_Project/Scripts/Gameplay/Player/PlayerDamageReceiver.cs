@@ -25,6 +25,7 @@ namespace LittleHero
             // A4 — 챕터 곱셈이 적용된 공격력 사용 (enemy.Data.damage는 SO 베이스값이라 사용 금지)
             DamageSystem.DealDamageToPlayer(_health, enemy.AttackDamage);
             _lastDamageTime = Time.time;
+            AudioManager.Instance?.Play(SfxType.PlayerHit);
         }
     }
 }

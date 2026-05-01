@@ -405,8 +405,8 @@ public interface IAttackPattern
 3. ~~**추억 시스템** — `MemoryPickup` (월드 픽업) + 다락방 일기장 UI~~ ✅ 부분 완료 (2026-04-30, 히든 챕터 unlock UI는 추후)
 4. ~~**메타 업그레이드** — 무지개 구슬으로 영구 스탯 강화 (HP, 데미지, 별가루 획득량)~~ ✅ 완료 (2026-04-30)
 5. ~~**컬렉션/도감** — 처치한 적 자동 등록~~ ✅ 부분 완료 (2026-04-30, 100% 채우면 펫 동행 기능은 추후)
-6. **사운드** — Unity Audio 효과음 + BGM
-7. **아트** — 단색 더미 → 실 스프라이트 교체
+6. ~~**사운드** — Unity Audio 효과음 + BGM~~ ✅ 부분 완료 (2026-05-01, P9 절차적 SFX 5종. BGM·보스 fanfare 후속)
+7. **아트** — 단색 더미 → 실 스프라이트 교체 ✅ 부분 완료 (Phase G2 P0~P10 — 138 PNG + walk 코드 애니메이션)
 
 ## 14. 변경 이력
 
@@ -500,3 +500,4 @@ public interface IAttackPattern
   - **누적**: P0~P6 131 PNG 생성 + 99 SO wiring (Chapter 35 + Equipment 16 + Enemy 41 + Memory 4 + Meta 3) = **138 / 138 (100%)**
   - 참조: `docs/art_pipeline_v2.md` / `Assets/Screenshots/wondrousmap_v2_overlay.png`
 - 2026-05-01: **Phase G2 P10 캐릭터 walk 애니메이션 (코드 대체)** — txt2img sprite sheet 시도 실패(동일 seed 8000 + prompt 미세 변경, 본체는 일관성 OK 였으나 가방·신발·표정이 프레임마다 발산. ControlNet/IP-Adapter 없이는 sprite sheet 보증 불가) → PlayerController 코드 애니메이션으로 대체. `Update()` 에서 `_rb.linearVelocity.x` 부호로 SpriteRenderer.flipX, 이동 중일 때 `Mathf.Sin(Time.time * 8f) * 0.05f` 만큼 transform.localPosition.y bob. 1장 idle PNG 만으로 "걷는 듯한" 느낌 — 캐주얼 게임 지브리 톤 충분. 추후 IP-Adapter 환경 정리 시 sprite sheet 재시도 가능.
+- 2026-05-01: **Phase G2 P9 사운드 효과 (절차적 합성)** — `Core/AudioManager.cs` 신설. RuntimeInitializeOnLoadMethod 자동 부트스트랩 + DontDestroyOnLoad. 5종 SfxType(EnemyPop/Pickup/LevelUp/MemoryFound/PlayerHit) 을 코드로 합성(sine wave + envelope, AudioClip.SetData) — 외부 음원 의존 0. **EnemyPop "퐁!"**: 880→220Hz exp sweep + decay 0.15s (CLAUDE.md §2 절대 원칙 첫 사운드 구현). **LevelUp**: C5-E5-G5-C6 4음 아르페지오 0.4s. **MemoryFound**: A4+E5 동시 + attack-decay 0.6s 따뜻한 차임. **Pickup**: 1320+1760Hz 듀얼 사인 0.1s. **PlayerHit**: 200Hz 펄스 + 노이즈 0.08s 만화풍 KO. 자동 wiring: GameEvents.OnEnemyKilled→Pop / OnLevelUp→LevelUp / OnMemoryDiscovered→MemoryFound. PlayerDamageReceiver.OnCollisionStay2D 에서 PlayerHit 직접 호출. AudioSource volume=0.6, spatialBlend=0(2D). 후속: BGM 트랙(허브·챕터·보스), 보스 처치 fanfare, UI 클릭 사운드.
