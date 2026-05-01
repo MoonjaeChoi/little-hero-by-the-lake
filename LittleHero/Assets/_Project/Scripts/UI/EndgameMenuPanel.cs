@@ -32,15 +32,15 @@ namespace LittleHero
         [SerializeField] private Button _closeButton;
 
         [Header("씬 이름")]
-        [SerializeField] private string _endgameSceneName = "Chapter";
+        [SerializeField] private string _bossEncounterSceneName = "BossEncounter";
         [SerializeField] private string _infiniteTowerSceneName = "InfiniteTower";
 
         [Header("F5 신화 보장 — 주간 보스 처치 시 사용")]
         [SerializeField] private MythicDefinition[] _mythicPool;
 
         [Header("F4·F5 — 즉시 처치 처리 (테스트용)")]
-        [Tooltip("실 보스 씬 분리 전까지 사용. 버튼 클릭 = 보스 처치 시뮬레이션 + 보상 적용.")]
-        [SerializeField] private bool _instantCompleteForTesting = true;
+        [Tooltip("true = 보스 씬 진입 없이 즉시 처치 시뮬. false = BossEncounter 씬 진입.")]
+        [SerializeField] private bool _instantCompleteForTesting = false;
 
         private void OnEnable()
         {
@@ -56,7 +56,8 @@ namespace LittleHero
         {
             if (!EndgameResetService.IsDailyAvailable() || _dailyBoss == null) return;
             var boss = BossEncounterService.ResolveDailyBoss(_dailyBoss);
-            Debug.Log($"[EndgameMenu] 일일 보스: {boss?.displayName ?? "(없음)"}");
+            if (boss == null) { Debug.LogWarning("[EndgameMenu] 일일 보스 풀이 비어있음"); return; }
+            Debug.Log($"[EndgameMenu] 일일 보스: {boss.displayName}");
 
             if (_instantCompleteForTesting)
             {
@@ -66,7 +67,9 @@ namespace LittleHero
             }
             else
             {
-                Enter(_dailyBoss, true);
+                BossEncounterContext.Set(BossEncounterContext.Mode.Daily, boss, _dailyBoss, _mythicPool);
+                Time.timeScale = 1f;
+                SceneManager.LoadScene(_bossEncounterSceneName);
             }
         }
 
@@ -74,7 +77,8 @@ namespace LittleHero
         {
             if (!EndgameResetService.IsWeeklyAvailable() || _weeklyBoss == null) return;
             var boss = BossEncounterService.ResolveWeeklyBoss(_weeklyBoss);
-            Debug.Log($"[EndgameMenu] 주간 보스: {boss?.displayName ?? "(없음)"}");
+            if (boss == null) { Debug.LogWarning("[EndgameMenu] 주간 보스 풀이 비어있음"); return; }
+            Debug.Log($"[EndgameMenu] 주간 보스: {boss.displayName}");
 
             if (_instantCompleteForTesting)
             {
@@ -90,7 +94,9 @@ namespace LittleHero
             }
             else
             {
-                Enter(_weeklyBoss, true);
+                BossEncounterContext.Set(BossEncounterContext.Mode.Weekly, boss, _weeklyBoss, _mythicPool);
+                Time.timeScale = 1f;
+                SceneManager.LoadScene(_bossEncounterSceneName);
             }
         }
 
