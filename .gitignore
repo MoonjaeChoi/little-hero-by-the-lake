@@ -149,3 +149,14 @@ secrets.json
 # ============================================================
 LittleHero/Assets/Screenshots/
 LittleHero/Assets/Screenshots.meta
+
+
+# ============================================================
+# 9. Phase G2 아트 raw references (생성 후 선별 전 산출물)
+# ============================================================
+# References/ 는 ComfyUI/DreamShaperXL 가 생성한 raw PNG 후보들의 작업장.
+# 셀렉션 후 채택한 PNG 만 Generated_v2/ 등 정식 위치로 이동/commit.
+# Reference 자체는 ~186MB 이며 repo 비대화 원인이라 untracked 유지.
+LittleHero/Assets/_Project/Art/References/
+LittleHero/Assets/_Project/Art/References.meta
+LittleHero/Assets/_Project/Art/Generated_v2.meta
