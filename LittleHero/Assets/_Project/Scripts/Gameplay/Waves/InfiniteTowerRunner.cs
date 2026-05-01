@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LittleHero
 {
@@ -30,6 +32,10 @@ namespace LittleHero
         [Header("웨이브")]
         [SerializeField] private float _waveDuration = 30f;
         [SerializeField] private int _baseSpawnCount = 8;
+
+        [Header("사망 시 복귀")]
+        [SerializeField] private string _atticSceneName = "Attic";
+        [SerializeField] private float _returnDelay = 2.5f;
 
         private WaveManager _wave;
         private EnemySpawner _spawner;
@@ -100,9 +106,18 @@ namespace LittleHero
 
         private void HandleDied()
         {
+            if (!_running) return;
             _running = false;
             EndgameResetService.RecordInfiniteDepth(_currentDepth);
             Debug.Log($"[InfiniteTower] 종료 — 도달 깊이 {_currentDepth}");
+            StartCoroutine(LoadAtticAfterDelay());
+        }
+
+        private IEnumerator LoadAtticAfterDelay()
+        {
+            yield return new WaitForSecondsRealtime(_returnDelay);
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(_atticSceneName);
         }
     }
 }
