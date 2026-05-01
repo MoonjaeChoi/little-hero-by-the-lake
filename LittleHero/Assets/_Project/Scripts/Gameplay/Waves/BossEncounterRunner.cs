@@ -80,6 +80,10 @@ namespace LittleHero
                         BossEncounterContext.PendingMythicPool);
                     Debug.Log($"[BossEncounter] 주간 보스 완료={result.success} 신화={(result.mythicGranted?.instanceId ?? "없음")}");
                     BossEncounterContext.LastMythicGranted = result.mythicGranted;
+                    // Pool 에서 def lookup 후 보관 → 다락방에서 Overlay.Play 직접 호출
+                    BossEncounterContext.LastMythicDefinition = ResolveMythicDef(
+                        result.mythicGranted?.mythicId,
+                        BossEncounterContext.PendingMythicPool);
                     break;
             }
             BossEncounterContext.Clear();
@@ -101,6 +105,14 @@ namespace LittleHero
             yield return new WaitForSecondsRealtime(_returnDelay);
             Time.timeScale = 1f;
             SceneManager.LoadScene(_atticSceneName);
+        }
+
+        private static MythicDefinition ResolveMythicDef(string id, MythicDefinition[] pool)
+        {
+            if (string.IsNullOrEmpty(id) || pool == null) return null;
+            for (int i = 0; i < pool.Length; i++)
+                if (pool[i] != null && pool[i].id == id) return pool[i];
+            return null;
         }
     }
 }

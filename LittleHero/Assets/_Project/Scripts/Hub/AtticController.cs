@@ -164,6 +164,7 @@ namespace LittleHero
             UpdateMagicCrystals(CurrencyService.MagicCrystals);
             UpdateStarlight(CurrencyService.Starlight);
             RefreshEndgameMenu();
+            HandleReturnFromBossEncounter();
 
             // 다락방 BGM (Joe Hisaishi 풍 nostalgic)
             AudioManager.Instance?.PlayBgm("attic_nostalgic");
@@ -281,6 +282,28 @@ namespace LittleHero
             if (MetaProgression.Instance != null)
                 MetaProgression.Instance.SelectedChapter = chapter;
             SceneManager.LoadScene(_chapterSceneName);
+        }
+
+        // F5 — 보스 씬에서 신화 발현된 경우 다락방 복귀 시 1회 무지개 Overlay
+        private void HandleReturnFromBossEncounter()
+        {
+            var def = BossEncounterContext.LastMythicDefinition;
+            if (def == null) return;
+
+            var overlay = FindFirstObjectByType<MythicEffectOverlay>(FindObjectsInactive.Include);
+            if (overlay != null)
+            {
+                overlay.Play(def);
+                Debug.Log($"[Attic] 신화 발현 통지: {def.displayName}");
+            }
+            else
+            {
+                Debug.LogWarning("[Attic] MythicEffectOverlay 미존재 — 신화 발현 통지 skip");
+            }
+
+            // 1회 표시 후 Clear (재진입 시 중복 표시 방지)
+            BossEncounterContext.LastMythicDefinition = null;
+            BossEncounterContext.LastMythicGranted = null;
         }
     }
 }

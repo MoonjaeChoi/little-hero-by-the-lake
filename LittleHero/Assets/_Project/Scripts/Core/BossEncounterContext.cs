@@ -17,6 +17,8 @@ namespace LittleHero
 
         // 처치 결과 (Weekly 한정 — 다락방 복귀 후 신화 오버레이 1회 표시)
         public static EquipmentInstance LastMythicGranted;
+        // Pool 에서 lookup 한 MythicDefinition (AtticController 에서 Overlay.Play 직접 호출용)
+        public static MythicDefinition LastMythicDefinition;
 
         public static void Set(Mode type, EnemyData boss, EndgameModeData mode, MythicDefinition[] mythicPool)
         {
