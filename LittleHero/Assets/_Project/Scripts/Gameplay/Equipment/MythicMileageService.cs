@@ -102,6 +102,38 @@ namespace LittleHero
             return true;
         }
 
+        /// <summary>주간 보스 보상 — 마일리지 게이트 무시하고 발현 보장 (endgame §5.4).</summary>
+        public static bool GuaranteeRoll(EquipmentInstance instance, MythicDefinition[] pool, System.Random rng = null)
+        {
+            if (instance == null || pool == null || pool.Length == 0) return false;
+            if (!IsUnlocked()) return false;
+            if (!string.IsNullOrEmpty(instance.mythicId)) return false;
+
+            var template = ResolveTemplate(instance);
+            EquipSlot? slot = template?.slot;
+            var matches = new System.Collections.Generic.List<MythicDefinition>(pool.Length);
+            for (int i = 0; i < pool.Length; i++)
+            {
+                var m = pool[i];
+                if (m == null) continue;
+                if (slot.HasValue && m.slotRestriction != null && m.slotRestriction.Length > 0)
+                {
+                    bool ok = false;
+                    for (int s = 0; s < m.slotRestriction.Length; s++)
+                        if (m.slotRestriction[s] == slot.Value) { ok = true; break; }
+                    if (!ok) continue;
+                }
+                matches.Add(m);
+            }
+            if (matches.Count == 0) return false;
+
+            rng ??= _defaultRng;
+            instance.mythicId = matches[rng.Next(matches.Count)].id;
+            instance.history ??= new InstanceHistory();
+            instance.history.mileage = 0;
+            return true;
+        }
+
         // ===== 헬퍼 =====
 
         public static bool IsUnlocked()

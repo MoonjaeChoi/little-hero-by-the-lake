@@ -61,14 +61,19 @@ namespace LittleHero
         public static float CalcTrailLengthMultiplier()
             => HasMythic(ID_DAD_PROMISE) ? PROMISE_TRAIL_LENGTH_MUL : 1f;
 
-        /// <summary>약속 1회 무료 리롤 사용 가능 여부 (D5 EquipmentCardPanel 에서 호출).</summary>
-        public static bool ConsumeFreeRerollIfAvailable()
+        /// <summary>F8 — 약속(약속의 부적) 발현 시 1회 무료 리롤 토큰 (세션당 1회).
+        /// EquipmentCardPanel 의 Reroll 처리에서 차감 시도 — true 반환 시 별가루 비용 면제.
+        /// 카드 패널 닫기/씬 전환 시 ResetPromiseFreeReroll 로 재충전.</summary>
+        public static bool TryConsumePromiseFreeReroll()
         {
-            // MVP: 인스턴스 단위 1회 무료 — instance.history 에 플래그 추가 필요.
-            // 본 함수는 placeholder; EquipmentCardPanel 의 Reroll 처리에서 instance.history.mythicAttempts 등
-            // 으로 추적 후 호출.
-            return HasMythic(ID_DAD_PROMISE);
+            if (!HasMythic(ID_DAD_PROMISE)) return false;
+            if (_promiseFreeRerollUsed) return false;
+            _promiseFreeRerollUsed = true;
+            return true;
         }
+
+        public static void ResetPromiseFreeReroll() => _promiseFreeRerollUsed = false;
+        private static bool _promiseFreeRerollUsed;
 
         // ===== 헬퍼 =====
 

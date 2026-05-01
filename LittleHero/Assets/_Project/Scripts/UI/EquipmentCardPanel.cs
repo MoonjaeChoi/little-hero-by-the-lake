@@ -61,6 +61,8 @@ namespace LittleHero
         {
             _instance = instance;
             _template = template;
+            // F8: 카드 진입 시 약속 무료 리롤 토큰 재충전 (인스턴스별 세션 1회)
+            MythicEffectRuntime.ResetPromiseFreeReroll();
             gameObject.SetActive(true);
             Refresh();
         }
@@ -101,7 +103,10 @@ namespace LittleHero
             var pool = FindSlotPool(_template.slot);
             if (pool == null) return;
             int cost = AffixRoller.CalcRerollCostMain(_instance, _balanceConfig);
-            if (!AffixRoller.CanRerollMain(_instance) || !TrySpendDust(cost)) return;
+            // F8: mythic_dad_promise 발현 시 첫 리롤 1회 무료 (equipment §3.7)
+            bool freePromise = MythicEffectRuntime.TryConsumePromiseFreeReroll();
+            if (!AffixRoller.CanRerollMain(_instance)) return;
+            if (!freePromise && !TrySpendDust(cost)) return;
             AffixRoller.RerollMain(_instance, pool, _template.rarity, null);
             Refresh();
         }
@@ -110,7 +115,9 @@ namespace LittleHero
         {
             if (_instance == null || _template == null || _globalSubPool == null) return;
             int cost = AffixRoller.CalcRerollCostSub(_instance, _balanceConfig);
-            if (!AffixRoller.CanRerollSub(_instance) || !TrySpendDust(cost)) return;
+            bool freePromise = MythicEffectRuntime.TryConsumePromiseFreeReroll();
+            if (!AffixRoller.CanRerollSub(_instance)) return;
+            if (!freePromise && !TrySpendDust(cost)) return;
             AffixRoller.RerollSub(_instance, _globalSubPool, _template.rarity, null);
             Refresh();
         }

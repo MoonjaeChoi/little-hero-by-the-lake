@@ -34,14 +34,63 @@ namespace LittleHero
         [Header("씬 이름 (Phase 2 placeholder)")]
         [SerializeField] private string _endgameSceneName = "Chapter";
 
+        [Header("F5 신화 보장 — 주간 보스 처치 시 사용")]
+        [SerializeField] private MythicDefinition[] _mythicPool;
+
+        [Header("F4·F5 — 즉시 처치 처리 (테스트용)")]
+        [Tooltip("실 보스 씬 분리 전까지 사용. 버튼 클릭 = 보스 처치 시뮬레이션 + 보상 적용.")]
+        [SerializeField] private bool _instantCompleteForTesting = true;
+
         private void OnEnable()
         {
-            if (_dailyButton != null)    _dailyButton.onClick.AddListener(() => Enter(_dailyBoss, EndgameResetService.IsDailyAvailable()));
-            if (_weeklyButton != null)   _weeklyButton.onClick.AddListener(() => Enter(_weeklyBoss, EndgameResetService.IsWeeklyAvailable()));
+            if (_dailyButton != null)    _dailyButton.onClick.AddListener(OnDailyClicked);
+            if (_weeklyButton != null)   _weeklyButton.onClick.AddListener(OnWeeklyClicked);
             if (_infiniteButton != null) _infiniteButton.onClick.AddListener(() => Enter(_infiniteTower, true));
             if (_hardcoreButton != null) _hardcoreButton.onClick.AddListener(() => Enter(_hardcoreChapter, true));
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             Refresh();
+        }
+
+        private void OnDailyClicked()
+        {
+            if (!EndgameResetService.IsDailyAvailable() || _dailyBoss == null) return;
+            var boss = BossEncounterService.ResolveDailyBoss(_dailyBoss);
+            Debug.Log($"[EndgameMenu] 일일 보스: {boss?.displayName ?? "(없음)"}");
+
+            if (_instantCompleteForTesting)
+            {
+                bool ok = BossEncounterService.CompleteDailyBoss(_dailyBoss);
+                Debug.Log($"[EndgameMenu] 일일 보스 완료 처리: {ok}");
+                Refresh();
+            }
+            else
+            {
+                Enter(_dailyBoss, true);
+            }
+        }
+
+        private void OnWeeklyClicked()
+        {
+            if (!EndgameResetService.IsWeeklyAvailable() || _weeklyBoss == null) return;
+            var boss = BossEncounterService.ResolveWeeklyBoss(_weeklyBoss);
+            Debug.Log($"[EndgameMenu] 주간 보스: {boss?.displayName ?? "(없음)"}");
+
+            if (_instantCompleteForTesting)
+            {
+                var result = BossEncounterService.CompleteWeeklyBoss(_weeklyBoss, _mythicPool);
+                Debug.Log($"[EndgameMenu] 주간 보스 완료={result.success} 신화발현={(result.mythicGranted != null ? result.mythicGranted.instanceId : "없음")}");
+                if (result.mythicGranted != null)
+                {
+                    var overlay = FindAnyObjectByType<MythicEffectOverlay>();
+                    var def = ResolveMythicDefinition(result.mythicGranted.mythicId);
+                    if (overlay != null && def != null) overlay.Play(def);
+                }
+                Refresh();
+            }
+            else
+            {
+                Enter(_weeklyBoss, true);
+            }
         }
 
         private void OnDisable()
@@ -98,5 +147,13 @@ namespace LittleHero
         }
 
         public void Close() => gameObject.SetActive(false);
+
+        private MythicDefinition ResolveMythicDefinition(string id)
+        {
+            if (_mythicPool == null || string.IsNullOrEmpty(id)) return null;
+            for (int i = 0; i < _mythicPool.Length; i++)
+                if (_mythicPool[i] != null && _mythicPool[i].id == id) return _mythicPool[i];
+            return null;
+        }
     }
 }

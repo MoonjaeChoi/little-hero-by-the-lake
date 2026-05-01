@@ -164,11 +164,11 @@
 
 | ID | 작업 | 참조 | 의존 | 비고 |
 |---|---|---|---|---|
-| **F4** | 일일 보스 7종 (요일별 회전) | endgame §4 | C6, B8 | ✅ 2026-05-01 (7 boss SO + EndgameModeData.daily_boss.bossPool) |
-| **F5** | 주간 보스 4종 (4주 사이클) + 신화 발현 보장 | endgame §5 | C7, F4 | ✅ 2026-05-01 (4 boss SO + bossPool. 신화 보장은 F5 보스 처치 매니저에서 ForceRoll 호출 — 후속) |
+| **F4** | 일일 보스 7종 (요일별 회전) | endgame §4 | C6, B8 | ✅ 2026-05-01 (7 boss SO + bossPool + BossEncounterService.ResolveDailyBoss/CompleteDailyBoss) |
+| **F5** | 주간 보스 4종 (4주 사이클) + 신화 발현 보장 | endgame §5 | C7, F4 | ✅ 2026-05-01 (4 boss SO + bossPool + BossEncounterService.CompleteWeeklyBoss + MythicMileageService.GuaranteeRoll) |
 | **F6** | 무한 모드 (끝없는 다락방) | endgame §6 | C6 | ✅ 2026-05-01 (InfiniteTowerRunner) |
 | **F7** | 고난도 챕터 36~50 (어둠 모드) | endgame §3 | F3 | ✅ 2026-05-01 (CH 21~35 클론, x2.0 곱셈) |
-| **F8** | 신화 옵션 4종 SO + 발현 효과 | equipment §3.7 + endgame §5.4 | C7, B10 | ✅ 2026-05-01 (MythicEffectRuntime + DamageSystem 통합) |
+| **F8** | 신화 옵션 4종 SO + 발현 효과 | equipment §3.7 + endgame §5.4 | C7, B10 | ✅ 2026-05-01 (MythicEffectRuntime + DamageSystem + 약속 무료 리롤 wiring) |
 
 **메인 스토리 예상 30~45일 / Endgame 예상 25~35일.**
 
