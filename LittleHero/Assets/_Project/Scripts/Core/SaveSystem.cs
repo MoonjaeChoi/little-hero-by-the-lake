@@ -27,7 +27,7 @@ namespace LittleHero
         public int starlight;                                        // 별빛 ⋆ (영구·캐시)
         public int level = 1;                                        // 캐릭터 레벨 (L100 캡)
         public int xp;                                               // 누적 XP (현 레벨 내 진행도는 BalanceConfig.xpThresholds로 환산)
-        public int firstClearedChapters;                             // 35 챕터 첫 클리어 비트마스크 (별빛 1회 보상용)
+        public long firstClearedChapters;                            // 35+15 챕터 첫 클리어 비트마스크 (long, 출시 전 fix #2 — int 32비트 한계 해소)
 
         // ✦ B2 — 장비 인스턴스 영구 저장 (equipment §4.2)
         public EquipmentInstance[] equipmentInstances = new EquipmentInstance[0];

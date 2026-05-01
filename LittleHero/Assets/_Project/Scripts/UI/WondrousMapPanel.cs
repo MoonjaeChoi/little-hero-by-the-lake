@@ -37,6 +37,9 @@ namespace LittleHero
 
         private void OnEnable()
         {
+            // 출시 전 fix #4 — raycast 누설 방지 (다른 형제 위에 그려져 입력 우선권)
+            transform.SetAsLastSibling();
+
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             if (_confirmStartButton != null) _confirmStartButton.onClick.AddListener(OnConfirmStart);
             if (_confirmCancelButton != null) _confirmCancelButton.onClick.AddListener(CloseConfirm);
@@ -68,7 +71,7 @@ namespace LittleHero
         private void Refresh()
         {
             if (_nodes == null || _chapters == null) return;
-            int firstMask = MetaProgression.Instance?.Data?.firstClearedChapters ?? 0;
+            long firstMask = MetaProgression.Instance?.Data?.firstClearedChapters ?? 0L;
             int playerLevel = PlayerProgress.Instance?.Level ?? (MetaProgression.Instance?.Data?.level ?? 1);
 
             for (int i = 0; i < _nodes.Length; i++)
@@ -77,18 +80,18 @@ namespace LittleHero
                 if (node == null) continue;
                 ChapterData chapter = i < _chapters.Length ? _chapters[i] : null;
                 int chapterNum = chapter != null ? chapter.chapterNumber : (i + 1);
-                bool firstCleared = chapterNum >= 1 && chapterNum <= 32 && (firstMask & (1 << (chapterNum - 1))) != 0;
+                bool firstCleared = chapterNum >= 1 && chapterNum <= 50 && (firstMask & (1L << (chapterNum - 1))) != 0;
                 bool unlocked = IsChapterUnlocked(chapterNum, firstMask);
                 node.Bind(chapter, chapterNum, unlocked, firstCleared, playerLevel);
             }
         }
 
         // chapter N 해방 = chapter N-1 첫 클리어. CH1 은 항상 해방.
-        private static bool IsChapterUnlocked(int chapterNum, int firstMask)
+        private static bool IsChapterUnlocked(int chapterNum, long firstMask)
         {
             if (chapterNum <= 1) return true;
             int prevBit = chapterNum - 2;  // 1-indexed → 0-indexed prev = (N-1)-1
-            return (firstMask & (1 << prevBit)) != 0;
+            return (firstMask & (1L << prevBit)) != 0;
         }
 
         private void HandleNodeClicked(ChapterData chapter)

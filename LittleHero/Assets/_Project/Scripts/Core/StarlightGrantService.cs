@@ -79,8 +79,8 @@ namespace LittleHero
             int reward = CurrencyService.CalcChapterStarlightReward(chapterNumber);
             CurrencyService.GrantStarlight(reward);
             data.chapterStarlightGranted[idx] = true;
-            // firstClearedChapters 비트마스크도 동기화 (D3 지도 해방용)
-            if (idx < 32) data.firstClearedChapters |= (1 << idx);
+            // firstClearedChapters 비트마스크도 동기화 (D3 지도 해방용, long 50비트 — CH 1~35 + hardcore 36~50)
+            if (idx >= 0 && idx < 50) data.firstClearedChapters |= (1L << idx);
             SaveSystem.Save(data);
             Debug.Log($"[StarlightGrant] 챕터 {chapterNumber} 첫 클리어 +{reward}⋆");
             return true;

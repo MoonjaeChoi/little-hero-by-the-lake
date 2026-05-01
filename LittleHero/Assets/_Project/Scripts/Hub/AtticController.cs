@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -39,6 +40,70 @@ namespace LittleHero
         [SerializeField] private Text _dailyBossCooldownText;
         [SerializeField] private Text _weeklyBossCooldownText;
         [SerializeField] private Text _infiniteDepthText;
+
+        // 출시 전 fix #1 — 한 번에 하나의 패널만 활성화 보장
+        // _managedPanels 가 비어있으면 Awake 에서 Canvas 자식 중 Panel/Modal/Overlay 접미어 자동 탐색.
+        // _excludePanelNames 에 명시된 이름은 제외 (CharacterPanel 같은 다락방 본체 UI).
+        [Header("패널 토글 관리 (한 번에 하나만 활성, 출시 전 fix #1)")]
+        [SerializeField] private GameObject[] _managedPanels;
+        [SerializeField] private string[] _excludePanelNames = { "CharacterPanel" };
+
+        private GameObject _lastActivePanel;
+
+        private void Awake()
+        {
+            if (_managedPanels == null || _managedPanels.Length == 0) AutoDiscoverPanels();
+        }
+
+        private void AutoDiscoverPanels()
+        {
+            var canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
+            if (canvas == null) { _managedPanels = new GameObject[0]; return; }
+
+            var list = new List<GameObject>();
+            foreach (Transform child in canvas.transform)
+            {
+                string n = child.name;
+                if (_excludePanelNames != null && System.Array.IndexOf(_excludePanelNames, n) >= 0) continue;
+                if (n.EndsWith("Panel") || n.EndsWith("Modal") || n.EndsWith("Overlay"))
+                    list.Add(child.gameObject);
+            }
+            _managedPanels = list.ToArray();
+        }
+
+        private void Update()
+        {
+            // 출시 전 fix #1 — 다른 패널이 활성화되면 이전 패널 자동 비활성화 (한 번에 하나만)
+            if (_managedPanels == null || _managedPanels.Length == 0) return;
+
+            GameObject newlyActive = null;
+            for (int i = 0; i < _managedPanels.Length; i++)
+            {
+                var p = _managedPanels[i];
+                if (p != null && p.activeSelf && p != _lastActivePanel)
+                {
+                    newlyActive = p;
+                    break;
+                }
+            }
+
+            if (newlyActive != null)
+            {
+                for (int i = 0; i < _managedPanels.Length; i++)
+                {
+                    var p = _managedPanels[i];
+                    if (p != null && p != newlyActive && p.activeSelf) p.SetActive(false);
+                }
+                _lastActivePanel = newlyActive;
+            }
+            else
+            {
+                bool any = false;
+                for (int i = 0; i < _managedPanels.Length; i++)
+                    if (_managedPanels[i] != null && _managedPanels[i].activeSelf) { any = true; break; }
+                if (!any) _lastActivePanel = null;
+            }
+        }
 
         private void OnEnable()
         {
@@ -188,15 +253,13 @@ namespace LittleHero
 
         private static bool AllChaptersFirstCleared()
         {
-            int mask = MetaProgression.Instance?.Data?.firstClearedChapters ?? 0;
-            // 35 챕터 — 비트 0~34 모두 set
-            const int target = (1 << 0) - 1;  // placeholder; 실제는 (1 << 35) - 1 인데 int 32bit 한계 → long 필요
-            // long 비교를 우회: 단순히 첫 35개 비트 set 여부를 별도 필드로 검사하는 게 정확.
-            // 임시: chapterNumber 1~35 비트가 모두 set 인지 long 으로 비교 — 현재 SaveData.firstClearedChapters 가 int 라
-            // 35bit 가 표현 불가. 후속 (F1~F3 콘텐츠 + B7 챕터 도입 시) long 으로 승격 예정.
-            // MVP D2 placeholder: 추억 4종 모두 발견 시 endgame 활성으로 대용.
-            _ = mask; _ = target;
-            return MetaProgression.Instance != null && MetaProgression.Instance.AllMemoriesDiscovered();
+            // 출시 전 fix #2 — long 승격 후 진짜 35 챕터 첫 클리어 검사 (CH 1~35 비트 0~34 모두 set)
+            // 또는 추억 4종 모두 발견 (story-completion 우회) 둘 중 하나 만족 시 endgame 활성.
+            long mask = MetaProgression.Instance?.Data?.firstClearedChapters ?? 0L;
+            const long target35 = (1L << 35) - 1;  // 0x7FFFFFFFF
+            bool allChapters = (mask & target35) == target35;
+            bool allMemories = MetaProgression.Instance != null && MetaProgression.Instance.AllMemoriesDiscovered();
+            return allChapters || allMemories;
         }
 
         private static string FormatHm(long seconds)

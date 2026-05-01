@@ -104,8 +104,8 @@ namespace LittleHero
                 case EquipSlot.Shoes: return true;
             }
             // 장신구 5: 챕터 6~10 첫 클리어 비트로 판정 (chapter_curve §3.7).
-            // SaveData.firstClearedChapters int 의 비트 N-1 = 챕터 N 첫 클리어.
-            int mask = MetaProgression.Instance?.Data?.firstClearedChapters ?? 0;
+            // SaveData.firstClearedChapters long 의 비트 N-1 = 챕터 N 첫 클리어.
+            long mask = MetaProgression.Instance?.Data?.firstClearedChapters ?? 0L;
             int requiredChapter = slot switch
             {
                 EquipSlot.Earring  => 6,
@@ -116,7 +116,7 @@ namespace LittleHero
                 _ => 0,
             };
             if (requiredChapter == 0) return false;
-            return (mask & (1 << (requiredChapter - 1))) != 0;
+            return (mask & (1L << (requiredChapter - 1))) != 0;
         }
 
         private EquipmentTemplate FindTemplate(string id)
