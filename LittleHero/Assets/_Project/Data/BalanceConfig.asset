@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334e98a2192b1490ea353a0862656548, type: 3}
   m_Name: BalanceConfig
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.BalanceConfig
-  baseMaxHealth: 100
+  baseMaxHealth: 5000
   baseMoveSpeed: 5
-  baseAttackDamage: 10
-  baseAttackSpeed: 1
+  baseAttackDamage: 500
+  baseAttackSpeed: 5
   baseRange: 5
   xpThresholds: 
   shopItemCount: 6
