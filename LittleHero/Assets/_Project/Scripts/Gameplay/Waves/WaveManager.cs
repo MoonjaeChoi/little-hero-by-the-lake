@@ -115,6 +115,8 @@ namespace LittleHero
                 enemy.transform.position = GetBossSpawnPosition();
             _activeEnemies.Add(enemy);
             enemy.OnDied += HandleEnemyDied;
+            // 보스 체력바 — isBoss 만 (미니보스는 제외)
+            if (data.isBoss) GameEvents.RaiseBossSpawned(enemy);
         }
 
         private static Vector3 GetBossSpawnPosition()
@@ -129,6 +131,8 @@ namespace LittleHero
         {
             enemy.OnDied -= HandleEnemyDied;
             _activeEnemies.Remove(enemy);
+            // 보스 체력바 — isBoss 사망 시 비활성화
+            if (enemy.Data != null && enemy.Data.isBoss) GameEvents.RaiseBossDespawned();
             _spawner.ReturnToPool(enemy);
             CheckWaveComplete();
         }

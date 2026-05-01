@@ -23,6 +23,10 @@ namespace LittleHero
         // ✦ C1 — 굴림/리롤 결과 (AffixRoller 가 발행)
         public static event Action<EquipmentInstance> OnAffixRolled;
 
+        // ✦ 보스 체력바 — WaveManager / BossEncounterRunner 가 발행
+        public static event Action<EnemyController> OnBossSpawned;
+        public static event Action OnBossDespawned;
+
         public static void RaiseEnemyKilled(EnemyData data) => OnEnemyKilled?.Invoke(data);
         public static void RaiseLevelUp(int level) => OnLevelUp?.Invoke(level);
         public static void RaiseWaveCleared(int wave) => OnWaveCleared?.Invoke(wave);
@@ -37,5 +41,7 @@ namespace LittleHero
         public static void RaiseMagicCrystalChanged(int amount) => OnMagicCrystalChanged?.Invoke(amount);
         public static void RaiseStarlightChanged(int amount) => OnStarlightChanged?.Invoke(amount);
         public static void RaiseAffixRolled(EquipmentInstance instance) => OnAffixRolled?.Invoke(instance);
+        public static void RaiseBossSpawned(EnemyController boss) => OnBossSpawned?.Invoke(boss);
+        public static void RaiseBossDespawned() => OnBossDespawned?.Invoke();
     }
 }
