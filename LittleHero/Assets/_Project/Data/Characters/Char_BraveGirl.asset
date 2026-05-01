@@ -15,7 +15,7 @@ MonoBehaviour:
   id: brave_girl
   displayName: "\uC529\uC529\uD55C \uC18C\uB140"
   description: 
-  portrait: {fileID: 0}
+  portrait: {fileID: -8188201727400294438, guid: 4f260c916db4d46f293af8a4c1f6830d, type: 3}
   prefab: {fileID: 0}
   maxHealth: 130
   moveSpeed: 4.5
@@ -23,4 +23,8 @@ MonoBehaviour:
   attackSpeed: 1
   range: 5
   tintColor: {r: 0.95, g: 0.65, b: 0.85, a: 1}
+  strengthMultiplier: 1
+  agilityMultiplier: 1
+  wisdomMultiplier: 1
+  spiritMultiplier: 1
   starFragmentCost: 10

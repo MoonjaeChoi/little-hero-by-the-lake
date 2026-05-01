@@ -15,7 +15,7 @@ MonoBehaviour:
   id: quiet_friend
   displayName: "\uC870\uC6A9\uD55C \uCE5C\uAD6C"
   description: 
-  portrait: {fileID: 0}
+  portrait: {fileID: -1530446253210398266, guid: edd537bdaffa14610bd7596c65d2ef93, type: 3}
   prefab: {fileID: 0}
   maxHealth: 90
   moveSpeed: 6
@@ -23,4 +23,8 @@ MonoBehaviour:
   attackSpeed: 1.1
   range: 5.5
   tintColor: {r: 0.55, g: 0.85, b: 0.95, a: 1}
+  strengthMultiplier: 1
+  agilityMultiplier: 1
+  wisdomMultiplier: 1
+  spiritMultiplier: 1
   starFragmentCost: 25

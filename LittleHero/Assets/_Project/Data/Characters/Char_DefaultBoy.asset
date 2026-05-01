@@ -15,7 +15,7 @@ MonoBehaviour:
   id: default_boy
   displayName: "\uC6A9\uAC10\uD55C \uC18C\uB144"
   description: 
-  portrait: {fileID: 0}
+  portrait: {fileID: -7419536186609909705, guid: fe52f52c9e5934c1a9247d7ea1f26de1, type: 3}
   prefab: {fileID: 0}
   maxHealth: 100
   moveSpeed: 5
@@ -23,4 +23,8 @@ MonoBehaviour:
   attackSpeed: 1
   range: 5
   tintColor: {r: 1, g: 0.85, b: 0.55, a: 1}
+  strengthMultiplier: 1
+  agilityMultiplier: 1
+  wisdomMultiplier: 1
+  spiritMultiplier: 1
   starFragmentCost: 0
