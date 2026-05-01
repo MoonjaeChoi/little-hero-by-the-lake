@@ -30,6 +30,7 @@ namespace LittleHero
         private void HandlePlayerDied()
         {
             if (_panelRoot != null) _panelRoot.SetActive(true);
+            AudioManager.Instance?.PlayBgm("game_over_gentle", crossFadeSec: 0.8f);
         }
 
         private void HandleRestart()

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LittleHero
@@ -16,6 +18,13 @@ namespace LittleHero
         public static AudioManager Instance { get; private set; }
 
         private AudioSource _src;
+        private AudioSource _bgmSrc;
+        private AudioSource _bgmFadeSrc;  // crossfade 보조
+        private string _currentBgm;
+        private Coroutine _crossFadeCo;
+        private readonly Dictionary<string, AudioClip> _bgmCache = new();
+        private const float BGM_VOLUME = 0.4f;
+
         private AudioClip _popClip;
         private AudioClip _pickupClip;
         private AudioClip _levelUpClip;
@@ -40,6 +49,18 @@ namespace LittleHero
             _src.loop = false;
             _src.spatialBlend = 0f;
             _src.volume = 0.6f;
+
+            _bgmSrc = gameObject.AddComponent<AudioSource>();
+            _bgmSrc.playOnAwake = false;
+            _bgmSrc.loop = true;
+            _bgmSrc.spatialBlend = 0f;
+            _bgmSrc.volume = BGM_VOLUME;
+
+            _bgmFadeSrc = gameObject.AddComponent<AudioSource>();
+            _bgmFadeSrc.playOnAwake = false;
+            _bgmFadeSrc.loop = true;
+            _bgmFadeSrc.spatialBlend = 0f;
+            _bgmFadeSrc.volume = 0f;
 
             _popClip      = SynthPop();
             _pickupClip   = SynthPickup();
@@ -161,6 +182,107 @@ namespace LittleHero
             var clip = AudioClip.Create("sfx_hit", len, 1, SR, false);
             clip.SetData(samples, 0);
             return clip;
+        }
+
+        // ===== BGM =====
+        // Resources/BGM/<name>.ogg — 처음 호출 시 lazy load + 캐시
+        public void PlayBgm(string name, float crossFadeSec = 1.5f)
+        {
+            if (string.IsNullOrEmpty(name)) return;
+            if (_currentBgm == name && _bgmSrc.isPlaying) return;
+            AudioClip clip = LoadBgmClip(name);
+            if (clip == null) return;
+            if (_crossFadeCo != null) StopCoroutine(_crossFadeCo);
+            if (!_bgmSrc.isPlaying || crossFadeSec <= 0f)
+            {
+                _bgmSrc.clip = clip;
+                _bgmSrc.volume = BGM_VOLUME;
+                _bgmSrc.Play();
+            }
+            else
+            {
+                _crossFadeCo = StartCoroutine(CrossFadeRoutine(clip, crossFadeSec));
+            }
+            _currentBgm = name;
+        }
+
+        public void StopBgm(float fadeSec = 0.5f)
+        {
+            if (_crossFadeCo != null) StopCoroutine(_crossFadeCo);
+            if (fadeSec <= 0f)
+            {
+                _bgmSrc.Stop();
+                _bgmFadeSrc.Stop();
+            }
+            else
+            {
+                _crossFadeCo = StartCoroutine(FadeOutRoutine(fadeSec));
+            }
+            _currentBgm = null;
+        }
+
+        // 챕터 카테고리 → BGM 이름 (chapter_structure_v2 §3 매핑)
+        public static string GetChapterBgm(int chapterNumber)
+        {
+            string suffix = (chapterNumber % 2 == 0) ? "_a" : "_b";
+            if (chapterNumber <= 5)  return "ch_meta"    + suffix;
+            if (chapterNumber <= 12) return "ch_nature"  + suffix;
+            if (chapterNumber <= 20) return "ch_animal"  + suffix;
+            if (chapterNumber <= 28) return "ch_civ"     + suffix;
+            return "ch_fantasy" + suffix;
+        }
+
+        private AudioClip LoadBgmClip(string name)
+        {
+            if (_bgmCache.TryGetValue(name, out var cached)) return cached;
+            var clip = Resources.Load<AudioClip>("BGM/" + name);
+            if (clip != null) _bgmCache[name] = clip;
+            else Debug.LogWarning($"AudioManager: BGM not found Resources/BGM/{name}");
+            return clip;
+        }
+
+        private IEnumerator CrossFadeRoutine(AudioClip newClip, float duration)
+        {
+            // 현재 → fadeSrc 로 옮겨 fade-out, 새 클립을 mainSrc 로 fade-in
+            var prev = _bgmSrc.clip;
+            float prevTime = _bgmSrc.time;
+            _bgmFadeSrc.clip = prev;
+            _bgmFadeSrc.time = prevTime;
+            _bgmFadeSrc.volume = _bgmSrc.volume;
+            _bgmFadeSrc.Play();
+
+            _bgmSrc.clip = newClip;
+            _bgmSrc.volume = 0f;
+            _bgmSrc.Play();
+
+            float startVol = _bgmFadeSrc.volume;
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                float k = Mathf.Clamp01(t / duration);
+                _bgmFadeSrc.volume = Mathf.Lerp(startVol, 0f, k);
+                _bgmSrc.volume     = Mathf.Lerp(0f, BGM_VOLUME, k);
+                yield return null;
+            }
+            _bgmFadeSrc.Stop();
+            _bgmSrc.volume = BGM_VOLUME;
+            _crossFadeCo = null;
+        }
+
+        private IEnumerator FadeOutRoutine(float duration)
+        {
+            float startVol = _bgmSrc.volume;
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                _bgmSrc.volume = Mathf.Lerp(startVol, 0f, t / duration);
+                yield return null;
+            }
+            _bgmSrc.Stop();
+            _bgmSrc.volume = BGM_VOLUME;
+            _crossFadeCo = null;
         }
     }
 }

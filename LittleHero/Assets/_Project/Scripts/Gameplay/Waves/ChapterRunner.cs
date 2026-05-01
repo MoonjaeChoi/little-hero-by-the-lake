@@ -25,6 +25,11 @@ namespace LittleHero
             GameEvents.OnShopClosed += OnShopClosed;
             // C9 — 챕터 곱셈을 spawner 에 명시적으로 전달 (인스펙터·SelectedChapter 경로 일관)
             _spawner.SetActiveChapter(_chapterData);
+
+            // BGM — 챕터 카테고리별 트랙 (chapter_structure_v2 §3 매핑)
+            int chN = _chapterData != null ? _chapterData.chapterNumber : 1;
+            string bgm = AudioManager.GetChapterBgm(chN);
+            AudioManager.Instance?.PlayBgm(bgm, crossFadeSec: 1.0f);
             // Phase G2: 챕터 배경 동적 변경
             ApplyChapterBackground();
             RegisterEnemyPool();
@@ -41,7 +46,15 @@ namespace LittleHero
 
         private void StartNextWave()
         {
-            WaveConfig config = BuildWaveConfig(GameManager.Instance.CurrentWave);
+            int wave = GameManager.Instance.CurrentWave;
+            WaveConfig config = BuildWaveConfig(wave);
+
+            // BGM — 보스 웨이브(20) 진입 시 보스 트랙으로 crossfade
+            if (config.boss != null)
+                AudioManager.Instance?.PlayBgm("boss_chapter", crossFadeSec: 1.5f);
+            else if (config.miniBoss != null)
+                AudioManager.Instance?.PlayBgm("miniboss_chase", crossFadeSec: 1.0f);
+
             _waveManager.StartWave(config, OnWaveComplete);
         }
 

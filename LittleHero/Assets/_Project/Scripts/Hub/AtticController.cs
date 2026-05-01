@@ -100,6 +100,9 @@ namespace LittleHero
             UpdateStarlight(CurrencyService.Starlight);
             RefreshEndgameMenu();
 
+            // 다락방 BGM (Joe Hisaishi 풍 nostalgic)
+            AudioManager.Instance?.PlayBgm("attic_nostalgic");
+
             // 저장된 캐릭터 ID 복원, 없으면 기본 캐릭터 자동 선택
             if (MetaProgression.Instance != null)
             {
