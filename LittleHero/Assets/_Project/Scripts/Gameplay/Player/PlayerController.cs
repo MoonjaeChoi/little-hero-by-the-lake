@@ -55,8 +55,8 @@ namespace LittleHero
                     if (character.portrait != null)
                     {
                         sr.sprite = character.portrait;
-                        // 1024×768 PNG 가 너무 크지 않게 캐릭터별 통일 scale (게임 내 균형)
-                        transform.localScale = Vector3.one * 0.6f;
+                        // 1024×768 PNG 가 화면을 너무 차지하지 않도록 축소 (사용자 보고 — 0.6 시 좌우 이동만 가능)
+                        transform.localScale = Vector3.one * 0.25f;
                     }
                 }
             }
