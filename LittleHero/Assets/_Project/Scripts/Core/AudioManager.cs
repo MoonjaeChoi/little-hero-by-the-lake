@@ -244,12 +244,21 @@ namespace LittleHero
         private IEnumerator CrossFadeRoutine(AudioClip newClip, float duration)
         {
             // 현재 → fadeSrc 로 옮겨 fade-out, 새 클립을 mainSrc 로 fade-in
+            // 출시 전 fix #5 — prev clip null 가드 (clip 이 없는 audio source 에 .time 설정 시 경고 방지)
             var prev = _bgmSrc.clip;
-            float prevTime = _bgmSrc.time;
-            _bgmFadeSrc.clip = prev;
-            _bgmFadeSrc.time = prevTime;
-            _bgmFadeSrc.volume = _bgmSrc.volume;
-            _bgmFadeSrc.Play();
+            if (prev != null)
+            {
+                _bgmFadeSrc.clip = prev;
+                _bgmFadeSrc.time = _bgmSrc.time;
+                _bgmFadeSrc.volume = _bgmSrc.volume;
+                _bgmFadeSrc.Play();
+            }
+            else
+            {
+                _bgmFadeSrc.Stop();
+                _bgmFadeSrc.clip = null;
+                _bgmFadeSrc.volume = 0f;
+            }
 
             _bgmSrc.clip = newClip;
             _bgmSrc.volume = 0f;
