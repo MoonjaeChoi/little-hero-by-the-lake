@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CH07_Small
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
   id: ch07_small
-  displayName: "\uB3C4\uD1A0\uB9AC \uCE5C\uAD6C"
+  displayName: "\uAD74\uB7EC\uAC00\uB294 \uB3C4\uD1A0\uB9AC"
   description: 
   icon: {fileID: -2050150420191153139, guid: 284c98a1348764c189dd31a2156f732b, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}

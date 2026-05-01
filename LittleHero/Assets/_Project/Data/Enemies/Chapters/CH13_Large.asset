@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52698276b7e542c588accfb9ce7b062, type: 3}
+  m_Name: CH13_Large
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
+  id: ch13_large
+  displayName: "\uD654\uC0B0 \uB3C4\uB871\uB1FD"
+  description: 
+  icon: {fileID: 231187738927615288, guid: 3fa6da5fecd3d456c8dc7ffa37c95085, type: 3}
+  prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
+  maxHealth: 80
+  moveSpeed: 2.8
+  damage: 12
+  xpDrop: 5
+  starDustDrop: 3
+  armor: 5
+  tintColor: {r: 0.55, g: 0.78, b: 0.55, a: 1}
+  scaleMultiplier: 1.15
+  isMiniB: 0
+  isBoss: 0

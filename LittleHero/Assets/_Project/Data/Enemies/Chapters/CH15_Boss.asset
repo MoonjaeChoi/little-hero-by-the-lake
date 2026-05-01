@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52698276b7e542c588accfb9ce7b062, type: 3}
+  m_Name: CH15_Boss
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
+  id: ch15_boss
+  displayName: "\uAE4A\uC740 \uAD74 \uD1A0\uB07C"
+  description: 
+  icon: {fileID: 1831762633881287577, guid: a9f20608280974fdeb4def5fc193cb3c, type: 3}
+  prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
+  maxHealth: 700
+  moveSpeed: 1.6
+  damage: 36
+  xpDrop: 50
+  starDustDrop: 25
+  armor: 30
+  tintColor: {r: 0.95, g: 0.78, b: 0.5, a: 1}
+  scaleMultiplier: 1.785
+  isMiniB: 0
+  isBoss: 1
