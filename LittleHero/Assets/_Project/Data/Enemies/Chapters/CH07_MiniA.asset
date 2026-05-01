@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52698276b7e542c588accfb9ce7b062, type: 3}
+  m_Name: CH07_MiniA
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
+  id: ch07_minia
+  displayName: "\uC232\uC758 \uAE4C\uB9C8\uADC0"
+  description: 
+  icon: {fileID: -4477430629435229306, guid: 9b15d28b1a569468181415f30fea191a, type: 3}
+  prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
+  maxHealth: 200
+  moveSpeed: 2.2
+  damage: 20
+  xpDrop: 12
+  starDustDrop: 8
+  armor: 15
+  tintColor: {r: 0.55, g: 0.78, b: 0.55, a: 1}
+  scaleMultiplier: 1.3
+  isMiniB: 1
+  isBoss: 0

@@ -21,11 +21,11 @@ MonoBehaviour:
   totalWaves: 20
   waveDuration: 45
   enemyPool:
-  - {fileID: 11400000, guid: 89905cbef2d4045dc8419a3c4971985c, type: 2}
-  - {fileID: 11400000, guid: 4d44ba983a7f844338f363e545afb393, type: 2}
-  - {fileID: 11400000, guid: ac47f9b82ab184ef9a9563cb49296b68, type: 2}
+  - {fileID: 11400000, guid: 34f4d64a8410a4ae59d7254a70c5cf89, type: 2}
+  - {fileID: 11400000, guid: 9a985368f2b8c4b75ac079984559fd15, type: 2}
+  - {fileID: 11400000, guid: 3aff2e61ae5a44bb7beeec2800e913f0, type: 2}
   miniBossPool:
-  - {fileID: 11400000, guid: 14d8e485272e64c4399b1546f4334947, type: 2}
-  - {fileID: 11400000, guid: 2c04ef5ab55104e4fafc8ac7547c99a0, type: 2}
-  bossEnemy: {fileID: 11400000, guid: 0a13ef028ee444c3e9c2cc48591d802b, type: 2}
+  - {fileID: 11400000, guid: c5a008057b4fa41389940833dbacc453, type: 2}
+  - {fileID: 11400000, guid: 50b86b8def8424912b5fbcf2f27c2b01, type: 2}
+  bossEnemy: {fileID: 11400000, guid: 77ab5928095fb469fa6b0fc3f921baf7, type: 2}
   starFragmentReward: 9
