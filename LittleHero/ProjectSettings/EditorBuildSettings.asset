@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Chapter.unity
     guid: 45063cb733f904e939efa447fa49fcc1
+  - enabled: 1
+    path: Assets/_Project/Scenes/InfiniteTower.unity
+    guid: dc6b29894b72749a9a37926fc1a595c8
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: ff55b0a36b94745688295ee34e4cfccd, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
