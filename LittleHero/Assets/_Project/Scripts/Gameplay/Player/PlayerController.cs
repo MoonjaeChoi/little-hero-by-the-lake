@@ -48,7 +48,17 @@ namespace LittleHero
             if (character != null)
             {
                 SpriteRenderer sr = GetComponent<SpriteRenderer>();
-                if (sr != null) sr.color = character.tintColor;
+                if (sr != null)
+                {
+                    sr.color = character.tintColor;
+                    // Phase G2 — character.portrait 가 있으면 sprite 동적 변경 (placeholder Circle → 실 캐릭터 idle)
+                    if (character.portrait != null)
+                    {
+                        sr.sprite = character.portrait;
+                        // 1024×768 PNG 가 너무 크지 않게 캐릭터별 통일 scale (게임 내 균형)
+                        transform.localScale = Vector3.one * 0.6f;
+                    }
+                }
             }
         }
 

@@ -355,7 +355,7 @@ public interface IAttackPattern
 - `Char_DefaultBoy` — 용감한 소년 (HP 100, Speed 5, Dmg 10, free)
 - `Char_BraveGirl` — 씩씩한 소녀 (HP 130, Speed 4.5, Dmg 9, 10 무지개 구슬)
 - `Char_QuietFriend` — 조용한 친구 (HP 90, Speed 6, Dmg 11, AtkSpd 1.1, 25 무지개 구슬)
-- 캐릭터 선택 흐름: `MetaProgression.SelectCharacter` (Save 자동) → `PlayerStats.Initialize`가 BalanceConfig 대신 캐릭터 스탯 사용 → `PlayerController`가 캐릭터 tint 적용
+- 캐릭터 선택 흐름: `MetaProgression.SelectCharacter` (Save 자동) → `PlayerStats.Initialize`가 BalanceConfig 대신 캐릭터 스탯 사용 → `PlayerController`가 캐릭터 tint 적용 + **Phase G2: portrait 가 있으면 SpriteRenderer.sprite 동적 변경 + scale 0.6**
 
 ### 추억 SO
 - `Memory_DadPhoto` (Photo, ch_01_redhood)
