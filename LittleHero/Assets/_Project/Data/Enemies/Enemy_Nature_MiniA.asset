@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_Nature_MiniA
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
   id: Enemy_Nature_MiniA
-  displayName: "\uC232\uC758 \uC218\uD638\uC790"
+  displayName: "\uC232\uC758 \uC9C0\uD0B4\uC774"
   description: 
   icon: {fileID: -4477430629435229306, guid: 9b15d28b1a569468181415f30fea191a, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}

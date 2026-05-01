@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WeeklyBoss_01
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
   id: WeeklyBoss_01
-  displayName: "\uD658\uC0C1\uC758 \uAC70\uB300 \uCE5C\uAD6C 2\uC8FC"
+  displayName: "\uC774\uC0C1\uD55C \uB098\uB77C\uC758 \uD070 \uCE5C\uAD6C 2\uC8FC"
   description: 
   icon: {fileID: 907016249835596447, guid: 317ba95fdb8dc41179e218f4e931bd45, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "CH_03_\uC78A\uD600\uC9C4_\uD559\uAD50"
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ChapterData
   id: CH_03
-  displayName: "\uC78A\uD600\uC9C4 \uD559\uAD50"
+  displayName: "\uC78A\uD78C \uD559\uAD50"
   description: "\uCC55\uD130 3 \u2014 \uC78A\uD600\uC9C4 \uD559\uAD50"
   coverArt: {fileID: -8906834628833726170, guid: debca6c648b3340e8a2acb19ce37f80f, type: 3}
   chapterNumber: 3
