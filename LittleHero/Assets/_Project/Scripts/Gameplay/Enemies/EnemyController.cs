@@ -57,11 +57,19 @@ namespace LittleHero
                 Die();
         }
 
+        private static GameObject _cachedDeathFx;
+
         private void Die()
         {
             _isDead = true;
             GameEvents.RaiseEnemyKilled(_data);
             OnDied?.Invoke(this);
+
+            // Phase G2 — 적 처치 시 별 흩어짐 VFX (CLAUDE.md §2 절대 원칙)
+            if (_cachedDeathFx == null)
+                _cachedDeathFx = Resources.Load<GameObject>("VFX/StarBurstFx");
+            if (_cachedDeathFx != null)
+                Instantiate(_cachedDeathFx, transform.position, Quaternion.identity);
 
             // 풀에서 반환되지 않은 경우 안전 비활성화
             if (gameObject.activeSelf)
