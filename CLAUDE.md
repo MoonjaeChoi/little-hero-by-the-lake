@@ -499,3 +499,4 @@ public interface IAttackPattern
   - **알려진 후속**: Krita 후처리 (transparent BG 제거), CharacterData.icon 필드 추가 + 캐릭터 sprite 동적 변경, EnemyController SpriteRenderer 동적 변경, ParticleSystem 셰이더·시트 wiring
   - **누적**: P0~P6 131 PNG 생성 + 99 SO wiring (Chapter 35 + Equipment 16 + Enemy 41 + Memory 4 + Meta 3) = **138 / 138 (100%)**
   - 참조: `docs/art_pipeline_v2.md` / `Assets/Screenshots/wondrousmap_v2_overlay.png`
+- 2026-05-01: **Phase G2 P10 캐릭터 walk 애니메이션 (코드 대체)** — txt2img sprite sheet 시도 실패(동일 seed 8000 + prompt 미세 변경, 본체는 일관성 OK 였으나 가방·신발·표정이 프레임마다 발산. ControlNet/IP-Adapter 없이는 sprite sheet 보증 불가) → PlayerController 코드 애니메이션으로 대체. `Update()` 에서 `_rb.linearVelocity.x` 부호로 SpriteRenderer.flipX, 이동 중일 때 `Mathf.Sin(Time.time * 8f) * 0.05f` 만큼 transform.localPosition.y bob. 1장 idle PNG 만으로 "걷는 듯한" 느낌 — 캐주얼 게임 지브리 톤 충분. 추후 IP-Adapter 환경 정리 시 sprite sheet 재시도 가능.

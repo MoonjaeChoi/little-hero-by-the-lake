@@ -96,8 +96,18 @@
 | 🔴 P7 | Icon_Slot_Necklace 1장 재생성 (prompt 수정) | 1분 |
 | 🟡 P8 | 35 배경 spot-check + 캐릭터 포함 배경 재생성 (선택) | 5~10분 |
 | 🟢 P9 | 사운드 효과 — "퐁!" (CLAUDE.md §2 적 처치 시 사운드) | 별도 작업 |
-| 🟢 P10 | 캐릭터 walk/attack 4프레임 애니메이션 (idle 1장만 현재) | 별도 작업 |
+| ✅ P10 | 캐릭터 walk/bob 코드 애니메이션 (txt2img sprite sheet은 일관성 부족 → 코드 대체) | 완료 |
 | 🟢 P11 | EnemyData.scaleMultiplier 미세 조정 (적 sprite 너무 작음) | 별도 작업 |
+
+### P10 결정 — txt2img sprite sheet 포기, 코드 대체
+
+- 시도: DefaultBoy 4 walk 프레임 동일 seed 8000 + 미세 prompt 변형
+- 결과: 본체(얼굴/머리/재킷)는 일관성 OK 였으나 **부속(가방·신발·표정)이 프레임마다 변경** — F0 갈색 구두/가방 없음 → F1~F3 흰 운동화/노란 가방
+- 원인: txt2img 는 seed 가 같아도 prompt 미세 변경 시 의류 디테일이 발산. ControlNet/IP-Adapter 없이는 sprite sheet 품질 보증 어려움
+- **결론**: PlayerController 에 코드 애니메이션 추가 (이미 적용)
+  - sprite flipX: `_rb.linearVelocity.x` 부호로 좌우 반전
+  - bob: 이동 중 `Mathf.Sin(Time.time * 8f) * 0.05f` 만큼 위아래 흔들림
+- 효과: 1장 idle PNG 만으로 "걷는 듯한" 느낌. 캐주얼 게임 지브리 톤 충분 + 추후 IP-Adapter 환경 정리되면 sprite sheet 재시도 가능
 
 ---
 
