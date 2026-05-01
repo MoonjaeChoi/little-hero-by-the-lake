@@ -27,10 +27,10 @@ MonoBehaviour:
     xpGainBonus: 0
   attackPattern: 1
   attackConfig:
-    damage: 10
+    damage: 5000
     attackInterval: 0.8
-    range: 15
-    projectileSpeed: 6
+    range: 20
+    projectileSpeed: 30
     count: 1
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
   setId: 
