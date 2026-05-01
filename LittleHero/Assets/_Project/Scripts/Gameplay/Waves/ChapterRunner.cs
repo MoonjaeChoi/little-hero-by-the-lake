@@ -5,6 +5,7 @@ namespace LittleHero
     public class ChapterRunner : MonoBehaviour
     {
         [SerializeField] private ChapterData _chapterData;
+        [SerializeField] private SpriteRenderer _backgroundRenderer;  // Phase G2: chapter coverArt 적용용
 
         private WaveManager _waveManager;
         private EnemySpawner _spawner;
@@ -24,6 +25,8 @@ namespace LittleHero
             GameEvents.OnShopClosed += OnShopClosed;
             // C9 — 챕터 곱셈을 spawner 에 명시적으로 전달 (인스펙터·SelectedChapter 경로 일관)
             _spawner.SetActiveChapter(_chapterData);
+            // Phase G2: 챕터 배경 동적 변경
+            ApplyChapterBackground();
             RegisterEnemyPool();
             _waveManager.Initialize(_spawner);
             GameManager.Instance.ResetRun();   // 새 런: CurrentWave=0, StarDust=0
@@ -55,6 +58,23 @@ namespace LittleHero
         private void OnShopClosed()
         {
             StartNextWave();
+        }
+
+        private void ApplyChapterBackground()
+        {
+            if (_backgroundRenderer == null)
+            {
+                var bgGO = GameObject.Find("Background");
+                if (bgGO != null) _backgroundRenderer = bgGO.GetComponent<SpriteRenderer>();
+            }
+            if (_backgroundRenderer == null || _chapterData?.coverArt == null) return;
+            _backgroundRenderer.sprite = _chapterData.coverArt;
+            _backgroundRenderer.sortingOrder = -100;
+            _backgroundRenderer.drawMode = SpriteDrawMode.Simple;
+            // 1024×768 PNG (PPU 100) → 10.24 unit. Camera ortho width ≈ 16 → scale 1.6 으로 화면 채움.
+            _backgroundRenderer.transform.localScale = new Vector3(1.6f, 1.6f, 1f);
+            _backgroundRenderer.transform.position = Vector3.zero;
+            _backgroundRenderer.color = Color.white;
         }
 
         private WaveConfig BuildWaveConfig(int waveNumber)
