@@ -97,7 +97,7 @@
 | 🟡 P8 | 35 배경 spot-check + 캐릭터 포함 배경 재생성 (선택) | 5~10분 |
 | 🟢 P9 | 사운드 효과 — "퐁!" (CLAUDE.md §2 적 처치 시 사운드) | 별도 작업 |
 | ✅ P10 | 캐릭터 walk/bob 코드 애니메이션 (txt2img sprite sheet은 일관성 부족 → 코드 대체) | 완료 |
-| 🟢 P11 | EnemyData.scaleMultiplier 미세 조정 (적 sprite 너무 작음) | 별도 작업 |
+| ✅ P11 | EnemyController spriteScale 베이스 0.4→0.55 (보스 위압감 확보) | 완료 |
 
 ### P10 결정 — txt2img sprite sheet 포기, 코드 대체
 

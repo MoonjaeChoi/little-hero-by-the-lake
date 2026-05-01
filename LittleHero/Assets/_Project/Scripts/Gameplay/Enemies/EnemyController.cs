@@ -41,9 +41,10 @@ namespace LittleHero
                 // tint 적용 — 신규 sprite는 흰색 유지(원본 색 보존), placeholder 원형은 tintColor 적용
                 sr.color = data.icon != null ? Color.white : data.tintColor;
             }
-            // 768×768 PNG 가 너무 크지 않게 적용. data.icon 있으면 0.4 통일, 없으면 기존 scale.
+            // P11 — 768×768 PNG 베이스 0.4 → 0.55 (small≈0.5, boss≈0.94 vs player 0.6 — 보스 위압감 확보).
+            // 개별 적은 EnemyData.scaleMultiplier 로 fine-tune.
             float baseScale = data.scaleMultiplier > 0f ? data.scaleMultiplier : 1f;
-            float spriteScale = data.icon != null ? 0.4f : 1f;
+            float spriteScale = data.icon != null ? 0.55f : 1f;
             transform.localScale = new Vector3(baseScale * spriteScale, baseScale * spriteScale, 1f);
         }
 
