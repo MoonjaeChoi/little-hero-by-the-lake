@@ -31,8 +31,9 @@ namespace LittleHero
         [SerializeField] private Button _hardcoreButton;
         [SerializeField] private Button _closeButton;
 
-        [Header("씬 이름 (Phase 2 placeholder)")]
+        [Header("씬 이름")]
         [SerializeField] private string _endgameSceneName = "Chapter";
+        [SerializeField] private string _infiniteTowerSceneName = "InfiniteTower";
 
         [Header("F5 신화 보장 — 주간 보스 처치 시 사용")]
         [SerializeField] private MythicDefinition[] _mythicPool;
@@ -45,7 +46,7 @@ namespace LittleHero
         {
             if (_dailyButton != null)    _dailyButton.onClick.AddListener(OnDailyClicked);
             if (_weeklyButton != null)   _weeklyButton.onClick.AddListener(OnWeeklyClicked);
-            if (_infiniteButton != null) _infiniteButton.onClick.AddListener(() => Enter(_infiniteTower, true));
+            if (_infiniteButton != null) _infiniteButton.onClick.AddListener(OnInfiniteClicked);
             if (_hardcoreButton != null) _hardcoreButton.onClick.AddListener(() => Enter(_hardcoreChapter, true));
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             Refresh();
@@ -144,6 +145,14 @@ namespace LittleHero
             long d = seconds / 86400;
             long h = (seconds % 86400) / 3600;
             return $"{d}일 {h}시";
+        }
+
+        private void OnInfiniteClicked()
+        {
+            Debug.Log($"[EndgameMenu] 무한 다락방 진입 — scene={_infiniteTowerSceneName}");
+            if (string.IsNullOrEmpty(_infiniteTowerSceneName)) return;
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(_infiniteTowerSceneName);
         }
 
         public void Close() => gameObject.SetActive(false);
