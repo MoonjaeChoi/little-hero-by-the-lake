@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: "\uBCC4\uBAA8\uC591 \uC2A4\uD2F0\uCEE4"
   description: "\uC624\uB798\uB41C \uCC45 \uD45C\uC9C0\uC5D0 \uBD99\uC5B4\uC788\uB358
     \uBC18\uC9DD\uC774 \uC2A4\uD2F0\uCEE4."
-  image: {fileID: 0}
+  image: {fileID: 3569286063225342142, guid: 23b4a0c39d8204fb388760a6ac6dd7f0, type: 3}
   memoryType: 2
   chapterId: ch_03_alice
   spawnChance: 0.4

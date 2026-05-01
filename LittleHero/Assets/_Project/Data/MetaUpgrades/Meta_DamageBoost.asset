@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: "\uACF5\uACA9\uB825 \uAC15\uD654"
   description: "\uAE30\uBCF8 \uACF5\uACA9\uB825\uC774 \uC601\uAD6C\uC801\uC73C\uB85C
     \uB298\uC5B4\uB0A9\uB2C8\uB2E4."
-  icon: {fileID: 0}
+  icon: {fileID: -5054706441475036321, guid: c41af7e1bc93448cf849a2051f2c65ab, type: 3}
   targetStat: 1
   bonusPerLevel: 1
   maxLevel: 5

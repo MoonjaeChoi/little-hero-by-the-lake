@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: "\uC544\uBE60\uC758 \uC5B4\uB9B4 \uC801 \uC0AC\uC9C4"
   description: "\uD638\uC22B\uAC00\uC5D0\uC11C \uD65C\uC9DD \uC6C3\uB294 \uC791\uC740
     \uC601\uC6C5\uC758 \uBAA8\uC2B5."
-  image: {fileID: 0}
+  image: {fileID: -6078614615644955485, guid: b28d6a8c2e3b34168b8011b41e2ca391, type: 3}
   memoryType: 0
   chapterId: ch_01_redhood
   spawnChance: 0.4

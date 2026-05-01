@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: "\uC544\uBE60\uC758 \uC791\uC740 \uBA54\uBAA8"
   description: "\"\uCF69\uB098\uBB34 \uAF2D\uB300\uAE30\uC5D4 \uCE5C\uAD6C\uAC00
     \uC0B0\uB2E4\" \u2014 \uC5B4\uB9B0 \uC190\uAE00\uC528"
-  image: {fileID: 0}
+  image: {fileID: 8909666343139707245, guid: 8148a63a08166447092b2f5d5847aa29, type: 3}
   memoryType: 1
   chapterId: ch_02_beanstalk
   spawnChance: 0.4

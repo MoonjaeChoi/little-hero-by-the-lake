@@ -493,5 +493,8 @@ public interface IAttackPattern
   - 폴더: `Assets/_Project/Art/Generated_v2/{Characters,Enemies,Bosses,Backgrounds,UI/{Equipment,Slots,Currency}}/` 총 111 PNG
   - **SO 자동 wiring**: ChapterData.coverArt 35/35 + EquipmentTemplate.icon 16/16 + EnemyData.icon 41/52 (archetype 30 + Daily 7 + Weekly 4 = 41 매핑, 기존 Phase 1·2 적 11종은 PNG 없음)
   - **D3 WondrousMapNode 보강**: 35 노드에 Icon Image 추가 + `_icon` 필드 wiring. Attic Play 시 신기한 지도 진입 → 35 챕터 coverArt 표시 ✅
-  - **알려진 후속**: Krita 후처리 (transparent BG 제거), CharacterData.icon 필드 추가 + 캐릭터 sprite 동적 변경, EnemyController SpriteRenderer 동적 변경, **P6** (추억 4 + 메타 6 + 파티클 8~12 = 18~22)
+  - **P6 추억·메타·파티클 15장**: 4 추억 (DadPhoto/DadMemo/DadSticker/DadDoodle) + 3 메타 (HpBoost/DamageBoost/DustGain) + 8 파티클 (StarBurst/HeartFloat/PetalDrop/BubblePop/SparkleTrail/StarTwinkle/HeartGlow/BubbleFloat). flat illustration 톤. CLAUDE.md §2 절대 원칙 (별·하트·꽃잎·비눗방울) 준수.
+  - **P6 SO wiring**: MemoryData.image 4/4 + MetaUpgradeData.icon 3/3. VFX 8장은 ParticleSystem texture 로 후속 wiring.
+  - **알려진 후속**: Krita 후처리 (transparent BG 제거), CharacterData.icon 필드 추가 + 캐릭터 sprite 동적 변경, EnemyController SpriteRenderer 동적 변경, ParticleSystem 셰이더·시트 wiring
+  - **누적**: P0~P6 131 PNG 생성 + 99 SO wiring (Chapter 35 + Equipment 16 + Enemy 41 + Memory 4 + Meta 3) = **138 / 138 (100%)**
   - 참조: `docs/art_pipeline_v2.md` / `Assets/Screenshots/wondrousmap_v2_overlay.png`

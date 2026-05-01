@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: "\uBCC4\uAC00\uB8E8 \uD589\uC6B4"
   description: "\uC801\uC744 \uCC98\uCE58\uD560 \uB54C \uBCC4\uAC00\uB8E8\uB97C \uB354
     \uB9CE\uC774 \uC5BB\uC2B5\uB2C8\uB2E4 (+10%/Lv)."
-  icon: {fileID: 0}
+  icon: {fileID: 8738319895132082367, guid: e1c7d576b5284442e8086c605cdb6b74, type: 3}
   targetStat: 2
   bonusPerLevel: 0.1
   maxLevel: 5
