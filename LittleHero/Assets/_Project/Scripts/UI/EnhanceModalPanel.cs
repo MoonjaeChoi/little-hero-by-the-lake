@@ -75,7 +75,7 @@ namespace LittleHero
                                                        ? $"+{result.newLevel} 성공! (아빠가 도와주셨어요)"
                                                        : $"+{result.newLevel} 성공!",
                 EnhanceOutcome.Failure            => "별가루가 흩어졌어요…",
-                EnhanceOutcome.AtMaxLevel         => "이미 최대 강화입니다",
+                EnhanceOutcome.AtMaxLevel         => "더 이상 강해질 수 없어요",
                 EnhanceOutcome.InsufficientDust   => "별가루가 부족해요",
                 EnhanceOutcome.InsufficientCrystal=> "마법 결정이 부족해요",
                 EnhanceOutcome.InvalidInstance    => "장비를 불러올 수 없어요",
@@ -110,7 +110,7 @@ namespace LittleHero
             if (_pityGauge != null)
                 _pityGauge.value = Mathf.Clamp01((float)_instance.failCount / EnhancementService.HARD_PITY_FAILS);
             if (_pityGaugeText != null)
-                _pityGaugeText.text = $"천장 {_instance.failCount} / {EnhancementService.HARD_PITY_FAILS}";
+                _pityGaugeText.text = $"확정까지 {_instance.failCount} / {EnhancementService.HARD_PITY_FAILS}";
 
             bool maxed = level >= max;
             if (_enhanceButton != null) _enhanceButton.interactable = !maxed;

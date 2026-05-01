@@ -34,7 +34,7 @@ namespace LittleHero
             if (_titleText != null)
                 _titleText.text = data != null ? $"챕터 클리어!\n{data.displayName}" : "챕터 클리어!";
             if (_rewardText != null && data != null)
-                _rewardText.text = $"별 조각 ✦ +{data.starFragmentReward}";
+                _rewardText.text = $"무지개 구슬 ✦ +{data.starFragmentReward}";
             if (_panelRoot != null) _panelRoot.SetActive(true);
         }
 

@@ -89,7 +89,7 @@ namespace LittleHero
         private void UpdateStars(int amount)
         {
             if (_starFragmentsText != null)
-                _starFragmentsText.text = $"별 조각 ✦ {amount}";
+                _starFragmentsText.text = $"무지개 구슬 ✦ {amount}";
         }
     }
 }

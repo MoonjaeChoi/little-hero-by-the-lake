@@ -110,13 +110,13 @@ namespace LittleHero
                 SetText(_attackSpeedText,  $"공격 속도 {_stats.AttackSpeed:F2}");
                 SetText(_moveSpeedText,    $"이동 속도 {_stats.MoveSpeed:F2}");
                 SetText(_rangeText,        $"사거리 {_stats.Range:F1}");
-                SetText(_critChanceText,   $"크리 확률 {_stats.CritChance * 100f:F1}%");
-                SetText(_critDamageText,   $"크리 피해 ×{_stats.CritDamage:F2}");
+                SetText(_critChanceText,   $"한방 확률 {_stats.CritChance * 100f:F1}%");
+                SetText(_critDamageText,   $"한방 피해 ×{_stats.CritDamage:F2}");
                 SetText(_armorText,        $"방어력 {Mathf.RoundToInt(_stats.Armor)}");
                 SetText(_damageReductionText, $"피해 감소 {_stats.DamageReduction * 100f:F1}%");
-                SetText(_xpGainText,       $"XP 획득 ×{_stats.XpGainMultiplier:F2}");
+                SetText(_xpGainText,       $"경험치 ×{_stats.XpGainMultiplier:F2}");
                 SetText(_dustGainText,     $"별가루 ×{_stats.DustGainMultiplier:F2}");
-                SetText(_dropRateText,     $"드랍률 ×{_stats.DropRateMultiplier:F2}");
+                SetText(_dropRateText,     $"획득률 ×{_stats.DropRateMultiplier:F2}");
             }
             else if (character != null)
             {
@@ -125,13 +125,13 @@ namespace LittleHero
                 SetText(_attackSpeedText,  $"공격 속도 {character.attackSpeed:F2}");
                 SetText(_moveSpeedText,    $"이동 속도 {character.moveSpeed:F2}");
                 SetText(_rangeText,        $"사거리 {character.range:F1}");
-                SetText(_critChanceText,   "크리 확률 -");
-                SetText(_critDamageText,   "크리 피해 -");
+                SetText(_critChanceText,   "한방 확률 -");
+                SetText(_critDamageText,   "한방 피해 -");
                 SetText(_armorText,        "방어력 -");
                 SetText(_damageReductionText, "피해 감소 -");
-                SetText(_xpGainText,       "XP 획득 ×1.00");
+                SetText(_xpGainText,       "경험치 ×1.00");
                 SetText(_dustGainText,     "별가루 ×1.00");
-                SetText(_dropRateText,     "드랍률 ×1.00");
+                SetText(_dropRateText,     "획득률 ×1.00");
             }
         }
 

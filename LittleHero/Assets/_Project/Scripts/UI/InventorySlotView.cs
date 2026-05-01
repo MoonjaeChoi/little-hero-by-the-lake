@@ -73,7 +73,7 @@ namespace LittleHero
             EquipSlot.Glasses => "안경",
             EquipSlot.Necklace => "목걸이",
             EquipSlot.Ring => "반지",
-            EquipSlot.Pet => "펫",
+            EquipSlot.Pet => "친구",
             _ => s.ToString(),
         };
     }

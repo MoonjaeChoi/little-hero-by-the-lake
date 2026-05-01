@@ -143,7 +143,7 @@ namespace LittleHero
             if (_enhanceBadgeText != null) _enhanceBadgeText.text = $"+{_instance.enhanceLevel}";
             var h = _instance.history ?? new InstanceHistory();
             if (_historyText != null)
-                _historyText.text = $"총 강화 {h.totalEnhanceAttempts}회 / 천장 {h.pityTriggeredCount} / 신화 {h.mythicAttempts}";
+                _historyText.text = $"총 강화 {h.totalEnhanceAttempts}회 / 확정까지 {h.pityTriggeredCount} / 마법 {h.mythicAttempts}";
 
             // 2. 베이스 스탯
             if (_baseStatsText != null)
@@ -156,8 +156,8 @@ namespace LittleHero
 
             int rerollMainCost = AffixRoller.CalcRerollCostMain(_instance, _balanceConfig);
             int rerollSubCost = AffixRoller.CalcRerollCostSub(_instance, _balanceConfig);
-            if (_rerollMainCostText != null) _rerollMainCostText.text = $"리롤 ★ {rerollMainCost}";
-            if (_rerollSubCostText != null)  _rerollSubCostText.text  = $"리롤 ★ {rerollSubCost}";
+            if (_rerollMainCostText != null) _rerollMainCostText.text = $"다시 ★ {rerollMainCost}";
+            if (_rerollSubCostText != null)  _rerollSubCostText.text  = $"다시 ★ {rerollSubCost}";
             if (_rerollMainButton != null)
                 _rerollMainButton.interactable = AffixRoller.CanRerollMain(_instance) && (GameManager.Instance?.StarDust ?? 0) >= rerollMainCost;
             if (_rerollSubButton != null)
