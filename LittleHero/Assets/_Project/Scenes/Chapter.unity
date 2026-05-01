@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a80cc6e871394fc8935f4af458bbdae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ChapterRunner
-  _chapterData: {fileID: 11400000, guid: 2517a83c10d674ce8b622e80bb1c8c20, type: 2}
+  _chapterData: {fileID: 11400000, guid: f71ae9ae2fc1443629ee2172d8b31ec8, type: 2}
 --- !u!4 &81786009
 Transform:
   m_ObjectHideFlags: 0

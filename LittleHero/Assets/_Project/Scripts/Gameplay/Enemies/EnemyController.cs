@@ -34,9 +34,17 @@ namespace LittleHero
         private void ApplyAppearance(EnemyData data)
         {
             SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-            if (sr != null) sr.color = data.tintColor;
-            float s = data.scaleMultiplier > 0f ? data.scaleMultiplier : 1f;
-            transform.localScale = new Vector3(s, s, 1f);
+            if (sr != null)
+            {
+                // Phase G2 — data.icon 이 있으면 sprite 동적 변경 (placeholder 원형 → 실 적 idle)
+                if (data.icon != null) sr.sprite = data.icon;
+                // tint 적용 — 신규 sprite는 흰색 유지(원본 색 보존), placeholder 원형은 tintColor 적용
+                sr.color = data.icon != null ? Color.white : data.tintColor;
+            }
+            // 768×768 PNG 가 너무 크지 않게 적용. data.icon 있으면 0.4 통일, 없으면 기존 scale.
+            float baseScale = data.scaleMultiplier > 0f ? data.scaleMultiplier : 1f;
+            float spriteScale = data.icon != null ? 0.4f : 1f;
+            transform.localScale = new Vector3(baseScale * spriteScale, baseScale * spriteScale, 1f);
         }
 
         public void TakeDamage(float damage)
