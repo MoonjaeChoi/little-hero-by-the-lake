@@ -69,7 +69,6 @@ namespace LittleHero
         }
 
         private SpriteRenderer _sr;
-        private float _bobBaseY;
 
         private void FixedUpdate()
         {
@@ -79,19 +78,12 @@ namespace LittleHero
 
         private void Update()
         {
-            // Phase G2 P10: 단순 애니메이션 — 좌우 반전 + 작은 bob
+            // Phase G2 P10: 좌우 반전만 (bob 제거 — Y velocity 와 충돌해 상하 이동 불가 버그)
             if (_sr == null) _sr = GetComponent<SpriteRenderer>();
             if (_sr == null) return;
             float vx = _rb.linearVelocity.x;
             if (Mathf.Abs(vx) > 0.05f)
-                _sr.flipX = vx < 0f;  // 좌측 이동 시 sprite 좌우 반전
-            // bob: 이동 중에만 살짝 위아래
-            bool moving = _rb.linearVelocity.sqrMagnitude > 0.01f;
-            if (_bobBaseY == 0f) _bobBaseY = transform.localPosition.y;
-            float bob = moving ? Mathf.Sin(Time.time * 8f) * 0.05f : 0f;
-            var p = transform.localPosition;
-            p.y = _bobBaseY + bob;
-            transform.localPosition = p;
+                _sr.flipX = vx < 0f;
         }
 
         // 가상 조이스틱 UI에서 호출
