@@ -6,26 +6,40 @@
 
 ---
 
-## 0. 현재 상태 (2026-04-30)
+## 0. 현재 상태 (2026-05-01 갱신)
 
-### 완료
-- Phase 0/1/2/3 부분 완료 (CLAUDE.md §11~12)
-  - 코어 골격: GameEvents, GameManager, ObjectPool, SaveSystem
-  - 데이터 SO: 16 장비, 11 적, 3 챕터, 3 캐릭터, 4 추억, 3 메타 업그레이드
-  - 게임플레이: Player + Enemy + Wave + 7 공격 패턴 + Combat
-  - UI: HUD, Shop, Attic, GameOver/ChapterCleared, Diary, Bestiary, MetaUpgrade
-- 10 설계 문서 (equipment / stats / affix_pool / item_drop / character_progression / chapter_curve / economy / endgame / monetization / ui)
-- CurveSimulator (Editor 메뉴) + 자동 검증 리포트
+### 완료 — Phase A~F 전부 (51/51 ✅)
 
-### 미구현 (본 계획서가 다룸)
-- L100 piecewise 레벨 곡선 + 4 코어 스탯 자동 증가
-- 5층 아이템 아키텍처 (강화·옵션·신화)
-- 6줄 affix (주옵션 3 + 부옵션 3) + 드랍 트리
-- 4 화폐 (마법 결정 + 별빛 신규)
-- 변환 모루 + 별빛 상점 + Unity IAP
-- Endgame 5 모드
-- 카드 6단 + 인벤토리 + 신기한 지도
-- 챕터 4~35 + 콘텐츠
+| Phase | 진척 | 핵심 산출물 |
+|---|---|---|
+| A Foundation | 7/7 | PlayerStats(4코어+11파생) / PlayerProgress(L100) / DamageCalc(3버킷) / EnemySpawner 챕터곱셈 / CurrencyService(4화폐) / SaveData / GameEvents |
+| B 데이터 | 10/10 | EquipmentTemplate(16) + Instance / Affix 22 + SubAffix 12 / Pool 12+1 / ChapterData V2 35개 / EndgameMode 4 / BalanceConfig 확장 / Mythic 4 |
+| C 시스템 | 9/9 | AffixRoller / ItemDrop / Enhancement(+0~+25) / EffectResolver / ConversionForge / EndgameReset / MythicMileage / IAttackPattern 갱신 / Spawner |
+| D UI | 12/12 | HUD / Attic / 신기한지도(35) / 인벤토리(12슬롯) / 카드6단 / 강화모달 / 변환모루 / 캐릭터정보 / 별빛상점 / Endgame / 신화오버레이 / 권장레벨경고 |
+| E 과금 | 5/5 | Unity IAP 5상품 / IAPService / 별빛 무료 출처 / 시즌패스 스캐폴드 / 영수증 검증 |
+| F 콘텐츠 | 8/8 | CH4~35 적 풀 와이어링 + 일일 보스 7 + 주간 보스 4 + InfiniteTowerScene 분리 + 고난도 CH36~50 + 신화 효과 / **F4·F5·F8 wiring 2026-05-01 완료** (BossEncounterService + GuaranteeRoll + 약속 무료 리롤) |
+
+추가 완료:
+- **사운드**: 절차합성 SFX 5종 + ACE-Step BGM 18 트랙 (보스 4종 Joe Hisaishi 풍)
+- **아트**: Phase G2 P0~P11 — 138 PNG 생성 + 99 SO wiring + Chapter.unity 배경 + 캐릭터/적 sprite 동적 변경 + walk 코드 애니메이션 + 적 처치 별 흩어짐 VFX
+- **자동화**: ACE-Step 서버 시작/종료/배치 생성 스킬 (`~/.claude/skills/little-hero-bgm`)
+
+### 미완료 — Phase G (출시 준비)
+
+| ID | 작업 | 상태 |
+|---|---|---|
+| G1 | 사운드 16종 + BGM 6종 | ~85% (5 SFX + 18 BGM ≫ 목표). 보스 fanfare/UI 클릭음 추가 가능 |
+| G2 | 아트 스프라이트 | ~95% (138 PNG + walk 코드 애니). sprite sheet/pixel art 후속 가능 |
+| G3 | 한국어 텍스트 검수 (어린이 어휘) | ❌ 미시작 |
+| G4 | iOS 빌드 + TestFlight | ❌ 미시작 |
+| G5 | App Store 심사 + 4+ 등급 인증 | ❌ 미시작 |
+| G6 | 출시 후 3개월 라이브 운영 (시즌 1) | ❌ 미시작 |
+
+### 미해결 위험 (§13 참고)
+
+- **시뮬 §10 경고**: TTK 6개 챕터 ⚠️ + 저챕터 XP 과잉 — 실측 보정 필요 (BalanceConfig 미세 조정 + CurveSimulator 재실행)
+- **F4/F5 보스 처치 매니저**: BossEncounterService 는 만들었으나 **실제 보스 씬 분리는 아직** — EndgameMenuPanel 의 `_instantCompleteForTesting=true` 플래그로 즉시 처치 시뮬만 동작. 실제 보스전 씬은 후속.
+- **F1~F3 placeholder 적**: 30 generic archetype 으로 35 챕터 와이어 끝 — 디자인 패스에서 챕터별 고유 명·외형·정밀 밸런싱 필요
 
 ---
 
