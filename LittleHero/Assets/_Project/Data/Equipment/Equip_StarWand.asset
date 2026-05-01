@@ -27,7 +27,7 @@ MonoBehaviour:
     xpGainBonus: 0
   attackPattern: 1
   attackConfig:
-    damage: 5000
+    damage: 500
     attackInterval: 0.8
     range: 20
     projectileSpeed: 30
