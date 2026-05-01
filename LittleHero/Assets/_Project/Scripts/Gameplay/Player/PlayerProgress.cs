@@ -88,13 +88,13 @@ namespace LittleHero
         private int CurrentChapterNumber()
             => MetaProgression.Instance?.SelectedChapter?.chapterNumber ?? 0;
 
-        // character_progression §5.1 — 시뮬 §5.1 반영 베이스 XP (1/5 축소)
-        // 일반 적 = 2, 미니보스 = 20, 보스 = 80
+        // character_progression §5.1 — 시뮬 §5.1 50% 컷 (저챕터 XP 과잉 보정 2026-05-01).
+        // 일반 적 = 1, 미니보스 = 10, 보스 = 40
         // 모디파이어 = 1 + chapterN × 0.1
         private void HandleEnemyKilled(EnemyData enemy)
         {
             if (enemy == null) return;
-            int baseXp = enemy.isBoss ? 80 : enemy.isMiniB ? 20 : 2;
+            int baseXp = enemy.isBoss ? 40 : enemy.isMiniB ? 10 : 1;
             int n = CurrentChapterNumber();
             float modifier = 1f + n * 0.1f;
             int gain = Mathf.RoundToInt(baseXp * modifier);
@@ -104,13 +104,13 @@ namespace LittleHero
         private void HandleChapterCleared(ChapterData chapter)
         {
             if (chapter == null) return;
-            // 챕터 클리어 보너스 = N × 40 (시뮬 §5.1). chapterNumber=0 → 0 (B7 채움 전)
-            AddXp(chapter.chapterNumber * 40);
+            // 챕터 클리어 보너스 = N × 20 (시뮬 §5.1 50% 컷). chapterNumber=0 → 0 (B7 채움 전)
+            AddXp(chapter.chapterNumber * 20);
         }
 
         private void HandleMemoryDiscovered(MemoryData _)
         {
-            AddXp(40);  // 시뮬 §5.1
+            AddXp(20);  // 시뮬 §5.1 50% 컷
         }
 
         public void AddXp(int amount)

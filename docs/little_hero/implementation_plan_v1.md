@@ -37,7 +37,7 @@
 
 ### 미해결 위험 (§13 참고)
 
-- **시뮬 §10 경고**: TTK 6개 챕터 ⚠️ + 저챕터 XP 과잉 — 실측 보정 필요 (BalanceConfig 미세 조정 + CurveSimulator 재실행)
+- ~~**시뮬 §10 경고**: TTK 6개 챕터 ⚠️ + 저챕터 XP 과잉~~ → **2026-05-01 1차 보정 완료**: XP 베이스 50% 컷 → CH5 도달 L26→L21 (❌ → ⚠️ 강등). TTK 60~90s 6개는 ±20% 분산 가정 시 허용 범위 — 베타 측정 후 보정 (실 게임 RNG·신화·강화 가속 미반영)
 - **F4/F5 보스 처치 매니저**: BossEncounterService 는 만들었으나 **실제 보스 씬 분리는 아직** — EndgameMenuPanel 의 `_instantCompleteForTesting=true` 플래그로 즉시 처치 시뮬만 동작. 실제 보스전 씬은 후속.
 - **F1~F3 placeholder 적**: 30 generic archetype 으로 35 챕터 와이어 끝 — 디자인 패스에서 챕터별 고유 명·외형·정밀 밸런싱 필요
 
