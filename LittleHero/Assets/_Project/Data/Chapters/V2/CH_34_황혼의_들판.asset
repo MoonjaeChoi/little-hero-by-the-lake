@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ChapterData
   id: CH_34
   displayName: "\uB178\uC744 \uB4E4\uD310"
-  description: "\uCC55\uD130 34 \u2014 \uD669\uD63C\uC758 \uB4E4\uD310"
+  description: "\uCC55\uD130 34 \u2014 \uB178\uC744 \uB4E4\uD310"
   coverArt: {fileID: 1947437786965989853, guid: a01e3d8a6433a410faeacd7dea4c5513, type: 3}
   chapterNumber: 34
   enemyStatMultiplier: 23.22517
