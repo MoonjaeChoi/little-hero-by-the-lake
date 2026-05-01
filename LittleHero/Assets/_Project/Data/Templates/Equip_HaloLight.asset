@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_HaloLight
   displayName: "\uBC18\uC9DD\uC774\uB294 \uD6C4\uAD11"
   description: 
-  icon: {fileID: -7473132296661859926, guid: 8a3e1b6fb0f4a4cdb9e723641484e22f, type: 3}
+  icon: {fileID: -7473132296661859926, guid: 71d21e4686fcf4aa9bf823e605bfdbe6, type: 3}
   slot: 0
   rarity: 0
   baseStats:

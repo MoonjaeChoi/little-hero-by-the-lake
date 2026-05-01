@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Fantasy_MiniA
   displayName: "\uD658\uC0C1\uC758 \uC218\uD638\uC790"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: -8004965901446211636, guid: 54576cf34d98145f4914b3d96f8cdb17, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 200
   moveSpeed: 2.2

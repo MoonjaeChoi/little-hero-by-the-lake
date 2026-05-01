@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_StarWand
   displayName: "\uBCC4 \uC9C0\uD321\uC774"
   description: 
-  icon: {fileID: 6616322432424907181, guid: bf8b5f00f74984f479918743ec57c63e, type: 3}
+  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
   slot: 5
   rarity: 0
   baseStats:

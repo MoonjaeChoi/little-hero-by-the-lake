@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Civ_Small
   displayName: "\uB3C4\uC2DC\uC758 \uC791\uC740 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: -6629745967420484906, guid: e3361ca9f1b274e519eaa15e8c03666f, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 30
   moveSpeed: 2.8

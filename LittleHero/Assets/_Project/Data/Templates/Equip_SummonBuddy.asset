@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_SummonBuddy
   displayName: "\uC544\uAE30 \uBCC4\uCE5C\uAD6C"
   description: 
-  icon: {fileID: -7412918133470649350, guid: 56b93dc35d5254eb18bb05d28cdf95ac, type: 3}
+  icon: {fileID: -7412918133470649350, guid: 4c5c12353fc3f4380a3c190990edc558, type: 3}
   slot: 11
   rarity: 2
   baseStats:

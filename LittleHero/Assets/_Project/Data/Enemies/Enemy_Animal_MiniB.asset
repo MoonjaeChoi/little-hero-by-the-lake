@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Animal_MiniB
   displayName: "\uB3D9\uBB3C \uCE5C\uAD6C \uD070 \uC218\uD638\uC790"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: -3913461856602106931, guid: 812f76e12790649c2a75be026e707448, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 280
   moveSpeed: 2.2

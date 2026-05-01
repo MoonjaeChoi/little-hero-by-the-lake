@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_SparkleTrail
   displayName: "\uBC18\uC9DD\uC774 \uC790\uCDE8"
   description: 
-  icon: {fileID: -2401980939658400463, guid: cbfb4cded29854564ba39c9771c068d5, type: 3}
+  icon: {fileID: -2401980939658400463, guid: efd882da254984cc2b3539910af4f064, type: 3}
   slot: 6
   rarity: 1
   baseStats:

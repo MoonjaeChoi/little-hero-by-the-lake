@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_MeteorRod
   displayName: "\uC720\uC131 \uB9C9\uB300\uAE30"
   description: 
-  icon: {fileID: -2762256035120528957, guid: d6bf0e1c4aa52487aa1d62ec0f669b91, type: 3}
+  icon: {fileID: -2762256035120528957, guid: 26f1e6f76d45a4db69313b303bb06114, type: 3}
   slot: 5
   rarity: 2
   baseStats:

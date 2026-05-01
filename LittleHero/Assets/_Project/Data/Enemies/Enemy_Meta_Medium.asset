@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Meta_Medium
   displayName: "\uB9C8\uC744\uC758 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 9070596237633297719, guid: c5a904354b978418787fc8cb1ffb8625, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 50
   moveSpeed: 2.8

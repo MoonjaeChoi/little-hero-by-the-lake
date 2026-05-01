@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_StarlightHalo
   displayName: "\uBCC4\uBE5B \uD6C4\uAD11"
   description: 
-  icon: {fileID: 2723365453023647494, guid: 22123510294174772b96b96207506564, type: 3}
+  icon: {fileID: 2723365453023647494, guid: 7b59a3f6f1fdc4eb092962a116b2aec1, type: 3}
   slot: 0
   rarity: 2
   baseStats:

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_31
   displayName: "\uC2DC\uAC04\uC774 \uBA48\uCD98 \uB9C8\uC744"
   description: "\uCC55\uD130 31 \u2014 \uC2DC\uAC04\uC774 \uBA48\uCD98 \uB9C8\uC744"
-  coverArt: {fileID: 0}
+  coverArt: {fileID: 1089861264739208065, guid: a9d8957e4c6c7437c8866ba1083ed155, type: 3}
   chapterNumber: 31
   enemyStatMultiplier: 17.449413
   totalWaves: 20

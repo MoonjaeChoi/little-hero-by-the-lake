@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_20
   displayName: "\uBCC4\uBE5B \uB291\uB300 \uC0B0\uACE8"
   description: "\uCC55\uD130 20 \u2014 \uBCC4\uBE5B \uB291\uB300 \uC0B0\uACE8"
-  coverArt: {fileID: 0}
+  coverArt: {fileID: 8203346900829930460, guid: d0454a92805424d0993f9fe575fab1ff, type: 3}
   chapterNumber: 20
   enemyStatMultiplier: 6.1159115
   totalWaves: 20

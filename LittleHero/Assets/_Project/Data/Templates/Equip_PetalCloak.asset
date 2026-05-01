@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_PetalCloak
   displayName: "\uAF43\uC78E \uB9DD\uD1A0"
   description: 
-  icon: {fileID: 7548812174054619973, guid: a57947d04389649d2ad8b24096db15ef, type: 3}
+  icon: {fileID: 7548812174054619973, guid: 99d3d17694d154caa95c6423cd2c24b9, type: 3}
   slot: 3
   rarity: 0
   baseStats:

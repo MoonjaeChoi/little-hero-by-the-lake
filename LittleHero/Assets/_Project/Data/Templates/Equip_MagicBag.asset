@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_MagicBag
   displayName: "\uB9C8\uBC95 \uAC00\uBC29"
   description: 
-  icon: {fileID: -4971171723176077403, guid: 31966698a69754d73a22818f12b7f6a7, type: 3}
+  icon: {fileID: -4971171723176077403, guid: 77544862cb535486fb0d25c87ea34b8e, type: 3}
   slot: 9
   rarity: 0
   baseStats:

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_DancingStarDust
   displayName: "\uCDA4\uCD94\uB294 \uBCC4\uAC00\uB8E8"
   description: 
-  icon: {fileID: 9111955648529488509, guid: 3959d46e4389046cd9525ccdb617dc4b, type: 3}
+  icon: {fileID: 9111955648529488509, guid: 9bbbf4e1423fb4b14bd8dc30f909505c, type: 3}
   slot: 9
   rarity: 2
   baseStats:

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_PulseBag
   displayName: "\uB450\uADFC\uB450\uADFC \uAC00\uBC29"
   description: 
-  icon: {fileID: -472002844585081047, guid: f4213331f329b412fb2eb127758dbc08, type: 3}
+  icon: {fileID: -472002844585081047, guid: 4be4d269192ac4034b89280eccdd0ae0, type: 3}
   slot: 9
   rarity: 1
   baseStats:

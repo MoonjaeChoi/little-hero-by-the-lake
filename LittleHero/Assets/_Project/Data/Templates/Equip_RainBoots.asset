@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_RainBoots
   displayName: "\uBE44\uAD6C\uB984 \uBD80\uCE20"
   description: 
-  icon: {fileID: -7383868662419484212, guid: 03af9ebe995504598abd57f77cff6339, type: 3}
+  icon: {fileID: -7383868662419484212, guid: db3cd03ffcf4b4e68b4ace3df62552f5, type: 3}
   slot: 6
   rarity: 2
   baseStats:

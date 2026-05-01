@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_BraveHat
   displayName: "\uC6A9\uAE30 \uBAA8\uC790"
   description: 
-  icon: {fileID: -1905225272367456619, guid: 6038a165cc0b742f3805b003ec4ba0d1, type: 3}
+  icon: {fileID: -1905225272367456619, guid: 1ebae215b1cbc49678cd7d58817d43ad, type: 3}
   slot: 0
   rarity: 1
   baseStats:

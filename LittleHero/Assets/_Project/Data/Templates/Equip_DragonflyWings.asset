@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_DragonflyWings
   displayName: "\uC7A0\uC790\uB9AC \uB0A0\uAC1C"
   description: 
-  icon: {fileID: 7121649062890369815, guid: 6ce5390a864f946c0bddbb8f001383e5, type: 3}
+  icon: {fileID: 7121649062890369815, guid: 914461d716cf24935af0b102acd32587, type: 3}
   slot: 3
   rarity: 1
   baseStats:

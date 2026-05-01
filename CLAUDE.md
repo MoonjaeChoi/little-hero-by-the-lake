@@ -483,3 +483,15 @@ public interface IAttackPattern
     - 시즌 로테이션 cron/scheduler (출시 3개월차 도입 시점)
 - 2026-05-01: C3 EnhancementService — 강화 +0~+25 정적 서비스(`Gameplay/Equipment/EnhancementService.cs`). `TryEnhance(instance, config, rng)` → `EnhanceResult{outcome=Success/Failure/AtMaxLevel/InsufficientDust/InsufficientCrystal/InvalidInstance, newLevel, dustCost, crystalCost, wasPityTriggered, rolledChance}`. +0~+15 결정론(1.0). +16~+25 RNG: `0.50 × 0.85^(L-16)` + 소프트 천장 `failCount≥5: +0.05/회` + 하드 천장 `failCount≥20: 1.0`. 비용은 시도 시점에 차감(실패해도 환불 없음, dust↗crystal 순 pre-check). `CalcSuccessRate(L, failCount)` 헬퍼로 UI에 미리보기. 상수: MAX_ENHANCE_LEVEL=25, DETERMINISTIC_LEVEL_CAP=16, HARD_PITY_FAILS=20. 참조: equipment §3.3·§3.4 + economy §4.1·§7.3.
 - 2026-05-01: C2 ItemDropService — 정적 드랍 결정 트리(`Gameplay/Items/ItemDropService.cs`). DropContext(source/chapterNumber/forcedSlot/forcedRarity) → ① 확률 굴림(Enemy 0.5% / Mini 8% / Boss 100% / BossRepeat 30% / Shop 100%) → ② 슬롯(CH≤10 주 7, CH11+ 12 균등 / forcedSlot 우선) → ③ 등급(affix_pool §5 챕터 묶음 분포 + Mini/Boss +1 가중 / forcedRarity 우선) → ④ 템플릿 매칭(slot+rarity 정확→슬롯 폴백) → ⑤ AffixRoller로 주 3 + 부 3 일괄 굴림 → ⑥ history.mileage += 1(C7 신화 발현 보류). `Initialize(slotPools, globalPool, templates, config)` 부트스트랩 필요. DropSource enum 5종(Enemy/MiniBoss/Boss/BossRepeat/Shop). 참조: item_drop §4·§5.3.
+- 2026-05-01: **Phase G2 아트 P0~P5 진행** — RTX 5070 (192.168.75.194) + DreamShaperXL Turbo SFW + 옵션 C 하이브리드 톤. 116 placeholder 에셋 생성 + 92 SO wiring.
+  - **P0** 5 카테고리 reference (Selected_Plush 2 + Selected_Flat 3): Meta·Animal=plush / Nature·Civ·Fantasy=flat
+  - **P1** 3 캐릭터 idle (Char_DefaultBoy/BraveGirl/QuietFriend, plush 톤). CharacterData.icon 필드 부재로 wiring skip
+  - **P2** 30 적 archetype (5 카테고리 × 6 역할 Small/Medium/Large/MiniA/MiniB/Boss, plush 톤)
+  - **P3** 11 보스 (일일 7 Mon~Sun + 주간 4 W1~W4, plush 톤)
+  - **P4** 35 챕터 배경 (chapter_structure_v2 §3 35 챕터 1024×768, flat illustration 톤)
+  - **P5** 32 UI 아이콘 (Equip 16 + Slot 12 + Currency 4, flat illustration 톤)
+  - 폴더: `Assets/_Project/Art/Generated_v2/{Characters,Enemies,Bosses,Backgrounds,UI/{Equipment,Slots,Currency}}/` 총 111 PNG
+  - **SO 자동 wiring**: ChapterData.coverArt 35/35 + EquipmentTemplate.icon 16/16 + EnemyData.icon 41/52 (archetype 30 + Daily 7 + Weekly 4 = 41 매핑, 기존 Phase 1·2 적 11종은 PNG 없음)
+  - **D3 WondrousMapNode 보강**: 35 노드에 Icon Image 추가 + `_icon` 필드 wiring. Attic Play 시 신기한 지도 진입 → 35 챕터 coverArt 표시 ✅
+  - **알려진 후속**: Krita 후처리 (transparent BG 제거), CharacterData.icon 필드 추가 + 캐릭터 sprite 동적 변경, EnemyController SpriteRenderer 동적 변경, **P6** (추억 4 + 메타 6 + 파티클 8~12 = 18~22)
+  - 참조: `docs/art_pipeline_v2.md` / `Assets/Screenshots/wondrousmap_v2_overlay.png`

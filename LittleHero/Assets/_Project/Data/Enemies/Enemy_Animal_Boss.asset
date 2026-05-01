@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Animal_Boss
   displayName: "\uB3D9\uBB3C \uCE5C\uAD6C \uC73C\uB738 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 1831762633881287577, guid: a9f20608280974fdeb4def5fc193cb3c, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 700
   moveSpeed: 1.6

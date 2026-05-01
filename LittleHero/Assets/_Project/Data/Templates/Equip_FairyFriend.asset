@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_FairyFriend
   displayName: "\uC694\uC815 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: -1854112368490917219, guid: ab024c08103d54b44ac6682f3fc394dd, type: 3}
+  icon: {fileID: -1854112368490917219, guid: eb694030d18c34d8faf56d0d13f68880, type: 3}
   slot: 11
   rarity: 1
   baseStats:

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_RunShoes
   displayName: "\uB2EC\uB9AC\uAE30 \uC2E0\uBC1C"
   description: 
-  icon: {fileID: 8866752119881613738, guid: 6a576874e3a1f4b008bd1fb41b328f3b, type: 3}
+  icon: {fileID: 8866752119881613738, guid: 8b6c27eec71994610adf531c3bc634d7, type: 3}
   slot: 6
   rarity: 0
   baseStats:
