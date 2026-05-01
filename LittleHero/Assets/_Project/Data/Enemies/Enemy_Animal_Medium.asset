@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_Animal_Medium
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
   id: Enemy_Animal_Medium
-  displayName: "\uB3D9\uBB3C \uCE5C\uAD6C \uCE5C\uAD6C"
+  displayName: "\uB3D9\uBB3C\uC758 \uCE5C\uAD6C"
   description: 
   icon: {fileID: -1337969851191796025, guid: 0d8c9931380fb466a94416b09d96c31a, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
