@@ -412,12 +412,47 @@ public interface IAttackPattern
 | 🟢 4 | **F1~F3 placeholder 적 디자인 패스** | 30 generic archetype 을 챕터별 고유 명·외형·BPM·밸런싱 으로 정밀화 | 디자인 작업 |
 | 🟢 5 | **F4/F5 실 보스 씬 분리** | BossEncounterService 는 완성, 현재 즉시 처치 시뮬. 별도 보스 전투 씬 필요 | 2~3시간 |
 
-### 알려진 제약 — Unity MCP 미연결
+### 알려진 제약 — Unity MCP 비정상 종료 (2026-05-01 16:45 KST)
 
-세션 마지막에 Unity MCP 가 연결 끊김 (씬 추가 후 domain reload 추정). F4·F5·F6·F8 사이클의 **최종 컴파일 검증 미수행**:
-- 직전 컴파일은 성공
-- 모든 신규 심볼은 grep 교차 검증 완료
-- 사용자 점검 시 Unity Editor 가 컴파일 에러 표시하면 알려주세요
+**근본 원인**: Unity Mono 런타임이 MCP 플러그인의 socket 워커 스레드와 domain reload 가 동시 발생할 때 SIGSEGV. F4·F5·F8 사이클에서 다중 `execute_code`(스크립트 편집) + `refresh_unity` + 씬 저장이 연속으로 일어나며 트리거됨.
+
+**스택 트레이스** (`~/Library/Logs/Unity/Editor-prev.log` 마지막 부분):
+```
+#0  mono_arch_patch_callsite          ← JIT 가 콜사이트 패치 중
+#1  common_call_trampoline
+#2  mono_magic_trampoline
+...
+#5  System.Net.Sockets.Socket:ReceiveFrom_internal   ← 동시에 socket 수신 중
+#6  System.Net.Sockets.Socket:ReceiveFrom
+#9  System.Threading._ThreadPoolWaitCallback
+```
+JIT가 콜사이트를 패치하는 동안 MCP HTTP 서버(:8080)의 ThreadPool 워커가 socket 수신 중이라 충돌. **com.coplaydev.unity-mcp 패키지의 알려진 패턴**.
+
+**기여 요인**:
+- Unity 6000.4.4f1 가 **Rosetta x86_64 모드**로 실행 (Apple Silicon 인데). Rosetta + Mono 6.x = 안정성 ↓
+- F6 사이클: InfiniteTower 씬 생성(execute_code) → 스크립트 편집 → refresh_unity 강제 호출 연쇄로 도메인 리로드 다수 발생
+
+**현재 상태 (16:58 사용자가 Bug Reporter 취소 후)**:
+- 17:00 Unity 재시작 → 17:02 정상 종료 (clean shutdown)
+- `Assets/_Recovery/0.unity` (113KB) — Unity 자동 복구 스냅샷 보관 (다음 실행 시 복원 제안 가능)
+- 모든 씬 파일 디스크 정상 (Chapter.unity / InfiniteTower.unity / Attic.unity)
+- Git 작업물 모두 commit 완료, 손실 없음
+
+**사용자가 다음에 할 일 (우선순위)**:
+1. **Unity 재실행 + 컴파일 확인** — F4·F5·F6·F8 의 최종 컴파일 미검증 (grep 교차 검증으로 대체). Unity 콘솔에 컴파일 에러 표시 시 알려주세요.
+2. **(선택) Apple Silicon 네이티브 Unity 설치** — Unity Hub → 6000.4.4f1 의 macOS Apple silicon 빌드 추가. Rosetta 의존 제거로 Mono 안정성 ↑.
+3. **(선택) MCP 플러그인 업데이트 점검** — `Library/PackageCache/com.coplaydev.unity-mcp@13fb3ee12774` — 최신 버전 확인.
+
+**다음 MCP 사용 시 안전 패턴**:
+- 스크립트 편집 후 `refresh_unity`/`read_console` 호출 시 사이에 5~10초 대기 (도메인 리로드 안정화)
+- 씬 저장(`execute_code`로 SaveScene) 후 다음 MCP 호출 전 10초+ 대기
+- MCP 가 응답 없을 때 즉시 재시도 X — 1분 대기 후 1회만 재시도, 그래도 안 되면 사용자에게 보고
+- 한 사이클에 씬 편집 + 다중 스크립트 편집 + 다중 refresh 를 묶지 말 것 (분리 commit 권장)
+
+**진단 로그 위치**:
+- `~/Library/Logs/Unity/Editor-prev.log` — 크래시 직전 로그 (8.2MB, 16:58 까지)
+- `~/Library/Logs/Unity/Editor.log` — 재시작 후 로그 (476KB, 17:02 정상 종료)
+- `~/Library/Logs/Unity/UnityBugReporter.log` — Bug Reporter 이벤트 (사용자 취소함)
 
 ### 빠른 시작 명령
 
