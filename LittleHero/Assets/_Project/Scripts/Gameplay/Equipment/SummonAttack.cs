@@ -12,7 +12,7 @@ namespace LittleHero
         private Transform _projRoot;
         private readonly List<Transform> _companions = new List<Transform>();
         private readonly List<float> _timers = new List<float>();
-        private readonly Collider2D[] _overlapBuffer = new Collider2D[64];
+        // Damage v2 — DamageQuery.FindNearest 로 통일 (LayerMask Enemy)
 
         private const float CompanionRadius = 1.4f;
         private const float CompanionLag = 4f;
@@ -98,17 +98,7 @@ namespace LittleHero
 
         private EnemyController FindNearestEnemy(Vector3 origin)
         {
-            int n = Physics2D.OverlapCircleNonAlloc(origin, _config.range, _overlapBuffer);
-            EnemyController nearest = null;
-            float minDist = float.MaxValue;
-            for (int i = 0; i < n; i++)
-            {
-                EnemyController e = _overlapBuffer[i].GetComponent<EnemyController>();
-                if (e == null || e.IsDead) continue;
-                float d = Vector2.Distance(origin, e.transform.position);
-                if (d < minDist) { minDist = d; nearest = e; }
-            }
-            return nearest;
+            return DamageQuery.FindNearest(origin, _config.range);
         }
     }
 }

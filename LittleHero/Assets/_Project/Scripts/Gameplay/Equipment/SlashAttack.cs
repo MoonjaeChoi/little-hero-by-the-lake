@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LittleHero
@@ -5,7 +6,7 @@ namespace LittleHero
     /// <summary>
     /// PIVOT 2026-05-02 — 검기 발사 패턴 (탕탕특공대 카타나 / 빛을 쫓는자 차용).
     /// 전방 부채꼴 영역 (range × spreadAngle) 의 적 max maxTargets 마리에 동시 데미지.
-    /// 효과 변형: lifestealRatio (흡혈) / dotDamage / pierceCount (관통은 부채꼴 모양상 자동 처리).
+    /// Damage v2 — DamageQuery + 부채꼴 필터 + 거리 정렬 + ApplyMulti (메이플 풍 다중 보정).
     /// </summary>
     public class SlashAttack : IAttackPattern
     {
@@ -13,7 +14,8 @@ namespace LittleHero
         private Transform _owner;
         private PlayerStats _stats;
         private float _timer;
-        private static readonly Collider2D[] _overlapBuffer = new Collider2D[32];
+        private static readonly List<EnemyController> _scratch = new List<EnemyController>(32);
+        private static readonly List<EnemyController> _filtered = new List<EnemyController>(32);
 
         public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
@@ -37,32 +39,31 @@ namespace LittleHero
             if (_owner == null) return;
             float r = Mathf.Max(0.1f, _config.range);
             int maxTargets = _config.maxTargets > 0 ? _config.maxTargets : 1;
-            int hitCount = 0;
 
-            int count = Physics2D.OverlapCircleNonAlloc(_owner.position, r, _overlapBuffer);
-            for (int i = 0; i < count && hitCount < maxTargets; i++)
+            DamageQuery.FindEnemiesInCircle(_owner.position, r, _scratch);
+            _filtered.Clear();
+            for (int i = 0; i < _scratch.Count; i++)
             {
-                EnemyController e = _overlapBuffer[i].GetComponent<EnemyController>();
-                if (e == null || e.IsDead) continue;
-
-                // 부채꼴 (spreadAngle=0 → 전 방향 / spreadAngle>0 → 전방 부채꼴)
+                var e = _scratch[i];
                 if (_config.spreadAngle > 0f)
                 {
                     Vector2 toEnemy = (e.transform.position - _owner.position);
-                    Vector2 forward = Vector2.right;  // 단순화 — 향후 _stats 또는 Rigidbody 의 facing 으로
+                    Vector2 forward = Vector2.right;
                     float angle = Vector2.Angle(forward, toEnemy);
                     if (angle > _config.spreadAngle * 0.5f) continue;
                 }
-
-                DamageSystem.DealDamage(e, _config.damage);
-                hitCount++;
-
-                // 흡혈 — PlayerHealth.Heal 미구현이라 보류 (Phase C5 활성화)
-                // if (_config.lifestealRatio > 0f) {
-                //     var health = _owner.GetComponent<PlayerHealth>();
-                //     if (health != null) health.Heal(_config.damage * _config.lifestealRatio);
-                // }
+                _filtered.Add(e);
             }
+            // 거리 정렬 + maxTargets 자르기
+            Vector3 ownerPos = _owner.position;
+            _filtered.Sort((a, b) =>
+            {
+                float sa = ((Vector2)a.transform.position - (Vector2)ownerPos).sqrMagnitude;
+                float sb = ((Vector2)b.transform.position - (Vector2)ownerPos).sqrMagnitude;
+                return sa.CompareTo(sb);
+            });
+            if (_filtered.Count > maxTargets) _filtered.RemoveRange(maxTargets, _filtered.Count - maxTargets);
+            DamageDealer.ApplyMulti(_filtered, _config.damage);
         }
     }
 }
