@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Fantasy_Boss
   displayName: "\uC774\uC0C1\uD55C \uB098\uB77C\uC758 \uC73C\uB738 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: -3518998750988415373, guid: d604ae7fa4e9f47a49eac9f3d1e7f5ef, type: 3}
+  icon: {fileID: 21300000, guid: d604ae7fa4e9f47a49eac9f3d1e7f5ef, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 700
   moveSpeed: 1.6

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Nature_Large
   displayName: "\uC232\uC758 \uD070 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: 231187738927615288, guid: 3fa6da5fecd3d456c8dc7ffa37c95085, type: 3}
+  icon: {fileID: 21300000, guid: 3fa6da5fecd3d456c8dc7ffa37c95085, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 80
   moveSpeed: 2.8

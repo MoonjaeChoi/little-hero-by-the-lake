@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Animal_Large
   displayName: "\uB3D9\uBB3C\uC758 \uD070 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: -974632490154702886, guid: f638342dc6f2c40a8a1e6243e0831d25, type: 3}
+  icon: {fileID: 21300000, guid: f638342dc6f2c40a8a1e6243e0831d25, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 80
   moveSpeed: 2.8

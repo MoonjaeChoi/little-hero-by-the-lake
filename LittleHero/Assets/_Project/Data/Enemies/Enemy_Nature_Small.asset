@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Enemy_Nature_Small
   displayName: "\uC232\uC758 \uC791\uC740 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: -2050150420191153139, guid: 284c98a1348764c189dd31a2156f732b, type: 3}
+  icon: {fileID: 21300000, guid: 284c98a1348764c189dd31a2156f732b, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 30
   moveSpeed: 2.8

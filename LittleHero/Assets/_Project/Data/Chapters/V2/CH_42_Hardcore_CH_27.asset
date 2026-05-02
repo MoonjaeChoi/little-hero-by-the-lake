@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: "\uC5B4\uB460\uC758 \uC885\uC774 \uC778\uD615 \uBB34\uB300"
   description: "\uACE0\uB09C\uB3C4 \uCC55\uD130 \u2014 \uC885\uC774 \uC778\uD615
     \uBB34\uB300 \uC758 \uC5B4\uB460 \uBCC0\uD615"
-  coverArt: {fileID: 0}
+  coverArt: {fileID: -7248397059847287158, guid: d206bd15ef8784f7f957909b3faf3aa5, type: 3}
   chapterNumber: 42
   enemyStatMultiplier: 23.836367
   totalWaves: 20
