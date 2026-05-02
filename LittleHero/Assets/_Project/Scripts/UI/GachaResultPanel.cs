@@ -23,6 +23,9 @@ namespace LittleHero
         [Header("displayName lookup")]
         [SerializeField] private GachaPool _pool;
 
+        [Header("무기 아이콘 (단판: 결과 / 10연차: 최고 등급)")]
+        [SerializeField] private Image _weaponIconImage;
+
         [Header("등급별 frame (6 Image, 결과 시 1개만 활성)")]
         [SerializeField] private Image _frameCommon;
         [SerializeField] private Image _frameMagic;
@@ -56,6 +59,7 @@ namespace LittleHero
             if (result == null) return;
             gameObject.SetActive(true);
             ActivateFrame(result.rarity);
+            ApplyWeaponIcon(result);
 
             string label = ResolveTemplateName(result);
             if (_summaryText != null) _summaryText.text = label;
@@ -88,6 +92,12 @@ namespace LittleHero
                 if (results[i] != null && (int)results[i].rarity > highestRarity)
                     highestRarity = (int)results[i].rarity;
             ActivateFrame((Rarity)highestRarity);
+            // 최고 등급 결과 1개를 무기 아이콘으로 표시
+            GachaResult highest = null;
+            for (int i = 0; i < results.Length; i++)
+                if (results[i] != null && (highest == null || (int)results[i].rarity >= (int)highest.rarity))
+                    highest = results[i];
+            ApplyWeaponIcon(highest);
             // (highestRarity 는 후속 sb 루프에서도 재계산되니 0으로 리셋)
             highestRarity = 0;
 
@@ -121,6 +131,24 @@ namespace LittleHero
         }
 
         public void Close() => gameObject.SetActive(false);
+
+        private void ApplyWeaponIcon(GachaResult result)
+        {
+            if (_weaponIconImage == null) return;
+            if (result == null || _pool == null || string.IsNullOrEmpty(result.templateId))
+            {
+                _weaponIconImage.enabled = false;
+                return;
+            }
+            var t = FindTemplate(_pool, result.templateId);
+            if (t == null || t.icon == null)
+            {
+                _weaponIconImage.enabled = false;
+                return;
+            }
+            _weaponIconImage.sprite = t.icon;
+            _weaponIconImage.enabled = true;
+        }
 
         private void ActivateFrame(Rarity rarity)
         {
