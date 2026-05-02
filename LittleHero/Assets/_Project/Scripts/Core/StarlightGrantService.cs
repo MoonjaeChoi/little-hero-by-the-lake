@@ -24,6 +24,14 @@ namespace LittleHero
         public const int DAILY_BOSS_AMOUNT = 5;
         public const int WEEKLY_BOSS_AMOUNT = 20;
 
+        // C7 (PIVOT) — 스타포스 조각 무료 출처 (gacha_v1.md §3.4).
+        // 본 서비스는 별빛과 동일 hook 에서 조각도 동시 grant.
+        public const int SHARDS_DAILY_LOGIN = 5;
+        public const int SHARDS_DAILY_BOSS = 20;
+        public const int SHARDS_WEEKLY_BOSS = 100;
+        // 챕터 첫 클리어: chapterNumber × 3 (gacha_v1.md §3.4)
+        public static int CalcChapterFirstClearShards(int chapterN) => chapterN * 3;
+
         private static bool _bootstrapped;
 
         public static void Bootstrap()
@@ -55,8 +63,10 @@ namespace LittleHero
             if (data.lastDailyLoginUnix >= todayKstUnix) return false;
             data.lastDailyLoginUnix = todayKstUnix;
             CurrencyService.GrantStarlight(DAILY_LOGIN_AMOUNT);
+            // C7 — 일일 로그인 +5 조각도 동시 grant.
+            StarforceService.GrantShards(SHARDS_DAILY_LOGIN);
             SaveSystem.Save(data);
-            Debug.Log($"[StarlightGrant] 일일 로그인 +{DAILY_LOGIN_AMOUNT}⋆");
+            Debug.Log($"[StarlightGrant] 일일 로그인 +{DAILY_LOGIN_AMOUNT}⋆ +{SHARDS_DAILY_LOGIN} 조각");
             return true;
         }
 
@@ -78,11 +88,14 @@ namespace LittleHero
 
             int reward = CurrencyService.CalcChapterStarlightReward(chapterNumber);
             CurrencyService.GrantStarlight(reward);
+            // C7 — 챕터 첫 클리어 +N×3 조각도 동시 grant.
+            int shards = CalcChapterFirstClearShards(chapterNumber);
+            StarforceService.GrantShards(shards);
             data.chapterStarlightGranted[idx] = true;
             // firstClearedChapters 비트마스크도 동기화 (D3 지도 해방용, long 50비트 — CH 1~35 + hardcore 36~50)
             if (idx >= 0 && idx < 50) data.firstClearedChapters |= (1L << idx);
             SaveSystem.Save(data);
-            Debug.Log($"[StarlightGrant] 챕터 {chapterNumber} 첫 클리어 +{reward}⋆");
+            Debug.Log($"[StarlightGrant] 챕터 {chapterNumber} 첫 클리어 +{reward}⋆ +{shards} 조각");
             return true;
         }
 
@@ -155,19 +168,21 @@ namespace LittleHero
 
         // ===== Endgame 보스 (F4·F5 보스 처치 매니저가 호출) =====
 
-        public static bool GrantDailyBossFirstClear() => GrantOneShotIfNotPaid(ref DailyBossPaidThisCycle, DAILY_BOSS_AMOUNT, "일일 보스");
-        public static bool GrantWeeklyBossFirstClear() => GrantOneShotIfNotPaid(ref WeeklyBossPaidThisCycle, WEEKLY_BOSS_AMOUNT, "주간 보스");
+        public static bool GrantDailyBossFirstClear() => GrantOneShotIfNotPaid(ref DailyBossPaidThisCycle, DAILY_BOSS_AMOUNT, SHARDS_DAILY_BOSS, "일일 보스");
+        public static bool GrantWeeklyBossFirstClear() => GrantOneShotIfNotPaid(ref WeeklyBossPaidThisCycle, WEEKLY_BOSS_AMOUNT, SHARDS_WEEKLY_BOSS, "주간 보스");
 
         // 메모리 캐시 — EndgameResetService 가 cycle reset 시 false 로 돌림 (호출 책임은 F4·F5 매니저)
         public static bool DailyBossPaidThisCycle;
         public static bool WeeklyBossPaidThisCycle;
 
-        private static bool GrantOneShotIfNotPaid(ref bool flag, int amount, string label)
+        private static bool GrantOneShotIfNotPaid(ref bool flag, int amount, int shards, string label)
         {
             if (flag) return false;
             flag = true;
             CurrencyService.GrantStarlight(amount);
-            Debug.Log($"[StarlightGrant] {label} 첫 클리어 +{amount}⋆");
+            // C7 — 일일 +20 / 주간 +100 조각 동시 grant.
+            StarforceService.GrantShards(shards);
+            Debug.Log($"[StarlightGrant] {label} 첫 클리어 +{amount}⋆ +{shards} 조각");
             return true;
         }
 

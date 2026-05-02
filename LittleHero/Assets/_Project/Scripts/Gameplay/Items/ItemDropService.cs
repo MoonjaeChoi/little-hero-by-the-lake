@@ -75,6 +75,10 @@ namespace LittleHero
 
             if (!RollDropChance(ctx, rng)) return null;
 
+            // C6 (PIVOT): 무기 슬롯은 가챠 한정 — drop 풀에서 제외 (gacha_v1.md §2.2).
+            // forcedSlot=Weapon 도 차단 (Shop 직구매도 무기 X).
+            if (ctx.forcedSlot == EquipSlot.Weapon) return null;
+
             EquipSlot slot = ctx.forcedSlot ?? RollSlot(ctx, rng);
             Rarity rarity = ctx.forcedRarity ?? RollRarity(ctx, rng);
 
@@ -141,8 +145,12 @@ namespace LittleHero
         {
             // item_drop §4.2 — 챕터 1~10 주 슬롯 7개 균등, 11+ 부터 장신구도 일정 확률.
             // MVP 단순화: 11+ 면 12 슬롯 균등.
+            // C6 (PIVOT): 무기 슬롯(EquipSlot.Weapon=5) 은 가챠 한정 — drop 굴림에서 제외.
             int slotCount = ctx.chapterNumber <= 10 ? 7 : 12;
-            return (EquipSlot)rng.Next(0, slotCount);
+            // 12 슬롯 중 Weapon 1개 제외 — slotCount - 1 범위에서 굴리고, Weapon 이후 슬롯은 +1 보정.
+            int picked = rng.Next(0, slotCount - 1);
+            if (picked >= (int)EquipSlot.Weapon) picked += 1;
+            return (EquipSlot)picked;
         }
 
         // ===== 3. 등급 굴림 =====
