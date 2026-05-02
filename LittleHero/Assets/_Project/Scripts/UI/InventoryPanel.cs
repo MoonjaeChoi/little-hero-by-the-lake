@@ -17,6 +17,7 @@ namespace LittleHero
 
         [Header("연결")]
         [SerializeField] private EquipmentCardPanel _cardPanel;
+        [SerializeField] private InventorySelectionPanel _selectionPanel;  // 옵션 B
         [SerializeField] private EquipmentTemplate[] _templateLookup;
         [SerializeField] private Button _closeButton;
 
@@ -46,7 +47,7 @@ namespace LittleHero
             }
         }
 
-        private void Refresh()
+        public void Refresh()
         {
             var data = MetaProgression.Instance?.Data;
             EquipmentInstance[] instances = data?.equipmentInstances ?? new EquipmentInstance[0];
@@ -78,6 +79,13 @@ namespace LittleHero
 
         private void HandleSlotClicked(EquipSlot slot)
         {
+            // 옵션 B — 보유 인스턴스 list 진입 (장착/해제 가능)
+            if (_selectionPanel != null)
+            {
+                _selectionPanel.Show(slot);
+                return;
+            }
+            // 폴백 — SelectionPanel 미wiring 시 EquipmentCardPanel 직접
             if (_cardPanel == null) return;
             var data = MetaProgression.Instance?.Data;
             if (data?.equipmentInstances == null) return;
@@ -93,6 +101,7 @@ namespace LittleHero
                 }
             }
         }
+
 
         private static bool IsSlotUnlocked(EquipSlot slot)
         {
