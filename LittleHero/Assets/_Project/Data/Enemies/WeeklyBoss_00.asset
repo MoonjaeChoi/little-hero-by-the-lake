@@ -15,7 +15,7 @@ MonoBehaviour:
   id: WeeklyBoss_00
   displayName: "\uC774\uC0C1\uD55C \uB098\uB77C\uC758 \uD070 \uCE5C\uAD6C 1\uC8FC"
   description: 
-  icon: {fileID: 2042925604989110232, guid: 0f12e508b9e3545ad82a7b5e03d1b648, type: 3}
+  icon: {fileID: 21300000, guid: 0f12e508b9e3545ad82a7b5e03d1b648, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 25000
   moveSpeed: 1.6

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: starcloud
   displayName: "\uBC24\uD558\uB298 \uBCC4\uAD6C\uB984"
   description: 
-  icon: {fileID: -8714045087275458850, guid: 9059b33ef5a0c45b89a1b5a172a1323a, type: 3}
+  icon: {fileID: 21300000, guid: 9059b33ef5a0c45b89a1b5a172a1323a, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 250
   moveSpeed: 1

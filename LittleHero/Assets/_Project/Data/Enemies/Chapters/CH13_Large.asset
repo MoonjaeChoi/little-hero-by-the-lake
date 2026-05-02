@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch13_large
   displayName: "\uD654\uC0B0 \uB3C4\uB871\uB1FD"
   description: 
-  icon: {fileID: -4100346442475708583, guid: 1a36249a2a732462abb4cf3d4f372aaa, type: 3}
+  icon: {fileID: 21300000, guid: 1a36249a2a732462abb4cf3d4f372aaa, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 80
   moveSpeed: 2.8

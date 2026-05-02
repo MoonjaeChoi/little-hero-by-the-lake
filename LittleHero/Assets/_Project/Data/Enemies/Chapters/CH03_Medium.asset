@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch03_medium
   displayName: "\uB5A0\uB2E4\uB2C8\uB294 \uC885\uC774\uBE44\uD589\uAE30"
   description: 
-  icon: {fileID: 1519092722069851173, guid: 1e65e8fbd697c4475a3475454c721d61, type: 3}
+  icon: {fileID: 21300000, guid: 1e65e8fbd697c4475a3475454c721d61, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 50
   moveSpeed: 2.8

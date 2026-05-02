@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch34_minia
   displayName: "\uB178\uC744 \uB4F1\uBD88"
   description: 
-  icon: {fileID: -1267358280998128947, guid: d56f28069a80242a59187f5f4468ed5b, type: 3}
+  icon: {fileID: 21300000, guid: d56f28069a80242a59187f5f4468ed5b, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 200
   moveSpeed: 2.2

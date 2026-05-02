@@ -15,7 +15,7 @@ MonoBehaviour:
   id: bear
   displayName: "\uC878\uB9B0 \uD070 \uACF0"
   description: 
-  icon: {fileID: -8144105972298554343, guid: 3131ce3254d7841d7aa713352e5d28cf, type: 3}
+  icon: {fileID: 21300000, guid: 3131ce3254d7841d7aa713352e5d28cf, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 100
   moveSpeed: 1.2

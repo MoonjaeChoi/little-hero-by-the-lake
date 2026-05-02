@@ -15,7 +15,7 @@ MonoBehaviour:
   id: DailyBoss_03
   displayName: "\uBAA9\uC694\uC77C \uD070 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: 5765906362308316325, guid: ef94ea31d082c4e5388a7bc0deec6ced, type: 3}
+  icon: {fileID: 21300000, guid: ef94ea31d082c4e5388a7bc0deec6ced, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 5000
   moveSpeed: 1.6
