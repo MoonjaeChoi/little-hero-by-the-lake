@@ -105,6 +105,7 @@ namespace LittleHero
                 AttackPatternType.Trail      => new TrailAttack(),
                 AttackPatternType.Pulse      => new PulseAttack(),
                 AttackPatternType.Summon     => new SummonAttack(),
+                AttackPatternType.Slash      => new SlashAttack(),
                 _ => null
             };
         }
@@ -120,6 +121,7 @@ namespace LittleHero
                 AttackPatternType.Trail      => typeof(TrailAttack),
                 AttackPatternType.Pulse      => typeof(PulseAttack),
                 AttackPatternType.Summon     => typeof(SummonAttack),
+                AttackPatternType.Slash      => typeof(SlashAttack),
                 _ => null
             };
         }

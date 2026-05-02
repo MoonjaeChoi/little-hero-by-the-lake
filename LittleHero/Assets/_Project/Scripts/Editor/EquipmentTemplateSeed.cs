@@ -30,18 +30,18 @@ namespace LittleHero.EditorTools
             new Mapping("Equip_MeteorRod",       EquipSlot.Weapon,   Rarity.Rare),
             new Mapping("Equip_HaloLight",       EquipSlot.Hat,      Rarity.Common),
             new Mapping("Equip_StarlightHalo",   EquipSlot.Hat,      Rarity.Rare),
-            new Mapping("Equip_BraveHat",        EquipSlot.Hat,      Rarity.Uncommon),
+            new Mapping("Equip_BraveHat",        EquipSlot.Hat,      Rarity.Magic),
             new Mapping("Equip_PetalCloak",      EquipSlot.Cloak,    Rarity.Common),
-            new Mapping("Equip_DragonflyWings",  EquipSlot.Cloak,    Rarity.Uncommon),
+            new Mapping("Equip_DragonflyWings",  EquipSlot.Cloak,    Rarity.Magic),
             new Mapping("Equip_HeroOutfit",      EquipSlot.Top,      Rarity.Epic),
             new Mapping("Equip_RunShoes",        EquipSlot.Shoes,    Rarity.Common),
             new Mapping("Equip_RainBoots",       EquipSlot.Shoes,    Rarity.Rare),
-            new Mapping("Equip_SparkleTrail",    EquipSlot.Shoes,    Rarity.Uncommon),
-            new Mapping("Equip_FairyFriend",     EquipSlot.Pet,      Rarity.Uncommon),
+            new Mapping("Equip_SparkleTrail",    EquipSlot.Shoes,    Rarity.Magic),
+            new Mapping("Equip_FairyFriend",     EquipSlot.Pet,      Rarity.Magic),
             new Mapping("Equip_SummonBuddy",     EquipSlot.Pet,      Rarity.Rare),
             new Mapping("Equip_DancingStarDust", EquipSlot.Necklace, Rarity.Rare),
             new Mapping("Equip_MagicBag",        EquipSlot.Necklace, Rarity.Common),
-            new Mapping("Equip_PulseBag",        EquipSlot.Necklace, Rarity.Uncommon),
+            new Mapping("Equip_PulseBag",        EquipSlot.Necklace, Rarity.Magic),
         };
 
         [MenuItem("Tools/LittleHero/Migrate Equipment Templates")]

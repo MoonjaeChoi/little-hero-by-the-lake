@@ -166,7 +166,7 @@ namespace LittleHero
             return (Rarity)picked;
         }
 
-        // affix_pool_v1 §5 챕터 묶음별 등급 분포 [Common, Uncommon, Rare, Epic, Legendary]
+        // affix_pool_v1 §5 챕터 묶음별 등급 분포 [Common, Magic, Rare, Epic, Legendary, Mythic]
         private static double[] GetChapterRarityDistribution(int chapterN)
         {
             if (chapterN <= 5) return new[] { 0.90, 0.10, 0.0, 0.0, 0.0 };

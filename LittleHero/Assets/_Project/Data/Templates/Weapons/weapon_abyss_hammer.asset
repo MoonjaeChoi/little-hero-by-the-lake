@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77dc62b5207834b08818fbd59085232a, type: 3}
+  m_Name: weapon_abyss_hammer
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EquipmentTemplate
+  id: weapon_abyss_hammer
+  displayName: "\uC2EC\uC5F0\uC758 \uB9DD\uCE58"
+  description: 
+  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  slot: 5
+  rarity: 3
+  baseStats:
+    maxHealthBonus: 0
+    speedBonus: 0
+    attackDamageBonus: 0
+    attackSpeedBonus: 0
+    rangeBonus: 0
+    xpGainBonus: 0
+  attackPattern: 6
+  attackConfig:
+    damage: 35
+    attackInterval: 2.5
+    range: 10
+    projectileSpeed: 0
+    count: 1
+    projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0.3
+    slowDuration: 2
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 5
+    spreadAngle: 0
+    isBoomerang: 0
+  maxEnhanceLevel: 25
+  mainAffixLineCount: 3
+  subAffixLineCount: 3
