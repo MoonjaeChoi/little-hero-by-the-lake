@@ -15,7 +15,7 @@ MonoBehaviour:
   id: quiet_friend
   displayName: "\uC870\uC6A9\uD55C \uCE5C\uAD6C"
   description: 
-  portrait: {fileID: -7757741356870071166, guid: 2c53e76751ee447c192630f0c9028063, type: 3}
+  portrait: {fileID: 21300000, guid: 2c53e76751ee447c192630f0c9028063, type: 3}
   prefab: {fileID: 0}
   maxHealth: 90
   moveSpeed: 6
