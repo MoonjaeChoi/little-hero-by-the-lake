@@ -41,6 +41,7 @@ namespace LittleHero
         {
             _slot = slot;
             gameObject.SetActive(true);
+            transform.SetAsLastSibling();  // 강화 모달은 SlotStarforcePanel 위에 떠야 함
             if (_resultText != null) _resultText.text = "";
             Refresh();
         }

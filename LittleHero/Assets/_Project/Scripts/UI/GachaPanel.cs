@@ -50,6 +50,7 @@ namespace LittleHero
 
         private void OnEnable()
         {
+            transform.SetAsLastSibling();  // 활성 시 항상 위에 그려짐
             if (_singleButton != null) _singleButton.onClick.AddListener(OnSingleClicked);
             if (_multiButton  != null) _multiButton.onClick.AddListener(OnMultiClicked);
             if (_closeButton  != null) _closeButton.onClick.AddListener(Close);

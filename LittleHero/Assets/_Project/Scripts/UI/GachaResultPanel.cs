@@ -20,6 +20,9 @@ namespace LittleHero
         [SerializeField] private Image _backdrop;
         [SerializeField] private Button _closeButton;
 
+        [Header("displayName lookup")]
+        [SerializeField] private GachaPool _pool;
+
         [Header("등급별 색")]
         [SerializeField] private Color _commonColor    = new Color(0.85f, 0.85f, 0.85f);
         [SerializeField] private Color _magicColor     = new Color(0.5f, 0.85f, 1f);
@@ -31,6 +34,8 @@ namespace LittleHero
         private void OnEnable()
         {
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
+            // 출시 전 fix #4 패턴 — 활성화 시 가장 마지막에 그려져 입력·시각 우선권 확보.
+            transform.SetAsLastSibling();
         }
 
         private void OnDisable()
@@ -102,10 +107,30 @@ namespace LittleHero
 
         private string ResolveTemplateName(GachaResult r)
         {
-            if (r == null) return "";
-            // templateId → displayName 은 인스펙터에 풀 lookup 추가하기보다, 인스턴스의 templateId 그대로 표시.
-            // 후속: GachaPool 에서 직접 lookup 헬퍼 추가.
-            return string.IsNullOrEmpty(r.templateId) ? "?" : r.templateId;
+            if (r == null || string.IsNullOrEmpty(r.templateId)) return "?";
+            if (_pool != null)
+            {
+                var t = FindTemplate(_pool, r.templateId);
+                if (t != null && !string.IsNullOrEmpty(t.displayName)) return t.displayName;
+            }
+            return r.templateId;
+        }
+
+        private static EquipmentTemplate FindTemplate(GachaPool pool, string id)
+        {
+            var groups = new[]
+            {
+                pool.commonPool, pool.magicPool, pool.rarePool,
+                pool.epicPool, pool.legendaryPool, pool.mythicPool,
+            };
+            for (int g = 0; g < groups.Length; g++)
+            {
+                var arr = groups[g];
+                if (arr == null) continue;
+                for (int i = 0; i < arr.Length; i++)
+                    if (arr[i] != null && arr[i].id == id) return arr[i];
+            }
+            return null;
         }
 
         private static string RarityKorean(Rarity r) => r switch

@@ -29760,6 +29760,7 @@ MonoBehaviour:
   _bonusText: {fileID: 1724544368}
   _backdrop: {fileID: 0}
   _closeButton: {fileID: 1623612427}
+  _pool: {fileID: 11400000, guid: ffd693245947e4ffb8853dba0e647697, type: 2}
   _commonColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   _magicColor: {r: 0.5, g: 0.85, b: 1, a: 1}
   _rareColor: {r: 0.4, g: 1, b: 0.5, a: 1}

@@ -21,6 +21,7 @@ namespace LittleHero
 
         private void OnEnable()
         {
+            transform.SetAsLastSibling();
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             BindSlots();
             GameEvents.OnStarforceShardsChanged += HandleShardsChanged;
