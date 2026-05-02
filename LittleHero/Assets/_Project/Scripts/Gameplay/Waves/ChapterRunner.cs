@@ -145,9 +145,6 @@ namespace LittleHero
             _backgroundRenderer.transform.localScale = Vector3.one;
             _backgroundRenderer.transform.position = Vector3.zero;
             _backgroundRenderer.color = Color.white;
-            // BackgroundFollow 제거 (BG 정적, player 추적 X)
-            var follow = _backgroundRenderer.GetComponent<BackgroundFollow>();
-            if (follow != null) Object.Destroy(follow);
         }
 
         private WaveConfig BuildWaveConfig(int waveNumber)
