@@ -77,6 +77,9 @@ namespace LittleHero
         {
             CurrentWave++;
             SetState(GameState.Wave);
+            // PIVOT v2 fix — HUD 웨이브 라벨 갱신 보장. CurrentWave 증가 후 OnShopClosed 재발행.
+            // (직전 EndWave 의 즉시 발행은 CurrentWave 증가 전이라 HUD 가 같은 번호 표시).
+            GameEvents.RaiseShopClosed();
         }
 
         public void EndWave()
