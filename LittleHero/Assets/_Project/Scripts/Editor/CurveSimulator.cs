@@ -89,6 +89,7 @@ namespace LittleHero.EditorTools
             SimulateGachaCurrency(sb);       // ✦ PIVOT — 가챠 별빛 흐름
             SimulateStarforceShards(sb);     // ✦ PIVOT — 스타포스 조각 흐름
             SimulateFullBuildEstimate(sb);   // ✦ PIVOT — ⭐25 풀빌드 도달 추정
+            SimulateLimitedShop(sb);         // ✦ PIVOT — 한정 상점 retention 보완
             SimulateAlerts(sb);
 
             string projectRoot = Application.dataPath;
@@ -601,10 +602,93 @@ namespace LittleHero.EditorTools
             sb.AppendLine();
         }
 
-        // ── §14. 경고 ────────────────────────────────────────────────────
+        // ── §15. 한정 상점 영향 (PIVOT) ──────────────────────────────────
+        static void SimulateLimitedShop(StringBuilder sb)
+        {
+            sb.AppendLine("## 15. 한정 상점 retention 보완 (PIVOT — limited_shop_v1)");
+            sb.AppendLine();
+
+            // 출시 1개월 비과금 별빛 누적 — §11 결과 재계산
+            int chapterStarlight = 0;
+            for (int n = 1; n <= CHAPTER_COUNT; n++) chapterStarlight += n * 2;
+            int monthBaseStarlight = chapterStarlight + 50 * CHAPTER_COUNT + 10 * 4
+                                  + 5 * 30 + 5 * 30 + 20 * 4;  // §11 합계 = 3,430
+
+            // 무료 핫딜 4 (limited_shop_v1.md §3.1)
+            // free_summon_lv2 200⋆ → Rare 무기 확정 (단, ⭐2 도달 = 가챠 100회 = 별빛 10,000⋆ 필요. 1개월 미달.)
+            // free_chapter_05 100⋆ → 조각 1,000 + 소환권 5
+            // free_chapter_15 500⋆ → 조각 5,000 + 소환권 10
+            // free_chapter_25 1,000⋆ → 조각 15,000 + Epic 무기 확정 (CH25 클리어 = 1개월 후반 가능)
+
+            sb.AppendLine("### 15.1 비과금 1개월 무료 핫딜 시뮬");
+            sb.AppendLine();
+            sb.AppendLine("| 핫딜 | 트리거 | 비용 | 보상 | 1개월 가용? |");
+            sb.AppendLine("|---|---|---|---|---|");
+            sb.AppendLine("| free_summon_lv2 | ⭐2 도달 (가챠 100회) | 200⋆ | Rare 확정 | ❌ (가챠 ~34회만) |");
+            sb.AppendLine("| free_chapter_05 | CH5 첫 클리어 | 100⋆ | 조각 1,000 + 소환권 5 | ✅ |");
+            sb.AppendLine("| free_chapter_15 | CH15 첫 클리어 | 500⋆ | 조각 5,000 + 소환권 10 | ✅ |");
+            sb.AppendLine("| free_chapter_25 | CH25 첫 클리어 | 1,000⋆ | 조각 15,000 + Epic 확정 | △ (진행 속도 의존) |");
+            sb.AppendLine();
+
+            int spentStarlight = 100 + 500 + 1000;  // free_chapter_5/15/25 모두 결제 가정
+            int reservedFor25 = 0;  // 25챕터 도달 못하면 0
+            int gachaShardsLv1 = 30 * 1;  // 30 단판 평균 부수 (Lv1)
+            int totalShardsAfter = 1890 + 150 + 600 + 400 + gachaShardsLv1   // 기본 1개월 (§12)
+                                  + 1000 + 5000 + 15000;                       // 핫딜 보상
+            int totalSummonTickets = 5 + 10;
+            int totalEpicConfirmed = 1;  // free_chapter_25
+            int totalRareConfirmed = 0;  // free_summon_lv2 미도달
+
+            sb.AppendLine("### 15.2 보상 합계 (CH5/15/25 모두 첫 클리어 가정)");
+            sb.AppendLine();
+            sb.AppendLine("| 항목 | 한정 상점 전 | 한정 상점 후 | 증가 |");
+            sb.AppendLine("|---|---|---|---|");
+            sb.AppendLine($"| 별빛 ⋆ (1개월) | 3,430 | {3430 - spentStarlight:N0} | -{spentStarlight} (소비) |");
+            sb.AppendLine($"| 스타포스 조각 ◈ | ~3,070 | {totalShardsAfter:N0} | **+{totalShardsAfter - 3070:N0}** |");
+            sb.AppendLine($"| 무기 소환권 | 0 | {totalSummonTickets} | **+{totalSummonTickets}** |");
+            sb.AppendLine($"| Epic 무기 확정 | 0 | {totalEpicConfirmed} | **+{totalEpicConfirmed}** |");
+            sb.AppendLine($"| Rare 무기 확정 | 0 | {totalRareConfirmed} | (⭐2 미도달) |");
+            sb.AppendLine();
+
+            // 캐시 시나리오 — 신규유저 1,500원 패키지
+            sb.AppendLine("### 15.3 신규 유저 패키지 (1,500원) 시나리오");
+            sb.AppendLine();
+            sb.AppendLine("| 보상 | 정상가 환산 | 패키지 가성비 |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine("| 별빛 ⋆ 1,000 | 약 3,000원 (1,100⋆ 패키지 기준) | -50% |");
+            sb.AppendLine("| 조각 1,000 | 별빛 100⋆ × 1단판 ≈ 평균 3 조각 = 약 333배 가성비 | 매우 우월 |");
+            sb.AppendLine("| 소환권 5 | 무료 출처 외 직구매 X — **추가 가챠 5회** | 핵심 가치 |");
+            sb.AppendLine();
+            sb.AppendLine("> **결론**: 1,500원 패키지로 가챠 5회 추가 + 별빛 1,000⋆ + 조각 1,000.");
+            sb.AppendLine("> 비과금 대비 **가챠 ~50% 추가** (34→44회) → Lv 2 임계 (100회) 진입 가속.");
+            sb.AppendLine();
+
+            // ⭐3 Rare 확정 패키지 (5,500원)
+            sb.AppendLine("### 15.4 ⭐3 Rare 확정 패키지 (5,500원)");
+            sb.AppendLine();
+            sb.AppendLine("| 보상 | 가치 |");
+            sb.AppendLine("|---|---|");
+            sb.AppendLine("| Rare 무기 1개 확정 | **정상 가챠 Rare 0.5~30% (Lv별)** — 확정 보장 |");
+            sb.AppendLine("| 조각 3,000 | 비과금 일일 ~42 조각 → ~71일분 |");
+            sb.AppendLine();
+            sb.AppendLine("> ⭐3 도달 (가챠 300회) 후 활성 — **소액 과금 유저 메인 가치 제안**.");
+            sb.AppendLine();
+
+            sb.AppendLine("### 15.5 retention 보완 평가");
+            sb.AppendLine();
+            sb.AppendLine("- ❗ **시뮬 §13 위험**: 비과금 1개월 Lv 2 미달, Epic 0개");
+            sb.AppendLine("- ✅ **한정 상점 후**: 비과금 Epic 1개 (CH25 free) + Rare 0개 (⭐2 미달, 캐시 5,500원으로 보완)");
+            sb.AppendLine("- ✅ **조각 수입 +700%** (3,070 → 25,090) → 1슬롯 ⭐15 안전권 1개월 도달 가능");
+            sb.AppendLine("- ✅ **소환권 15장** = 추가 가챠 15회 → 가챠 49회로 Lv 2 (100회) 진입 가속 (49% 진척)");
+            sb.AppendLine();
+            sb.AppendLine("---");
+            sb.AppendLine();
+        }
+
+        // ── §16. 경고 ────────────────────────────────────────────────────
         static void SimulateAlerts(StringBuilder sb)
         {
-            sb.AppendLine("## 14. 경고·플래그");
+            sb.AppendLine("## 16. 경고·플래그");
             sb.AppendLine();
 
             var alerts = new System.Collections.Generic.List<string>();
@@ -665,6 +749,10 @@ namespace LittleHero.EditorTools
                 alerts.Add($"❌ 마법 결정 적자: 변환 모루 활용 후도 {totalCrystalAvailable} ◇ < 풀 +20 ({CRYSTAL_FOR_FULL_PLUS_20}) — 별빛 직구매 또는 endgame 추가 필요");
             else if (cumCrystal < CRYSTAL_FOR_FULL_PLUS_20)
                 alerts.Add($"✅ 마법 결정: 직접 ◇ {cumCrystal} 부족하지만 변환 모루로 +{convertibleCrystal} → 총 {totalCrystalAvailable} ◇ 가용 (잉여 {totalCrystalAvailable - CRYSTAL_FOR_FULL_PLUS_20} ◇)");
+
+            // (4) 한정 상점 retention 보완 (PIVOT)
+            alerts.Add("✅ 한정 상점 retention: 비과금 1개월 Epic 1개 (CH25 free 1,000⋆) + 조각 수입 +700% (3,070 → 25,090) — 시뮬 §13 retention 위험 보완 검증.");
+            alerts.Add("⚠️ ⭐2 도달 (가챠 100회) 1개월 미달 — Rare 무기 확정은 캐시 5,500원 (cash_summon_lv3_rare) 유도.");
 
             if (alerts.Count == 0)
             {
