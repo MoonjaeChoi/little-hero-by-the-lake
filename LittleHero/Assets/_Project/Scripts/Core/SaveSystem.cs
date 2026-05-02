@@ -69,6 +69,10 @@ namespace LittleHero
 
         // ✦ PIVOT v2 — 별가루 ★ 영구화 (game_pivot_v2.md §2.1)
         public int starDust;                                         // ★ 별가루 (영구, 상점 폐기 후)
+
+        // ✦ 챕터 진행 일시 정지 + 재개 (사용자 요청 2026-05-03)
+        public string activeChapterId;                               // 진행 중인 챕터 ID (빈 문자열 = 활성 X)
+        public int activeChapterWave;                                // 진행 wave 번호
     }
 
     [System.Serializable]

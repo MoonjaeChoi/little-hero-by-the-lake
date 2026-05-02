@@ -23,6 +23,7 @@ namespace LittleHero
                 _chapterData = MetaProgression.Instance.SelectedChapter;
 
             GameEvents.OnShopClosed += OnShopClosed;
+            GameEvents.OnPlayerDied += HandlePlayerDied;
             // C9 — 챕터 곱셈을 spawner 에 명시적으로 전달 (인스펙터·SelectedChapter 경로 일관)
             _spawner.SetActiveChapter(_chapterData);
 
@@ -34,14 +35,54 @@ namespace LittleHero
             ApplyChapterBackground();
             RegisterEnemyPool();
             _waveManager.Initialize(_spawner);
-            GameManager.Instance.ResetRun();   // 새 런: CurrentWave=0, StarDust=0
-            GameManager.Instance.StartWave();  // 0 → 1
+            GameManager.Instance.ResetRun();   // 새 런: CurrentWave=0, StarDust 영구
+
+            // 사용자 요청 2026-05-03 — 활성 챕터 session 있으면 wave 부터 재개
+            int resumeWave = 0;
+            var data = MetaProgression.Instance?.Data;
+            if (data != null && _chapterData != null
+                && !string.IsNullOrEmpty(data.activeChapterId)
+                && data.activeChapterId == _chapterData.id
+                && data.activeChapterWave > 0
+                && data.activeChapterWave < _chapterData.totalWaves)
+            {
+                resumeWave = data.activeChapterWave;
+                Debug.Log($"[ChapterRunner] 재개: wave {resumeWave} 부터");
+            }
+            for (int i = 0; i <= resumeWave; i++)
+                GameManager.Instance.StartWave();  // 0→1, 또는 0→resumeWave+1
+
             StartNextWave();
+        }
+
+        public void SaveSession()
+        {
+            var data = MetaProgression.Instance?.Data;
+            if (data == null || _chapterData == null) return;
+            data.activeChapterId = _chapterData.id;
+            data.activeChapterWave = GameManager.Instance != null ? GameManager.Instance.CurrentWave : 0;
+            SaveSystem.Save(data);
+            Debug.Log($"[ChapterRunner] 세션 저장: {data.activeChapterId} wave {data.activeChapterWave}");
+        }
+
+        public static void ClearSession()
+        {
+            var data = MetaProgression.Instance?.Data;
+            if (data == null) return;
+            data.activeChapterId = "";
+            data.activeChapterWave = 0;
+            SaveSystem.Save(data);
         }
 
         private void OnDestroy()
         {
             GameEvents.OnShopClosed -= OnShopClosed;
+            GameEvents.OnPlayerDied -= HandlePlayerDied;
+        }
+
+        private void HandlePlayerDied()
+        {
+            ClearSession();  // 사망 시 session 정리 (재개 X — 처음부터 시작)
         }
 
         private void StartNextWave()
@@ -63,6 +104,7 @@ namespace LittleHero
             if (GameManager.Instance.CurrentWave >= _chapterData.totalWaves)
             {
                 GameEvents.RaiseChapterCleared(_chapterData);
+                ClearSession();  // 클리어 시 session 정리
                 return;
             }
             GameManager.Instance.EndWave();
