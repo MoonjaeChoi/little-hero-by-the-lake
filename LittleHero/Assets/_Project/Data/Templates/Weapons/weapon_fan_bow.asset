@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_fan_bow
   displayName: "\uBD80\uCC44\uAF34 \uD65C"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: 5017996773135625522, guid: e10457f5b0b4f4866be3af6a038f853f, type: 3}
   slot: 5
   rarity: 0
   baseStats:

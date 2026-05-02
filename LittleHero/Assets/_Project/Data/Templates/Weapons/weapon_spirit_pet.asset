@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_spirit_pet
   displayName: "\uC601\uD63C \uB3D9\uB8CC"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: 1560368772844549241, guid: 0c1eb5dd754ab43d98832259ec9f9a3f, type: 3}
   slot: 5
   rarity: 1
   baseStats:

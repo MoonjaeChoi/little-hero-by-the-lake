@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_annihilation_rain
   displayName: "\uBA78\uC0B4\uC758 \uBE44"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: -907402060874480689, guid: e9bbacbb5f7f54e298366ff57fa710a8, type: 3}
   slot: 5
   rarity: 3
   baseStats:

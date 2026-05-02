@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_spin_dagger
   displayName: "\uD68C\uC804 \uB2E8\uAC80"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: 2662063223932955258, guid: e527667e1e84649878b27bc4ac909dc9, type: 3}
   slot: 5
   rarity: 0
   baseStats:

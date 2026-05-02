@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_return_boomerang
   displayName: "\uD68C\uADC0 \uBD80\uBA54\uB791"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: 8780882570487644789, guid: 22fe480e88f494801b84685d53419231, type: 3}
   slot: 5
   rarity: 2
   baseStats:

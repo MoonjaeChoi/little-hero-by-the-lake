@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_firebottle
   displayName: "\uD654\uC5FC\uBCD1"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: 5748276082456245809, guid: 9ae42f218f13b4de29e2077188a507b6, type: 3}
   slot: 5
   rarity: 0
   baseStats:

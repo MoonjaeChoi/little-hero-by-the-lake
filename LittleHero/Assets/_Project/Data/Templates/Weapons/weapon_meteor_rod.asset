@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_meteor_rod
   displayName: "\uC720\uC131 \uB9C9\uB300"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: -3438557710792845313, guid: b6b17f8a7c2424b6999495554bd01732, type: 3}
   slot: 5
   rarity: 2
   baseStats:

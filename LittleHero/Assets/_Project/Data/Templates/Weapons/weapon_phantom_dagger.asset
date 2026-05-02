@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_phantom_dagger
   displayName: "\uD658\uC601 \uB2E8\uAC80"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: -6113586671962378619, guid: 6ccbd18101b924ad09fba3567d70e642, type: 3}
   slot: 5
   rarity: 1
   baseStats:
