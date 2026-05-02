@@ -45,6 +45,7 @@ namespace LittleHero
             transform.SetAsLastSibling();
             if (_titleText != null) _titleText.text = $"{SlotLabel(slot)} 슬롯 — 보유 장비";
             Refresh();
+            Debug.Log($"[InventorySelectionPanel] Show {slot} — rows={_rows.Count}");
         }
 
         public void Close() => gameObject.SetActive(false);

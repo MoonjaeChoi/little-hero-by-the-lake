@@ -79,6 +79,7 @@ namespace LittleHero
 
         private void HandleSlotClicked(EquipSlot slot)
         {
+            Debug.Log($"[InventoryPanel] Slot clicked: {slot} (selectionPanel={_selectionPanel != null})");
             // 옵션 B — 보유 인스턴스 list 진입 (장착/해제 가능)
             if (_selectionPanel != null)
             {
