@@ -61,6 +61,11 @@ namespace LittleHero
         public int starforceShards;                                  // 스타포스 조각 (슬롯 강화 재화)
         public int weaponSummonTickets;                              // 무기 소환권 (무료 출처)
         public int[] slotStarforceLevels = new int[12];              // 12 슬롯별 ⭐ 단계 (0~25)
+
+        // ✦ PIVOT — 한정 상점 (limited_shop_v1.md §5.2)
+        public LimitedOfferTrigger[] limitedOfferTriggers = new LimitedOfferTrigger[0];
+        public string[] purchasedLimitedOfferIds = new string[0];
+        public long firstLaunchUnix;                                 // NewUser 트리거 (게임 첫 시작 시각)
     }
 
     [System.Serializable]

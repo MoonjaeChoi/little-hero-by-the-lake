@@ -34,6 +34,11 @@ namespace LittleHero
         public static event Action<int> OnWeaponSummonTicketsChanged;          // 소환권 잔량
         public static event Action<int /*slotIdx*/, int /*newLevel*/> OnSlotStarforceChanged;
 
+        // ✦ PIVOT — 한정 상점 (limited_shop_v1.md)
+        public static event Action<LimitedShopOffer> OnLimitedOfferActivated;
+        public static event Action<LimitedShopOffer> OnLimitedOfferPurchased;
+        public static event Action<LimitedShopOffer> OnLimitedOfferExpired;
+
         public static void RaiseEnemyKilled(EnemyData data) => OnEnemyKilled?.Invoke(data);
         public static void RaiseLevelUp(int level) => OnLevelUp?.Invoke(level);
         public static void RaiseWaveCleared(int wave) => OnWaveCleared?.Invoke(wave);
@@ -55,5 +60,8 @@ namespace LittleHero
         public static void RaiseStarforceShardsChanged(int amount) => OnStarforceShardsChanged?.Invoke(amount);
         public static void RaiseWeaponSummonTicketsChanged(int amount) => OnWeaponSummonTicketsChanged?.Invoke(amount);
         public static void RaiseSlotStarforceChanged(int slotIdx, int newLevel) => OnSlotStarforceChanged?.Invoke(slotIdx, newLevel);
+        public static void RaiseLimitedOfferActivated(LimitedShopOffer offer) => OnLimitedOfferActivated?.Invoke(offer);
+        public static void RaiseLimitedOfferPurchased(LimitedShopOffer offer) => OnLimitedOfferPurchased?.Invoke(offer);
+        public static void RaiseLimitedOfferExpired(LimitedShopOffer offer) => OnLimitedOfferExpired?.Invoke(offer);
     }
 }
