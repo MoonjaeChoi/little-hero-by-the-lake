@@ -27,6 +27,13 @@ namespace LittleHero
         public static event Action<EnemyController> OnBossSpawned;
         public static event Action OnBossDespawned;
 
+        // ✦ PIVOT Phase C3 — 가챠·스타포스 (gacha_v1.md)
+        public static event Action<EquipmentInstance, Rarity> OnGachaResult;  // 단일 결과
+        public static event Action<int> OnSummonLevelUp;                       // 소환 레벨 N 도달
+        public static event Action<int> OnStarforceShardsChanged;              // 조각 잔량
+        public static event Action<int> OnWeaponSummonTicketsChanged;          // 소환권 잔량
+        public static event Action<int /*slotIdx*/, int /*newLevel*/> OnSlotStarforceChanged;
+
         public static void RaiseEnemyKilled(EnemyData data) => OnEnemyKilled?.Invoke(data);
         public static void RaiseLevelUp(int level) => OnLevelUp?.Invoke(level);
         public static void RaiseWaveCleared(int wave) => OnWaveCleared?.Invoke(wave);
@@ -43,5 +50,10 @@ namespace LittleHero
         public static void RaiseAffixRolled(EquipmentInstance instance) => OnAffixRolled?.Invoke(instance);
         public static void RaiseBossSpawned(EnemyController boss) => OnBossSpawned?.Invoke(boss);
         public static void RaiseBossDespawned() => OnBossDespawned?.Invoke();
+        public static void RaiseGachaResult(EquipmentInstance instance, Rarity rarity) => OnGachaResult?.Invoke(instance, rarity);
+        public static void RaiseSummonLevelUp(int level) => OnSummonLevelUp?.Invoke(level);
+        public static void RaiseStarforceShardsChanged(int amount) => OnStarforceShardsChanged?.Invoke(amount);
+        public static void RaiseWeaponSummonTicketsChanged(int amount) => OnWeaponSummonTicketsChanged?.Invoke(amount);
+        public static void RaiseSlotStarforceChanged(int slotIdx, int newLevel) => OnSlotStarforceChanged?.Invoke(slotIdx, newLevel);
     }
 }

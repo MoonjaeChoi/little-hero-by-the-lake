@@ -54,6 +54,13 @@ namespace LittleHero
         public int seasonPoints;                                     // 시즌 진행도
         public int seasonRewardClaimedFreeMask;                      // 무료 선 보상 수령 비트
         public int seasonRewardClaimedPremiumMask;                   // 프리미엄 보상 수령 비트
+
+        // ✦ PIVOT Phase C3 — 가챠·스타포스 (gacha_v1.md)
+        public int totalGachaCount;                                  // 누적 무기 가챠 소환 횟수 (소환 레벨 계산용)
+        public int summonLevel = 1;                                  // 현재 소환 레벨 (1~10)
+        public int starforceShards;                                  // 스타포스 조각 (슬롯 강화 재화)
+        public int weaponSummonTickets;                              // 무기 소환권 (무료 출처)
+        public int[] slotStarforceLevels = new int[12];              // 12 슬롯별 ⭐ 단계 (0~25)
     }
 
     [System.Serializable]
