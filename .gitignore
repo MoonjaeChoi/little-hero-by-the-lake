@@ -32,6 +32,10 @@
 # MemoryCaptures — 용량 크고 민감한 데이터 포함 가능
 /[Mm]emoryCaptures/
 
+# Unity 자동 복구 폴더 (비정상 종료 후 자동 생성)
+**/_Recovery/
+**/_Recovery.meta
+
 # Recordings — 용량 큼
 /[Rr]ecordings/
 
