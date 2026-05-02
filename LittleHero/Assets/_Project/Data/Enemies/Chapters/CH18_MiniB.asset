@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch18_minib
   displayName: "\uB9CC\uD0C0\uAC00\uC624\uB9AC"
   description: 
-  icon: {fileID: 7646707355230794860, guid: 90693a57b5a424cbeaa727b08ae009e0, type: 3}
+  icon: {fileID: -8066627449368202856, guid: fd7993c6eba2e4b29ad58bec335456d3, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 280
   moveSpeed: 2.2

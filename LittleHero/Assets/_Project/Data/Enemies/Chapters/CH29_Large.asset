@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch29_large
   displayName: "\uD070 \uAC70\uC6B8 \uC815\uB839"
   description: 
-  icon: {fileID: -1702658752515633458, guid: c5b550f47d0b4490395a17ce6fd6d39e, type: 3}
+  icon: {fileID: 3056382683831553877, guid: b73b0f114794d4f5a9db3e698f5a8082, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 80
   moveSpeed: 2.8

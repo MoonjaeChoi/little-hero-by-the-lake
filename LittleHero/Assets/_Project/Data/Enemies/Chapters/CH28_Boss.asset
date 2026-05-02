@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch28_boss
   displayName: "\uC815\uC6D0 \uD070 \uC815\uB839"
   description: 
-  icon: {fileID: 2705972301287187060, guid: cabdb9bc1e64b4a219a6983ba32bcd44, type: 3}
+  icon: {fileID: -2390438056801578838, guid: 1c5e5e84038ad4377aabce0584c2b96c, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 700
   moveSpeed: 1.6

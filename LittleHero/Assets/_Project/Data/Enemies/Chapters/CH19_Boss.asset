@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch19_boss
   displayName: "\uAC70\uB300 \uAC70\uBD81\uC774"
   description: 
-  icon: {fileID: 3622723810436318589, guid: e0b6b52a969fd455d9eaa89843a2a947, type: 3}
+  icon: {fileID: 2980991029230057657, guid: 13572f6aec94b437f915aa6e2d11fc82, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 700
   moveSpeed: 1.6

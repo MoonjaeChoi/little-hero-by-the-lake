@@ -15,7 +15,7 @@ MonoBehaviour:
   id: ch20_minia
   displayName: "\uC0B0\uACE8 \uAE4C\uB9C8\uADC0"
   description: 
-  icon: {fileID: -1402465909065832886, guid: 7d136083d819844d7b6016ca0ff69c68, type: 3}
+  icon: {fileID: -6111404491333570228, guid: 13c1c88f3550345e9a9823f0924e8120, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 200
   moveSpeed: 2.2
