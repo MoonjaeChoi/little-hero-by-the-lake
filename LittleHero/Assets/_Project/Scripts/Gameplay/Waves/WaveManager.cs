@@ -87,8 +87,8 @@ namespace LittleHero
             CheckWaveComplete();
         }
 
-        // PIVOT v3 Phase 2 — 동시 적 cap (game_pivot_v2.md 안전장치). 1,000 이상 시 spawn 일시 중지.
-        private const int MAX_CONCURRENT_ENEMIES = 1000;
+        // PIVOT v3.1 — 동시 적 cap 1,000 → 1,500 (출현 ×20 정합, +50%).
+        private const int MAX_CONCURRENT_ENEMIES = 1500;
 
         private IEnumerator SpawnRegular(WaveConfig config, int count)
         {

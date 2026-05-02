@@ -30,10 +30,17 @@ MonoBehaviour:
   rerollCostSub: 15
   lockMultiplier: 0.5
   accessoryShopCommon: 5
-  accessoryShopUncommon: 12
+  accessoryShopMagic: 12
   accessoryShopRare: 30
   accessoryShopEpic: 80
   subAffixUpgradeCost: 10
   starDustChapterMultiplierBase: 1.08
   bossCrystalBaseDrop: 1
   bossCrystalChapterPerStep: 3
+  enemyHpMul: 0.3
+  enemyAtkMul: 0.3
+  enemyScaleMul: 0.3
+  enemyStarDustMul: 0.1
+  enemyXpMul: 0.1
+  spawnIntervalMul: 0.05
+  enemyDropChanceMul: 0.1

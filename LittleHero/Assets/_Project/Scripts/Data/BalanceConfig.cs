@@ -53,16 +53,16 @@ namespace LittleHero
         public float bossCrystalBaseDrop = 1f;
         public float bossCrystalChapterPerStep = 3f;
 
-        // PIVOT v3 — 작은 적 무리 패러다임 (Vampire Survivors / Maplestory Idle)
-        // 적 1/10 + 출현 ×10 = 합산 동일 + 시각·게임플레이 idle 톤 정합
-        // game_pivot_v2.md PIVOT v3 결정 (2026-05-02 사용자 추천 안 채택)
-        [Header("PIVOT v3 글로벌 곱셈 (적 1/10 / 출현 ×10)")]
-        public float enemyHpMul        = 0.1f;   // 적 HP × 0.1 (보스 제외)
-        public float enemyAtkMul       = 0.1f;   // 적 ATK × 0.1 (보스 제외)
-        public float enemyScaleMul     = 0.1f;   // sprite scale × 0.1
-        public float enemyStarDustMul  = 0.1f;   // 적 별가루 드롭 × 0.1
-        public float enemyXpMul        = 0.1f;   // 적 XP 드롭 × 0.1
-        public float spawnIntervalMul  = 0.1f;   // spawn 간격 × 0.1 = 10× 빈도
-        public float enemyDropChanceMul = 0.1f;  // Enemy 드랍 확률 × 0.1 (마리수 ×10 으로 합산 동일)
+        // PIVOT v3.1 (2026-05-02 사용자 보정) — 적 시각 식별성 강화
+        // 적 ×3 (HP/ATK/scale) + 출현 ×20 + 별가루/XP/드랍 마리당 0.1 그대로 (×2 인플레이션 의도)
+        // cap 1,500 (50% 상향). game_pivot_v2.md PIVOT v3.1
+        [Header("PIVOT v3.1 글로벌 곱셈 (적 ×3 / 출현 ×20 / 인플레이션 ×2)")]
+        public float enemyHpMul        = 0.3f;   // 적 HP × 0.3 (보스 제외)
+        public float enemyAtkMul       = 0.3f;   // 적 ATK × 0.3 (보스 제외)
+        public float enemyScaleMul     = 0.3f;   // sprite scale × 0.3 (식별성 ↑)
+        public float enemyStarDustMul  = 0.1f;   // 마리당 0.1 그대로 (마리수 ×20 으로 ×2 인플레이션)
+        public float enemyXpMul        = 0.1f;   // 마리당 0.1 그대로
+        public float spawnIntervalMul  = 0.05f;  // spawn 간격 × 0.05 = 20× 빈도
+        public float enemyDropChanceMul = 0.1f;  // 마리당 0.1 그대로 (×2 드랍)
     }
 }
