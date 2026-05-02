@@ -17,8 +17,10 @@ namespace LittleHero
             bool isCrit = RollCrit();
             float critMul = isCrit ? GetCritDamageMul() : 1f;
             float final = damage * MythicEffectRuntime.CalcOutgoingDamageMultiplier(enemy) * critMul;
-            enemy.TakeDamage(final);
+            // PIVOT v4 — OnHit 먼저 (적 1발 처치 시 SetActive(false) 후 coroutine 시작 실패 방지).
+            // floater/audio/shake 는 enemy 비활성과 무관, punch/flash coroutine 만 적이 alive 일 때 동작.
             enemy.OnHit(final, isCrit);
+            enemy.TakeDamage(final);
         }
 
         public static void DealDamageToPlayer(PlayerHealth player, float damage)

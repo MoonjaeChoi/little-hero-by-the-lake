@@ -109,14 +109,7 @@ namespace LittleHero
         public void OnHit(float damage, bool isCrit)
         {
             if (_isDead) return;
-            // 1. Punch scale
-            if (_punchCo != null) StopCoroutine(_punchCo);
-            _punchCo = PunchRoutine(isCrit ? 1.7f : 1.4f, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
-            StartCoroutine(_punchCo);
-            // 2. Color flash
-            if (_flashCo != null) StopCoroutine(_flashCo);
-            _flashCo = FlashRoutine(isCrit ? Color.yellow : Color.red, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
-            StartCoroutine(_flashCo);
+            // 글로벌 효과 — 적이 비활성돼도 적용 (floater/audio/vfx/shake)
             // 3. Hit particle
             VfxPool.SpawnHitStar(transform.position, isCrit);
             // 4. Sound
@@ -132,6 +125,16 @@ namespace LittleHero
                 CinematicEffects.Instance?.PlayHitPause(0.08f);
                 CinematicEffects.Instance?.PlayScreenShake(0.3f);
             }
+            // 적별 효과 — gameObject active 인 경우만 (1발 처치 시 의미 X, 효과만 노출)
+            if (!gameObject.activeInHierarchy) return;
+            // 1. Punch scale
+            if (_punchCo != null) StopCoroutine(_punchCo);
+            _punchCo = PunchRoutine(isCrit ? 1.7f : 1.4f, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
+            StartCoroutine(_punchCo);
+            // 2. Color flash
+            if (_flashCo != null) StopCoroutine(_flashCo);
+            _flashCo = FlashRoutine(isCrit ? Color.yellow : Color.red, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
+            StartCoroutine(_flashCo);
         }
 
         private System.Collections.IEnumerator PunchRoutine(float targetScale, float expandTime, float returnTime)

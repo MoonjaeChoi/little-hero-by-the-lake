@@ -26,7 +26,7 @@ namespace LittleHero
             _canvas = gameObject.AddComponent<Canvas>();
             _canvas.renderMode = RenderMode.WorldSpace;
             _canvas.sortingOrder = 100;
-            transform.localScale = Vector3.one * 0.01f;  // WorldSpace Canvas 일반 크기
+            transform.localScale = Vector3.one * 0.05f;  // WorldSpace Canvas — fontSize 24 × 0.05 = 1.2 unit (~7.5% screen)
 
             var go = new GameObject("Text");
             go.transform.SetParent(transform, false);
@@ -68,8 +68,8 @@ namespace LittleHero
             _cg.alpha = 1f;
             _shakePhase = Random.Range(0f, Mathf.PI * 2f);
 
-            // Critical 진입 punch — scale 0.5 → 1.0
-            transform.localScale = Vector3.one * (_isCrit ? 0.005f : 0.01f);
+            // Critical 진입 punch — scale 0.5 → 1.0 (베이스 0.05)
+            transform.localScale = Vector3.one * (_isCrit ? 0.025f : 0.05f);
         }
 
         private static string FormatDamage(int damage, DamageType type)
@@ -116,11 +116,11 @@ namespace LittleHero
             float ease = 1f - (1f - k) * (1f - k);
             transform.position = Vector3.Lerp(_startPos, _endPos, ease);
 
-            // Critical 진입 punch — 0.5→1.0 in 0.15s
+            // Critical 진입 punch — 0.5→1.0 in 0.15s (베이스 0.05, Critical 0.07)
             if (_isCrit && _lifeTime < 0.15f)
             {
                 float p = _lifeTime / 0.15f;
-                float scale = Mathf.Lerp(0.005f, 0.014f, p);
+                float scale = Mathf.Lerp(0.025f, 0.07f, p);
                 transform.localScale = Vector3.one * scale;
                 // 진동
                 float shake = Mathf.Sin(_shakePhase + Time.time * 30f) * 0.05f * (1f - p);
@@ -128,7 +128,7 @@ namespace LittleHero
             }
             else if (_isCrit)
             {
-                transform.localScale = Vector3.one * 0.014f;
+                transform.localScale = Vector3.one * 0.07f;
             }
 
             // Fade out — 0.4s after delay 0.2s (일반) / 0.5s after delay 0.3s (크리)
