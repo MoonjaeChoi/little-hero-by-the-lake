@@ -47,6 +47,8 @@ namespace LittleHero
             Time.timeScale = 0f;
         }
 
+        private float _pendingDust;  // PIVOT v3.1 — fractional 누적 (×0.1 RoundToInt=0 문제 해결)
+
         private void HandleEnemyKilled(EnemyData data)
         {
             if (data == null) return;
@@ -55,8 +57,16 @@ namespace LittleHero
                 : 0f);
             // PIVOT v3 — 적 별가루 × 0.1 (보스 제외). 마리수 ×10 으로 합산 동일.
             float v3DustMul = (Balance != null && !data.isBoss) ? Balance.enemyStarDustMul : 1f;
-            int drop = Mathf.RoundToInt(data.starDustDrop * dustMult * v3DustMul);
-            if (drop > 0) AddStarDust(drop);
+            float dropF = data.starDustDrop * dustMult * v3DustMul;
+            // PIVOT v3.1 — fractional 누적: 1.6 × 0.1 = 0.16 → RoundToInt = 0 → 별가루 0 문제 해결.
+            // 누적치 1.0 도달 시 정수 단위로 AddStarDust.
+            _pendingDust += dropF;
+            int wholeAmount = (int)_pendingDust;
+            if (wholeAmount > 0)
+            {
+                _pendingDust -= wholeAmount;
+                AddStarDust(wholeAmount);
+            }
         }
 
         private void HandlePlayerDied()
