@@ -63,7 +63,11 @@ namespace LittleHero
             {
                 case BossAttackType.Charge: return new BossChargeAttack();
                 case BossAttackType.Pulse:  return new BossPulseAttack();
-                // 사이클 2~3: Spread/Summon/Vine/Tornado/BlackHole 후속
+                case BossAttackType.Spread:    return new BossSpreadAttack();
+                case BossAttackType.Summon:    return new BossSummonAttack();
+                case BossAttackType.Vine:      return new BossVineAttack();
+                case BossAttackType.Tornado:   return new BossTornadoAttack();
+                case BossAttackType.BlackHole: return new BossBlackHoleAttack();
                 default: return null;
             }
         }

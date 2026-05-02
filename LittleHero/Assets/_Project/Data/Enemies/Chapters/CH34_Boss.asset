@@ -27,3 +27,7 @@ MonoBehaviour:
   scaleMultiplier: 1.8700001
   isMiniB: 0
   isBoss: 1
+  bossAttackType: 3
+  bossAttackCooldown: 5.7
+  bossAttackDamage: 66
+  bossAttackRange: 5
