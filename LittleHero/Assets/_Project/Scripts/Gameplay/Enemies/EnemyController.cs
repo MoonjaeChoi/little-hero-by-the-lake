@@ -20,6 +20,9 @@ namespace LittleHero
         private float _baseScaleX;
         private float _baseScaleY;
 
+        // 보스 공격 패턴 (boss_attack_v1.md)
+        private IBossAttackPattern _bossAttack;
+
         public EnemyData Data => _data;
         public bool IsDead => _isDead;
         public float MaxHealth => _maxHealth;
@@ -48,12 +51,30 @@ namespace LittleHero
             _swayPhase = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
             // PIVOT v3 Phase 2 — 단일 Update 패턴 (EnemyAnimationManager 위임)
             EnemyAnimationManager.Register(this);
+
+            // 보스 공격 패턴 (CH6+ chapter boss 만)
+            _bossAttack = CreateBossAttack(data.bossAttackType);
+            _bossAttack?.Initialize(this, data);
+        }
+
+        private static IBossAttackPattern CreateBossAttack(BossAttackType type)
+        {
+            switch (type)
+            {
+                case BossAttackType.Charge: return new BossChargeAttack();
+                case BossAttackType.Pulse:  return new BossPulseAttack();
+                // 사이클 2~3: Spread/Summon/Vine/Tornado/BlackHole 후속
+                default: return null;
+            }
         }
 
         // PIVOT v3 Phase 2 — EnemyAnimationManager 가 매 프레임 호출 (Unity Update callback 폐기)
         public void UpdateAnim(float time)
         {
             if (_isDead || _sr == null) return;
+
+            // 보스 공격 패턴 Tick (active 시)
+            if (_bossAttack != null) _bossAttack.Tick(Time.deltaTime);
 
             // 1) 좌우 flip — 이동 방향 따라 sprite 반전
             if (_rb != null)
@@ -108,6 +129,8 @@ namespace LittleHero
             _isDead = true;
             // PIVOT v3 Phase 2 — Animation Manager 에서 unregister (Update 폐기)
             EnemyAnimationManager.Unregister(this);
+            // 보스 공격 패턴 Cleanup
+            if (_bossAttack != null) { _bossAttack.Cleanup(); _bossAttack = null; }
             GameEvents.RaiseEnemyKilled(_data);
             OnDied?.Invoke(this);
 

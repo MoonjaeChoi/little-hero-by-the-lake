@@ -28,5 +28,12 @@ namespace LittleHero
         [Header("분류")]
         public bool isMiniB;
         public bool isBoss;
+
+        // PIVOT v3 보스 공격 패턴 (boss_attack_v1.md §2.2). CH6+ chapter boss 만 사용.
+        [Header("보스 공격 패턴 (CH6+ chapter boss)")]
+        public BossAttackType bossAttackType = BossAttackType.None;
+        public float bossAttackCooldown = 4f;
+        public float bossAttackDamage = 20f;
+        public float bossAttackRange = 5f;
     }
 }
