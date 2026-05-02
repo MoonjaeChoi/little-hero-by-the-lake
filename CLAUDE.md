@@ -211,21 +211,19 @@ public interface IAttackPattern
 6. **Pulse** — 주기적 광역 폭발
 7. **Summon** — 작은 동료가 따라다니며 공격
 
-### 웨이브 시스템 (Brotato식)
+### 웨이브 시스템 (Idle식, PIVOT v3 적용)
 - 1챕터 = 20웨이브
 - 각 웨이브 30~60초
 - **5/10/15 웨이브**: 미니보스
 - **20 웨이브**: 챕터 보스
-- 웨이브 종료 시 자동 일시정지 → 상점 페이즈
+- 웨이브 종료 시 **5초 휴식 (HP 50% 회복) → 자동 다음 웨이브** (PIVOT v2 — 상점 페이즈 폐기)
+- **챕터당 ~10,000마리 (PIVOT v3 작은 적 무리)** / 동시 active cap **1,000** / 일반 적 1발 처치
 
-### 상점 페이즈
-- 6칸 상품 슬롯 (장비 4 + 강화 2)
-- 새로고침 비용 별가루 (점차 비싸짐)
-- 인벤토리 드래그&드롭으로 슬롯 교체
-- "출발" 버튼으로 다음 웨이브
+### 상점 페이즈 (archive — PIVOT v2 폐기)
+- 코드 보존, 호출 X. 다락방 (가챠/슬롯강화/한정상점/변환모루/마음단련) 으로 분리됨.
 
 ### 메타 시스템
-- **별가루 (런 내)**: `★` 아이콘. 적 처치로 획득, 상점에서 소비. 사망/클리어 시 0으로 리셋. HUD 표시 `별가루 ★ N`, 상점 `새로고침 (별가루 ★ N)` / 슬롯 `★ N`.
+- **별가루 (영구, PIVOT v2)**: `★` 아이콘. 적 처치로 획득, 다락방 메타 강화·변환 모루에서 소비. SaveData.starDust 영구 저장. HUD 표시 `별가루 ★ N`.
 - **무지개 구슬 (영구)**: `✦` 아이콘. 챕터 클리어 보상으로만 획득(CH1=5/CH2=8/CH3=12), 마음 단련에서 소비. SaveSystem에 영구 저장. UI 표시 `무지개 구슬 ✦ N` / 강화 비용 `(✦ N)`.
 - **마법 결정 (영구, 강화 전용)**: `◇` 아이콘. 보스 처치 시 드랍, +16 이상 강화에만 사용 (economy_v1 §7).
 - **별빛 (영구, 캐시)**: `⋆` 아이콘. 실금 + 일일 로그인 + 챕터 첫 클리어 + endgame 보스. 장비 강화 가속 전용 (monetization_v1).
@@ -239,12 +237,14 @@ public interface IAttackPattern
 - `OnMemoryDiscovered` 이벤트 발행 → 다락방 일기장에 자동 정리
 - 모든 추억을 모으면 **마지막 페이지 (히든 챕터)** 언락
 
-## 7. 성능 목표
+## 7. 성능 목표 (PIVOT v3 갱신)
 
 - **iPhone 12 이상**에서 **60fps 유지**
-- **동시 적 500마리** 이상 가능 (오브젝트 풀 필수)
-- **메모리** 200MB 이하
-- **앱 용량** 100MB 이하
+- **동시 적 1,000마리 cap** (PIVOT v3 작은 적 무리, ObjectPool 200/type pre-warm 필수)
+- **GC Allocation/sec <50KB** (Idle 게임 표준, Phase 2 7 hotspot 해결)
+- **GPU draw call <10/frame** (EnemyAtlas SpriteAtlas SRP Batcher)
+- **메모리** 250MB 이하 (PIVOT v3 ×10 적 + atlas + pool 반영)
+- **앱 용량** 150MB 이하
 
 ## 8. 작업 우선순위
 
@@ -606,6 +606,7 @@ CLAUDE.md §11 의 Phase 3 "🔄 진행 중" 은 **사실상 종료** (메타 �
 - 2026-05-01: **G3 한국어 검수 2차 — SO 콘텐츠 명 일괄 정리 (어린이 친화 톤)** — CLAUDE.md §2 텍스트 가이드(한자어 회피·어린이 어휘) 위반 22개 SO displayName 일괄 변경. **Unity SerializedObject API + AssetDatabase.SaveAssets** 로 안전 적용. (1) **적 SO 18종**: `환상의 ~` → `이상한 나라의 ~` (Enemy_Fantasy_Small/Medium/Large/MiniA/MiniB/Boss 6종, CH3 동화 톤 정합), `수호자` → `지킴이` (Enemy_Animal/Civ/Meta/Nature MiniA·MiniB 8종 + Fantasy MiniA/B 동시 적용), `거대 친구` → `큰 친구` (WeeklyBoss_00~03 4종). (2) **챕터 V2 3종**: `잊혀진 학교`(어법) → `잊힌 학교`, `발광 해파리 정원` → `빛나는 해파리 정원`, `황혼의 들판` → `노을 들판`. (3) **장비 1종**: `유성 막대기` → `별똥별 막대기` (Equip_MeteorRod). 추억 4종(아빠의 ~)·신화 4종·캐릭터 3종·메타 3종·일일 보스 7종(요일명)·Phase 1·2 적 11종(꼬마 슬라임 등)·화폐 4종 라벨은 이미 친화 톤으로 검수 통과. reduplication(`동물 친구 친구` Medium 5종) 정리는 별도 사이클로 분리 — Medium 역할 라벨 합의 필요. CodeDom(C# 6) 호환 코드로 일괄 처리, 컴파일 에러 0건.
 - 2026-05-01: **G3 한국어 검수 1차 — UI 패널 어휘 정리 (어린이 친화 톤)** — CLAUDE.md §2 텍스트 가이드(한자어·영어 줄임말 ❌, 어린이 어휘) 위반 9개 수정. (1) **화폐명 시대 오류**: `별 조각 ✦` → `무지개 구슬 ✦` (ChapterClearedPanel:37, MetaUpgradePanel:92). (2) **외래어/영어 줄임말 → 한국어**: `펫` → `애완동물` (InventorySlotView:76, 사용자 보정), `XP 획득` → `경험치` (CharacterInfoPanel:117·132), `드랍률` → `획득률` (CharacterInfoPanel:119·134), `크리 확률/피해` → `치명타 확률/피해` (CharacterInfoPanel:113·114·128·129, 사용자 보정), `리롤 ★ N` → `다시 ★ N` (EquipmentCardPanel:159·160). (3) **게임 속어/한자어 → 쉬운 말**: `천장 N / 20` → `확정까지 N / 20` (EnhanceModalPanel:113, EquipmentCardPanel:146). (4) **부정적 어조 → 친화적**: `이미 최대 강화입니다` → `더 이상 강해질 수 없어요` (EnhanceModalPanel:78). SO displayName 100+ 종은 이미 친화 톤("꼬마 슬라임", "동물 친구 큰 친구", "아빠의 약속") 으로 검수 통과. 화폐 4종 라벨(별가루/무지개 구슬/마법 결정/별빛), `보스/미니보스` 일반 한국어 게임 어휘는 유지. Header/Tooltip 인스펙터 텍스트는 사용자 미노출로 미수정. SO 콘텐츠 명·설명 일괄 검수는 G3 2차 사이클로 분리.
 - 2026-05-01: **시뮬 §13 위험 보정 — XP 베이스 50% 컷 + TTK 분산 가정 코멘트** — implementation_plan §0 두 위험 중 XP 과잉 해소. **PlayerProgress.cs** HandleEnemyKilled/HandleChapterCleared/HandleMemoryDiscovered 베이스 일괄 50% 컷: 적 2→1 / 미니 20→10 / 보스 80→40 / 챕터 N×40→N×20 / 추억 40→20. 모디파이어 `1 + N*0.1` 유지. **CurveSimulator.cs** §2 SimulateChapterIncome + §9 SimulateLevelChapterAlignment + §10 alert 분기 동일 상수 갱신. 결과: §10 `❌ XP 과잉 CH5→L26` → `⚠️ 약간 과잉 CH5→L21` 강등(권장 L18 대비 +3, 임계 ±5 안). §9 CH 35 도달 L50→L45 = 권장 L45 정확 정합. **TTK 60~90s 6개**: 코드 변경 없이 §10 alert 메시지에 RNG 크리·신화·affix·별빛 ±20% 분산 가정 코멘트 추가 — 베타 측정 후 보정 안내. CurveSimulator 재실행으로 simulation_report.md 자동 갱신.
+- 2026-05-02: **PIVOT v3 Phase 3+4 — 시뮬 §3/§5/§17 재구성 + CLAUDE.md §6/§7 갱신** — Phase 2 GC 해결 후 시뮬·문서 정합. **§3 적 스탯**: 일반/미니 HP·ATK × 0.1 (보스 변경 X — 위압감 보존), V3_NORMAL_MUL=0.1f 곱셈. **§5.1 보스 TTK** 변경 X / **§5.2 일반 적 TTK** 신규 (HP × 0.1 = 거의 1발 처치). **§17 작은 적 무리** 신규 4 sub-section: 17.1 마리수 비교 (챕터 1k→10k, 35챕터 35k→350k, 동시 cap 1k) / 17.2 합산 보존 (별가루·XP 합산 동일 ✅) / 17.3 GC pressure 추정 (Save 500→1, Instantiate 10k→32, Update 60k callback→1 manager, draw call 1k→3) / 17.4 검증 목표 (GC<50KB, frame<16.67ms, 동시 1k cap, 챕터 5~10분). §16→§18 재번호. **CLAUDE.md §6 웨이브 시스템 (Brotato식 → Idle식)**: 5초 휴식 + HP 50% + 자동 다음 웨이브 명시 / 챕터 ~10,000마리 / 동시 cap 1,000 / 1발 처치 명시. **상점 페이즈** 섹션 → "archive — PIVOT v2 폐기" / 다락방 분리 명시. **별가루** "런 내" → "영구 (PIVOT v2)" / SaveData.starDust 영구. **§7 성능 목표**: 동시 적 500 → **1,000 cap** / GC<50KB 신규 / GPU draw call <10/frame 신규 / 메모리 200→250MB / 앱 용량 100→150MB. simulation_report.md 자동 갱신.
 - 2026-05-02: **PIVOT v3 Phase 2 — GC 폭주 위험 해결 (퀄리티 무손실)** — 1,000 동시 적 안전화 7 hotspot 처리. **2.1 SaveData drop batching** (🔴 critical): MetaProgression 에 `_pendingDrops` List + `QueueDrop`/`FlushDrops` 추가. EnemyController.TryDropEquipment 가 매 드랍 SaveData append+Save 폐기 → QueueDrop 메모리만. ChapterCleared/PlayerDied 시점 1회 일괄 Save. 챕터당 500 Save → 1 Save (99.8% ↓). **2.2 EnemySpawner _player 캐시**: Awake 1회 FindWithTag → `_playerCached` Transform. spawn 마다 검색 폐기. **2.3 WaveManager._activeEnemies HashSet**: 이미 적용됨 (확인). **2.4 ObjectPool _poolSizePerType 20→200**: PIVOT v3 ×10 정합 + ChapterRunner.RegisterEnemyPool 챕터 시작 시 자동 pre-warm. **2.5 EnemyAnimationManager 단일 Update** (`Gameplay/Enemies/EnemyAnimationManager.cs` 신규): 1k 적 × MonoBehaviour Update callback 폐기 → 정적 List + 단일 Update 일괄 처리. EnemyController.UpdateAnim(time) public 헬퍼 + Register/Unregister. CPU 30~50% ↓ + 시각 동일 (퀄리티 무손실). **2.6 VfxPool** (`Core/VfxPool.cs` 신규): StarBurstFx Resources.Load + List 풀. EnemyController.Die 의 Instantiate 매 처치 → VfxPool.SpawnStarBurst 재사용. SimpleFx 0.6s 후 SetActive(false) → 다음 호출 reuse. 10k 처치 시 Instantiate 99% ↓. **2.7 EnemyAtlas SpriteAtlas**: `Art/Atlases/EnemyAtlas.spriteatlas` 신규. 4 폴더 (Chapters 210 + V1 11 + Enemies archetype 30 + Bosses 11) = **262 sprites packed**. SRP Batcher 자동 묶음 처리 → 1k draw call → ~3. **2.8 Camera ortho 5→8**: 3 씬 (Chapter/InfiniteTower/BossEncounter) 의 CinemachineCamera + Camera 갱신 (each 2 cams updated). 작은 적 시야 ↑. **2.9 WaveManager spawn cap 1,000**: `MAX_CONCURRENT_ENEMIES=1000` + `_activeEnemies.Count >= 1000` 시 0.5초 대기 후 재시도. 동시 적 안전. 컴파일 에러 0건. **누적 GC 위험**: 7 hotspot 모두 해결, 퀄리티 무손실. **다음**: Phase 3 시뮬 §3·§5·§17 재구성, Phase 4 CLAUDE.md §6·§7 갱신, Phase 5 Profiler 검수.
 - 2026-05-02: **PIVOT v3 Phase 1 — 작은 적 무리 패러다임 (Vampire Survivors / Maplestory Idle 풀)** — 사용자 결정 5건 추천 안 채택. **§1 정체성 갱신**: "Auto-Shooter Roguelite" → "**Auto-Shooter Idle**" / 영감 "Brotato" → "**Maplestory Idle (작은 적 무리·메타 진행)**" / 진행 "Brotato식" → "**Idle식 (작은 적 무리)**". **BalanceConfig.pivotV3 신규 7 multipliers**: enemyHpMul=0.1 / enemyAtkMul=0.1 / enemyScaleMul=0.1 / enemyStarDustMul=0.1 / enemyXpMul=0.1 / spawnIntervalMul=0.1 (×10 빈도) / enemyDropChanceMul=0.1. **5 시스템 곱셈 적용**: (1) **EnemyController.Initialize** HP/ATK/scale × 0.1 (보스 제외 — 위압감 보존) / (2) **WaveManager.SpawnRegular** spawn count × (1/spawnIntervalMul = ×10) + interval × 0.1 / (3) **GameManager.HandleEnemyKilled** starDust × 0.1 (보스 제외) / (4) **PlayerProgress.HandleEnemyKilled** XP × 0.1 (보스 제외) / (5) **ItemDropService.RollDropChance** Enemy 5%→0.5% × 0.1 (마리수 ×10 으로 합산 동일, MiniBoss/Boss 변경 X). **결과**: 챕터당 1,000마리 → 10,000마리 / TTK 적 매우 빠름 (1발 처치) / 화면 가득 작은 무리 시각 / 합산 별가루·XP·드랍은 동일. **다음 Phase**: 2 ObjectPool 강화 + Camera zoom 8 + spawn cap 1,000 visible / 3 시뮬 §3·§5·§17 재구성 / 4 CLAUDE.md §6·§7 갱신 / 5 검수. 컴파일 에러 0건.
 - 2026-05-02: **PIVOT v2 Phase 1 — Brotato → Maplestory Idle 풀 전환 (코어 시스템)** — 사용자 결정 추천 안 6건 채택. **디자인 문서**: `docs/little_hero/game_pivot_v2.md` 신규 (10 섹션, 위험·완화·5 Phase 분해). **1.1 별가루 ★ 영구화**: SaveData.starDust 신규 + GameManager.StarDust → MetaProgression.Data.starDust 위임 (정적 facade). ResetRun 시 별가루 리셋 코드 제거. SpendStarDust/AddStarDust 모두 SaveSystem.Save 자동. **1.2 상점 페이즈 폐기**: ChapterRunner.OnWaveComplete → `WaveRestCoroutine` (5초 휴식 + Heal MaxHealth×0.5) → 자동 다음 웨이브. GameManager.EndWave 의 `RaiseShopOpened` → `RaiseShopOpened()+RaiseShopClosed()` 즉시 close (호환성). OnShopClosed 메서드 보존 (호출 X — archive). **1.3 드랍 확률 상향**: ItemDropService.RollDropChance Enemy 0.5→**5%** (10×) / MiniBoss 8→**30%** (3.75×). **1.4 V1 장비 16종 일반 드랍 풀 통합**: 이미 V2 EquipmentTemplate 마이그레이션 완료 (Templates/ 16종 + Weapons/ 가챠 18종 분리). **ItemDropService.Initialize 부트스트랩** 추가 — MetaProgression.Awake 에서 자동 (#if UNITY_EDITOR 가드, 빌드 모드는 Inspector SerializeField 후속). **EnemyController.Die 의 TryDropEquipment hook**: DropContext 자동 (source = isBoss/isMiniB/Enemy + chapterNumber from SelectedChapter). 드랍 시 SaveData.equipmentInstances 자동 append + SaveSystem.Save. 컴파일 에러 0건. **다음 Phase**: 2 UI (ShopPanel 비활성·HUD 별가루 영구·Inventory 강조), 3 스토리 텍스트, 4 시뮬 §2~16 재구성, 5 검수.

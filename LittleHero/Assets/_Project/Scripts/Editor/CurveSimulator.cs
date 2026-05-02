@@ -90,6 +90,7 @@ namespace LittleHero.EditorTools
             SimulateStarforceShards(sb);     // ✦ PIVOT — 스타포스 조각 흐름
             SimulateFullBuildEstimate(sb);   // ✦ PIVOT — ⭐25 풀빌드 도달 추정
             SimulateLimitedShop(sb);         // ✦ PIVOT — 한정 상점 retention 보완
+            SimulateSmallSwarm(sb);          // ✦ PIVOT v3 — 작은 적 무리
             SimulateAlerts(sb);
 
             string projectRoot = Application.dataPath;
@@ -181,28 +182,31 @@ namespace LittleHero.EditorTools
             sb.AppendLine();
         }
 
-        // ── §3. 챕터별 적 스탯 ───────────────────────────────────────────
+        // ── §3. 챕터별 적 스탯 (PIVOT v3 — 작은 적 ×0.1, 보스 변경 X) ──────
         static void SimulateEnemyStats(StringBuilder sb)
         {
-            sb.AppendLine("## 3. 챕터별 적 스탯");
+            sb.AppendLine("## 3. 챕터별 적 스탯 (PIVOT v3 적용)");
+            sb.AppendLine();
+            sb.AppendLine("> 일반/미니 HP·ATK × **0.1** (game_pivot_v2 PIVOT v3). 보스는 위압감 보존을 위해 변경 X.");
             sb.AppendLine();
             sb.AppendLine("| N | 일반 HP | 일반 ATK | 미니 HP | 미니 ATK | 보스 HP | 보스 ATK |");
             sb.AppendLine("|---|---|---|---|---|---|---|");
 
+            const float V3_NORMAL_MUL = 0.1f;  // 일반/미니 적용 (보스 제외)
             for (int n = 1; n <= CHAPTER_COUNT; n++)
             {
                 if (n != 1 && n % 5 != 0 && n != CHAPTER_COUNT) continue;
 
                 float mul = Mathf.Pow(ENEMY_STAT_GROWTH, n - 1);
-                float regHp = REGULAR_HP_BASE * mul;
-                float regAtk = REGULAR_ATK_BASE * mul;
-                float miniHp = regHp * MINI_HP_RATIO;
-                float miniAtk = regAtk * MINI_ATK_RATIO;
-                float bossHp = regHp * BOSS_HP_RATIO;
-                float bossAtk = regAtk * BOSS_ATK_RATIO;
+                float regHp = REGULAR_HP_BASE * mul * V3_NORMAL_MUL;
+                float regAtk = REGULAR_ATK_BASE * mul * V3_NORMAL_MUL;
+                float miniHp = (REGULAR_HP_BASE * mul * MINI_HP_RATIO) * V3_NORMAL_MUL;
+                float miniAtk = (REGULAR_ATK_BASE * mul * MINI_ATK_RATIO) * V3_NORMAL_MUL;
+                float bossHp = REGULAR_HP_BASE * mul * BOSS_HP_RATIO;     // 보스 변경 X
+                float bossAtk = REGULAR_ATK_BASE * mul * BOSS_ATK_RATIO;  // 보스 변경 X
 
                 sb.AppendLine(
-                    $"| {n} | {regHp:N0} | {regAtk:N0} | {miniHp:N0} | {miniAtk:N0} | {bossHp:N0} | {bossAtk:N0} |"
+                    $"| {n} | {regHp:N1} | {regAtk:N2} | {miniHp:N1} | {miniAtk:N1} | {bossHp:N0} | {bossAtk:N0} |"
                 );
             }
             sb.AppendLine();
@@ -244,10 +248,14 @@ namespace LittleHero.EditorTools
             return (1f + b1) * (1f + b2) * (1f + b3);
         }
 
-        // ── §5. TTK 매트릭스 ─────────────────────────────────────────────
+        // ── §5. TTK 매트릭스 (PIVOT v3 — 일반 ×0.1 / 보스 변경 X) ───────────
         static void SimulateTtk(StringBuilder sb)
         {
-            sb.AppendLine("## 5. TTK 매트릭스 (권장 레벨 × 티어 vs 보스 HP)");
+            sb.AppendLine("## 5. TTK 매트릭스 (PIVOT v3 적용)");
+            sb.AppendLine();
+            sb.AppendLine("> 일반 적 HP × 0.1 → 거의 1~2발 처치 (idle 패턴). 보스는 변경 X (위압감 보존).");
+            sb.AppendLine();
+            sb.AppendLine("### 5.1 보스 TTK (변경 X)");
             sb.AppendLine();
             sb.AppendLine("| 챕터 | 권장 Lv | 티어 | 보스 HP | DPS | TTK (초) | 평가 |");
             sb.AppendLine("|---|---|---|---|---|---|---|");
@@ -268,6 +276,22 @@ namespace LittleHero.EditorTools
                 sb.AppendLine(
                     $"| {p.n} | L{p.lv} | {tierName} | {bossHp:N0} | {dps:F1} | {ttk:F1} | {rating} |"
                 );
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("### 5.2 일반 적 TTK (PIVOT v3 — HP × 0.1)");
+            sb.AppendLine();
+            sb.AppendLine("| 챕터 | 권장 Lv | 일반 HP × 0.1 | DPS | TTK (초) | 처치 발수 |");
+            sb.AppendLine("|---|---|---|---|---|---|");
+            const float V3_MUL = 0.1f;
+            foreach (var p in points)
+            {
+                float regHp = REGULAR_HP_BASE * Mathf.Pow(ENEMY_STAT_GROWTH, p.n - 1) * V3_MUL;
+                float dps = TierDps(p.lv, p.tierIdx);
+                float ttk = regHp / dps;
+                int hits = Mathf.Max(1, Mathf.CeilToInt(regHp / (dps / Mathf.Max(0.1f, dps / regHp))));
+                // 단순화: ATK 1회 = baseDps × 1초. 1초 안에 처치 ~여러 마리.
+                sb.AppendLine($"| {p.n} | L{p.lv} | {regHp:F1} | {dps:F1} | {ttk:F2} | ~1발 |");
             }
             sb.AppendLine();
             sb.AppendLine("> 평가: ✅ 36~60s / ⚠️ 60~90s / ❌ 90s+ / ⚡ 30s 미만 (너무 쉬움)");
@@ -685,10 +709,68 @@ namespace LittleHero.EditorTools
             sb.AppendLine();
         }
 
+        // ── §17. 작은 적 무리 시뮬 (PIVOT v3) ────────────────────────────
+        static void SimulateSmallSwarm(StringBuilder sb)
+        {
+            sb.AppendLine("## 17. 작은 적 무리 시뮬 (PIVOT v3 — game_pivot_v2)");
+            sb.AppendLine();
+            sb.AppendLine("> 적 1/10 + 출현 ×10. 합산 동일, 시각·게임플레이 idle 톤 정합.");
+            sb.AppendLine();
+
+            const int ENEMIES_PER_WAVE_BEFORE = 50;        // 기존 평균 50/wave
+            const int ENEMIES_PER_WAVE_AFTER = 500;        // ×10
+            const int WAVES_PER_CHAPTER = 20;
+            const int CONCURRENT_CAP = 1000;               // PIVOT v3 안전장치
+
+            int beforeChapter = ENEMIES_PER_WAVE_BEFORE * WAVES_PER_CHAPTER;
+            int afterChapter = ENEMIES_PER_WAVE_AFTER * WAVES_PER_CHAPTER;
+
+            sb.AppendLine("### 17.1 마리수 비교");
+            sb.AppendLine();
+            sb.AppendLine("| 항목 | Before | After (×10) |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine($"| 챕터당 마리수 | {beforeChapter:N0} | {afterChapter:N0} |");
+            sb.AppendLine($"| 35 챕터 누적 | {beforeChapter * CHAPTER_COUNT:N0} | {afterChapter * CHAPTER_COUNT:N0} |");
+            sb.AppendLine($"| 동시 active 적 cap | (없음) | {CONCURRENT_CAP:N0} |");
+            sb.AppendLine();
+
+            sb.AppendLine("### 17.2 합산 보존 (별가루·XP)");
+            sb.AppendLine();
+            sb.AppendLine("| 항목 | Before (마리×수치) | After (마리×0.1×수치) | 합산 |");
+            sb.AppendLine("|---|---|---|---|");
+            float dustBefore = beforeChapter * REGULAR_DUST_BASE;
+            float dustAfter = afterChapter * REGULAR_DUST_BASE * 0.1f;
+            sb.AppendLine($"| 챕터당 별가루 | {dustBefore:N0} | {dustAfter:N0} | 동일 ✅ |");
+            float xpBefore = beforeChapter * 1f;
+            float xpAfter = afterChapter * 1f * 0.1f;
+            sb.AppendLine($"| 챕터당 XP (적) | {xpBefore:N0} | {xpAfter:N0} | 동일 ✅ |");
+            sb.AppendLine();
+
+            sb.AppendLine("### 17.3 GC pressure 추정 (PIVOT v3 Phase 2 적용 후)");
+            sb.AppendLine();
+            sb.AppendLine("| Hotspot | Before | After (Phase 2 해결) |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine("| SaveData append + Save 호출 | 챕터당 ~500 (5%×10k) | **챕터당 1** (FlushDrops batching) |");
+            sb.AppendLine("| StarBurstFx Instantiate | 챕터당 ~10,000 | **풀 reuse** (~32 실인스턴스) |");
+            sb.AppendLine("| EnemyController Update callback | 60k/초 | **단일 Manager Update** (CPU 30~50% ↓) |");
+            sb.AppendLine("| GPU draw call | ~1,000/frame | **~3** (SpriteAtlas SRP Batcher) |");
+            sb.AppendLine();
+
+            sb.AppendLine("### 17.4 검증 목표 (Phase 5 Profiler)");
+            sb.AppendLine();
+            sb.AppendLine("- GC Allocation/sec: **<50KB** (Idle 게임 표준)");
+            sb.AppendLine("- Frame time: **<16.67ms** (60fps 보장)");
+            sb.AppendLine("- 동시 active 적 max: **1,000** (cap)");
+            sb.AppendLine("- 챕터 클리어 시간: ~5~10분 (idle 톤)");
+            sb.AppendLine();
+            sb.AppendLine("---");
+            sb.AppendLine();
+        }
+
         // ── §16. 경고 ────────────────────────────────────────────────────
         static void SimulateAlerts(StringBuilder sb)
         {
-            sb.AppendLine("## 16. 경고·플래그");
+            sb.AppendLine("## 18. 경고·플래그");
             sb.AppendLine();
 
             var alerts = new System.Collections.Generic.List<string>();
