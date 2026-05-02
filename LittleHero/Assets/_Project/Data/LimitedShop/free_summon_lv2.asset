@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81a247c6c387542a083fb9dfb861bf84, type: 3}
+  m_Name: free_summon_lv2
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.LimitedShopOffer
+  id: free_summon_lv2
+  displayName: "\uC18C\uD658 \uAE30\uB150 \u2014 Rare \uBB34\uAE30"
+  description: "\uC18C\uD658 \uB808\uBCA8 \u2B502 \uB3C4\uB2EC \uCD95\uD558 \uD328\uD0A4\uC9C0.
+    Rare \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C \uD655\uC815!"
+  icon: {fileID: 0}
+  triggerType: 0
+  triggerValue: 2
+  durationDays: 14
+  starlightPrice: 200
+  iapProductId: 
+  discountLabel: 
+  rewards:
+  - type: 1
+    amount: 0
+    equipmentTemplateId: 
+    rarity: 2

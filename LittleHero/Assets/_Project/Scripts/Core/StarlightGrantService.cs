@@ -91,6 +91,8 @@ namespace LittleHero
             // C7 — 챕터 첫 클리어 +N×3 조각도 동시 grant.
             int shards = CalcChapterFirstClearShards(chapterNumber);
             StarforceService.GrantShards(shards);
+            // PIVOT — 한정 상점 트리거
+            LimitedShopService.HandleChapterFirstClear(chapterNumber);
             data.chapterStarlightGranted[idx] = true;
             // firstClearedChapters 비트마스크도 동기화 (D3 지도 해방용, long 50비트 — CH 1~35 + hardcore 36~50)
             if (idx >= 0 && idx < 50) data.firstClearedChapters |= (1L << idx);
@@ -168,8 +170,18 @@ namespace LittleHero
 
         // ===== Endgame 보스 (F4·F5 보스 처치 매니저가 호출) =====
 
-        public static bool GrantDailyBossFirstClear() => GrantOneShotIfNotPaid(ref DailyBossPaidThisCycle, DAILY_BOSS_AMOUNT, SHARDS_DAILY_BOSS, "일일 보스");
-        public static bool GrantWeeklyBossFirstClear() => GrantOneShotIfNotPaid(ref WeeklyBossPaidThisCycle, WEEKLY_BOSS_AMOUNT, SHARDS_WEEKLY_BOSS, "주간 보스");
+        public static bool GrantDailyBossFirstClear()
+        {
+            bool g = GrantOneShotIfNotPaid(ref DailyBossPaidThisCycle, DAILY_BOSS_AMOUNT, SHARDS_DAILY_BOSS, "일일 보스");
+            if (g) LimitedShopService.HandleDailyBossClear();  // 핫딜 트리거
+            return g;
+        }
+        public static bool GrantWeeklyBossFirstClear()
+        {
+            bool g = GrantOneShotIfNotPaid(ref WeeklyBossPaidThisCycle, WEEKLY_BOSS_AMOUNT, SHARDS_WEEKLY_BOSS, "주간 보스");
+            if (g) LimitedShopService.HandleWeeklyBossClear();
+            return g;
+        }
 
         // 메모리 캐시 — EndgameResetService 가 cycle reset 시 false 로 돌림 (호출 책임은 F4·F5 매니저)
         public static bool DailyBossPaidThisCycle;

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81a247c6c387542a083fb9dfb861bf84, type: 3}
+  m_Name: free_chapter_15
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.LimitedShopOffer
+  id: free_chapter_15
+  displayName: "15\uCC55\uD130 \uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4"
+  description: "15\uCC55\uD130 \uCCAB \uD074\uB9AC\uC5B4! \uC870\uAC01 5,000 + \uC18C\uD658\uAD8C
+    10\uC7A5."
+  icon: {fileID: 0}
+  triggerType: 1
+  triggerValue: 15
+  durationDays: 7
+  starlightPrice: 500
+  iapProductId: 
+  discountLabel: 
+  rewards:
+  - type: 2
+    amount: 5000
+    equipmentTemplateId: 
+    rarity: 0
+  - type: 4
+    amount: 10
+    equipmentTemplateId: 
+    rarity: 0

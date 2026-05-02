@@ -97,6 +97,8 @@ namespace LittleHero
                 Debug.LogWarning($"[IAPService] receipt validation FAILED — {productId} (grant 진행)");
 
             ApplyGrant(productId);
+            // PIVOT — 한정 상점 IAP 비동기 콜백 (limited_shop_v1.md §6.2)
+            LimitedShopService.ConfirmIAPPurchase(productId);
             OnPurchaseSucceededEvent?.Invoke(productId);
             return PurchaseProcessingResult.Complete;
         }

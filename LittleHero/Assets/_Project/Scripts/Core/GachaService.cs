@@ -132,6 +132,96 @@ namespace LittleHero
             return results;
         }
 
+        // ===== 한정 상점 grant 헬퍼 (limited_shop_v1.md §6.2) =====
+
+        /// <summary>
+        /// 한정 상점에서 특정 templateId 무기 1개 확정 grant. AffixRoller 로 6줄 옵션 굴림.
+        /// 본 함수는 비용 차감 X — 호출자(LimitedShopService)가 별빛/IAP 차감 후 호출.
+        /// </summary>
+        public static GachaResult GrantSpecificWeapon(GachaPool pool, string templateId, System.Random rng = null)
+        {
+            if (!_initialized || pool == null || string.IsNullOrEmpty(templateId)) return null;
+            rng = rng ?? _defaultRng;
+
+            EquipmentTemplate template = null;
+            var groups = new[] { pool.commonPool, pool.magicPool, pool.rarePool, pool.epicPool, pool.legendaryPool, pool.mythicPool };
+            for (int g = 0; g < groups.Length && template == null; g++)
+            {
+                var arr = groups[g];
+                if (arr == null) continue;
+                for (int i = 0; i < arr.Length; i++)
+                    if (arr[i] != null && arr[i].id == templateId) { template = arr[i]; break; }
+            }
+            if (template == null)
+            {
+                Debug.LogWarning("[GachaService] GrantSpecificWeapon: templateId '" + templateId + "' 미존재");
+                return null;
+            }
+            return BuildAndStoreInstance(pool, template, rng, isForcedRarity: false);
+        }
+
+        /// <summary>
+        /// 한정 상점에서 등급 풀 1개 확정 grant (예: Rare 풀 무작위 1개).
+        /// </summary>
+        public static GachaResult GrantWeaponByRarity(GachaPool pool, Rarity rarity, System.Random rng = null)
+        {
+            if (!_initialized || pool == null) return null;
+            rng = rng ?? _defaultRng;
+            var template = PickFromRarityPool(pool, rarity, rng);
+            if (template == null)
+            {
+                Debug.LogWarning("[GachaService] GrantWeaponByRarity: " + rarity + " 풀 비어있음");
+                return null;
+            }
+            return BuildAndStoreInstance(pool, template, rng, isForcedRarity: true);
+        }
+
+        private static GachaResult BuildAndStoreInstance(GachaPool pool, EquipmentTemplate template, System.Random rng, bool isForcedRarity)
+        {
+            int mainCount = Mathf.Max(0, template.mainAffixLineCount);
+            int subCount = Mathf.Max(0, template.subAffixLineCount);
+            var instance = new EquipmentInstance
+            {
+                instanceId = System.Guid.NewGuid().ToString(),
+                templateId = template.id,
+                enhanceLevel = 0, failCount = 0,
+                mainAffixes = new AffixLine[mainCount],
+                subAffixes = new AffixLine[subCount],
+                mythicId = "", isLocked = false, isEquipped = false,
+                history = new InstanceHistory(),
+            };
+            var slotPool = FindSlotPool(template.slot);
+            if (slotPool != null)
+                for (int i = 0; i < mainCount; i++)
+                    instance.mainAffixes[i] = AffixRoller.RollMain(slotPool, template.rarity, rng);
+            if (_globalPool != null)
+                for (int i = 0; i < subCount; i++)
+                    instance.subAffixes[i] = AffixRoller.RollSub(_globalPool, template.rarity, rng);
+
+            int shards = GetShardsForRarity(pool, template.rarity);
+
+            var meta = MetaProgression.Instance;
+            if (meta != null && meta.Data != null)
+            {
+                AppendInstance(meta.Data, instance);
+                if (shards > 0)
+                {
+                    meta.Data.starforceShards += shards;
+                    GameEvents.RaiseStarforceShardsChanged(meta.Data.starforceShards);
+                }
+                SaveSystem.Save(meta.Data);
+            }
+
+            var result = new GachaResult
+            {
+                instance = instance, rarity = template.rarity, templateId = template.id,
+                starforceShards = shards, isRarePlusGuaranteed = isForcedRarity,
+                causedSummonLevelUp = false, newSummonLevel = 0,
+            };
+            GameEvents.RaiseGachaResult(instance, template.rarity);
+            return result;
+        }
+
         // ===== 내부 =====
 
         private static GachaResult RollOne(GachaPool pool, System.Random rng, Rarity? forcedRarity)
@@ -309,6 +399,7 @@ namespace LittleHero
                 for (int i = results.Length - 1; i >= 0; i--)
                     if (results[i] != null) { results[i].causedSummonLevelUp = true; results[i].newSummonLevel = newLevel; break; }
                 GameEvents.RaiseSummonLevelUp(newLevel);
+                LimitedShopService.HandleSummonLevelUp(newLevel);  // 핫딜 트리거
             }
 
             if (totalShards > 0)

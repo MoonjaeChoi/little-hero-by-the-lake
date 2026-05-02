@@ -56,6 +56,12 @@ namespace LittleHero
         [SerializeField] private SlotStarforcePanel _starforcePanel;
         [SerializeField] private Text _starforceShardsHud;
 
+        // ✦ PIVOT 한정 상점 (limited_shop_v1.md §7.3)
+        [Header("PIVOT 한정 상점")]
+        [SerializeField] private Button _limitedShopButton;
+        [SerializeField] private LimitedShopPanel _limitedShopPanel;
+        [SerializeField] private Text _limitedShopBadgeText;  // 활성 핫딜 N개 뱃지
+
         private GameObject _lastActivePanel;
 
         private void Awake()
@@ -126,6 +132,10 @@ namespace LittleHero
 
             if (_gachaButton != null) _gachaButton.onClick.AddListener(OpenGachaPanel);
             if (_starforceButton != null) _starforceButton.onClick.AddListener(OpenStarforcePanel);
+            if (_limitedShopButton != null) _limitedShopButton.onClick.AddListener(OpenLimitedShopPanel);
+            GameEvents.OnLimitedOfferActivated += HandleLimitedOfferChanged;
+            GameEvents.OnLimitedOfferPurchased += HandleLimitedOfferChanged;
+            GameEvents.OnLimitedOfferExpired   += HandleLimitedOfferChanged;
 
             if (_chapterButtons != null)
             {
@@ -163,6 +173,10 @@ namespace LittleHero
 
             if (_gachaButton != null) _gachaButton.onClick.RemoveAllListeners();
             if (_starforceButton != null) _starforceButton.onClick.RemoveAllListeners();
+            if (_limitedShopButton != null) _limitedShopButton.onClick.RemoveAllListeners();
+            GameEvents.OnLimitedOfferActivated -= HandleLimitedOfferChanged;
+            GameEvents.OnLimitedOfferPurchased -= HandleLimitedOfferChanged;
+            GameEvents.OnLimitedOfferExpired   -= HandleLimitedOfferChanged;
 
             if (_chapterButtons != null)
                 foreach (var entry in _chapterButtons)
@@ -180,6 +194,7 @@ namespace LittleHero
             UpdateMagicCrystals(CurrencyService.MagicCrystals);
             UpdateStarlight(CurrencyService.Starlight);
             UpdateStarforceShards(StarforceService.Shards);
+            RefreshLimitedShopBadge();
             RefreshEndgameMenu();
             HandleReturnFromBossEncounter();
 
@@ -257,6 +272,24 @@ namespace LittleHero
         private void OpenStarforcePanel()
         {
             if (_starforcePanel != null) _starforcePanel.gameObject.SetActive(true);
+        }
+
+        private void OpenLimitedShopPanel()
+        {
+            if (_limitedShopPanel != null) _limitedShopPanel.gameObject.SetActive(true);
+        }
+
+        private void HandleLimitedOfferChanged(LimitedShopOffer _)
+        {
+            RefreshLimitedShopBadge();
+        }
+
+        private void RefreshLimitedShopBadge()
+        {
+            if (_limitedShopBadgeText == null) return;
+            int n = LimitedShopService.IsInitialized ? LimitedShopService.GetActiveOffers().Count : 0;
+            _limitedShopBadgeText.text = n > 0 ? n.ToString() : "";
+            _limitedShopBadgeText.gameObject.SetActive(n > 0);
         }
 
         private void RefreshEndgameMenu()

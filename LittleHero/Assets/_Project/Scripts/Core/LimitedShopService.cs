@@ -14,13 +14,15 @@ namespace LittleHero
     public static class LimitedShopService
     {
         private static LimitedShopOffer[] _catalog;
+        private static GachaPool _gachaPool;
         private static bool _initialized;
 
         public static bool IsInitialized => _initialized;
 
-        public static void Initialize(LimitedShopOffer[] catalog)
+        public static void Initialize(LimitedShopOffer[] catalog, GachaPool gachaPool = null)
         {
             _catalog = catalog ?? new LimitedShopOffer[0];
+            _gachaPool = gachaPool;
             _initialized = true;
             EnsureFirstLaunchRecorded();
         }
@@ -234,14 +236,22 @@ namespace LittleHero
 
         private static void GrantSpecificWeapon(string templateId)
         {
-            // 운영 단계 — GachaService 에 GrantSpecific 메서드 추가 권장. MVP: 직접 EquipmentInstance 생성.
-            if (string.IsNullOrEmpty(templateId)) return;
-            Debug.Log($"[LimitedShop] GrantSpecificWeapon({templateId}) — TODO: GachaService 통합");
+            if (_gachaPool == null || string.IsNullOrEmpty(templateId))
+            {
+                Debug.LogWarning("[LimitedShop] GrantSpecificWeapon: GachaPool 미설정 또는 templateId 빈 값");
+                return;
+            }
+            GachaService.GrantSpecificWeapon(_gachaPool, templateId);
         }
 
         private static void GrantWeaponByRarity(Rarity rarity)
         {
-            Debug.Log($"[LimitedShop] GrantWeaponByRarity({rarity}) — TODO: GachaService 통합");
+            if (_gachaPool == null)
+            {
+                Debug.LogWarning("[LimitedShop] GrantWeaponByRarity: GachaPool 미설정");
+                return;
+            }
+            GachaService.GrantWeaponByRarity(_gachaPool, rarity);
         }
 
         private static void MarkPurchased(LimitedShopOffer offer)

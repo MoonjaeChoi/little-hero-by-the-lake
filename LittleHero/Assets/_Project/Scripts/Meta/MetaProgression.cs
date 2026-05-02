@@ -168,6 +168,7 @@ namespace LittleHero
             Data.selectedCharacterId = character != null ? character.id : null;
             SaveSystem.Save(Data);
             OnCharacterChanged?.Invoke(character);
+            if (character != null) LimitedShopService.HandleCharacterFirstSelect(character.id);  // 핫딜 트리거
         }
 
         public int GetUpgradeLevel(string id)
