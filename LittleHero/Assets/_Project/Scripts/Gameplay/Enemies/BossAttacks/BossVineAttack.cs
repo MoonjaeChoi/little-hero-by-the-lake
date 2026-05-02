@@ -14,8 +14,9 @@ namespace LittleHero
         private const float VINE_RADIUS = 1.2f;
         private const float VINE_DAMAGE_INTERVAL = 0.5f;
 
-        private struct Vine { public Vector2 pos; public float life, dmgTimer; }
+        private class Vine { public Vector2 pos; public float life, dmgTimer; public GameObject visual; }
         private readonly System.Collections.Generic.List<Vine> _vines = new System.Collections.Generic.List<Vine>(8);
+        private static Sprite _vineSprite;
 
         private EnemyController _owner;
         private EnemyData _data;
@@ -59,18 +60,56 @@ namespace LittleHero
                 var v = _vines[i];
                 v.life -= dt;
                 v.dmgTimer -= dt;
-                if (v.life <= 0f) { _vines.RemoveAt(i); continue; }
+                if (v.life <= 0f)
+                {
+                    if (v.visual != null) Object.Destroy(v.visual);
+                    _vines.RemoveAt(i);
+                    continue;
+                }
+                // alpha pulse 효과 (남은 수명에 비례)
+                if (v.visual != null)
+                {
+                    var sr = v.visual.GetComponent<SpriteRenderer>();
+                    if (sr != null)
+                    {
+                        float fade = Mathf.Min(1f, v.life / 1f);  // 마지막 1초 fade out
+                        sr.color = new Color(1f, 1f, 1f, fade * (0.7f + Mathf.Sin(Time.time * 4f) * 0.2f));
+                    }
+                }
                 if (v.dmgTimer <= 0f && _player != null && Vector2.Distance(v.pos, _player.position) < VINE_RADIUS)
                 {
                     var ph = _player.GetComponent<PlayerHealth>();
                     if (ph != null) ph.TakeDamage(_data.bossAttackDamage);
                     v.dmgTimer = VINE_DAMAGE_INTERVAL;
                 }
-                _vines[i] = v;
             }
         }
 
-        private void BeginSpawn() { _spawning = true; _telegraphTimer = TELEGRAPH_SEC; }
+        private static GameObject CreateVineVisual(Vector2 pos)
+        {
+            if (_vineSprite == null) _vineSprite = Resources.Load<Sprite>("VFX/Boss/Boss_Vine");
+            var go = new GameObject("BossVine");
+            go.transform.position = pos;
+            go.transform.localScale = new Vector3(2f, 2f, 1f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = _vineSprite;
+            sr.color = new Color(1f, 1f, 1f, 0.85f);
+            sr.sortingOrder = 3;
+            return go;
+        }
+
+        private void BeginSpawn() {
+            _spawning = true; _telegraphTimer = TELEGRAPH_SEC;
+            // 4 vine 위치 미리 표시 (player 주변)
+            if (_player != null) {
+                Vector2 origin = _player.position;
+                for (int i = 0; i < VINE_COUNT; i++) {
+                    float angle = (i / (float)VINE_COUNT) * Mathf.PI * 2f;
+                    Vector2 pos = origin + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 1.5f;
+                    VfxPool.SpawnWarning(pos, VINE_RADIUS, TELEGRAPH_SEC);
+                }
+            }
+        }
 
         private void PlaceVines()
         {
@@ -84,13 +123,15 @@ namespace LittleHero
                 float angle = Random.Range(0f, Mathf.PI * 2f);
                 float dist = Random.Range(1f, 2f);
                 Vector2 pos = origin + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * dist;
-                _vines.Add(new Vine { pos = pos, life = VINE_DURATION, dmgTimer = 0f });
+                _vines.Add(new Vine { pos = pos, life = VINE_DURATION, dmgTimer = 0f, visual = CreateVineVisual(pos) });
             }
         }
 
         public void Cleanup()
         {
             if (_sr != null) _sr.color = _origColor;
+            for (int i = 0; i < _vines.Count; i++)
+                if (_vines[i].visual != null) Object.Destroy(_vines[i].visual);
             _vines.Clear();
         }
     }

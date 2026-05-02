@@ -74,6 +74,7 @@ namespace LittleHero
         {
             _state = State.Telegraph;
             _stateTimer = TELEGRAPH_SEC;
+            AudioManager.Instance?.Play(SfxType.BossTelegraph);
         }
 
         private void BeginCharge()
@@ -82,6 +83,7 @@ namespace LittleHero
             _stateTimer = CHARGE_SEC;
             if (_sr != null) _sr.color = _origColor;
             _owner.transform.localScale = _origScale;
+            AudioManager.Instance?.Play(SfxType.BossCharge);
             // 돌진 방향 = player 방향 (telegraph 시작 시점이 아닌 charge 시작 시점)
             if (_player != null)
                 _chargeDirection = ((Vector2)(_player.position - _owner.transform.position)).normalized;

@@ -25,9 +25,10 @@ namespace LittleHero
         private float _telegraphTimer;
         private bool _firing;
 
-        // 활성 탄 추적 (CPU 단순 — 동시 ~30 발)
-        private struct Projectile { public Vector2 pos, dir; public float life; public bool hit; }
+        // 활성 탄 추적 + 시각 GameObject
+        private class Projectile { public Vector2 pos, dir; public float life; public bool hit; public GameObject visual; }
         private readonly System.Collections.Generic.List<Projectile> _projectiles = new System.Collections.Generic.List<Projectile>(32);
+        private static Sprite _projectileSprite;
 
         public void Initialize(EnemyController owner, EnemyData data)
         {
@@ -62,15 +63,37 @@ namespace LittleHero
                 var p = _projectiles[i];
                 p.pos += p.dir * PROJ_SPEED * dt;
                 p.life -= dt;
+                if (p.visual != null) p.visual.transform.position = p.pos;
                 if (!p.hit && _player != null && Vector2.Distance(p.pos, _player.position) < PROJ_RADIUS)
                 {
                     var ph = _player.GetComponent<PlayerHealth>();
                     if (ph != null) ph.TakeDamage(_data.bossAttackDamage);
                     p.hit = true;
                 }
-                if (p.life <= 0f) { _projectiles.RemoveAt(i); continue; }
-                _projectiles[i] = p;
+                if (p.life <= 0f)
+                {
+                    if (p.visual != null) Object.Destroy(p.visual);
+                    _projectiles.RemoveAt(i);
+                }
             }
+        }
+
+        private static GameObject CreateProjectileVisual(Vector2 pos)
+        {
+            if (_projectileSprite == null)
+            {
+                // 기존 별 스프라이트 재활용 — 없으면 흰색 점
+                var t = Resources.Load<Sprite>("VFX/Boss/Boss_BlackHole");
+                _projectileSprite = t;
+            }
+            var go = new GameObject("BossProjectile");
+            go.transform.position = pos;
+            go.transform.localScale = new Vector3(0.4f, 0.4f, 1f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = _projectileSprite;
+            sr.color = new Color(0.85f, 0.4f, 1f, 0.9f);
+            sr.sortingOrder = 5;
+            return go;
         }
 
         private void BeginFire()
@@ -93,12 +116,14 @@ namespace LittleHero
             for (int i = 0; i < SHOT_COUNT; i++)
             {
                 float a = (baseAngle - halfSpread + step * i) * Mathf.Deg2Rad;
+                Vector2 pos0 = _owner.transform.position;
                 _projectiles.Add(new Projectile
                 {
-                    pos = _owner.transform.position,
+                    pos = pos0,
                     dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a)),
                     life = PROJ_LIFETIME,
                     hit = false,
+                    visual = CreateProjectileVisual(pos0),
                 });
             }
         }
@@ -106,6 +131,8 @@ namespace LittleHero
         public void Cleanup()
         {
             if (_sr != null) _sr.color = _origColor;
+            for (int i = 0; i < _projectiles.Count; i++)
+                if (_projectiles[i].visual != null) Object.Destroy(_projectiles[i].visual);
             _projectiles.Clear();
         }
     }

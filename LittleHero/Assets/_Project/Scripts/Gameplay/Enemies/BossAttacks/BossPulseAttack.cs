@@ -58,10 +58,13 @@ namespace LittleHero
         {
             _state = State.Telegraph;
             _stateTimer = TELEGRAPH_SEC;
+            VfxPool.SpawnWarning(_owner.transform.position, _data.bossAttackRange, TELEGRAPH_SEC);
+            AudioManager.Instance?.Play(SfxType.BossTelegraph);
         }
 
         private void Detonate()
         {
+            AudioManager.Instance?.Play(SfxType.BossDetonate);
             // OverlapCircle — Player 만 검사
             if (_player != null)
             {

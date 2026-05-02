@@ -53,7 +53,10 @@ namespace LittleHero
             }
         }
 
-        private void BeginSummon() { _summoning = true; _telegraphTimer = TELEGRAPH_SEC; }
+        private void BeginSummon() {
+            _summoning = true; _telegraphTimer = TELEGRAPH_SEC;
+            AudioManager.Instance?.Play(SfxType.BossSummon);
+        }
 
         private void DoSummon()
         {

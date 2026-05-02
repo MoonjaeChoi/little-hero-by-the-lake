@@ -6,11 +6,17 @@ namespace LittleHero
 {
     public enum SfxType
     {
-        EnemyPop,    // 적 처치 "퐁!" (CLAUDE.md §2 절대 원칙)
-        Pickup,      // 별가루·아이템 픽업
-        LevelUp,     // 레벨업 상승 아르페지오
-        MemoryFound, // 추억 발견 — 따뜻한 차임
-        PlayerHit,   // 플레이어 피격 (가벼운 만화풍)
+        EnemyPop,
+        Pickup,
+        LevelUp,
+        MemoryFound,
+        PlayerHit,
+        // 보스 공격 (boss_attack_v1.md 사이클 C)
+        BossTelegraph,  // 1.5s warning chime
+        BossDetonate,   // 폭발 boom
+        BossCharge,     // 돌진 swoosh
+        BossSummon,     // 소환 pop
+        BossTornado,    // 회전 영역 (단발 — loop 미사용 단순화)
     }
 
     public class AudioManager : MonoBehaviour
@@ -30,6 +36,11 @@ namespace LittleHero
         private AudioClip _levelUpClip;
         private AudioClip _memoryClip;
         private AudioClip _hitClip;
+        private AudioClip _bossTelegraphClip;
+        private AudioClip _bossDetonateClip;
+        private AudioClip _bossChargeClip;
+        private AudioClip _bossSummonClip;
+        private AudioClip _bossTornadoClip;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -67,6 +78,11 @@ namespace LittleHero
             _levelUpClip  = SynthLevelUp();
             _memoryClip   = SynthMemory();
             _hitClip      = SynthHit();
+            _bossTelegraphClip = SynthBossTelegraph();
+            _bossDetonateClip  = SynthBossDetonate();
+            _bossChargeClip    = SynthBossCharge();
+            _bossSummonClip    = SynthBossSummon();
+            _bossTornadoClip   = SynthBossTornado();
 
             GameEvents.OnEnemyKilled       += _ => Play(SfxType.EnemyPop);
             GameEvents.OnLevelUp           += _ => Play(SfxType.LevelUp);
@@ -79,14 +95,108 @@ namespace LittleHero
             if (_src == null) return;
             AudioClip clip = type switch
             {
-                SfxType.EnemyPop    => _popClip,
-                SfxType.Pickup      => _pickupClip,
-                SfxType.LevelUp     => _levelUpClip,
-                SfxType.MemoryFound => _memoryClip,
-                SfxType.PlayerHit   => _hitClip,
+                SfxType.EnemyPop      => _popClip,
+                SfxType.Pickup        => _pickupClip,
+                SfxType.LevelUp       => _levelUpClip,
+                SfxType.MemoryFound   => _memoryClip,
+                SfxType.PlayerHit     => _hitClip,
+                SfxType.BossTelegraph => _bossTelegraphClip,
+                SfxType.BossDetonate  => _bossDetonateClip,
+                SfxType.BossCharge    => _bossChargeClip,
+                SfxType.BossSummon    => _bossSummonClip,
+                SfxType.BossTornado   => _bossTornadoClip,
                 _ => null,
             };
             if (clip != null) _src.PlayOneShot(clip);
+        }
+
+        // === 보스 SFX 5종 (절차적 합성, Phase G2 P9 패턴) ===
+
+        // 위협 chime — 600Hz 단음 진동 (vibrato), 1s
+        private static AudioClip SynthBossTelegraph()
+        {
+            int len = (int)(SR * 1.0f);
+            var s = new float[len];
+            for (int i = 0; i < len; i++) {
+                float t = (float)i / SR;
+                float vib = Mathf.Sin(2f * Mathf.PI * 8f * t) * 30f;
+                float wave = Mathf.Sin(2f * Mathf.PI * (600f + vib) * t);
+                float env = Mathf.Lerp(0.6f, 0.2f, t);
+                s[i] = wave * env * 0.5f;
+            }
+            var c = AudioClip.Create("BossTelegraph", len, 1, SR, false);
+            c.SetData(s, 0); return c;
+        }
+
+        // 폭발 boom — 200→50Hz sweep + 노이즈 + exp decay 0.4s
+        private static AudioClip SynthBossDetonate()
+        {
+            int len = (int)(SR * 0.4f);
+            var s = new float[len];
+            var rng = new System.Random(7);
+            for (int i = 0; i < len; i++) {
+                float t = (float)i / SR;
+                float k = t / 0.4f;
+                float freq = Mathf.Lerp(200f, 50f, k * k);
+                float env = Mathf.Exp(-t * 8f);
+                float wave = Mathf.Sin(2f * Mathf.PI * freq * t);
+                float noise = ((float)rng.NextDouble() * 2f - 1f) * 0.3f;
+                s[i] = (wave + noise) * env * 0.8f;
+            }
+            var c = AudioClip.Create("BossDetonate", len, 1, SR, false);
+            c.SetData(s, 0); return c;
+        }
+
+        // 돌진 swoosh — 1500→400Hz fast sweep, 0.5s, 노이즈 부분
+        private static AudioClip SynthBossCharge()
+        {
+            int len = (int)(SR * 0.5f);
+            var s = new float[len];
+            var rng = new System.Random(11);
+            for (int i = 0; i < len; i++) {
+                float t = (float)i / SR;
+                float k = t / 0.5f;
+                float freq = Mathf.Lerp(1500f, 400f, k);
+                float env = Mathf.Sin(Mathf.PI * k);  // attack-decay
+                float wave = Mathf.Sin(2f * Mathf.PI * freq * t);
+                float noise = ((float)rng.NextDouble() * 2f - 1f) * 0.4f;
+                s[i] = (wave * 0.6f + noise * env) * env * 0.6f;
+            }
+            var c = AudioClip.Create("BossCharge", len, 1, SR, false);
+            c.SetData(s, 0); return c;
+        }
+
+        // 소환 pop — 440 + 660Hz 듀얼 + 짧은 attack-release 0.2s
+        private static AudioClip SynthBossSummon()
+        {
+            int len = (int)(SR * 0.2f);
+            var s = new float[len];
+            for (int i = 0; i < len; i++) {
+                float t = (float)i / SR;
+                float env = Mathf.Exp(-t * 12f);
+                float wave = Mathf.Sin(2f * Mathf.PI * 440f * t) + 0.7f * Mathf.Sin(2f * Mathf.PI * 660f * t);
+                s[i] = wave * env * 0.4f;
+            }
+            var c = AudioClip.Create("BossSummon", len, 1, SR, false);
+            c.SetData(s, 0); return c;
+        }
+
+        // 회전 — 200Hz wobble + 화이트 노이즈 1초
+        private static AudioClip SynthBossTornado()
+        {
+            int len = (int)(SR * 1.0f);
+            var s = new float[len];
+            var rng = new System.Random(13);
+            for (int i = 0; i < len; i++) {
+                float t = (float)i / SR;
+                float wobble = Mathf.Sin(2f * Mathf.PI * 4f * t) * 50f;
+                float wave = Mathf.Sin(2f * Mathf.PI * (200f + wobble) * t);
+                float noise = ((float)rng.NextDouble() * 2f - 1f) * 0.5f;
+                float env = Mathf.Sin(Mathf.PI * t);  // 부드러운 fade in/out
+                s[i] = (wave * 0.5f + noise * 0.5f) * env * 0.5f;
+            }
+            var c = AudioClip.Create("BossTornado", len, 1, SR, false);
+            c.SetData(s, 0); return c;
         }
 
         private const int SR = 44100;

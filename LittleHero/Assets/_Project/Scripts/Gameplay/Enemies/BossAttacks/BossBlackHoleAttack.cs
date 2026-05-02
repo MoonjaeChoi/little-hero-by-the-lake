@@ -21,6 +21,8 @@ namespace LittleHero
         private enum State { Idle, Telegraph, Sucking }
         private State _state = State.Idle;
         private float _stateTimer, _cooldown;
+        private GameObject _visual;
+        private static Sprite _bhSprite;
 
         public void Initialize(EnemyController owner, EnemyData data)
         {
@@ -39,13 +41,20 @@ namespace LittleHero
             {
                 case State.Idle:
                     _cooldown -= dt;
-                    if (_cooldown <= 0f) { _state = State.Telegraph; _stateTimer = TELEGRAPH_SEC; }
+                    if (_cooldown <= 0f) {
+                        _state = State.Telegraph; _stateTimer = TELEGRAPH_SEC;
+                        VfxPool.SpawnWarning(_owner.transform.position, _data.bossAttackRange, TELEGRAPH_SEC);
+                        AudioManager.Instance?.Play(SfxType.BossTelegraph);
+                    }
                     break;
                 case State.Telegraph:
                     _stateTimer -= dt;
                     if (_sr != null)
                         _sr.color = Color.Lerp(_origColor, new Color(0.4f, 0.1f, 0.5f), Mathf.PingPong((TELEGRAPH_SEC - _stateTimer) * 4f, 1f));
-                    if (_stateTimer <= 0f) { _state = State.Sucking; _stateTimer = SUCK_DURATION; }
+                    if (_stateTimer <= 0f) {
+                        _state = State.Sucking; _stateTimer = SUCK_DURATION;
+                        SpawnVisual();
+                    }
                     break;
                 case State.Sucking:
                     _stateTimer -= dt;
@@ -54,9 +63,28 @@ namespace LittleHero
                         Vector3 toBoss = _owner.transform.position - _player.position;
                         _player.position += toBoss.normalized * SUCK_FORCE * dt;
                     }
+                    if (_visual != null) {
+                        _visual.transform.position = _owner.transform.position;
+                        _visual.transform.Rotate(0f, 0f, 360f * dt);
+                        // 흡인 동안 scale pulse
+                        float s = _data.bossAttackRange * 2f * (1f + Mathf.Sin(Time.time * 5f) * 0.1f);
+                        _visual.transform.localScale = new Vector3(s, s, 1f);
+                    }
                     if (_stateTimer <= 0f) Detonate();
                     break;
             }
+        }
+
+        private void SpawnVisual()
+        {
+            if (_bhSprite == null) _bhSprite = Resources.Load<Sprite>("VFX/Boss/Boss_BlackHole");
+            _visual = new GameObject("BossBlackHoleVisual");
+            _visual.transform.position = _owner.transform.position;
+            _visual.transform.localScale = new Vector3(_data.bossAttackRange * 2f, _data.bossAttackRange * 2f, 1f);
+            var sr = _visual.AddComponent<SpriteRenderer>();
+            sr.sprite = _bhSprite;
+            sr.color = new Color(1f, 1f, 1f, 0.85f);
+            sr.sortingOrder = 4;
         }
 
         private void Detonate()
@@ -68,11 +96,16 @@ namespace LittleHero
                 if (ph != null) ph.TakeDamage(_data.bossAttackDamage);
             }
             VfxPool.SpawnStarBurst(_owner.transform.position);
+            AudioManager.Instance?.Play(SfxType.BossDetonate);
             _state = State.Idle;
             _cooldown = _data.bossAttackCooldown;
             if (_sr != null) _sr.color = _origColor;
+            if (_visual != null) { Object.Destroy(_visual); _visual = null; }
         }
 
-        public void Cleanup() { if (_sr != null) _sr.color = _origColor; }
+        public void Cleanup() {
+            if (_sr != null) _sr.color = _origColor;
+            if (_visual != null) Object.Destroy(_visual);
+        }
     }
 }
