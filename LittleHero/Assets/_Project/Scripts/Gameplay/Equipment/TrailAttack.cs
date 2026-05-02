@@ -57,7 +57,7 @@ namespace LittleHero
             field.transform.position = pos;
             float r = Mathf.Max(0.1f, _config.range);
             field.transform.localScale = new Vector3(r, r, 1f);
-            field.Activate(_config.damage, TrailLifetime, HitInterval, ReturnField);
+            field.Activate(_config.damage, TrailLifetime, HitInterval, r, ReturnField);
         }
 
         private void ReturnField(TrailField field) { _pool?.Return(field); }

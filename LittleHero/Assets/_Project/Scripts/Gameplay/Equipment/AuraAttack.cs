@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LittleHero
@@ -10,7 +11,8 @@ namespace LittleHero
         private float _timer;
         private GameObject _visual;
 
-        private readonly Collider2D[] _overlapBuffer = new Collider2D[64];
+        // Damage v2 — DamageQuery 통일 (LayerMask Enemy)
+        private readonly List<EnemyController> _targets = new List<EnemyController>(64);
 
         public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
@@ -50,12 +52,11 @@ namespace LittleHero
         private void DealAuraDamage()
         {
             if (_owner == null) return;
-            int count = Physics2D.OverlapCircleNonAlloc(_owner.position, _config.range, _overlapBuffer);
-            for (int i = 0; i < count; i++)
+            // Damage v2 — Aura 는 sustained DPS, 모든 적 100% 데미지 (penalty X)
+            DamageQuery.FindEnemiesInCircle(_owner.position, _config.range, _targets);
+            for (int i = 0; i < _targets.Count; i++)
             {
-                EnemyController e = _overlapBuffer[i].GetComponent<EnemyController>();
-                if (e == null || e.IsDead) continue;
-                DamageSystem.DealDamage(e, _config.damage);
+                DamageDealer.ApplySingle(_targets[i], _config.damage);
             }
         }
     }

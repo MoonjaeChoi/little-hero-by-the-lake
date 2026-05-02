@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LittleHero
@@ -12,7 +13,7 @@ namespace LittleHero
         private Transform _poolRoot;
 
         private const float PulseDuration = 0.35f;
-        private readonly Collider2D[] _overlapBuffer = new Collider2D[64];
+        private readonly List<EnemyController> _targets = new List<EnemyController>(64);
 
         public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
@@ -47,13 +48,9 @@ namespace LittleHero
             if (_owner == null) return;
             float r = Mathf.Max(0.1f, _config.range);
 
-            int count = Physics2D.OverlapCircleNonAlloc(_owner.position, r, _overlapBuffer);
-            for (int i = 0; i < count; i++)
-            {
-                EnemyController e = _overlapBuffer[i].GetComponent<EnemyController>();
-                if (e == null || e.IsDead) continue;
-                DamageSystem.DealDamage(e, _config.damage);
-            }
+            // Damage v2 — Pulse 광역 폭발, 거리 정렬 + 다중 타깃 보정 (메이플 풍)
+            DamageQuery.FindNearestN(_owner.position, r, 32, _targets);
+            DamageDealer.ApplyMulti(_targets, _config.damage);
 
             if (_visualPool != null)
             {
