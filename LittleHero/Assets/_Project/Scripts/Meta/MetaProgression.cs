@@ -43,6 +43,43 @@ namespace LittleHero
             // E1+E2 — IAP 백그라운드 초기화 (Editor·Services 미설정 시 에러 로그만, 게임플레이는 영향 X)
             try { IAPService.Bootstrap(); }
             catch (System.Exception e) { Debug.LogWarning($"[MetaProgression] IAP bootstrap skip: {e.Message}"); }
+            // PIVOT v2 — ItemDropService 부트스트랩 (game_pivot_v2.md §10).
+            try { BootstrapItemDropService(); }
+            catch (System.Exception e) { Debug.LogWarning($"[MetaProgression] ItemDrop bootstrap skip: {e.Message}"); }
+        }
+
+        private void BootstrapItemDropService()
+        {
+            if (ItemDropService.IsInitialized) return;
+#if UNITY_EDITOR
+            // Editor 모드 — AssetDatabase 자동 검색.
+            // 빌드용 Inspector SerializeField 폴백은 후속 (드랍 풀 SO 인덱스 신규).
+            var allGuids = UnityEditor.AssetDatabase.FindAssets("t:EquipmentTemplate", new[] { "Assets/_Project/Data/Templates" });
+            var templates = new System.Collections.Generic.List<EquipmentTemplate>();
+            foreach (var g in allGuids)
+            {
+                var p = UnityEditor.AssetDatabase.GUIDToAssetPath(g);
+                if (p.Contains("/Weapons/")) continue;  // 가챠 한정 풀 제외
+                var t = UnityEditor.AssetDatabase.LoadAssetAtPath<EquipmentTemplate>(p);
+                if (t != null) templates.Add(t);
+            }
+            var slotPoolGuids = UnityEditor.AssetDatabase.FindAssets("t:SlotAffixPool", new[] { "Assets/_Project/Data/SlotPools" });
+            var slotPools = new System.Collections.Generic.List<SlotAffixPool>();
+            foreach (var g in slotPoolGuids)
+                slotPools.Add(UnityEditor.AssetDatabase.LoadAssetAtPath<SlotAffixPool>(UnityEditor.AssetDatabase.GUIDToAssetPath(g)));
+            var globalPool = UnityEditor.AssetDatabase.LoadAssetAtPath<GlobalSubAffixPool>("Assets/_Project/Data/GlobalPools/GlobalSubAffixPool_Default.asset");
+            var balance = UnityEditor.AssetDatabase.LoadAssetAtPath<BalanceConfig>("Assets/_Project/Data/BalanceConfig.asset");
+
+            if (templates.Count == 0 || slotPools.Count == 0 || globalPool == null)
+            {
+                Debug.LogWarning("[MetaProgression] ItemDrop assets 부족 — 부트스트랩 스킵");
+                return;
+            }
+            ItemDropService.Initialize(slotPools.ToArray(), globalPool, templates.ToArray(), balance);
+            Debug.Log($"[MetaProgression] ItemDrop bootstrap: templates={templates.Count} slotPools={slotPools.Count}");
+#else
+            Debug.LogWarning("[MetaProgression] ItemDrop bootstrap — 빌드 모드: Inspector SerializeField 후속 필요");
+#endif
         }
 
         private void OnEnable()

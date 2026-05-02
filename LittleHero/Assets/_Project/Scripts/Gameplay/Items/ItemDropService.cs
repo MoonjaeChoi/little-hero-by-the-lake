@@ -127,10 +127,12 @@ namespace LittleHero
 
         private static bool RollDropChance(DropContext ctx, System.Random rng)
         {
+            // PIVOT v2 — 상점 폐기 + 영구 인벤토리 (game_pivot_v2.md §2.3).
+            // Enemy 0.5%→5% (10×) / MiniBoss 8%→30% (3.75×). Boss/Repeat 동일.
             float p = ctx.source switch
             {
-                DropSource.Enemy => 0.005f,
-                DropSource.MiniBoss => 0.08f,
+                DropSource.Enemy => 0.05f,
+                DropSource.MiniBoss => 0.30f,
                 DropSource.Boss => 1.0f,
                 DropSource.BossRepeat => 0.30f,
                 DropSource.Shop => 1.0f,

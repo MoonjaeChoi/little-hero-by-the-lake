@@ -66,11 +66,23 @@ namespace LittleHero
                 return;
             }
             GameManager.Instance.EndWave();
+            // PIVOT v2 — 상점 폐기 + 5초 휴식 후 자동 다음 웨이브 (game_pivot_v2.md §3.2).
+            StartCoroutine(WaveRestCoroutine());
+        }
+
+        private System.Collections.IEnumerator WaveRestCoroutine()
+        {
+            // HP 50% 회복 (휴식 의미 부여)
+            var player = UnityEngine.Object.FindFirstObjectByType<PlayerHealth>(FindObjectsInactive.Include);
+            var stats = UnityEngine.Object.FindFirstObjectByType<PlayerStats>(FindObjectsInactive.Include);
+            if (player != null && stats != null) player.Heal(stats.MaxHealth * 0.5f);
+            yield return new WaitForSeconds(5f);
+            StartNextWave();
         }
 
         private void OnShopClosed()
         {
-            StartNextWave();
+            // PIVOT v2 — 상점 archive (game_pivot_v2.md §3.1). 호환성 위해 메서드 보존, 호출 X.
         }
 
         private void ApplyChapterBackground()

@@ -66,6 +66,9 @@ namespace LittleHero
         public LimitedOfferTrigger[] limitedOfferTriggers = new LimitedOfferTrigger[0];
         public string[] purchasedLimitedOfferIds = new string[0];
         public long firstLaunchUnix;                                 // NewUser 트리거 (게임 첫 시작 시각)
+
+        // ✦ PIVOT v2 — 별가루 ★ 영구화 (game_pivot_v2.md §2.1)
+        public int starDust;                                         // ★ 별가루 (영구, 상점 폐기 후)
     }
 
     [System.Serializable]

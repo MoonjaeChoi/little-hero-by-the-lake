@@ -12,7 +12,8 @@ namespace LittleHero
 
         public GameState CurrentState { get; private set; }
         public int CurrentWave { get; private set; }
-        public int StarDust { get; private set; }
+        // PIVOT v2 — 별가루 ★ 는 SaveData.starDust 영구 저장. GameManager 는 라우팅 facade.
+        public int StarDust => MetaProgression.Instance != null ? MetaProgression.Instance.Data.starDust : 0;
         public BalanceConfig Balance => _balanceConfig;
 
         private void Awake()
@@ -78,9 +79,12 @@ namespace LittleHero
 
         public void EndWave()
         {
+            // PIVOT v2 — 상점 페이즈 폐기 (game_pivot_v2.md §3.1).
+            // 웨이브 클리어 이벤트만 발행. 다음 웨이브 진행은 ChapterRunner 의 5초 휴식 코루틴이 담당.
             GameEvents.RaiseWaveCleared(CurrentWave);
-            SetState(GameState.Shop);
+            // 호환성 — 비활성 ShopPanel 이 OnShopOpened/OnShopClosed 구독을 정리할 수 있게 발행 후 즉시 close.
             GameEvents.RaiseShopOpened();
+            GameEvents.RaiseShopClosed();
         }
 
         public void CloseShop()
@@ -91,22 +95,29 @@ namespace LittleHero
 
         public void AddStarDust(int amount)
         {
-            StarDust += amount;
-            GameEvents.RaiseStarDustChanged(StarDust);
+            if (amount <= 0) return;
+            var meta = MetaProgression.Instance;
+            if (meta == null) return;
+            meta.Data.starDust += amount;
+            GameEvents.RaiseStarDustChanged(meta.Data.starDust);
+            SaveSystem.Save(meta.Data);
         }
 
         public bool SpendStarDust(int amount)
         {
-            if (StarDust < amount) return false;
-            StarDust -= amount;
-            GameEvents.RaiseStarDustChanged(StarDust);
+            if (amount <= 0) return false;
+            var meta = MetaProgression.Instance;
+            if (meta == null || meta.Data.starDust < amount) return false;
+            meta.Data.starDust -= amount;
+            GameEvents.RaiseStarDustChanged(meta.Data.starDust);
+            SaveSystem.Save(meta.Data);
             return true;
         }
 
         public void ResetRun()
         {
             CurrentWave = 0;
-            StarDust = 0;
+            // PIVOT v2 — 별가루 영구화 후 ResetRun 시 별가루 리셋 X.
             SetState(GameState.Hub);
         }
 

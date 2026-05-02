@@ -100,6 +100,9 @@ namespace LittleHero
             GameEvents.RaiseEnemyKilled(_data);
             OnDied?.Invoke(this);
 
+            // PIVOT v2 — 적 사망 시 장비 드랍 (game_pivot_v2.md §3).
+            TryDropEquipment();
+
             // Phase G2 — 적 처치 시 별 흩어짐 VFX (CLAUDE.md §2 절대 원칙)
             if (_cachedDeathFx == null)
                 _cachedDeathFx = Resources.Load<GameObject>("VFX/StarBurstFx");
@@ -109,6 +112,35 @@ namespace LittleHero
             // 풀에서 반환되지 않은 경우 안전 비활성화
             if (gameObject.activeSelf)
                 gameObject.SetActive(false);
+        }
+
+        private void TryDropEquipment()
+        {
+            if (!ItemDropService.IsInitialized || _data == null) return;
+            var ctx = new DropContext
+            {
+                source = _data.isBoss ? DropSource.Boss
+                       : _data.isMiniB ? DropSource.MiniBoss
+                       : DropSource.Enemy,
+                chapterNumber = MetaProgression.Instance != null && MetaProgression.Instance.SelectedChapter != null
+                    ? Mathf.Max(1, MetaProgression.Instance.SelectedChapter.chapterNumber)
+                    : 1,
+                enemy = _data,
+            };
+            var instance = ItemDropService.TryDrop(ctx);
+            if (instance == null) return;
+            // SaveData 인벤토리에 자동 추가
+            var meta = MetaProgression.Instance;
+            if (meta != null && meta.Data != null)
+            {
+                int len = meta.Data.equipmentInstances?.Length ?? 0;
+                var arr = new EquipmentInstance[len + 1];
+                for (int i = 0; i < len; i++) arr[i] = meta.Data.equipmentInstances[i];
+                arr[len] = instance;
+                meta.Data.equipmentInstances = arr;
+                SaveSystem.Save(meta.Data);
+                Debug.Log($"[Drop] {_data.displayName} → {instance.templateId} ({(int)ctx.source})");
+            }
         }
     }
 }
