@@ -48,5 +48,44 @@ namespace LittleHero.EditorTools
             // Finder 에서 폴더 열기
             EditorUtility.RevealInFinder(path);
         }
+
+        [MenuItem("Tools/LittleHero/Reset Boss Cooldown (일일·주간 보스 즉시 도전 가능)")]
+        public static void ResetBossCooldown()
+        {
+            var data = SaveSystem.Load();
+            if (data == null)
+            {
+                EditorUtility.DisplayDialog("Boss Cooldown",
+                    "SaveData 파일이 없습니다. 먼저 Play 모드 1회 실행해 SaveData 를 생성한 뒤 다시 시도하세요.", "OK");
+                return;
+            }
+            long beforeDaily = data.lastDailyBossClearTime;
+            long beforeWeekly = data.lastWeeklyBossClearTime;
+            data.lastDailyBossClearTime = 0;
+            data.lastWeeklyBossClearTime = 0;
+            SaveSystem.Save(data);
+            Debug.Log($"[BossCooldownReset] daily {beforeDaily}→0 / weekly {beforeWeekly}→0");
+            EditorUtility.DisplayDialog("Boss Cooldown Reset",
+                "✅ Reset 완료\n" +
+                "  daily: " + beforeDaily + " → 0\n" +
+                "  weekly: " + beforeWeekly + " → 0\n\n" +
+                "Play 모드 (또는 EndgameMenuPanel 재진입) 시 일일·주간 보스 도전 가능.",
+                "OK");
+        }
+
+        [MenuItem("Tools/LittleHero/Set Endgame Menu Active (firstClearedChapters 35비트 ON)")]
+        public static void EnableEndgameMenu()
+        {
+            var data = SaveSystem.Load();
+            if (data == null) data = new SaveData();
+            long before = data.firstClearedChapters;
+            data.firstClearedChapters = (1L << 35) - 1;
+            SaveSystem.Save(data);
+            Debug.Log($"[EndgameEnable] firstClearedChapters {before}→{data.firstClearedChapters}");
+            EditorUtility.DisplayDialog("Endgame Menu Active",
+                "✅ firstClearedChapters " + before + " → " + data.firstClearedChapters + "\n\n" +
+                "Play 모드 시작 시 다락방 우상단 '보스 도전' 메뉴 활성.",
+                "OK");
+        }
     }
 }
