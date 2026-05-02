@@ -1,8 +1,20 @@
 # Little Hero — 잭팟 ARPG 적용 인덱스
 
-> 잭팟 ARPG 설계서(`../`)와 Little Hero by the Lake(Unity 프로젝트, `../../LittleHero/`)를 **하나의 게임으로 통합**하기 위한 적용 문서들.
+> 잭팟 ARPG 설계서(`../design/`)와 Little Hero by the Lake(Unity 프로젝트, `../../LittleHero/`)를 **하나의 게임으로 통합**하기 위한 적용 문서들.
 >
 > Jackpot ARPG의 5층 아이템 아키텍처·강화 천장·신화 옵션·시즌제 메커니즘을, Little Hero의 비폭력 키즈 톤(별·하트·꽃잎, CLAUDE.md §2)과 챕터 동화책 스토리(빨간모자/잭과 콩나무/앨리스)에 호환되게 재해석한다.
+
+---
+
+## 토론 진행을 위한 인덱스 (재정리 2026-05-02)
+
+| 진입 | 용도 |
+|---|---|
+| **[INDEX_BY_SYSTEM.md](./INDEX_BY_SYSTEM.md)** | 11 시스템별 핵심 결정 + 의존 그래프 + 미해결 토론 포인트 |
+| **[INDEX_BY_FLOW.md](./INDEX_BY_FLOW.md)** | 게임플레이 흐름순 (앱 실행 → 다락방 → 챕터 → 보스 → Endgame) |
+| **[DISCUSSION.md](./DISCUSSION.md)** | 전체 토론 워크시트 — §1 정체성 / §2 화폐 / §3 시즌 / §4 자부심 / §5 UI / §6 콘텐츠 / §7 신화 / §8 Endgame / §9 출시 |
+
+---
 
 ---
 

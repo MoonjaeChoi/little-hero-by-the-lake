@@ -1,6 +1,6 @@
 # Part 5. UI/UX 설계
 
-> [← Part 4](./part_4_options_library.md) · [README](./README.md) · [다음: Part 6 →](./part_6_season_catchup.md)
+> [← Part 4](./part_4_options_library.md) · [README](../README.md) · [다음: Part 6 →](./part_6_season_catchup.md)
 >
 > ✦ `direction_v2.md` 1번 항목(모바일 전용) 반영. PC 정보 밀도 토론은 폐기, 단일 모바일 카드로 통합.
 

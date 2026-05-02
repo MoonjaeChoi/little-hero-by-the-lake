@@ -1,6 +1,6 @@
 # Part 1b. 캐릭터 진행 (XP · 레벨)
 
-> [← Part 1](./part_1_equipment_identity.md) · [README](./README.md) · [다음: Part 2 →](./part_2_item_enhancement.md)
+> [← Part 1](./part_1_equipment_identity.md) · [README](../README.md) · [다음: Part 2 →](./part_2_item_enhancement.md)
 >
 > ✦ `direction_v2.md` 2번 항목으로 신설된 파트. 장비 시스템(Part 1·2)과는 **별개의 결정론적 진행 축**을 정의한다.
 

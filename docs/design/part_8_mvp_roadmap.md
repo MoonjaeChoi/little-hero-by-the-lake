@@ -1,6 +1,6 @@
 # Part 8. MVP 우선순위와 다음 단계
 
-> [← Part 7](./part_7_architecture.md) · [README](./README.md)
+> [← Part 7](./part_7_architecture.md) · [README](../README.md)
 >
 > ✦ `direction_v2.md` 1·2·4번 반영. MVP 범위에 **1챕터 + 챕터 보스**, **캐릭터 레벨 1~30**이 포함되며, UI는 **모바일 전용**.
 

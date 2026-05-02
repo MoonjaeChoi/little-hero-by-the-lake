@@ -1,6 +1,6 @@
 # Part 6. 시즌제 · 캐치업
 
-> [← Part 5](./part_5_ui_ux.md) · [README](./README.md) · [다음: Part 7 →](./part_7_architecture.md)
+> [← Part 5](./part_5_ui_ux.md) · [README](../README.md) · [다음: Part 7 →](./part_7_architecture.md)
 >
 > ✦ `direction_v2.md` 4번 반영. **챕터(콘텐츠 진행)와 시즌(운영 주기)는 직교한다**는 점을 명시.
 

@@ -1,6 +1,6 @@
 # Part 1. 장비 시스템 정체성
 
-> [← Part 0](./part_0_overview.md) · [README](./README.md) · [Part 1b 캐릭터 진행](./part_1b_character_progression.md) · [다음: Part 2 →](./part_2_item_enhancement.md)
+> [← Part 0](./part_0_overview.md) · [README](../README.md) · [Part 1b 캐릭터 진행](./part_1b_character_progression.md) · [다음: Part 2 →](./part_2_item_enhancement.md)
 >
 > ✦ `direction_v2.md` 2번 항목 반영. 진행 구조에 **캐릭터 레벨**이 0층으로 추가되어 4중 구조가 됐다. 1번(모바일 전용)도 반영.
 

@@ -1,6 +1,6 @@
 # Part 7. 시스템 아키텍처
 
-> [← Part 6](./part_6_season_catchup.md) · [README](./README.md) · [다음: Part 8 →](./part_8_mvp_roadmap.md)
+> [← Part 6](./part_6_season_catchup.md) · [README](../README.md) · [다음: Part 8 →](./part_8_mvp_roadmap.md)
 >
 > ✦ `direction_v2.md` 1번 항목(모바일 전용) 반영. 웹 스택(Next.js, ui-web) 제거.
 

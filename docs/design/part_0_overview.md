@@ -1,6 +1,6 @@
 # Part 0. 프로젝트 개요
 
-> [← README](./README.md) · [다음: Part 1 →](./part_1_equipment_identity.md)
+> [← README](../README.md) · [다음: Part 1 →](./part_1_equipment_identity.md)
 >
 > **갱신 (2026-04-30)**: [`direction_v2.md`](./direction_v2.md)의 4대 방향성 반영. 변경된 항목은 ✦ 표기.
 

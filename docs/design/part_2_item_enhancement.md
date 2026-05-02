@@ -1,6 +1,6 @@
 # Part 2. 아이템 구조와 강화
 
-> [← Part 1](./part_1_equipment_identity.md) · [README](./README.md) · [다음: Part 3 →](./part_3_economy.md)
+> [← Part 1](./part_1_equipment_identity.md) · [README](../README.md) · [다음: Part 3 →](./part_3_economy.md)
 >
 > ✦ `direction_v2.md` 4번(챕터 진행+동조 성장) 반영. 강화 비용 곡선과 챕터 깊이의 동조 매트릭스 추가.
 

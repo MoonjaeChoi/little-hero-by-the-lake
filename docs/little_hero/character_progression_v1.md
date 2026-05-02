@@ -1,6 +1,6 @@
 # Little Hero — 캐릭터 진행 v1
 
-> [← Little Hero 인덱스](./README.md) · [장비 v1](./equipment_v1.md) · [스탯 v1](./stats_v1.md) · [옵션 풀 v1](./affix_pool_v1.md) · [챕터 v2](./chapter_structure_v2.md) · [원본 잭팟 Part 1b](../part_1b_character_progression.md)
+> [← Little Hero 인덱스](./README.md) · [장비 v1](./equipment_v1.md) · [스탯 v1](./stats_v1.md) · [옵션 풀 v1](./affix_pool_v1.md) · [챕터 v2](./chapter_structure_v2.md) · [원본 잭팟 Part 1b](../design/part_1b_character_progression.md)
 >
 > 잭팟 ARPG Part 1b의 결정론적 진행 축을 Little Hero 35 챕터에 매핑. **장비(L4 옵션)·강화(L2~L3)와는 별개의 50% 비중 채널**.
 
@@ -449,7 +449,7 @@ public class SaveData
 
 ## 12. 출처
 
-- 잭팟 ARPG [Part 1b — 캐릭터 진행](../part_1b_character_progression.md) (XP 공식·트랜잭션·50:50 비중 가이드)
+- 잭팟 ARPG [Part 1b — 캐릭터 진행](../design/part_1b_character_progression.md) (XP 공식·트랜잭션·50:50 비중 가이드)
 - [stats_v1 §3](./stats_v1.md) (4 코어 / 코어 100점당 효과 / 클래스 비중)
 - [equipment_v1 §3.7](./equipment_v1.md) (35 챕터 3-티어 정합)
 - [chapter_structure_v2 §5](./chapter_structure_v2.md) (적 stat_multiplier 곡선)

@@ -1,6 +1,6 @@
 # Part 3. 경제 시스템
 
-> [← Part 2](./part_2_item_enhancement.md) · [README](./README.md) · [다음: Part 4 →](./part_4_options_library.md)
+> [← Part 2](./part_2_item_enhancement.md) · [README](../README.md) · [다음: Part 4 →](./part_4_options_library.md)
 >
 > ✦ `direction_v2.md` 4번 반영. 챕터별 보상 매트릭스가 운영의 핵심 핸들로 추가.
 

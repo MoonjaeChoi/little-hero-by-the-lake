@@ -1,6 +1,6 @@
 # Part 4. 옵션 라이브러리 (세트 · 신화)
 
-> [← Part 3](./part_3_economy.md) · [README](./README.md) · [다음: Part 5 →](./part_5_ui_ux.md)
+> [← Part 3](./part_3_economy.md) · [README](../README.md) · [다음: Part 5 →](./part_5_ui_ux.md)
 >
 > ✦ `direction_v2.md` 2번 반영. **캐릭터 베이스 스탯**도 `Effect` 리졸버의 입력에 포함된다.
 

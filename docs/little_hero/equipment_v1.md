@@ -1,6 +1,6 @@
 # Little Hero — 장비 시스템 v1 초안
 
-> [← Little Hero 인덱스](./README.md) · [원본 잭팟 Part 1](../part_1_equipment_identity.md) · [원본 잭팟 Part 2](../part_2_item_enhancement.md)
+> [← Little Hero 인덱스](./README.md) · [원본 잭팟 Part 1](../design/part_1_equipment_identity.md) · [원본 잭팟 Part 2](../design/part_2_item_enhancement.md)
 >
 > 잭팟 ARPG의 5층 아이템 아키텍처를 Little Hero의 7슬롯 시스템·비폭력 톤·아빠 추억 코어에 맞춰 재해석한 v1 초안.
 
