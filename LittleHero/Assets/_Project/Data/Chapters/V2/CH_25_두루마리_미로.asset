@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_25
   displayName: "\uB450\uB8E8\uB9C8\uB9AC \uBBF8\uB85C"
   description: "\uCC55\uD130 25 \u2014 \uB450\uB8E8\uB9C8\uB9AC \uBBF8\uB85C"
-  coverArt: {fileID: 7637825232647387772, guid: d7235c2a7fb004d79a60a4b3268626ca, type: 3}
+  coverArt: {fileID: 21300000, guid: c5ec3fdb259d14884abd83c831d6d82c, type: 3}
   chapterNumber: 25
   enemyStatMultiplier: 9.849738
   totalWaves: 20

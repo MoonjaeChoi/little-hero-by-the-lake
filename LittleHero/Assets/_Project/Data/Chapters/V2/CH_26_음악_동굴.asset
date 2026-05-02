@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_26
   displayName: "\uC74C\uC545 \uB3D9\uAD74"
   description: "\uCC55\uD130 26 \u2014 \uC74C\uC545 \uB3D9\uAD74"
-  coverArt: {fileID: -4944013515326772553, guid: c7205eaf0b6c743f89e5483e1125cfdb, type: 3}
+  coverArt: {fileID: 21300000, guid: c8b5bf828d46b4c3bab5e24baf330245, type: 3}
   chapterNumber: 26
   enemyStatMultiplier: 10.834712
   totalWaves: 20

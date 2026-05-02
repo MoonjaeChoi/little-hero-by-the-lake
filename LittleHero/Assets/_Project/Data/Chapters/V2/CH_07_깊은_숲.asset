@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_07
   displayName: "\uAE4A\uC740 \uC232"
   description: "\uCC55\uD130 7 \u2014 \uAE4A\uC740 \uC232"
-  coverArt: {fileID: -9060602944725371744, guid: fdc0e8f67b2694eebb28551e43c750dc, type: 3}
+  coverArt: {fileID: 21300000, guid: 6c61ad532e35b47feb27554579de1542, type: 3}
   chapterNumber: 7
   enemyStatMultiplier: 1.7715613
   totalWaves: 20

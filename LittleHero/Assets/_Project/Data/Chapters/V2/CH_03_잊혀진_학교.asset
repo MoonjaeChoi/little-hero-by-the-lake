@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_03
   displayName: "\uC78A\uD78C \uD559\uAD50"
   description: "\uCC55\uD130 3 \u2014 \uC78A\uD78C \uD559\uAD50"
-  coverArt: {fileID: -8906834628833726170, guid: debca6c648b3340e8a2acb19ce37f80f, type: 3}
+  coverArt: {fileID: 21300000, guid: eaef54f29e3e14a90bffa0f494637d7c, type: 3}
   chapterNumber: 3
   enemyStatMultiplier: 1.21
   totalWaves: 20

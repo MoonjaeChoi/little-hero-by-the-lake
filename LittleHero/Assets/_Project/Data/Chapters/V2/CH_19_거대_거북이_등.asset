@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_19
   displayName: "\uAC70\uB300 \uAC70\uBD81\uC774 \uB4F1"
   description: "\uCC55\uD130 19 \u2014 \uAC70\uB300 \uAC70\uBD81\uC774 \uB4F1"
-  coverArt: {fileID: 504938601859598099, guid: 5054677da62f04af2b968b3f857c66fd, type: 3}
+  coverArt: {fileID: 21300000, guid: 49e2ce114fb534ec6b482b238d8d89af, type: 3}
   chapterNumber: 19
   enemyStatMultiplier: 5.5599194
   totalWaves: 20
