@@ -13,6 +13,13 @@ namespace LittleHero
         private float _attackDamage;
         private bool _isDead;
 
+        // 코드 애니메이션 (P10 패턴 답습 — Rigidbody Y 안 건드림)
+        private SpriteRenderer _sr;
+        private Rigidbody2D _rb;
+        private float _swayPhase;
+        private float _baseScaleX;
+        private float _baseScaleY;
+
         public EnemyData Data => _data;
         public bool IsDead => _isDead;
         public float MaxHealth => _maxHealth;
@@ -29,6 +36,33 @@ namespace LittleHero
             _currentHealth = _maxHealth;
             _isDead = false;
             ApplyAppearance(data);
+            _sr = GetComponentInChildren<SpriteRenderer>();
+            _rb = GetComponent<Rigidbody2D>();
+            _baseScaleX = transform.localScale.x;
+            _baseScaleY = transform.localScale.y;
+            // 적별 다른 위상으로 전체 sway 가 동기화되지 않게 무작위 시작점
+            _swayPhase = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+        }
+
+        private void Update()
+        {
+            if (_isDead || _sr == null) return;
+
+            // 1) 좌우 flip — 이동 방향 따라 sprite 반전
+            if (_rb != null)
+            {
+                float vx = _rb.linearVelocity.x;
+                if (vx > 0.05f) _sr.flipX = false;
+                else if (vx < -0.05f) _sr.flipX = true;
+            }
+
+            // 2) 가벼운 scale wobble (호흡 효과) — Rigidbody Y 안 건드림
+            //    Y squish/stretch 만 → Rigidbody position 영향 X
+            float wobble = Mathf.Sin(Time.time * 4f + _swayPhase) * 0.04f;
+            transform.localScale = new Vector3(
+                _baseScaleX,
+                _baseScaleY * (1f + wobble),
+                1f);
         }
 
         private void ApplyAppearance(EnemyData data)
