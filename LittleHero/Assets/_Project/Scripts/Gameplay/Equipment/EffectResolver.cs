@@ -74,11 +74,15 @@ namespace LittleHero
                 if (inst == null) continue;
 
                 // 1. 템플릿 베이스 스탯 — StatModifiers 의 6 필드는 모두 ADD.
+                //    C5: 슬롯 ⭐ 단계만큼 base 에 % 곱셈 (gacha_v1.md §3.3 — 장비 교체해도 ⭐ 유지).
                 EquipmentTemplate template = null;
                 if (templates != null && !string.IsNullOrEmpty(inst.templateId))
                     templates.TryGetValue(inst.templateId, out template);
                 if (template != null && template.baseStats != null)
-                    AddBaseStats(bonus, template.baseStats);
+                {
+                    float starforceMul = 1f + StarforceService.GetBaseMultiplier(template.slot);
+                    AddBaseStats(bonus, template.baseStats, starforceMul);
+                }
 
                 // 2. 주옵션 3 + 부옵션 3
                 ApplyAffixArray(bonus, inst.mainAffixes);
@@ -92,15 +96,15 @@ namespace LittleHero
             return bonus;
         }
 
-        private static void AddBaseStats(ResolvedEquipmentBonus bonus, StatModifiers s)
+        private static void AddBaseStats(ResolvedEquipmentBonus bonus, StatModifiers s, float mul = 1f)
         {
-            bonus.MaxHealthAdd     += s.maxHealthBonus;
-            bonus.MoveSpeedAdd     += s.speedBonus;
-            bonus.AttackDamageAdd  += s.attackDamageBonus;
+            bonus.MaxHealthAdd     += s.maxHealthBonus     * mul;
+            bonus.MoveSpeedAdd     += s.speedBonus         * mul;
+            bonus.AttackDamageAdd  += s.attackDamageBonus  * mul;
             // attackSpeedBonus 은 SO 마스터값이라 ADD 로 취급 (베이스 attackSpeed 와 합산).
-            bonus.AttackSpeedMulPercent += s.attackSpeedBonus * 100f; // 0.1 → +10%
-            bonus.RangeAdd         += s.rangeBonus;
-            bonus.XpGainPercent    += s.xpGainBonus * 100f;            // 0.2 → +20%
+            bonus.AttackSpeedMulPercent += s.attackSpeedBonus * 100f * mul; // 0.1 → +10%
+            bonus.RangeAdd         += s.rangeBonus         * mul;
+            bonus.XpGainPercent    += s.xpGainBonus * 100f * mul;            // 0.2 → +20%
         }
 
         private static void ApplyAffixArray(ResolvedEquipmentBonus bonus, AffixLine[] lines)
