@@ -15,13 +15,14 @@ MonoBehaviour:
   id: basic_slime
   displayName: "\uAF2C\uB9C8 \uC2AC\uB77C\uC784"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: -270589178857242514, guid: 99fc79d8289d74e25ab2467aa4b1ad2a, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 30
   moveSpeed: 2
   damage: 5
   xpDrop: 10
   starDustDrop: 1
+  armor: 0
   tintColor: {r: 0.5, g: 0.85, b: 0.55, a: 1}
   scaleMultiplier: 1
   isMiniB: 0

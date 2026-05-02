@@ -15,13 +15,14 @@ MonoBehaviour:
   id: card_soldier
   displayName: "\uCE74\uB4DC \uBCD1\uC815"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 2589566186160019231, guid: c0afe7a3fcfcb451c816b0fb1ecec897, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 300
   moveSpeed: 1.3
   damage: 16
   xpDrop: 100
   starDustDrop: 14
+  armor: 0
   tintColor: {r: 0.95, g: 0.4, b: 0.5, a: 1}
   scaleMultiplier: 1.5
   isMiniB: 1

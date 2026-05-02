@@ -15,13 +15,14 @@ MonoBehaviour:
   id: bean_giant
   displayName: "\uCF69\uC54C \uAC70\uC778"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: -5299318351996086514, guid: 05634af1769a2447ba11d7583cd52244, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 280
   moveSpeed: 1
   damage: 14
   xpDrop: 90
   starDustDrop: 12
+  armor: 0
   tintColor: {r: 0.55, g: 0.85, b: 0.4, a: 1}
   scaleMultiplier: 1.6
   isMiniB: 1

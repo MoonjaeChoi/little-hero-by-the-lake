@@ -15,13 +15,14 @@ MonoBehaviour:
   id: queen_hearts
   displayName: "\uD558\uD2B8 \uC5EC\uC655"
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: 7473408198012226712, guid: f5a3afde6370041d4b3ea694f814258e, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
   maxHealth: 1100
   moveSpeed: 1.1
   damage: 32
   xpDrop: 260
   starDustDrop: 40
+  armor: 0
   tintColor: {r: 0.85, g: 0.3, b: 0.45, a: 1}
   scaleMultiplier: 2.3
   isMiniB: 0
