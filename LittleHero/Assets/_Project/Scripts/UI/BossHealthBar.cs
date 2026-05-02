@@ -21,7 +21,10 @@ namespace LittleHero
         {
             if (_root == null) _root = gameObject;
             if (_slider == null) _slider = GetComponentInChildren<Slider>(true);
-            HideRoot();
+            // 주의: _root 가 자기 자신이면 GameObject 비활성화 시 OnEnable 호출 안 됨 →
+            // 이벤트 구독 못 함 → 보스 spawn 이벤트 못 받는 버그 발생.
+            // 자식들만 비활성화하여 컴포넌트는 항상 활성 유지.
+            SetVisualActive(false);
         }
 
         private void OnEnable()
@@ -43,7 +46,7 @@ namespace LittleHero
         {
             if (boss == null) return;
             _trackedBoss = boss;
-            if (_root != null) _root.SetActive(true);
+            SetVisualActive(true);
             if (_nameText != null) _nameText.text = boss.Data != null ? boss.Data.displayName : "?";
             if (_slider != null)
             {
@@ -56,12 +59,20 @@ namespace LittleHero
         private void HandleDespawned()
         {
             _trackedBoss = null;
-            HideRoot();
+            SetVisualActive(false);
         }
 
-        private void HideRoot()
+        private void SetVisualActive(bool active)
         {
-            if (_root != null) _root.SetActive(false);
+            if (_root == null) return;
+            if (_root != gameObject)
+            {
+                _root.SetActive(active);
+                return;
+            }
+            // _root 가 자기 자신이면 자식들만 토글 (이 컴포넌트는 항상 활성 유지)
+            for (int i = 0; i < transform.childCount; i++)
+                transform.GetChild(i).gameObject.SetActive(active);
         }
 
         private void Update()

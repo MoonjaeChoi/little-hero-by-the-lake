@@ -209,6 +209,8 @@ MonoBehaviour:
   _bossEvery: 10
   _waveDuration: 30
   _baseSpawnCount: 8
+  _atticSceneName: Attic
+  _returnDelay: 2.5
 --- !u!1 &88155523
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &108471239
 RectTransform:
   m_ObjectHideFlags: 0
@@ -763,7 +765,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &259906958
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1900,7 +1902,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &790590526
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4044,7 +4046,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1895369401
 MonoBehaviour:
   m_ObjectHideFlags: 0
