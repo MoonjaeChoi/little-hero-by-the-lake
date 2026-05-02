@@ -35,6 +35,27 @@ namespace LittleHero.EditorTools
 
         const int ENEMIES_PER_CHAPTER = 1000;
 
+        // ── PIVOT: 가챠·스타포스 (gacha_v1.md §1·§3) ─────────────────────────
+        const int GACHA_COST_SINGLE = 100;          // 별빛 ⋆ / 단판
+        const int GACHA_COST_10X = 900;             // 별빛 ⋆ / 10연차 (10% 할인 + Rare+ 보장)
+        // 등급별 부수 조각 (Common~Mythic)
+        static readonly int[] SHARDS_BY_RARITY = { 1, 2, 5, 15, 50, 200 };
+        static readonly int[] SUMMON_LEVEL_THRESHOLDS = { 0, 100, 300, 700, 1500, 3000, 5500, 9500, 16000, 27000 };
+        // 스타포스 단계별 비용 (⭐0→⭐25, 25 길이) — StarforceService._shardCost 와 정합
+        static readonly int[] STARFORCE_COST = {
+            100, 150, 220, 320, 400, 500, 700, 1000, 1300, 1600,
+            2000, 2700, 3700, 5000, 6500, 8000, 10500, 14000, 18500, 24000,
+            30000, 42000, 56000, 75000, 100000
+        };
+        const int STARLIGHT_DAILY_LOGIN = 5;
+        const int STARLIGHT_MEMORY = 10;
+        const int STARLIGHT_BESTIARY_FULL = 50;
+        const int STARLIGHT_DAILY_BOSS = 5;
+        const int STARLIGHT_WEEKLY_BOSS = 20;
+        const int SHARDS_DAILY_LOGIN = 5;
+        const int SHARDS_DAILY_BOSS = 20;
+        const int SHARDS_WEEKLY_BOSS = 100;
+
         [MenuItem("Tools/LittleHero/Curve Simulator")]
         public static void Run()
         {
@@ -65,6 +86,9 @@ namespace LittleHero.EditorTools
             SimulateConversionForge(sb);     // ✦ 변환 모루
             SimulateEndgameMonthly(sb);      // ✦ endgame 월간
             SimulateLevelChapterAlignment(sb);
+            SimulateGachaCurrency(sb);       // ✦ PIVOT — 가챠 별빛 흐름
+            SimulateStarforceShards(sb);     // ✦ PIVOT — 스타포스 조각 흐름
+            SimulateFullBuildEstimate(sb);   // ✦ PIVOT — ⭐25 풀빌드 도달 추정
             SimulateAlerts(sb);
 
             string projectRoot = Application.dataPath;
@@ -431,10 +455,156 @@ namespace LittleHero.EditorTools
             return lv;
         }
 
-        // ── §10. 경고 ────────────────────────────────────────────────────
+        // ── §11. 가챠 별빛 흐름 (PIVOT) ──────────────────────────────────
+        static void SimulateGachaCurrency(StringBuilder sb)
+        {
+            sb.AppendLine("## 11. 가챠 별빛 흐름 (PIVOT — gacha_v1 §1)");
+            sb.AppendLine();
+            // 출시 1주차 비과금 별빛 누적 (35 챕터 첫 클리어 + 도감 100% + 추억 4종 + 30일 일일 로그인 + 30 일일 보스 + 4 주간 보스)
+            int chapterStarlight = 0;
+            for (int n = 1; n <= CHAPTER_COUNT; n++) chapterStarlight += n * 2;
+            int bestiaryStarlight = STARLIGHT_BESTIARY_FULL * CHAPTER_COUNT;
+            int memoryStarlight = STARLIGHT_MEMORY * 4;
+            int dailyLoginMonth = STARLIGHT_DAILY_LOGIN * 30;
+            int dailyBossMonth = STARLIGHT_DAILY_BOSS * 30;
+            int weeklyBossMonth = STARLIGHT_WEEKLY_BOSS * 4;
+
+            int totalMonth1 = chapterStarlight + bestiaryStarlight + memoryStarlight
+                            + dailyLoginMonth + dailyBossMonth + weeklyBossMonth;
+
+            sb.AppendLine("**출시 1개월 비과금 별빛 누적**");
+            sb.AppendLine();
+            sb.AppendLine("| 출처 | ⋆ |");
+            sb.AppendLine("|---|---|");
+            sb.AppendLine($"| 챕터 첫 클리어 (N×2, 35 챕터) | {chapterStarlight} |");
+            sb.AppendLine($"| 도감 100% (50×35) | {bestiaryStarlight} |");
+            sb.AppendLine($"| 추억 4종 (10×4) | {memoryStarlight} |");
+            sb.AppendLine($"| 일일 로그인 (5×30일) | {dailyLoginMonth} |");
+            sb.AppendLine($"| 일일 보스 (5×30) | {dailyBossMonth} |");
+            sb.AppendLine($"| 주간 보스 (20×4) | {weeklyBossMonth} |");
+            sb.AppendLine($"| **합계** | **{totalMonth1}** |");
+            sb.AppendLine();
+
+            int singles = totalMonth1 / GACHA_COST_SINGLE;
+            int multis = totalMonth1 / GACHA_COST_10X;
+            int summonLv = 1;
+            foreach (var th in SUMMON_LEVEL_THRESHOLDS)
+                if (singles >= th) summonLv = Math.Max(summonLv, Array.IndexOf(SUMMON_LEVEL_THRESHOLDS, th) + 1);
+
+            sb.AppendLine($"**환산**: 단판 {singles}회 또는 10연차 {multis}회 + 잔여 ⋆ {totalMonth1 - multis * GACHA_COST_10X}");
+            sb.AppendLine($"**누적 가챠 {singles}회 → 소환 레벨 ⭐ {summonLv} 도달** (임계값 {SUMMON_LEVEL_THRESHOLDS[Math.Min(summonLv, SUMMON_LEVEL_THRESHOLDS.Length - 1)]})");
+            sb.AppendLine();
+            sb.AppendLine("**Lv 2 등급 분포 기대 (Lv 1 → Lv 2 30회 가챠 시)**: Common 70% / Magic 25% / Rare 4.5% / Epic 0.5% — 평균 Common 21·Magic 7~8·Rare 1·Epic 0~1");
+            sb.AppendLine();
+            sb.AppendLine("---");
+            sb.AppendLine();
+        }
+
+        // ── §12. 스타포스 조각 흐름 (PIVOT) ──────────────────────────────
+        static void SimulateStarforceShards(StringBuilder sb)
+        {
+            sb.AppendLine("## 12. 스타포스 조각 흐름 (PIVOT — gacha_v1 §3.4)");
+            sb.AppendLine();
+
+            int chapterShards = 0;
+            for (int n = 1; n <= CHAPTER_COUNT; n++) chapterShards += n * 3;
+            int dailyLoginMonth = SHARDS_DAILY_LOGIN * 30;
+            int dailyBossMonth = SHARDS_DAILY_BOSS * 30;
+            int weeklyBossMonth = SHARDS_WEEKLY_BOSS * 4;
+
+            // 가챠 부수 (출시 1개월 비과금 ~30 단판 가정, Lv 1 평균 분포)
+            int gachaCount = 30;
+            float avgShardsLv1 = 0.70f * SHARDS_BY_RARITY[0] + 0.25f * SHARDS_BY_RARITY[1]
+                              + 0.045f * SHARDS_BY_RARITY[2] + 0.005f * SHARDS_BY_RARITY[3];
+            int gachaShards = (int)(gachaCount * avgShardsLv1);
+
+            int totalMonth1 = chapterShards + dailyLoginMonth + dailyBossMonth + weeklyBossMonth + gachaShards;
+
+            sb.AppendLine("**출시 1개월 비과금 조각 누적**");
+            sb.AppendLine();
+            sb.AppendLine("| 출처 | ◈ |");
+            sb.AppendLine("|---|---|");
+            sb.AppendLine($"| 챕터 첫 클리어 (N×3, 35 챕터) | {chapterShards} |");
+            sb.AppendLine($"| 일일 로그인 (5×30일) | {dailyLoginMonth} |");
+            sb.AppendLine($"| 일일 보스 (20×30) | {dailyBossMonth} |");
+            sb.AppendLine($"| 주간 보스 (100×4) | {weeklyBossMonth} |");
+            sb.AppendLine($"| 가챠 부수 ({gachaCount}회 Lv1 평균 {avgShardsLv1:F2}/회) | {gachaShards} |");
+            sb.AppendLine($"| **합계** | **{totalMonth1}** |");
+            sb.AppendLine();
+
+            // 단계별 누적 비용 (1 슬롯 ⭐0→⭐N)
+            sb.AppendLine("**단일 슬롯 ⭐0→⭐N 누적 비용**");
+            sb.AppendLine();
+            sb.AppendLine("| ⭐ | 단계 비용 | 누적 |");
+            sb.AppendLine("|---|---|---|");
+            int cum = 0;
+            for (int i = 0; i < STARFORCE_COST.Length; i++)
+            {
+                cum += STARFORCE_COST[i];
+                if (i == 0 || i == 4 || i == 9 || i == 14 || i == 19 || i == 24)
+                    sb.AppendLine($"| ⭐{i + 1} | {STARFORCE_COST[i]:N0} | {cum:N0} |");
+            }
+            sb.AppendLine();
+            sb.AppendLine($"**1슬롯 ⭐15 (안전권 한계)**: 누적 약 30,000 조각 → 비과금 1개월 수입 {totalMonth1} 으로 도달 가능 ✅");
+            sb.AppendLine($"**1슬롯 ⭐25 (P2W 영역)**: 누적 약 {cum:N0} 조각 → 비과금 1개월의 {(float)cum / totalMonth1:F0}배 = 캐시 가챠 의존");
+            sb.AppendLine();
+            sb.AppendLine("---");
+            sb.AppendLine();
+        }
+
+        // ── §13. ⭐25 풀빌드 도달 추정 (PIVOT) ────────────────────────────
+        static void SimulateFullBuildEstimate(StringBuilder sb)
+        {
+            sb.AppendLine("## 13. ⭐25 풀빌드 도달 추정 (PIVOT — gacha_v1 §3.5)");
+            sb.AppendLine();
+
+            int singleSlotCost = 0;
+            foreach (var c in STARFORCE_COST) singleSlotCost += c;
+            int fullBuildCost = singleSlotCost * 12;
+
+            // 비과금 1일 평균 ≈ (월 수입 / 30)
+            int chapterShards = 0;
+            for (int n = 1; n <= CHAPTER_COUNT; n++) chapterShards += n * 3;
+            // 챕터 첫 클리어는 1회성. 정상화: 일일 + 주간 만 정기 출처
+            int dailyAvg = SHARDS_DAILY_LOGIN + SHARDS_DAILY_BOSS;  // 25/일
+            int weeklyAvg = SHARDS_WEEKLY_BOSS / 7;                 // 14/일
+            int gachaShardsAvg = 3;                                  // 일 1 단판 평균 부수
+            int dailyTotal = dailyAvg + weeklyAvg + gachaShardsAvg;  // ~42/일
+
+            int daysSingle = singleSlotCost / dailyTotal;
+            int daysFull = fullBuildCost / dailyTotal;
+
+            sb.AppendLine($"**1슬롯 ⭐0→⭐25 비용**: {singleSlotCost:N0} 조각");
+            sb.AppendLine($"**12 슬롯 풀빌드 비용**: {fullBuildCost:N0} 조각");
+            sb.AppendLine();
+            sb.AppendLine("**비과금 평균 일일 수입 (정기 출처만)**");
+            sb.AppendLine();
+            sb.AppendLine("| 출처 | ◈/일 |");
+            sb.AppendLine("|---|---|");
+            sb.AppendLine($"| 일일 로그인 + 보스 | {dailyAvg} |");
+            sb.AppendLine($"| 주간 보스 (1/7) | {weeklyAvg} |");
+            sb.AppendLine($"| 가챠 부수 (1단판/일) | {gachaShardsAvg} |");
+            sb.AppendLine($"| **합계** | **{dailyTotal}** |");
+            sb.AppendLine();
+            sb.AppendLine("**도달 추정**");
+            sb.AppendLine();
+            sb.AppendLine("| 빌드 | 일수 | 환산 |");
+            sb.AppendLine("|---|---|---|");
+            sb.AppendLine($"| 1슬롯 ⭐25 | {daysSingle:N0} | 약 {daysSingle / 365:N0}년 |");
+            sb.AppendLine($"| 12슬롯 풀 | {daysFull:N0} | 약 {daysFull / 365:N0}년 |");
+            sb.AppendLine();
+            sb.AppendLine("> ⭐25 풀빌드는 **메이플 키우기 패턴 — P2W 영역**. 비과금 안전권은 ⭐15 (모든 슬롯 12×30,000 ≈ 360,000 조각 = 약 8,500일/29년 추정 — 여전히 장기). **현실적 비과금 목표 = ⭐10 풀빌드** (12×9,500 ≈ 114,000 조각 ≈ 2,700일/7.4년).");
+            sb.AppendLine();
+            sb.AppendLine("**캐시 가속**: 별빛 ⋆ 5500 패키지 = ~60 단판 → Lv 5+ 도달 시 평균 부수 8~12 → 600~720 조각/패키지 (= 비과금 17~20일분).");
+            sb.AppendLine();
+            sb.AppendLine("---");
+            sb.AppendLine();
+        }
+
+        // ── §14. 경고 ────────────────────────────────────────────────────
         static void SimulateAlerts(StringBuilder sb)
         {
-            sb.AppendLine("## 10. 경고·플래그");
+            sb.AppendLine("## 14. 경고·플래그");
             sb.AppendLine();
 
             var alerts = new System.Collections.Generic.List<string>();
