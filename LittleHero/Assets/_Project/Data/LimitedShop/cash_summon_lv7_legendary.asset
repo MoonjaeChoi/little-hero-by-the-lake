@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: cash_summon_lv7_legendary
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.LimitedShopOffer
   id: cash_summon_lv7_legendary
-  displayName: "\uC18C\uD658 \u2B507 \u2014 Legendary \uD655\uC815"
-  description: "\uCD9C\uC2DC \uD6C4 \u2014 Legendary \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C
-    \uD655\uC815 + \uC870\uAC01 30,000."
+  displayName: "\uC18C\uD658 \u2B507 \u2014 \uC804\uC124 \uD655\uC815"
+  description: "\uCD9C\uC2DC \uD6C4 \u2014 \uC804\uC124 \uB4F1\uAE09 \uBB34\uAE30
+    1\uAC1C \uD655\uC815 + \uC870\uAC01 30,000."
   icon: {fileID: 0}
   triggerType: 0
   triggerValue: 7

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.LimitedShopOffer
   id: free_chapter_25
   displayName: "25\uCC55\uD130 \uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4"
-  description: "25\uCC55\uD130 \uCCAB \uD074\uB9AC\uC5B4! \uC870\uAC01 15,000 + Epic
+  description: "25\uCC55\uD130 \uCCAB \uD074\uB9AC\uC5B4! \uC870\uAC01 15,000 + \uC601\uC6C5
     \uBB34\uAE30 1\uAC1C \uD655\uC815."
   icon: {fileID: 0}
   triggerType: 1

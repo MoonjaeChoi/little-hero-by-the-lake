@@ -21,8 +21,8 @@ namespace LittleHero.EditorTools
             // === 무료 핫딜 (별빛 ⋆) — limited_shop_v1.md §3.1 ===
             MakeOffer(
                 id: "free_summon_lv2",
-                displayName: "소환 기념 — Rare 무기",
-                description: "소환 레벨 ⭐2 도달 축하 패키지. Rare 등급 무기 1개 확정!",
+                displayName: "소환 기념 — 희귀 무기",
+                description: "소환 레벨 ⭐2 도달 축하 패키지. 희귀 등급 무기 1개 확정!",
                 trigger: LimitedTriggerType.SummonLevelReached, triggerValue: 2,
                 duration: 14, starlight: 200, iap: "",
                 rewards: new[] { Reward(LimitedRewardType.GuaranteedRarityPool, rarity: Rarity.Rare) });
@@ -52,7 +52,7 @@ namespace LittleHero.EditorTools
             MakeOffer(
                 id: "free_chapter_25",
                 displayName: "25챕터 클리어 보너스",
-                description: "25챕터 첫 클리어! 조각 15,000 + Epic 무기 1개 확정.",
+                description: "25챕터 첫 클리어! 조각 15,000 + 영웅 무기 1개 확정.",
                 trigger: LimitedTriggerType.ChapterFirstCleared, triggerValue: 25,
                 duration: 7, starlight: 1000, iap: "",
                 rewards: new[] {
@@ -63,7 +63,7 @@ namespace LittleHero.EditorTools
             // === 캐시 핫딜 (Unity IAP) — limited_shop_v1.md §3.2 ===
             MakeOffer(
                 id: "cash_newuser_starter",
-                displayName: "신규 유저 입문 패키지",
+                displayName: "새내기 입문 패키지",
                 description: "게임 시작 7일 한정! 별빛 1,000 + 조각 1,000 + 소환권 5장.",
                 trigger: LimitedTriggerType.NewUser, triggerValue: 0,
                 duration: 7, starlight: 0, iap: "LIMITED_NEWUSER_STARTER", discount: "-50%",
@@ -75,8 +75,8 @@ namespace LittleHero.EditorTools
 
             MakeOffer(
                 id: "cash_summon_lv3_rare",
-                displayName: "소환 ⭐3 — Rare 확정",
-                description: "Rare 등급 무기 1개 확정 + 조각 3,000.",
+                displayName: "소환 ⭐3 — 희귀 확정",
+                description: "희귀 등급 무기 1개 확정 + 조각 3,000.",
                 trigger: LimitedTriggerType.SummonLevelReached, triggerValue: 3,
                 duration: 14, starlight: 0, iap: "LIMITED_SUMMON_LV3_RARE", discount: "-40%",
                 rewards: new[] {
@@ -86,8 +86,8 @@ namespace LittleHero.EditorTools
 
             MakeOffer(
                 id: "cash_summon_lv5_epic",
-                displayName: "소환 ⭐5 — Epic 확정",
-                description: "Epic 등급 무기 1개 확정 + 조각 10,000 + 별빛 1,100.",
+                displayName: "소환 ⭐5 — 영웅 확정",
+                description: "영웅 등급 무기 1개 확정 + 조각 10,000 + 별빛 1,100.",
                 trigger: LimitedTriggerType.SummonLevelReached, triggerValue: 5,
                 duration: 14, starlight: 0, iap: "LIMITED_SUMMON_LV5_EPIC", discount: "-45%",
                 rewards: new[] {
@@ -98,8 +98,8 @@ namespace LittleHero.EditorTools
 
             MakeOffer(
                 id: "cash_summon_lv7_legendary",
-                displayName: "소환 ⭐7 — Legendary 확정",
-                description: "출시 후 — Legendary 등급 무기 1개 확정 + 조각 30,000.",
+                displayName: "소환 ⭐7 — 전설 확정",
+                description: "출시 후 — 전설 등급 무기 1개 확정 + 조각 30,000.",
                 trigger: LimitedTriggerType.SummonLevelReached, triggerValue: 7,
                 duration: 14, starlight: 0, iap: "LIMITED_SUMMON_LV7_LEGENDARY", discount: "-50%",
                 rewards: new[] {
@@ -122,7 +122,7 @@ namespace LittleHero.EditorTools
             MakeOffer(
                 id: "cash_chapter_20",
                 displayName: "20챕터 보너스",
-                description: "Rare 등급 무기 1개 확정 + 조각 15,000.",
+                description: "희귀 등급 무기 1개 확정 + 조각 15,000.",
                 trigger: LimitedTriggerType.ChapterFirstCleared, triggerValue: 20,
                 duration: 7, starlight: 0, iap: "LIMITED_CHAPTER_20", discount: "-40%",
                 rewards: new[] {
@@ -133,7 +133,7 @@ namespace LittleHero.EditorTools
             MakeOffer(
                 id: "cash_chapter_30",
                 displayName: "30챕터 보너스",
-                description: "Epic 등급 무기 1개 확정 + 조각 50,000 + 별빛 3,500.",
+                description: "영웅 등급 무기 1개 확정 + 조각 50,000 + 별빛 3,500.",
                 trigger: LimitedTriggerType.ChapterFirstCleared, triggerValue: 30,
                 duration: 7, starlight: 0, iap: "LIMITED_CHAPTER_30", discount: "-45%",
                 rewards: new[] {

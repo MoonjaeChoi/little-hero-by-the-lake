@@ -38,7 +38,7 @@ namespace LittleHero
             {
                 _priceText.text = offer.starlightPrice > 0
                     ? "별빛 ⋆ " + offer.starlightPrice
-                    : "캐시 결제";
+                    : "유료 결제";
             }
             if (_discountText != null)
             {

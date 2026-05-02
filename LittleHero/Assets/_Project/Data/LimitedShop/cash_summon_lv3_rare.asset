@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: cash_summon_lv3_rare
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.LimitedShopOffer
   id: cash_summon_lv3_rare
-  displayName: "\uC18C\uD658 \u2B503 \u2014 Rare \uD655\uC815"
-  description: "Rare \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C \uD655\uC815 + \uC870\uAC01
+  displayName: "\uC18C\uD658 \u2B503 \u2014 \uD76C\uADC0 \uD655\uC815"
+  description: "\uD76C\uADC0 \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C \uD655\uC815 + \uC870\uAC01
     3,000."
   icon: {fileID: 0}
   triggerType: 0

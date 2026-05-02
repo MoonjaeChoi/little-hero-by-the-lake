@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: cash_summon_lv5_epic
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.LimitedShopOffer
   id: cash_summon_lv5_epic
-  displayName: "\uC18C\uD658 \u2B505 \u2014 Epic \uD655\uC815"
-  description: "Epic \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C \uD655\uC815 + \uC870\uAC01
+  displayName: "\uC18C\uD658 \u2B505 \u2014 \uC601\uC6C5 \uD655\uC815"
+  description: "\uC601\uC6C5 \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C \uD655\uC815 + \uC870\uAC01
     10,000 + \uBCC4\uBE5B 1,100."
   icon: {fileID: 0}
   triggerType: 0

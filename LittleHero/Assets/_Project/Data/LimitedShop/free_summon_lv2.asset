@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: free_summon_lv2
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.LimitedShopOffer
   id: free_summon_lv2
-  displayName: "\uC18C\uD658 \uAE30\uB150 \u2014 Rare \uBB34\uAE30"
+  displayName: "\uC18C\uD658 \uAE30\uB150 \u2014 \uD76C\uADC0 \uBB34\uAE30"
   description: "\uC18C\uD658 \uB808\uBCA8 \u2B502 \uB3C4\uB2EC \uCD95\uD558 \uD328\uD0A4\uC9C0.
-    Rare \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C \uD655\uC815!"
+    \uD76C\uADC0 \uB4F1\uAE09 \uBB34\uAE30 1\uAC1C \uD655\uC815!"
   icon: {fileID: 0}
   triggerType: 0
   triggerValue: 2
