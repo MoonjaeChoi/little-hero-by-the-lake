@@ -48,6 +48,14 @@ namespace LittleHero
         [SerializeField] private GameObject[] _managedPanels;
         [SerializeField] private string[] _excludePanelNames = { "CharacterPanel" };
 
+        // ✦ PIVOT D-가챠 — 진입 버튼 (gacha_v1.md §5)
+        [Header("PIVOT D-가챠 — 진입 버튼")]
+        [SerializeField] private Button _gachaButton;
+        [SerializeField] private GachaPanel _gachaPanel;
+        [SerializeField] private Button _starforceButton;
+        [SerializeField] private SlotStarforcePanel _starforcePanel;
+        [SerializeField] private Text _starforceShardsHud;
+
         private GameObject _lastActivePanel;
 
         private void Awake()
@@ -114,6 +122,10 @@ namespace LittleHero
             }
             GameEvents.OnMagicCrystalChanged += UpdateMagicCrystals;
             GameEvents.OnStarlightChanged    += UpdateStarlight;
+            GameEvents.OnStarforceShardsChanged += UpdateStarforceShards;
+
+            if (_gachaButton != null) _gachaButton.onClick.AddListener(OpenGachaPanel);
+            if (_starforceButton != null) _starforceButton.onClick.AddListener(OpenStarforcePanel);
 
             if (_chapterButtons != null)
             {
@@ -147,6 +159,10 @@ namespace LittleHero
             }
             GameEvents.OnMagicCrystalChanged -= UpdateMagicCrystals;
             GameEvents.OnStarlightChanged    -= UpdateStarlight;
+            GameEvents.OnStarforceShardsChanged -= UpdateStarforceShards;
+
+            if (_gachaButton != null) _gachaButton.onClick.RemoveAllListeners();
+            if (_starforceButton != null) _starforceButton.onClick.RemoveAllListeners();
 
             if (_chapterButtons != null)
                 foreach (var entry in _chapterButtons)
@@ -163,6 +179,7 @@ namespace LittleHero
             UpdateStarFragments(frags);
             UpdateMagicCrystals(CurrencyService.MagicCrystals);
             UpdateStarlight(CurrencyService.Starlight);
+            UpdateStarforceShards(StarforceService.Shards);
             RefreshEndgameMenu();
             HandleReturnFromBossEncounter();
 
@@ -224,6 +241,22 @@ namespace LittleHero
         {
             if (_starlightText != null)
                 _starlightText.text = $"별빛 ⋆ {amount}";
+        }
+
+        private void UpdateStarforceShards(int amount)
+        {
+            if (_starforceShardsHud != null)
+                _starforceShardsHud.text = $"스타포스 조각 ◈ {amount}";
+        }
+
+        private void OpenGachaPanel()
+        {
+            if (_gachaPanel != null) _gachaPanel.gameObject.SetActive(true);
+        }
+
+        private void OpenStarforcePanel()
+        {
+            if (_starforcePanel != null) _starforcePanel.gameObject.SetActive(true);
         }
 
         private void RefreshEndgameMenu()
