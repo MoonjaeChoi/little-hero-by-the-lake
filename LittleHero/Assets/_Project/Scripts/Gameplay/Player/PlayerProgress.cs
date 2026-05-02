@@ -97,7 +97,10 @@ namespace LittleHero
             int baseXp = enemy.isBoss ? 40 : enemy.isMiniB ? 10 : 1;
             int n = CurrentChapterNumber();
             float modifier = 1f + n * 0.1f;
-            int gain = Mathf.RoundToInt(baseXp * modifier);
+            // PIVOT v3 — 적 XP × 0.1 (보스 제외). 마리수 ×10 으로 합산 동일.
+            var balance = GameManager.Instance != null ? GameManager.Instance.Balance : null;
+            float v3XpMul = (balance != null && !enemy.isBoss) ? balance.enemyXpMul : 1f;
+            int gain = Mathf.RoundToInt(baseXp * modifier * v3XpMul);
             AddXp(gain);
         }
 

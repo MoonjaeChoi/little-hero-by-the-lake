@@ -31,8 +31,12 @@ namespace LittleHero
         {
             _data = data;
             float m = Mathf.Max(0.01f, statMultiplier);
-            _maxHealth     = data.maxHealth * m;
-            _attackDamage  = data.damage    * m;
+            // PIVOT v3 — 적 1/10 (보스 제외, 보스 의미 보존). game_pivot_v2.md PIVOT v3.
+            var balance = GameManager.Instance != null ? GameManager.Instance.Balance : null;
+            float v3HpMul = (balance != null && !data.isBoss) ? balance.enemyHpMul : 1f;
+            float v3AtkMul = (balance != null && !data.isBoss) ? balance.enemyAtkMul : 1f;
+            _maxHealth     = data.maxHealth * m * v3HpMul;
+            _attackDamage  = data.damage    * m * v3AtkMul;
             _currentHealth = _maxHealth;
             _isDead = false;
             ApplyAppearance(data);
@@ -75,11 +79,14 @@ namespace LittleHero
                 // tint 적용 — 신규 sprite는 흰색 유지(원본 색 보존), placeholder 원형은 tintColor 적용
                 sr.color = data.icon != null ? Color.white : data.tintColor;
             }
-            // P11 — 768×768 PNG 베이스 0.4 → 0.55 (small≈0.5, boss≈0.94 vs player 0.6 — 보스 위압감 확보).
-            // 개별 적은 EnemyData.scaleMultiplier 로 fine-tune.
+            // P11 — 768×768 PNG 베이스 0.4 → 0.55. PIVOT v3 — 적 1/10 scale (보스 제외).
             float baseScale = data.scaleMultiplier > 0f ? data.scaleMultiplier : 1f;
             float spriteScale = data.icon != null ? 0.55f : 1f;
-            transform.localScale = new Vector3(baseScale * spriteScale, baseScale * spriteScale, 1f);
+            // PIVOT v3 적 scale × 0.1 (보스 제외, 위압감 보존)
+            var balance = GameManager.Instance != null ? GameManager.Instance.Balance : null;
+            float v3ScaleMul = (balance != null && !data.isBoss) ? balance.enemyScaleMul : 1f;
+            float finalScale = baseScale * spriteScale * v3ScaleMul;
+            transform.localScale = new Vector3(finalScale, finalScale, 1f);
         }
 
         public void TakeDamage(float damage)

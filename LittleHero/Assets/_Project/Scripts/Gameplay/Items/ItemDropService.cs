@@ -138,6 +138,9 @@ namespace LittleHero
                 DropSource.Shop => 1.0f,
                 _ => 0f,
             };
+            // PIVOT v3 — 적 드랍 확률 × 0.1 (마리수 ×10 으로 합산 동일). MiniBoss/Boss 변경 X.
+            if (ctx.source == DropSource.Enemy && _config != null)
+                p *= _config.enemyDropChanceMul;
             return rng.NextDouble() < p;
         }
 

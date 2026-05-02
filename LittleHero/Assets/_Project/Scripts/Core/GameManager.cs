@@ -53,7 +53,9 @@ namespace LittleHero
             float dustMult = 1f + (MetaProgression.Instance != null
                 ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.StarDustGain)
                 : 0f);
-            int drop = Mathf.RoundToInt(data.starDustDrop * dustMult);
+            // PIVOT v3 — 적 별가루 × 0.1 (보스 제외). 마리수 ×10 으로 합산 동일.
+            float v3DustMul = (Balance != null && !data.isBoss) ? Balance.enemyStarDustMul : 1f;
+            int drop = Mathf.RoundToInt(data.starDustDrop * dustMult * v3DustMul);
             if (drop > 0) AddStarDust(drop);
         }
 

@@ -92,8 +92,13 @@ namespace LittleHero
             if (config.enemyPool == null || config.enemyPool.Length == 0)
                 yield break;
 
-            float interval = config.duration / Mathf.Max(1, count);
-            for (int i = 0; i < count; i++)
+            // PIVOT v3 — spawn ×10 (game_pivot_v2.md PIVOT v3). interval × 0.1 = ×10 빈도.
+            var balance = GameManager.Instance != null ? GameManager.Instance.Balance : null;
+            float spawnMul = balance != null ? Mathf.Max(0.01f, balance.spawnIntervalMul) : 1f;
+            float interval = (config.duration / Mathf.Max(1, count)) * spawnMul;
+            // 총 spawn 수 = count / spawnIntervalMul (1/10 → ×10)
+            int totalCount = Mathf.RoundToInt(count / Mathf.Max(0.01f, spawnMul));
+            for (int i = 0; i < totalCount; i++)
             {
                 EnemyData data = config.enemyPool[UnityEngine.Random.Range(0, config.enemyPool.Length)];
                 SpawnEnemy(data);
