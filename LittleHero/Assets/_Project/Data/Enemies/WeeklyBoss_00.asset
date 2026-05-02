@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 
   icon: {fileID: 2042925604989110232, guid: 0f12e508b9e3545ad82a7b5e03d1b648, type: 3}
   prefab: {fileID: 1811896067693556654, guid: c6bdb3086e8864842afb211d6a9cdea7, type: 3}
-  maxHealth: 2500
+  maxHealth: 25000
   moveSpeed: 1.6
   damage: 150
   xpDrop: 100
