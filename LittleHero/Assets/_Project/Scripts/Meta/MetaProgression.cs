@@ -87,6 +87,7 @@ namespace LittleHero
             GameEvents.OnChapterCleared    += HandleChapterCleared;
             GameEvents.OnMemoryDiscovered  += HandleMemoryDiscovered;
             GameEvents.OnEnemyKilled       += HandleEnemyKilled;
+            GameEvents.OnPlayerDied        += FlushDrops;
         }
 
         private void OnDisable()
@@ -94,6 +95,33 @@ namespace LittleHero
             GameEvents.OnChapterCleared    -= HandleChapterCleared;
             GameEvents.OnMemoryDiscovered  -= HandleMemoryDiscovered;
             GameEvents.OnEnemyKilled       -= HandleEnemyKilled;
+            GameEvents.OnPlayerDied        -= FlushDrops;
+        }
+
+        // PIVOT v3 Phase 2 — drop batching (game_pivot_v2.md GC critical 해결)
+        // 적 사망 시 SaveData.equipmentInstances 직접 append + Save 호출 폐기 →
+        // _pendingDrops List 에 메모리만 append, Chapter 클리어/사망 시점 1회 일괄 Save.
+        private readonly System.Collections.Generic.List<EquipmentInstance> _pendingDrops
+            = new System.Collections.Generic.List<EquipmentInstance>(512);
+
+        public void QueueDrop(EquipmentInstance instance)
+        {
+            if (instance == null) return;
+            _pendingDrops.Add(instance);
+        }
+
+        public void FlushDrops()
+        {
+            if (_pendingDrops.Count == 0) return;
+            var existing = Data.equipmentInstances ?? new EquipmentInstance[0];
+            var arr = new EquipmentInstance[existing.Length + _pendingDrops.Count];
+            for (int i = 0; i < existing.Length; i++) arr[i] = existing[i];
+            for (int i = 0; i < _pendingDrops.Count; i++) arr[existing.Length + i] = _pendingDrops[i];
+            Data.equipmentInstances = arr;
+            int count = _pendingDrops.Count;
+            _pendingDrops.Clear();
+            SaveSystem.Save(Data);
+            Debug.Log($"[MetaProgression] FlushDrops: {count} 장비 일괄 저장");
         }
 
         private void HandleEnemyKilled(EnemyData data)
@@ -143,6 +171,7 @@ namespace LittleHero
         private void HandleChapterCleared(ChapterData chapter)
         {
             if (chapter == null) return;
+            FlushDrops();  // PIVOT v3 — 챕터 클리어 시점 1회 Save (drop batching)
             AddStarFragments(chapter.starFragmentReward);
         }
 

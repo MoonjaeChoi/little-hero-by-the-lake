@@ -46,9 +46,12 @@ namespace LittleHero
             _baseScaleY = transform.localScale.y;
             // 적별 다른 위상으로 전체 sway 가 동기화되지 않게 무작위 시작점
             _swayPhase = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+            // PIVOT v3 Phase 2 — 단일 Update 패턴 (EnemyAnimationManager 위임)
+            EnemyAnimationManager.Register(this);
         }
 
-        private void Update()
+        // PIVOT v3 Phase 2 — EnemyAnimationManager 가 매 프레임 호출 (Unity Update callback 폐기)
+        public void UpdateAnim(float time)
         {
             if (_isDead || _sr == null) return;
 
@@ -61,8 +64,7 @@ namespace LittleHero
             }
 
             // 2) 가벼운 scale wobble (호흡 효과) — Rigidbody Y 안 건드림
-            //    Y squish/stretch 만 → Rigidbody position 영향 X
-            float wobble = Mathf.Sin(Time.time * 4f + _swayPhase) * 0.04f;
+            float wobble = Mathf.Sin(time * 4f + _swayPhase) * 0.04f;
             transform.localScale = new Vector3(
                 _baseScaleX,
                 _baseScaleY * (1f + wobble),
@@ -104,17 +106,16 @@ namespace LittleHero
         private void Die()
         {
             _isDead = true;
+            // PIVOT v3 Phase 2 — Animation Manager 에서 unregister (Update 폐기)
+            EnemyAnimationManager.Unregister(this);
             GameEvents.RaiseEnemyKilled(_data);
             OnDied?.Invoke(this);
 
             // PIVOT v2 — 적 사망 시 장비 드랍 (game_pivot_v2.md §3).
             TryDropEquipment();
 
-            // Phase G2 — 적 처치 시 별 흩어짐 VFX (CLAUDE.md §2 절대 원칙)
-            if (_cachedDeathFx == null)
-                _cachedDeathFx = Resources.Load<GameObject>("VFX/StarBurstFx");
-            if (_cachedDeathFx != null)
-                Instantiate(_cachedDeathFx, transform.position, Quaternion.identity);
+            // PIVOT v3 Phase 2 — VfxPool 재사용 (Instantiate 매 처치 폐기, GC critical)
+            VfxPool.SpawnStarBurst(transform.position);
 
             // 풀에서 반환되지 않은 경우 안전 비활성화
             if (gameObject.activeSelf)
@@ -136,18 +137,9 @@ namespace LittleHero
             };
             var instance = ItemDropService.TryDrop(ctx);
             if (instance == null) return;
-            // SaveData 인벤토리에 자동 추가
-            var meta = MetaProgression.Instance;
-            if (meta != null && meta.Data != null)
-            {
-                int len = meta.Data.equipmentInstances?.Length ?? 0;
-                var arr = new EquipmentInstance[len + 1];
-                for (int i = 0; i < len; i++) arr[i] = meta.Data.equipmentInstances[i];
-                arr[len] = instance;
-                meta.Data.equipmentInstances = arr;
-                SaveSystem.Save(meta.Data);
-                Debug.Log($"[Drop] {_data.displayName} → {instance.templateId} ({(int)ctx.source})");
-            }
+            // PIVOT v3 Phase 2 — drop batching (GC critical). 매 드랍 SaveData append+Save 폐기.
+            // MetaProgression._pendingDrops 에 메모리만 append, ChapterCleared/PlayerDied 시 일괄 Save.
+            MetaProgression.Instance?.QueueDrop(instance);
         }
     }
 }

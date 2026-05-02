@@ -87,6 +87,9 @@ namespace LittleHero
             CheckWaveComplete();
         }
 
+        // PIVOT v3 Phase 2 — 동시 적 cap (game_pivot_v2.md 안전장치). 1,000 이상 시 spawn 일시 중지.
+        private const int MAX_CONCURRENT_ENEMIES = 1000;
+
         private IEnumerator SpawnRegular(WaveConfig config, int count)
         {
             if (config.enemyPool == null || config.enemyPool.Length == 0)
@@ -100,6 +103,10 @@ namespace LittleHero
             int totalCount = Mathf.RoundToInt(count / Mathf.Max(0.01f, spawnMul));
             for (int i = 0; i < totalCount; i++)
             {
+                // PIVOT v3 Phase 2 — 동시 적 1,000 cap. 도달 시 0.5초 대기 후 재시도.
+                while (_activeEnemies.Count >= MAX_CONCURRENT_ENEMIES)
+                    yield return new WaitForSeconds(0.5f);
+
                 EnemyData data = config.enemyPool[UnityEngine.Random.Range(0, config.enemyPool.Length)];
                 SpawnEnemy(data);
                 yield return new WaitForSeconds(interval);
