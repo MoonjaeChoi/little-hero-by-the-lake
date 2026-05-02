@@ -7277,6 +7277,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 720393548}
   _enhanceBadgeText: {fileID: 1437422442}
   _slotLabelText: {fileID: 629567467}
+  _emptySlotSprite: {fileID: -2863046546584808134, guid: afa90d68ffcd2445f932f73c1a6189a9, type: 3}
 --- !u!224 &368647453
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12869,6 +12870,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 1050778313}
   _enhanceBadgeText: {fileID: 1845375201}
   _slotLabelText: {fileID: 2063340249}
+  _emptySlotSprite: {fileID: 6958299579171858707, guid: 778bc7b5a05674e4da51753064567d89, type: 3}
 --- !u!224 &583345422
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14226,6 +14228,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 434330016}
   _enhanceBadgeText: {fileID: 1114625447}
   _slotLabelText: {fileID: 1864478081}
+  _emptySlotSprite: {fileID: -4116569525418987983, guid: e8880f596c8064442a69589b328bbe24, type: 3}
 --- !u!224 &631078386
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16938,6 +16941,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 1513579861}
   _enhanceBadgeText: {fileID: 1035589204}
   _slotLabelText: {fileID: 491615055}
+  _emptySlotSprite: {fileID: 2794097184294867663, guid: fcbe8f6a4ca0c4f6ea8c25091b72f3e3, type: 3}
 --- !u!224 &693058333
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18141,6 +18145,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 1306187504}
   _enhanceBadgeText: {fileID: 1935844995}
   _slotLabelText: {fileID: 678299301}
+  _emptySlotSprite: {fileID: -4783893380155622411, guid: 0286eee7cb9984417a780a175f1907cf, type: 3}
 --- !u!224 &736771954
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21331,6 +21336,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 265217831}
   _enhanceBadgeText: {fileID: 1114635658}
   _slotLabelText: {fileID: 732974301}
+  _emptySlotSprite: {fileID: 2356501979621042160, guid: ecdfef556f5ca44749fa2e955ba4ee12, type: 3}
 --- !u!224 &854630561
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26256,6 +26262,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 603203951}
   _enhanceBadgeText: {fileID: 1308234561}
   _slotLabelText: {fileID: 1423013750}
+  _emptySlotSprite: {fileID: -5544764632694304532, guid: 3edb8f116136a40daa3e5c9279b542a6, type: 3}
 --- !u!224 &1049275857
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30232,6 +30239,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 303762843}
   _enhanceBadgeText: {fileID: 121351378}
   _slotLabelText: {fileID: 1195702085}
+  _emptySlotSprite: {fileID: 2378148875597440760, guid: 556de7571af4d4337abb929e0ea12f07, type: 3}
 --- !u!224 &1209829058
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37687,6 +37695,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 327206336}
   _enhanceBadgeText: {fileID: 1356047835}
   _slotLabelText: {fileID: 420812377}
+  _emptySlotSprite: {fileID: -7947320728810235741, guid: 04e8cbe679e3d40b7b4dc5e6598ce1c0, type: 3}
 --- !u!224 &1580224370
 RectTransform:
   m_ObjectHideFlags: 0
@@ -40798,6 +40807,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 1276187397}
   _enhanceBadgeText: {fileID: 469232494}
   _slotLabelText: {fileID: 93581311}
+  _emptySlotSprite: {fileID: -5567063545260545795, guid: d01585cc40ca045179ae5b882d8db27b, type: 3}
 --- !u!224 &1746470234
 RectTransform:
   m_ObjectHideFlags: 0
@@ -41996,6 +42006,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 512462854}
   _enhanceBadgeText: {fileID: 294438135}
   _slotLabelText: {fileID: 1271686587}
+  _emptySlotSprite: {fileID: 3102214911937244294, guid: 6ca689375631c4f3c93e00bc0ba09e31, type: 3}
 --- !u!224 &1775717444
 RectTransform:
   m_ObjectHideFlags: 0
@@ -47858,6 +47869,7 @@ MonoBehaviour:
   _lockOverlay: {fileID: 879142242}
   _enhanceBadgeText: {fileID: 841890178}
   _slotLabelText: {fileID: 1793178223}
+  _emptySlotSprite: {fileID: 2334115979217190278, guid: 2e1fc7c2197de4befbcbeea67b0ed537, type: 3}
 --- !u!224 &2009106287
 RectTransform:
   m_ObjectHideFlags: 0

@@ -18,6 +18,7 @@ namespace LittleHero
         [SerializeField] private Image _lockOverlay;
         [SerializeField] private Text _enhanceBadgeText;
         [SerializeField] private Text _slotLabelText;
+        [SerializeField] private Sprite _emptySlotSprite;  // 빈 슬롯 placeholder (Icon_Slot_*)
 
         public EquipSlot Slot => _slot;
 
@@ -50,7 +51,19 @@ namespace LittleHero
             }
             else
             {
-                if (_icon != null) _icon.enabled = false;
+                // 빈 슬롯: _emptySlotSprite (Icon_Slot_*) placeholder 표시
+                if (_icon != null)
+                {
+                    if (_emptySlotSprite != null)
+                    {
+                        _icon.sprite = _emptySlotSprite;
+                        _icon.enabled = unlocked;
+                    }
+                    else
+                    {
+                        _icon.enabled = false;
+                    }
+                }
                 if (_enhanceBadgeText != null) _enhanceBadgeText.text = "";
             }
         }
