@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_time_spirit
   displayName: "\uC2DC\uAC04 \uC815\uB839"
   description: 
-  icon: {fileID: 1957152677898543250, guid: 2fa1249d1dc07498c95d53cac16a29e1, type: 3}
+  icon: {fileID: 21300000, guid: 2fa1249d1dc07498c95d53cac16a29e1, type: 3}
   slot: 5
   rarity: 3
   baseStats:

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_quick_dagger
   displayName: "\uBE60\uB978 \uB2E8\uAC80"
   description: 
-  icon: {fileID: -2893802096621092371, guid: b10a3d0bca6b74fd6b71751eb2559662, type: 3}
+  icon: {fileID: 21300000, guid: b10a3d0bca6b74fd6b71751eb2559662, type: 3}
   slot: 5
   rarity: 0
   baseStats:

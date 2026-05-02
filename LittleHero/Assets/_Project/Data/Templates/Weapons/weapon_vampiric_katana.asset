@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_vampiric_katana
   displayName: "\uD761\uD608 \uCE74\uD0C0\uB098"
   description: 
-  icon: {fileID: -2486202895975305688, guid: 986e148573095470fa31df855731288a, type: 3}
+  icon: {fileID: 21300000, guid: 986e148573095470fa31df855731288a, type: 3}
   slot: 5
   rarity: 2
   baseStats:

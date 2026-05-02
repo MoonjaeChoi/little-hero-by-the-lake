@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_abyss_hammer
   displayName: "\uC2EC\uC5F0\uC758 \uB9DD\uCE58"
   description: 
-  icon: {fileID: 1565018222142629744, guid: b23a19a252a7b47a79dbf9b10257dfab, type: 3}
+  icon: {fileID: 21300000, guid: b23a19a252a7b47a79dbf9b10257dfab, type: 3}
   slot: 5
   rarity: 3
   baseStats:

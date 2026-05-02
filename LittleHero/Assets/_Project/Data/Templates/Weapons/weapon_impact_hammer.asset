@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_impact_hammer
   displayName: "\uCDA9\uACA9 \uB9DD\uCE58"
   description: 
-  icon: {fileID: 7831593428658708330, guid: 88bda94ef69ca42f890a93b2331d1290, type: 3}
+  icon: {fileID: 21300000, guid: 88bda94ef69ca42f890a93b2331d1290, type: 3}
   slot: 5
   rarity: 0
   baseStats:

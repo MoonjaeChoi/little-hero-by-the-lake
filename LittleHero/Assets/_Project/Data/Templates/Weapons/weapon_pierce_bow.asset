@@ -15,7 +15,7 @@ MonoBehaviour:
   id: weapon_pierce_bow
   displayName: "\uAD00\uD1B5\uC758 \uD65C"
   description: 
-  icon: {fileID: 3124126297490829037, guid: eebc484c65c3b4d9184fd88659d3e2ea, type: 3}
+  icon: {fileID: 21300000, guid: eebc484c65c3b4d9184fd88659d3e2ea, type: 3}
   slot: 5
   rarity: 1
   baseStats:
