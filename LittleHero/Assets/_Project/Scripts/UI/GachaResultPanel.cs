@@ -23,6 +23,14 @@ namespace LittleHero
         [Header("displayName lookup")]
         [SerializeField] private GachaPool _pool;
 
+        [Header("등급별 frame (6 Image, 결과 시 1개만 활성)")]
+        [SerializeField] private Image _frameCommon;
+        [SerializeField] private Image _frameMagic;
+        [SerializeField] private Image _frameRare;
+        [SerializeField] private Image _frameEpic;
+        [SerializeField] private Image _frameLegendary;
+        [SerializeField] private Image _frameMythic;
+
         [Header("등급별 색")]
         [SerializeField] private Color _commonColor    = new Color(0.85f, 0.85f, 0.85f);
         [SerializeField] private Color _magicColor     = new Color(0.5f, 0.85f, 1f);
@@ -47,6 +55,7 @@ namespace LittleHero
         {
             if (result == null) return;
             gameObject.SetActive(true);
+            ActivateFrame(result.rarity);
 
             string label = ResolveTemplateName(result);
             if (_summaryText != null) _summaryText.text = label;
@@ -73,6 +82,14 @@ namespace LittleHero
             int totalShards = 0;
             int highestRarity = 0;
             int newLevel = 0;
+
+            // 최고 등급으로 frame 활성
+            for (int i = 0; i < results.Length; i++)
+                if (results[i] != null && (int)results[i].rarity > highestRarity)
+                    highestRarity = (int)results[i].rarity;
+            ActivateFrame((Rarity)highestRarity);
+            // (highestRarity 는 후속 sb 루프에서도 재계산되니 0으로 리셋)
+            highestRarity = 0;
 
             var sb = new StringBuilder();
             sb.AppendLine("10연차 결과");
@@ -104,6 +121,16 @@ namespace LittleHero
         }
 
         public void Close() => gameObject.SetActive(false);
+
+        private void ActivateFrame(Rarity rarity)
+        {
+            if (_frameCommon    != null) _frameCommon.gameObject.SetActive(rarity == Rarity.Common);
+            if (_frameMagic     != null) _frameMagic.gameObject.SetActive(rarity == Rarity.Magic);
+            if (_frameRare      != null) _frameRare.gameObject.SetActive(rarity == Rarity.Rare);
+            if (_frameEpic      != null) _frameEpic.gameObject.SetActive(rarity == Rarity.Epic);
+            if (_frameLegendary != null) _frameLegendary.gameObject.SetActive(rarity == Rarity.Legendary);
+            if (_frameMythic    != null) _frameMythic.gameObject.SetActive(rarity == Rarity.Mythic);
+        }
 
         private string ResolveTemplateName(GachaResult r)
         {
