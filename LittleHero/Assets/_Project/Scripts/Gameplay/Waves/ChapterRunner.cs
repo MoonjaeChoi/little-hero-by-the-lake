@@ -135,18 +135,19 @@ namespace LittleHero
                 if (bgGO != null) _backgroundRenderer = bgGO.GetComponent<SpriteRenderer>();
             }
             if (_backgroundRenderer == null || _chapterData?.coverArt == null) return;
-            // PIVOT v3 — Tiled 무한 반복 ground. drawMode=Tiled + size 큰 영역 + sprite 반복.
+            // PIVOT v3 — 정적 BG (사용자 요청 2026-05-03: BG 안 움직이고 player·적만 이동).
+            // Tiled 절대 좌표 + 매우 큰 size → player 가 영역 벗어나도 안 보일 때까지 충분.
             _backgroundRenderer.sprite = _chapterData.coverArt;
             _backgroundRenderer.sortingOrder = -100;
             _backgroundRenderer.drawMode = SpriteDrawMode.Tiled;
             _backgroundRenderer.tileMode = SpriteTileMode.Continuous;
-            _backgroundRenderer.size = new Vector2(80f, 80f);  // 80×80 unit (카메라 ortho 8 = 16 width × 5)
+            _backgroundRenderer.size = new Vector2(300f, 300f);  // 300×300 unit, 절대 좌표
             _backgroundRenderer.transform.localScale = Vector3.one;
             _backgroundRenderer.transform.position = Vector3.zero;
             _backgroundRenderer.color = Color.white;
-            // BackgroundFollow 컴포넌트 추가 — player 따라 이동 (무한 ground 효과)
+            // BackgroundFollow 제거 (BG 정적, player 추적 X)
             var follow = _backgroundRenderer.GetComponent<BackgroundFollow>();
-            if (follow == null) _backgroundRenderer.gameObject.AddComponent<BackgroundFollow>();
+            if (follow != null) Object.Destroy(follow);
         }
 
         private WaveConfig BuildWaveConfig(int waveNumber)
