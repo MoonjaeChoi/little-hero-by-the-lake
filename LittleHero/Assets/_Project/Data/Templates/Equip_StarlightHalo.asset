@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_StarlightHalo
   displayName: "\uBCC4\uBE5B \uD6C4\uAD11"
   description: 
-  icon: {fileID: 2723365453023647494, guid: 7b59a3f6f1fdc4eb092962a116b2aec1, type: 3}
+  icon: {fileID: -4812181575544015350, guid: aa3167cba234c48958023f29c8cbe09d, type: 3}
   slot: 0
   rarity: 2
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 0
     count: 1
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

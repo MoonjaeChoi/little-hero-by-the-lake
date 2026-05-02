@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_HaloLight
   displayName: "\uBC18\uC9DD\uC774\uB294 \uD6C4\uAD11"
   description: 
-  icon: {fileID: -7473132296661859926, guid: 71d21e4686fcf4aa9bf823e605bfdbe6, type: 3}
+  icon: {fileID: 3752899889965335683, guid: 6fbe86d5bc3114430a7bdb91ac44caf1, type: 3}
   slot: 0
   rarity: 0
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 0
     count: 1
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

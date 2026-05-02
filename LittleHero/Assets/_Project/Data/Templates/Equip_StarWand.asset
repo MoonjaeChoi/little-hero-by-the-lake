@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_StarWand
   displayName: "\uBCC4 \uC9C0\uD321\uC774"
   description: 
-  icon: {fileID: 6616322432424907181, guid: 8b2dc25c2c887402f845b73604e4c1b2, type: 3}
+  icon: {fileID: 2602660446962001262, guid: 371189fd2cad0454d98c56cc6cdf48ee, type: 3}
   slot: 5
   rarity: 0
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 6
     count: 1
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_FairyFriend
   displayName: "\uC694\uC815 \uCE5C\uAD6C"
   description: 
-  icon: {fileID: -1854112368490917219, guid: eb694030d18c34d8faf56d0d13f68880, type: 3}
+  icon: {fileID: 7161186645792023202, guid: 4d45cf4f14bda4e03836fa078768146f, type: 3}
   slot: 11
   rarity: 1
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 3
     count: 2
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

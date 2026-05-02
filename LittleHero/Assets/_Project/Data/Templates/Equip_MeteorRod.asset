@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_MeteorRod
   displayName: "\uC720\uC131 \uB9C9\uB300\uAE30"
   description: 
-  icon: {fileID: -2762256035120528957, guid: 26f1e6f76d45a4db69313b303bb06114, type: 3}
+  icon: {fileID: 4546555144523302038, guid: 9abcf2a56dfca4772b7cdeeadfdc8449, type: 3}
   slot: 5
   rarity: 2
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 12
     count: 2
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_DragonflyWings
   displayName: "\uC7A0\uC790\uB9AC \uB0A0\uAC1C"
   description: 
-  icon: {fileID: 7121649062890369815, guid: 914461d716cf24935af0b102acd32587, type: 3}
+  icon: {fileID: 5056219877782210331, guid: a038381bd0a7f434ca8241f85a31e86e, type: 3}
   slot: 3
   rarity: 1
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 0
     count: 1
     projectilePrefab: {fileID: 0}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

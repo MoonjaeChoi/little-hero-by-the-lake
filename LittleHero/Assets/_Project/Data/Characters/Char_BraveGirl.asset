@@ -15,7 +15,7 @@ MonoBehaviour:
   id: brave_girl
   displayName: "\uC529\uC529\uD55C \uC18C\uB140"
   description: 
-  portrait: {fileID: -8188201727400294438, guid: 4f260c916db4d46f293af8a4c1f6830d, type: 3}
+  portrait: {fileID: -1027288345754614873, guid: f0823e952db484eca9b38e86a15850ea, type: 3}
   prefab: {fileID: 0}
   maxHealth: 130
   moveSpeed: 4.5

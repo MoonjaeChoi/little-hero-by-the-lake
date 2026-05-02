@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_BraveHat
   displayName: "\uC6A9\uAE30 \uBAA8\uC790"
   description: 
-  icon: {fileID: -1905225272367456619, guid: 1ebae215b1cbc49678cd7d58817d43ad, type: 3}
+  icon: {fileID: -8127528164268556191, guid: 83aa1c1c83e3b47b4962427ed2ea1bea, type: 3}
   slot: 0
   rarity: 1
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 0
     count: 1
     projectilePrefab: {fileID: 0}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

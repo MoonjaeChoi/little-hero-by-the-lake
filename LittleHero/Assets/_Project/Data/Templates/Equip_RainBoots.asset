@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_RainBoots
   displayName: "\uBE44\uAD6C\uB984 \uBD80\uCE20"
   description: 
-  icon: {fileID: -7383868662419484212, guid: db3cd03ffcf4b4e68b4ace3df62552f5, type: 3}
+  icon: {fileID: 5720320178660978392, guid: a11eebe91d9ff4a3499b1af749cd83b6, type: 3}
   slot: 6
   rarity: 2
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 8
     count: 5
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3

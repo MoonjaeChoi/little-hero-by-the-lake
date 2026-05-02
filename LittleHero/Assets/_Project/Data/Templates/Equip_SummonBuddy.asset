@@ -15,7 +15,7 @@ MonoBehaviour:
   id: Equip_SummonBuddy
   displayName: "\uC544\uAE30 \uBCC4\uCE5C\uAD6C"
   description: 
-  icon: {fileID: -7412918133470649350, guid: 4c5c12353fc3f4380a3c190990edc558, type: 3}
+  icon: {fileID: -2691754822757829029, guid: 8d3030622fa6d4311b18bb9427c20184, type: 3}
   slot: 11
   rarity: 2
   baseStats:
@@ -33,6 +33,19 @@ MonoBehaviour:
     projectileSpeed: 8
     count: 2
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3
