@@ -56,13 +56,18 @@ namespace LittleHero
             // 빌드용 Inspector SerializeField 폴백은 후속 (드랍 풀 SO 인덱스 신규).
             var allGuids = UnityEditor.AssetDatabase.FindAssets("t:EquipmentTemplate", new[] { "Assets/_Project/Data/Templates" });
             var templates = new System.Collections.Generic.List<EquipmentTemplate>();
+            var allTemplates = new System.Collections.Generic.List<EquipmentTemplate>();  // 옵션 Z — 가챠 무기 포함 전체
             foreach (var g in allGuids)
             {
                 var p = UnityEditor.AssetDatabase.GUIDToAssetPath(g);
-                if (p.Contains("/Weapons/")) continue;  // 가챠 한정 풀 제외
                 var t = UnityEditor.AssetDatabase.LoadAssetAtPath<EquipmentTemplate>(p);
-                if (t != null) templates.Add(t);
+                if (t == null) continue;
+                allTemplates.Add(t);
+                if (p.Contains("/Weapons/")) continue;  // 가챠 한정 풀 제외 (드랍에서 빠짐)
+                templates.Add(t);
             }
+            // 옵션 Z 사이클 1 — EquipmentManager 가 가챠 무기 포함 전체 lookup 가능
+            EquipmentManager.RegisterTemplates(allTemplates);
             var slotPoolGuids = UnityEditor.AssetDatabase.FindAssets("t:SlotAffixPool", new[] { "Assets/_Project/Data/SlotPools" });
             var slotPools = new System.Collections.Generic.List<SlotAffixPool>();
             foreach (var g in slotPoolGuids)
