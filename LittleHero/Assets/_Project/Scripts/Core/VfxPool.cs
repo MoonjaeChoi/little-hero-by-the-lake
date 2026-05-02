@@ -82,6 +82,24 @@ namespace LittleHero
             if (go == null) return;
             go.transform.position = position;
             go.transform.rotation = Quaternion.identity;
+            go.transform.localScale = Vector3.one;
+            var sr = go.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.color = Color.white;
+            go.SetActive(true);
+        }
+
+        /// <summary>PIVOT v4 — 피격 별 흩어짐 (작은 + 크리 시 골드 + 큰 scale).</summary>
+        public static void SpawnHitStar(Vector3 position, bool isCrit)
+        {
+            EnsurePrefab();
+            EnsureRoot();
+            var go = AcquireStarBurst();
+            if (go == null) return;
+            go.transform.position = position;
+            go.transform.rotation = Quaternion.identity;
+            go.transform.localScale = Vector3.one * (isCrit ? 1.4f : 0.6f);
+            var sr = go.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.color = isCrit ? new Color(1f, 0.84f, 0f) : Color.white;
             go.SetActive(true);
         }
 

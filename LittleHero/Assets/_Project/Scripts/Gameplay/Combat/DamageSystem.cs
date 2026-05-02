@@ -1,16 +1,24 @@
+using UnityEngine;
+
 namespace LittleHero
 {
     /// <summary>
     /// 데미지 적용 진입점. F8 — 신화 효과 곱셈 자동 반영.
-    /// 호출자는 베이스 데미지만 전달, 신화 보정은 본 클래스에서 일괄 처리.
+    /// PIVOT v4 — 자체 crit roll + EnemyController.OnHit 호출 (cinematic_combat_v1.md §6).
+    /// 호출자는 베이스 데미지만 전달, 신화 보정·crit 은 본 클래스에서 일괄 처리.
     /// </summary>
     public static class DamageSystem
     {
+        private static PlayerStats _statsCache;
+
         public static void DealDamage(EnemyController enemy, float damage)
         {
             if (enemy == null || enemy.IsDead) return;
-            float final = damage * MythicEffectRuntime.CalcOutgoingDamageMultiplier(enemy);
+            bool isCrit = RollCrit();
+            float critMul = isCrit ? GetCritDamageMul() : 1f;
+            float final = damage * MythicEffectRuntime.CalcOutgoingDamageMultiplier(enemy) * critMul;
             enemy.TakeDamage(final);
+            enemy.OnHit(final, isCrit);
         }
 
         public static void DealDamageToPlayer(PlayerHealth player, float damage)
@@ -18,6 +26,26 @@ namespace LittleHero
             if (player == null || player.IsDead) return;
             float final = damage * MythicEffectRuntime.CalcIncomingDamageMultiplier(player);
             player.TakeDamage(final);
+        }
+
+        private static PlayerStats GetStats()
+        {
+            if (_statsCache != null) return _statsCache;
+            _statsCache = Object.FindFirstObjectByType<PlayerStats>(FindObjectsInactive.Include);
+            return _statsCache;
+        }
+
+        private static bool RollCrit()
+        {
+            var s = GetStats();
+            float chance = s != null ? s.CritChance : 0.05f;
+            return Random.value < chance;
+        }
+
+        private static float GetCritDamageMul()
+        {
+            var s = GetStats();
+            return s != null && s.CritDamage > 1f ? s.CritDamage : 1.5f;
         }
     }
 }

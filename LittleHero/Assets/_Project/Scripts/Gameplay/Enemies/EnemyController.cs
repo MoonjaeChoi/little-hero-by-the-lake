@@ -20,6 +20,12 @@ namespace LittleHero
         private float _baseScaleX;
         private float _baseScaleY;
 
+        // PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3)
+        private float _punchScale = 1f;
+        private Color _baseColor = Color.white;
+        private System.Collections.IEnumerator _punchCo;
+        private System.Collections.IEnumerator _flashCo;
+
         // 보스 공격 패턴 (boss_attack_v1.md)
         private IBossAttackPattern _bossAttack;
 
@@ -47,6 +53,8 @@ namespace LittleHero
             _rb = GetComponent<Rigidbody2D>();
             _baseScaleX = transform.localScale.x;
             _baseScaleY = transform.localScale.y;
+            _baseColor = _sr != null ? _sr.color : Color.white;
+            _punchScale = 1f;
             // 적별 다른 위상으로 전체 sway 가 동기화되지 않게 무작위 시작점
             _swayPhase = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
             // PIVOT v3 Phase 2 — 단일 Update 패턴 (EnemyAnimationManager 위임)
@@ -89,11 +97,78 @@ namespace LittleHero
             }
 
             // 2) 가벼운 scale wobble (호흡 효과) — Rigidbody Y 안 건드림
+            // PIVOT v4 — _punchScale 곱셈 (피격 시 scale 1.4×~1.7×)
             float wobble = Mathf.Sin(time * 4f + _swayPhase) * 0.04f;
             transform.localScale = new Vector3(
-                _baseScaleX,
-                _baseScaleY * (1f + wobble),
+                _baseScaleX * _punchScale,
+                _baseScaleY * (1f + wobble) * _punchScale,
                 1f);
+        }
+
+        /// <summary>PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3).</summary>
+        public void OnHit(float damage, bool isCrit)
+        {
+            if (_isDead) return;
+            // 1. Punch scale
+            if (_punchCo != null) StopCoroutine(_punchCo);
+            _punchCo = PunchRoutine(isCrit ? 1.7f : 1.4f, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
+            StartCoroutine(_punchCo);
+            // 2. Color flash
+            if (_flashCo != null) StopCoroutine(_flashCo);
+            _flashCo = FlashRoutine(isCrit ? Color.yellow : Color.red, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
+            StartCoroutine(_flashCo);
+            // 3. Hit particle
+            VfxPool.SpawnHitStar(transform.position, isCrit);
+            // 4. Sound
+            AudioManager.Instance?.Play(isCrit ? SfxType.CritHit : SfxType.EnemyHit);
+            // 5. Damage number
+            DamageFloaterPool.Spawn(
+                transform.position + Vector3.up * 0.5f,
+                Mathf.RoundToInt(damage),
+                isCrit ? DamageType.Critical : DamageType.Normal);
+            // 6. Critical only — slow-mo + screen shake
+            if (isCrit)
+            {
+                CinematicEffects.Instance?.PlayHitPause(0.08f);
+                CinematicEffects.Instance?.PlayScreenShake(0.3f);
+            }
+        }
+
+        private System.Collections.IEnumerator PunchRoutine(float targetScale, float expandTime, float returnTime)
+        {
+            float t = 0f;
+            while (t < expandTime)
+            {
+                t += Time.unscaledDeltaTime;
+                _punchScale = Mathf.Lerp(1f, targetScale, t / expandTime);
+                yield return null;
+            }
+            t = 0f;
+            while (t < returnTime)
+            {
+                t += Time.unscaledDeltaTime;
+                _punchScale = Mathf.Lerp(targetScale, 1f, t / returnTime);
+                yield return null;
+            }
+            _punchScale = 1f;
+            _punchCo = null;
+        }
+
+        private System.Collections.IEnumerator FlashRoutine(Color flashColor, float holdTime, float returnTime)
+        {
+            if (_sr == null) yield break;
+            _sr.color = flashColor;
+            yield return new WaitForSecondsRealtime(holdTime);
+            float t = 0f;
+            while (t < returnTime)
+            {
+                t += Time.unscaledDeltaTime;
+                float k = t / returnTime;
+                _sr.color = Color.Lerp(flashColor, _baseColor, k);
+                yield return null;
+            }
+            _sr.color = _baseColor;
+            _flashCo = null;
         }
 
         private void ApplyAppearance(EnemyData data)

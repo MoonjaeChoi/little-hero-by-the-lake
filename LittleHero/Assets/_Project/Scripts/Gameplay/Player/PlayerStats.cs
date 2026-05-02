@@ -157,7 +157,8 @@ namespace LittleHero
 
             // 신규 파생 — 코어에서 받는 부분만 계산. affix·옵션·신화 영향분은
             // 별도 ApplyAffix… 채널이 들어오기 전까지 0/베이스 유지 (B2~C4).
-            CritChance         = lvCrit + coreCrit;
+            // PIVOT v4 — Cinematic Combat 베이스 5% 보장 (cinematic_combat_v1.md §3.2)
+            CritChance         = Mathf.Max(0.05f, lvCrit + coreCrit);
             // CritDamage/Armor/DamageReduction/FinalDamageBonus/ExtraAttackTargets/
             // ArmorPenetration/CompanionDurationBonus/AdditiveDamageBonus 는 affix 도입 시 합산.
             Armor              = coreArmor;

@@ -88,7 +88,7 @@ namespace LittleHero
         }
 
         // PIVOT v3.1 — 동시 적 cap 1,000 → 1,500 (출현 ×20 정합, +50%).
-        private const int MAX_CONCURRENT_ENEMIES = 1500;
+        private const int MAX_CONCURRENT_ENEMIES = 300;  // PIVOT v4 (cinematic_combat_v1.md)
 
         private IEnumerator SpawnRegular(WaveConfig config, int count)
         {

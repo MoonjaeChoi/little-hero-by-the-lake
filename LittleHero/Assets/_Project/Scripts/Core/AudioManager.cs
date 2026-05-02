@@ -17,6 +17,9 @@ namespace LittleHero
         BossCharge,     // 돌진 swoosh
         BossSummon,     // 소환 pop
         BossTornado,    // 회전 영역 (단발 — loop 미사용 단순화)
+        // PIVOT v4 Premium 피격 (cinematic_combat_v1.md §3)
+        EnemyHit,       // 일반 적 피격 — 짧은 thud + 노이즈
+        CritHit,        // 크리티컬 — 띵! 청량한 high tone + 노이즈
     }
 
     public class AudioManager : MonoBehaviour
@@ -41,6 +44,8 @@ namespace LittleHero
         private AudioClip _bossChargeClip;
         private AudioClip _bossSummonClip;
         private AudioClip _bossTornadoClip;
+        private AudioClip _enemyHitClip;
+        private AudioClip _critHitClip;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Bootstrap()
@@ -83,6 +88,8 @@ namespace LittleHero
             _bossChargeClip    = SynthBossCharge();
             _bossSummonClip    = SynthBossSummon();
             _bossTornadoClip   = SynthBossTornado();
+            _enemyHitClip      = SynthEnemyHit();
+            _critHitClip       = SynthCritHit();
 
             GameEvents.OnEnemyKilled       += _ => Play(SfxType.EnemyPop);
             GameEvents.OnLevelUp           += _ => Play(SfxType.LevelUp);
@@ -105,6 +112,8 @@ namespace LittleHero
                 SfxType.BossCharge    => _bossChargeClip,
                 SfxType.BossSummon    => _bossSummonClip,
                 SfxType.BossTornado   => _bossTornadoClip,
+                SfxType.EnemyHit      => _enemyHitClip,
+                SfxType.CritHit       => _critHitClip,
                 _ => null,
             };
             if (clip != null) _src.PlayOneShot(clip);
@@ -200,6 +209,44 @@ namespace LittleHero
         }
 
         private const int SR = 44100;
+
+        // === PIVOT v4 — Premium 피격 SFX 2종 ===
+
+        // 일반 적 피격 — 350Hz 짧은 thud + 약한 노이즈 0.07s
+        private static AudioClip SynthEnemyHit()
+        {
+            int len = (int)(SR * 0.07f);
+            var s = new float[len];
+            for (int i = 0; i < len; i++)
+            {
+                float t = (float)i / SR;
+                float env = Mathf.Exp(-t * 35f);
+                float wave = Mathf.Sin(2f * Mathf.PI * 350f * t);
+                float noise = (Random.value - 0.5f) * 0.3f;
+                s[i] = (wave + noise) * 0.45f * env;
+            }
+            var c = AudioClip.Create("sfx_enemy_hit", len, 1, SR, false);
+            c.SetData(s, 0); return c;
+        }
+
+        // 크리티컬 — 1200+1800Hz 듀얼 + 짧은 attack-decay 0.15s (청량한 띵!)
+        private static AudioClip SynthCritHit()
+        {
+            int len = (int)(SR * 0.15f);
+            var s = new float[len];
+            for (int i = 0; i < len; i++)
+            {
+                float t = (float)i / SR;
+                float env = Mathf.Exp(-t * 14f) * (1f - Mathf.Exp(-t * 80f));
+                float a = Mathf.Sin(2f * Mathf.PI * 1200f * t);
+                float b = Mathf.Sin(2f * Mathf.PI * 1800f * t);
+                float noise = (Random.value - 0.5f) * 0.2f * env;
+                s[i] = (a + b * 0.7f) * 0.35f * env + noise;
+            }
+            var c = AudioClip.Create("sfx_crit_hit", len, 1, SR, false);
+            c.SetData(s, 0); return c;
+        }
+
 
         // 적 처치 "퐁!" — 880→220Hz 빠른 sweep + exp decay (0.15s). 부드럽고 비폭력 톤.
         private static AudioClip SynthPop()

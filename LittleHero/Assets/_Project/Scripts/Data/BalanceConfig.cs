@@ -53,16 +53,15 @@ namespace LittleHero
         public float bossCrystalBaseDrop = 1f;
         public float bossCrystalChapterPerStep = 3f;
 
-        // PIVOT v3.1 (2026-05-02 사용자 보정) — 적 시각 식별성 강화
-        // 적 ×3 (HP/ATK/scale) + 출현 ×20 + 별가루/XP/드랍 마리당 0.1 그대로 (×2 인플레이션 의도)
-        // cap 1,500 (50% 상향). game_pivot_v2.md PIVOT v3.1
-        [Header("PIVOT v3.1 글로벌 곱셈 (적 ×3 / 출현 ×20 / 인플레이션 ×2)")]
-        public float enemyHpMul        = 0.3f;   // 적 HP × 0.3 (보스 제외)
-        public float enemyAtkMul       = 0.3f;   // 적 ATK × 0.3 (보스 제외)
-        public float enemyScaleMul     = 0.3f;   // sprite scale × 0.3 (식별성 ↑)
-        public float enemyStarDustMul  = 0.1f;   // 마리당 0.1 그대로 (마리수 ×20 으로 ×2 인플레이션)
-        public float enemyXpMul        = 0.1f;   // 마리당 0.1 그대로
-        public float spawnIntervalMul  = 0.05f;  // spawn 간격 × 0.05 = 20× 빈도
-        public float enemyDropChanceMul = 0.1f;  // 마리당 0.1 그대로 (×2 드랍)
+        // PIVOT v4 (2026-05-03 사용자 결정) — Cinematic Combat (cinematic_combat_v1.md)
+        // cap 1,500 → 300. 마리당 ★/XP/드랍 ×5 인상 (합산 보존). Premium 피격 + 데미지 수치.
+        [Header("PIVOT v4 — Cinematic Combat (cap 300 + Premium 피격)")]
+        public float enemyHpMul        = 0.3f;   // 적 HP × 0.3 (식별성, 그대로)
+        public float enemyAtkMul       = 0.3f;   // 적 ATK × 0.3 (그대로)
+        public float enemyScaleMul     = 0.5f;   // sprite scale × 0.5 (cap 적어 큰 적 OK)
+        public float enemyStarDustMul  = 0.5f;   // 마리당 ×5 인상 (1500/300 = 5배)
+        public float enemyXpMul        = 0.5f;   // 마리당 ×5
+        public float spawnIntervalMul  = 0.15f;  // spawn 간격 × 0.15 (cap 비례)
+        public float enemyDropChanceMul = 0.5f;  // 마리당 ×5 (드랍 합산 보존)
     }
 }
