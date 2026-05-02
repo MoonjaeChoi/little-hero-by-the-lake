@@ -18,8 +18,9 @@
 | 엔진 | Unity 6.3 LTS, URP 2D |
 | 언어 | C# (.NET Standard 2.1) |
 | 입력 | 가상 조이스틱 (모바일), 키보드 (에디터) |
-| 톤 | 귀엽고 비폭력적, 4+ 등급 |
-| 1차 시장 | 한국 / 일본 / 미국 가족·캐주얼 |
+| 톤 | 카주얼 ARPG, **PG-12 등급** (잔인·피·끔찍 ❌, 만화풍 폭발 OK) |
+| 1차 시장 | 한국 / 일본 / 미국 — **캐주얼 + 일반 ARPG** (메이플 키우기·뱀파이어 서바이버 톤) |
+| 수익화 | **별빛 ⋆ 캐시 + 시즌 패스 + 가챠 (신화 풀)** — Phase C 신규 도입 |
 
 ## 2. 세계관 & 스토리
 
@@ -43,23 +44,39 @@
 7. 피노키오
 - **마지막 페이지** (히든): 아빠가 미처 못 끝낸 챕터 — 진엔딩
 
-### 절대 원칙: 비폭력 톤
-- 모든 시각효과는 **별 / 하트 / 꽃잎 / 비눗방울** 파티클
-- ❌ 금지: 피, 시체, 잔해, 검은 폭발, 비명 사운드
-- ✅ 적 처치 시: 별 흩어짐 + "퐁!" 사운드 + 반짝임
-- ✅ 적 피격 시: 만화풍 "별 빙글빙글" KO 표현
-- ✅ 보스 사망: 풍선처럼 둥둥 떠올라 사라짐
-- 색 채도 60~70% (파스텔), 너무 쨍한 원색 금지
+### 절대 원칙: PG-12 톤 (2026-05-02 PIVOT — 옵션 Z)
 
-### 텍스트 가이드
+> **잔인·피·끔찍은 명시적으로 금지**. 그 외 카주얼 ARPG 표준 톤은 허용.
+> **갱신 배경**: 4+ 키즈 톤 → 12+ 카주얼 ARPG (캐주얼·일반 사용자 대상 확장).
+
+#### ❌ 금지 (PG-12 유지 항목)
+- **피·시체·잔해** — 어떤 형태든 ❌
+- **비명 사운드·고통 표현** — ❌
+- **사실적 폭력** (총상·자상·외상) — ❌
+- **공포·끔찍** (귀신·괴기·트라우마 묘사) — ❌
+
+#### ✅ 허용 (4+ 에서 확장)
+- **만화풍 폭발·임팩트** (잔해 X, 별/구름 KO 형태 OK)
+- **강한 색·임팩트 VFX** (파스텔 강제 X, 채도 자유)
+- **적 처치 표현 자유** — 별 흩어짐 / 만화풍 폭발 / 빙글빙글 KO / 풍선처럼 사라짐 모두 OK
+- **약한 긴장·도전** (보스 위압감·시계탑 어두운 분위기 등)
+
+#### VFX·SFX 가이드
+- 적 처치: 별 흩어짐 (Phase G2 기존 VFX 유지) 또는 만화풍 폭발
+- 적 피격: 만화풍 "별 빙글빙글" KO 또는 강한 임팩트
+- 보스 사망: 풍선처럼 사라짐 또는 빛 폭발
+- 색감: 파스텔 60~70% 강제 폐기 — 챕터별 분위기에 맞춰 자유
+
+### 텍스트 가이드 (PIVOT 후 갱신)
+
 - 모든 UI 텍스트는 한국어 우선
-- 어린이가 이해 가능한 어휘 (한자어, 영어 줄임말 ❌)
-- 적 이름은 친근한 별명풍 ("꼬마 슬라임", "졸린 큰 곰")
-- 아빠의 메모는 어린이의 손글씨 폰트로 표현
+- **일반 게임 어휘 OK** — 한자어·영어 줄임말 허용 (DPS·치명타·드랍률·리롤·천장 등)
+- 적 이름은 게임 표준 (12+ 적합) — "꼬마 슬라임" 친근풍·"심연의 거인" 카주얼 ARPG 풍 모두 OK
+- 아빠의 메모·세계관 narrative 는 따뜻한 정서 유지 (스토리 코어 보존)
 
 ### 접근성
 - 한 손 플레이 가능한 레이아웃 (가상 조이스틱은 좌측 하단 고정)
-- 모든 터치 타겟 최소 44pt (Apple 가이드라인)
+- 터치 타겟 최소 44pt (Apple 가이드라인) 권장 — 카주얼 ARPG 정보 밀도에 따라 일부 32pt 허용
 - 색맹 친화: 데미지/피격은 색이 아닌 형태로도 구분
 
 ## 3. 폴더 구조
@@ -562,6 +579,7 @@ CLAUDE.md §11 의 Phase 3 "🔄 진행 중" 은 **사실상 종료** (메타 �
 - 2026-05-01: **BGM 파이프라인 v2 — 시나리오 A 채택, ACE-Step v1.5 설치 완료** — 시나리오 A(셀프호스팅 only) 결정. RTX 5070 12GB 서버에 `~/ai-tools/ACE-Step-1.5/` 설치 (uv 0.11.8 + Python 3.12.12 + PyTorch 2.10.0+cu128, venv 7.6GB). API 서버 `tmux session 'acestep' :7867` 기동 (자동 설정: tier4 / CPU offload / INT8 quant / 0.6B LM). **첫 검증**: hub_lakeside 30s 트랙 생성 ~35s (모델 다운로드 첫 1회 ~5GB 포함), 5.7MB WAV 48kHz stereo, `/tmp/acestep_test/test_hub_lakeside.wav`. **VRAM 제약**: ComfyUI 와 동시 사용 X (12GB 한계) — 작업 전 `curl -X POST http://localhost:8188/free -d '{"unload_models":true,"free_memory":true}'` 필수. **42 트랙 계획**(허브 1 / 다락방 1 / 상점 1 / CH1~35 35 / 미니/보스 4) 추정 50분. helper 스크립트 `tools/bgm_generate.sh`. 참조: docs/bgm_pipeline_v2.md.
 - 2026-05-01: **Phase G2 P11 EnemyController 스케일 미세 조정** — `EnemyController.ApplyAppearance` 의 spriteScale 베이스 0.4 → 0.55 (37.5% 증가). 적용 후 player(0.6) 대비 small=0.50(83%) / medium=0.55(92%) / large=0.63(105%) / miniBoss=0.77(128%) / boss=0.94(156%) / daily=0.83(138%) / weekly=1.21(200%) — 보스 위압감 확보 + small enemy 시각적 식별성 유지. 41 적 SO 의 scaleMultiplier(0.85~2.2)는 그대로 — 단일 베이스 변경이 전체 archetype 균등 적용. icon 미보유 11 적(Phase 1·2 placeholder)은 spriteScale=1.0 경로 그대로.
 - 2026-05-01: **Phase G2 P9 사운드 효과 (절차적 합성)** — `Core/AudioManager.cs` 신설. RuntimeInitializeOnLoadMethod 자동 부트스트랩 + DontDestroyOnLoad. 5종 SfxType(EnemyPop/Pickup/LevelUp/MemoryFound/PlayerHit) 을 코드로 합성(sine wave + envelope, AudioClip.SetData) — 외부 음원 의존 0. **EnemyPop "퐁!"**: 880→220Hz exp sweep + decay 0.15s (CLAUDE.md §2 절대 원칙 첫 사운드 구현). **LevelUp**: C5-E5-G5-C6 4음 아르페지오 0.4s. **MemoryFound**: A4+E5 동시 + attack-decay 0.6s 따뜻한 차임. **Pickup**: 1320+1760Hz 듀얼 사인 0.1s. **PlayerHit**: 200Hz 펄스 + 노이즈 0.08s 만화풍 KO. 자동 wiring: GameEvents.OnEnemyKilled→Pop / OnLevelUp→LevelUp / OnMemoryDiscovered→MemoryFound. PlayerDamageReceiver.OnCollisionStay2D 에서 PlayerHit 직접 호출. AudioSource volume=0.6, spatialBlend=0(2D). 후속: BGM 트랙(허브·챕터·보스), 보스 처치 fanfare, UI 클릭 사운드.
+- 2026-05-02: **🔥 PIVOT — 키즈 톤 폐기 → PG-12 카주얼 ARPG (옵션 Z 진취·확장)** — 사용자 결정. CLAUDE.md §1·§2 정체성 갱신. **§1 톤**: "귀엽고 비폭력적 4+" → "카주얼 ARPG, PG-12 (잔인·피·끔찍 ❌, 만화풍 폭발 OK)". **§1 1차 시장**: 가족·캐주얼 → 캐주얼 + 일반 ARPG (메이플 키우기·뱀파이어 서바이버 톤). **§1 수익화**: + **가챠 (신화 풀)** 신규 (Phase C 도입). **§2 절대 원칙 재정의**: ❌ 금지 = 피·시체·잔해·비명·사실적 폭력·공포·끔찍 (PG-12 유지). ✅ 허용 = 만화풍 폭발·강한 색·임팩트 VFX·약한 긴장·도전·파스텔 강제 X. **§2 텍스트 가이드**: 어린이 어휘 ❌ → 일반 게임 어휘 OK (DPS·치명타·드랍률·리롤·천장 표준). **§2 접근성**: 44pt 권장 + 정보 밀도에 따라 32pt 허용. **PIVOT 4 단계**: A 정체성 갱신 (✅ 진행 중) / B G3 어휘 표준화 + 세계관 톤 + 마케팅 부제 (1~2일) / C 가챠 시스템 신규 (2~3주) / D 시뮬 재설계 (1~2주). 출시 일정 3~4주 지연. DISCUSSION.md Q1.1 ✅ 결정 표기 + §11 가챠 시스템 신규 토론 (Q11.1~Q11.8 + 권장 모델 초안).
 - 2026-05-02: **문서 재정리 — docs/ 카테고리 분리 + little_hero 토론 인덱스 3 신규** — Phase 1+2 두 단계. **Phase 1 (docs/ 직하)**: 19 파일 → 4 디렉토리 분리 (`design/` Part 0~8 + direction_v2 11종 / `pipeline/` 아트 3 + BGM 2 / `release/` 1 / `testing/` 1). git mv 14 파일 (history 보존). docs/README.md 갱신 — 새 구조 인덱스 + 빠른 진입 + 디렉토리 구조 한눈에. **Phase 2 (docs/little_hero/)**: 3 신규 토론용 문서. (1) `INDEX_BY_SYSTEM.md` — 11 시스템별 핵심 결정·의존 그래프·미해결 토론 포인트. (2) `INDEX_BY_FLOW.md` — 게임플레이 흐름순 (앱 실행→다락방→챕터→보스→Endgame→메타) + 각 단계 관련 시스템 매핑. (3) `DISCUSSION.md` — 전체 토론 워크시트 (§1~§10): 정체성·4 화폐·시즌·자부심·UI·콘텐츠·신화·Endgame·출시·Open. 각 섹션 4단 구조 (결정 이력 → 현재 상태 → 토론 포인트 → 다음 결정 후보) + ✅/🟡/❓/🔴 결정 표기. README.md 갱신 — 3 신규 인덱스 링크. **Cross-link sed 일괄**: design/ 내 part 파일 24개 → `../README.md` 로 / little_hero/ 12 파일 → `../design/part_*` 로 자동 갱신. 컴파일 영향 없음 (문서만).
 - 2026-05-02: **출시 전 cleanup — DEBUG-BUFF 3 commit revert** — 사용자 시각 검증 완료 후 출시 클린 상태 복원. 3 commit 단일 revert (`786a1ae` BalanceConfig buff / `1ae3363` StarWand+Boss HP / `142968c` StarWand 5000→500). 원복: BalanceConfig.baseAttackDamage 500→10·baseAttackSpeed 5→1·baseMaxHealth 5000→100 / Equip_StarWand.attackConfig.damage 500→10·range 20→15·projectileSpeed 30→6 / Enemy_*_Boss.maxHealth 70→700 (5종) + WeeklyBoss_00~03.maxHealth 2500→25000 (4종). SaveData 디버그 buff (level 100·화폐 9999·firstClearedChapters 35비트) 는 git 추적 X — 사용자가 출시 빌드 전 `Tools > LittleHero > Reset SaveData` 메뉴로 reset 권장. 컴파일 영향 없음 (asset 변경만).
 - 2026-05-02: **보스 체력바 — UI 추가 (Chapter / BossEncounter / InfiniteTower 3 씬)** — 사용자 시각 검증 중 보스 체력바 미구현 보고. **신규**: `UI/BossHealthBar.cs` — Slider (0~1 비율) + 보스 displayName Text + 폴링 갱신 (`Update` 매 프레임 `boss.HealthRatio` 읽음). **GameEvents 신규 이벤트**: `OnBossSpawned(EnemyController)` / `OnBossDespawned()`. **WaveManager 갱신**: SpawnEnemy 에서 `data.isBoss` 시 `RaiseBossSpawned`, HandleEnemyDied 에서 isBoss 사망 시 `RaiseBossDespawned`. **자동 활성/비활성**: BossHealthBar 가 OnBossSpawned 구독으로 자동 표시 + OnBossDespawned/OnPlayerDied/OnChapterCleared 시 비활성. **3 씬 UI 자동 생성** (execute_code): Canvas 자식 BossHealthBar GameObject (anchor top-center, pos 0,-120, 720×80) — 검정 반투명 배경 + 보스 이름 (LegacyRuntime.ttf 24pt 흰색) + Slider (Background 회색 + Fill 빨강 보스 체력색 RGB 0.85/0.15/0.15). 평소 비활성, 보스 spawn 시 자동 활성. 미니보스 제외 (data.isMiniB 아니라 isBoss 만). 컴파일 에러 0건.
