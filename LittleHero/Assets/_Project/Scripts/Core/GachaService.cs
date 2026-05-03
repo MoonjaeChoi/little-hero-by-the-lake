@@ -311,12 +311,19 @@ namespace LittleHero
 
         private static EquipmentTemplate PickFromRarityPool(GachaPool pool, Rarity rarity, System.Random rng)
         {
+            // weapon_v2 / gacha_class_filter_v1 — 본인 직업 무기만 추출
+            var playerClass = EquipmentManager.ResolvePlayerClass();
             var arr = GetPoolForRarity(pool, rarity);
             if (arr == null || arr.Length == 0) return null;
-            // null entry 회피
             var live = new List<EquipmentTemplate>(arr.Length);
             for (int i = 0; i < arr.Length; i++)
-                if (arr[i] != null) live.Add(arr[i]);
+            {
+                var t = arr[i];
+                if (t == null) continue;
+                // None 카테고리 (비-무기) 또는 본인 직업 매칭만 추출
+                if (t.category == WeaponCategory.None || t.requiredClass == playerClass)
+                    live.Add(t);
+            }
             if (live.Count == 0) return null;
             return live[rng.Next(live.Count)];
         }
