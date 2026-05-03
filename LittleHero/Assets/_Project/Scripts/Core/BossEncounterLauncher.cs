@@ -18,9 +18,8 @@ namespace LittleHero
             public void Launch(BossEncounterRequest req)
             {
                 BossEncounterContext.Set(req.mode, req.boss, req.endgameMode, req.mythicPool);
-                // T03 에서 Mode.ChapterBoss / PendingChapter / PendingReturnScene 활성화
-                // BossEncounterContext.PendingChapter = req.chapter;
-                // BossEncounterContext.PendingReturnScene = req.returnSceneName;
+                BossEncounterContext.PendingChapter = req.chapter;
+                BossEncounterContext.PendingReturnScene = req.returnSceneName;
                 Time.timeScale = 1f;
                 SceneManager.LoadScene("BossEncounter");
             }

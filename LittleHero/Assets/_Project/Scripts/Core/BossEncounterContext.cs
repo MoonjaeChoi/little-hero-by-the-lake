@@ -8,12 +8,16 @@ namespace LittleHero
     /// </summary>
     public static class BossEncounterContext
     {
-        public enum Mode { Daily, Weekly }
+        public enum Mode { Daily, Weekly, ChapterBoss }   // 5002 T03 — ChapterBoss 추가
 
         public static EnemyData PendingBoss;
         public static EndgameModeData PendingMode;
         public static Mode PendingType;
         public static MythicDefinition[] PendingMythicPool;
+
+        // 5002 T03 — ChapterBoss 한정
+        public static ChapterData PendingChapter;
+        public static string PendingReturnScene;
 
         // 처치 결과 (Weekly 한정 — 다락방 복귀 후 신화 오버레이 1회 표시)
         public static EquipmentInstance LastMythicGranted;
@@ -33,8 +37,11 @@ namespace LittleHero
             PendingBoss = null;
             PendingMode = null;
             PendingMythicPool = null;
+            PendingChapter = null;        // 5002 T03
+            PendingReturnScene = null;    // 5002 T03
         }
 
-        public static bool HasPending => PendingBoss != null && PendingMode != null;
+        public static bool HasPending => PendingBoss != null
+            && (PendingMode != null || PendingType == Mode.ChapterBoss);
     }
 }
