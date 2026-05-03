@@ -6,10 +6,33 @@
 The remote ComfyUI server runs at `192.168.75.194:8188`, exposed locally via SSH tunnel:
 
 ```
-ssh -L 8188:localhost:8188 <user>@192.168.75.194 -N
+ssh -L 8188:localhost:8188 pro301@192.168.75.194 -N
 ```
 
 So `http://localhost:8188` from the dev machine reaches it.
+
+## Why the SSH tunnel?
+
+ComfyUI on the remote machine binds to **`127.0.0.1:8188`** (loopback), not `0.0.0.0:8188`. That means port 8188 is **not reachable** from any other machine — only from `pro301@192.168.75.194` itself. This is the safe default: ComfyUI has no auth, so exposing it on a LAN/public interface would let anyone queue prompts, exhaust GPU, or read other users' outputs.
+
+The SSH tunnel solves this without changing ComfyUI's bind:
+
+```
+[dev mac]  http://localhost:8188   ──┐
+                                     │ encrypted SSH connection (port 22)
+                                     ▼
+[192.168.75.194]  sshd  ──forwards──▶  127.0.0.1:8188 (ComfyUI)
+```
+
+`ssh -L 8188:localhost:8188 ...` tells ssh: "open a listener on **my** localhost:8188; whenever something connects, tunnel that connection through ssh and hand it to **the remote's** localhost:8188". So:
+- The dev machine treats ComfyUI as if it were running locally.
+- ComfyUI never sees external traffic — it only ever sees its own loopback.
+- All traffic between dev mac and remote is wrapped in the SSH session (encrypted, authenticated by your SSH key/password).
+- When you close ssh, the tunnel closes — no lingering exposure.
+
+The script connects to `http://localhost:8188` because that's the dev-side end of the tunnel. If the tunnel is down, the script fails fast with `Connection refused` — that's the signal to re-establish ssh.
+
+If you ever wanted to skip the tunnel, you'd have to either (a) bind ComfyUI to `0.0.0.0` (insecure on shared networks) or (b) put a real auth proxy in front (nginx + basic auth, etc.). The tunnel is simpler and inherits your SSH credentials.
 
 ## Endpoints
 

@@ -31,7 +31,7 @@ curl -s http://localhost:8188/system_stats | head -c 200
 If not alive, instruct the user to start it (this skill does NOT establish the tunnel itself):
 
 ```bash
-ssh -L 8188:localhost:8188 <user>@192.168.75.194 -N
+ssh -L 8188:localhost:8188 pro301@192.168.75.194 -N
 ```
 
 The skill also requires a **ComfyUI workflow JSON in API format**. ComfyUI's UI exports this via `Settings → Save (API Format)`. The bundled `assets/workflow_template.json` is a generic SDXL placeholder — replace it with a project-specific workflow (V5 sticker tone, model checkpoint, LoRAs) for production use.

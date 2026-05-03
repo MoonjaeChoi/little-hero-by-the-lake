@@ -179,7 +179,7 @@ def main(argv=None) -> int:
         pid = queue_prompt(args.server, wf, client_id)
     except (urllib.error.URLError, ConnectionRefusedError) as e:
         print(f"ERROR: cannot reach {args.server} ({e}). "
-              f"Is the SSH tunnel up?  ssh -L 8188:localhost:8188 user@192.168.75.194 -N",
+              f"Is the SSH tunnel up?  ssh -L 8188:localhost:8188 pro301@192.168.75.194 -N",
               file=sys.stderr)
         return 3
 
