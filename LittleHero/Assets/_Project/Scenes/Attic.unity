@@ -38915,6 +38915,7 @@ GameObject:
   - component: {fileID: 1218918688}
   - component: {fileID: 1218918689}
   - component: {fileID: 1218918690}
+  - component: {fileID: 1218918691}
   m_Layer: 0
   m_Name: AtticController
   m_TagString: Untagged
@@ -39032,6 +39033,18 @@ MonoBehaviour:
   _managedPanels: []
   _excludePanelNames:
   - CharacterPanel
+--- !u!114 &1218918691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218918683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ec2cbf485d0c44c9a8e80170e5a42cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticReturnHandler
 --- !u!1 &1220013253
 GameObject:
   m_ObjectHideFlags: 0

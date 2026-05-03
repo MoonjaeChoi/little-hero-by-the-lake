@@ -11,6 +11,7 @@ namespace LittleHero
 
         // 5005 Sprint 4 — Endgame 메뉴는 AtticEndgameMenuView 로 추출 (4 SerializeField + Refresh + AllChaptersFirstCleared + FormatHm/FormatDh)
         // 5005 Sprint 5 — 패널 토글 관리는 AtticPanelToggleManager 로 추출 (_managedPanels + _excludePanelNames + Update + AutoDiscoverPanels)
+        // 5005 Sprint 6 — 보스 씬 복귀 신화 발현 토스트는 AtticReturnHandler 로 추출 (HandleReturnFromBossEncounter)
 
         // ✦ PIVOT D-가챠 — 진입 버튼 (gacha_v1.md §5)
         [Header("PIVOT D-가챠 — 진입 버튼")]
@@ -60,7 +61,7 @@ namespace LittleHero
             // 5005 Sprint 1 — 4 화폐 초기 표시는 AtticCurrencyView.Start 가 담당
             RefreshLimitedShopBadge();
             // 5005 Sprint 4 — RefreshEndgameMenu 는 AtticEndgameMenuView.Start 가 담당
-            HandleReturnFromBossEncounter();
+            // 5005 Sprint 6 — HandleReturnFromBossEncounter 는 AtticReturnHandler.Start 가 담당
             // 5005 Sprint 3 — HandlePendingChapterCleared 는 AtticChapterEntry.Start 가 담당
 
             // 다락방 BGM (Joe Hisaishi 풍 nostalgic)
@@ -105,26 +106,6 @@ namespace LittleHero
 
         // 5005 Sprint 3 — HandleStart / HandlePendingChapterCleared / ResolveChapterById 모두 AtticChapterEntry 로 이동
 
-        // F5 — 보스 씬에서 신화 발현된 경우 다락방 복귀 시 1회 무지개 Overlay
-        private void HandleReturnFromBossEncounter()
-        {
-            var def = BossEncounterContext.LastMythicDefinition;
-            if (def == null) return;
-
-            var overlay = FindFirstObjectByType<MythicEffectOverlay>(FindObjectsInactive.Include);
-            if (overlay != null)
-            {
-                overlay.Play(def);
-                Debug.Log($"[Attic] 신화 발현 통지: {def.displayName}");
-            }
-            else
-            {
-                Debug.LogWarning("[Attic] MythicEffectOverlay 미존재 — 신화 발현 통지 skip");
-            }
-
-            // 1회 표시 후 Clear (재진입 시 중복 표시 방지)
-            BossEncounterContext.LastMythicDefinition = null;
-            BossEncounterContext.LastMythicGranted = null;
-        }
+        // 5005 Sprint 6 — HandleReturnFromBossEncounter 는 AtticReturnHandler 로 이동
     }
 }
