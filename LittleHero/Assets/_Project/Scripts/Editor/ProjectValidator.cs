@@ -35,7 +35,49 @@ namespace LittleHero.EditorTools
             ValidateActiveScene(issues);
             ValidateOOPPolicy(issues);  // CLAUDE.md §15.12 신규
             ValidateWeaponSystem(issues);  // weapon_v2 신규
+            ValidateBossSystem(issues);   // 5001 boss_system_v2 신규 (T09)
             Print(issues);
+        }
+
+        // 5001 boss_system_v2 — 모든 보스 SO BossTier wiring 검증 (T09 Sprint 6)
+        private static void ValidateBossSystem(List<Issue> issues)
+        {
+            var guids = UnityEditor.AssetDatabase.FindAssets("t:EnemyData");
+            int tierViolations = 0, lootViolations = 0, attackViolations = 0;
+            foreach (var g in guids)
+            {
+                var p = UnityEditor.AssetDatabase.GUIDToAssetPath(g);
+                var d = UnityEditor.AssetDatabase.LoadAssetAtPath<EnemyData>(p);
+                if (d == null) continue;
+
+                // Rule 1: isMiniB/isBoss=true 인데 bossTier=None 이면 마이그레이션 누락
+                if ((d.isMiniB || d.isBoss) && d.bossTier == BossTier.None)
+                {
+                    issues.Add(new Issue(Severity.Warning, "Boss",
+                        $"5001 — {d.name}: isMiniB/isBoss=true 인데 bossTier=None (마이그레이션 누락)"));
+                    tierViolations++;
+                }
+
+                // Rule 2: ChapterBoss/DailyBoss/WeeklyBoss → lootTable != null 권장
+                if (d.bossTier >= BossTier.ChapterBoss && d.lootTable == null)
+                {
+                    issues.Add(new Issue(Severity.Warning, "Boss",
+                        $"5001 — {d.name}: bossTier={d.bossTier} 인데 lootTable=null (보상 미적용)"));
+                    lootViolations++;
+                }
+
+                // Rule 3: bossTier != None → bossAttackType != None 권장
+                if (d.bossTier != BossTier.None && d.bossAttackType == BossAttackType.None)
+                {
+                    issues.Add(new Issue(Severity.Warning, "Boss",
+                        $"5001 — {d.name}: bossTier={d.bossTier} 인데 bossAttackType=None (공격 패턴 미명세)"));
+                    attackViolations++;
+                }
+            }
+            int total = tierViolations + lootViolations + attackViolations;
+            if (total == 0)
+                issues.Add(new Issue(Severity.Warning, "Boss",
+                    $"5001 boss_system_v2 — {guids.Length} EnemyData 모두 BossTier 룰 통과"));
         }
 
         // weapon_system_v2.md — 모든 무기 SO requiredClass + category 검증
