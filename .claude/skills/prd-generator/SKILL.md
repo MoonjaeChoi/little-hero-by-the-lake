@@ -1,16 +1,18 @@
 # PRD Generator — Little Hero 디자인 + Sprint PRD 자동 작성
 
-> **목적**: 사용자 요청을 받아 `docs/little_hero/` 폴더에 **디자인 문서 + Sprint PRD** 2 종을 자동 작성한다.
+> **목적**: 사용자 요청을 받아 `docs/prd/` 폴더에 **디자인 문서 + Sprint PRD** 2 종을 자동 작성한다.
 > Clayve의 prd-generator를 Unity 게임 개발 환경에 맞게 재구성.
+>
+> **저장 위치 (2026-05-04 정리)**: PRD 산출은 `docs/prd/` 로 통합. 디자인 문서는 시스템 색인 역할이라 `docs/prd/` 루트에, Sprint PRD 등 산출 문서는 후속 mediator/breakdown/contract 단계에서 `docs/prd/<번호>/` 하위로 분리 가능 (5001/5002 패턴 답습). `docs/little_hero/` 는 시스템 디자인 외 일반 문서 (changelog / architecture_analysis / *_v1.md 등) 만 유지.
 
 ## 0. 단일 진실원
 
 | 파일 | 역할 |
 |---|---|
 | `CLAUDE.md` §15 OOP 정책 | 신규 코드 작성 시 우선 (SOLID·SO·GC·100줄) |
-| `docs/little_hero/<system>_v1.md` | 디자인 문서 (분석·옵션·결정) |
-| `docs/little_hero/<system>_v1_prd.md` | Sprint PRD (작업 명세·검증 기준) |
-| `docs/little_hero/changelog_v1.md` | 변경 이력 (changelog-manager 자동) |
+| `docs/prd/<system>_v1.md` | 디자인 문서 (분석·옵션·결정) — 시스템 색인 (prd/ 루트) |
+| `docs/prd/<system>_v1_prd.md` | Sprint PRD (작업 명세·검증 기준) — 후속 단계에서 `docs/prd/<번호>/` 로 이동 가능 |
+| `docs/little_hero/changelog_v1.md` | 변경 이력 (changelog-manager 자동, 위치 그대로) |
 
 ## 1. 입력
 
@@ -23,7 +25,7 @@
 
 ### Step 1 — 분석 + 디자인 문서
 
-`docs/little_hero/<system>_v1.md` 작성:
+`docs/prd/<system>_v1.md` 작성:
 1. 결정 이력 (날짜·사용자 결정)
 2. 현재 시스템 분석 (코드 grep + SO 분포 + 위반 사항)
 3. 옵션 비교 표 (장점/단점/권장)
@@ -36,7 +38,7 @@
 
 ### Step 2 — Sprint PRD 작성
 
-`docs/little_hero/<system>_v1_prd.md` 작성:
+`docs/prd/<system>_v1_prd.md` 작성:
 1. 전체 개요 (Sprint × commit × 시간 표)
 2. 각 Sprint 명세:
    - 작업 항목 (파일별)
@@ -53,8 +55,8 @@
 ### Step 3 — 사용자 검토 요청
 
 ```
-✅ 디자인 문서 완료: docs/little_hero/<system>_v1.md
-✅ Sprint PRD 완료: docs/little_hero/<system>_v1_prd.md
+✅ 디자인 문서 완료: docs/prd/<system>_v1.md
+✅ Sprint PRD 완료: docs/prd/<system>_v1_prd.md
 
 [Sprint 요약]
   Sprint 1: <작업> (N commit, M분)
@@ -218,8 +220,8 @@ Sprint 1 → Sprint 2 → Sprint 3 ┐
 ## 9. 출력 형식 (보고)
 
 ```
-✅ 디자인 문서: docs/little_hero/<system>_v1.md (X 라인)
-✅ Sprint PRD: docs/little_hero/<system>_v1_prd.md (Y 라인)
+✅ 디자인 문서: docs/prd/<system>_v1.md (X 라인)
+✅ Sprint PRD: docs/prd/<system>_v1_prd.md (Y 라인)
 
 [디자인 핵심]
   - 옵션 N 비교 (★권장: B)
@@ -245,5 +247,6 @@ Sprint 1 → Sprint 2 → Sprint 3 ┐
 
 - Clayve `prd-generator.md` 패턴
 - CLAUDE.md §15 OOP 정책
-- `docs/little_hero/` 기존 디자인 문서 패턴 (`stats_v2_infinite.md`, `weapon_system_v2.md` 등)
+- `docs/little_hero/` 일반 디자인 문서 (PRD 산출 외 참조용 — `stats_v2_infinite.md`, `weapon_system_v2.md` 등)
+- `docs/prd/5001_*` / `docs/prd/5002_*` 정착 패턴 (디자인 1개 prd/ 루트 + 산출 다수 `<번호>/` 하위)
 - `weapon_system_v2_prd.md` 형식 (Sprint × commit × 시간 표 + 의존성 그래프)
