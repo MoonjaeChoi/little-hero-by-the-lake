@@ -232,36 +232,8 @@ namespace LittleHero
             }
         }
 
-        private static IAttackPattern CreatePattern(AttackPatternType type)
-        {
-            return type switch
-            {
-                AttackPatternType.Projectile => new ProjectileAttack(),
-                AttackPatternType.Aura       => new AuraAttack(),
-                AttackPatternType.Orbit      => new OrbitAttack(),
-                AttackPatternType.Rain       => new RainAttack(),
-                AttackPatternType.Trail      => new TrailAttack(),
-                AttackPatternType.Pulse      => new PulseAttack(),
-                AttackPatternType.Summon     => new SummonAttack(),
-                AttackPatternType.Slash      => new SlashAttack(),
-                _ => null
-            };
-        }
-
-        private static System.Type GetPatternType(AttackPatternType type)
-        {
-            return type switch
-            {
-                AttackPatternType.Projectile => typeof(ProjectileAttack),
-                AttackPatternType.Aura       => typeof(AuraAttack),
-                AttackPatternType.Orbit      => typeof(OrbitAttack),
-                AttackPatternType.Rain       => typeof(RainAttack),
-                AttackPatternType.Trail      => typeof(TrailAttack),
-                AttackPatternType.Pulse      => typeof(PulseAttack),
-                AttackPatternType.Summon     => typeof(SummonAttack),
-                AttackPatternType.Slash      => typeof(SlashAttack),
-                _ => null
-            };
-        }
+        // CLAUDE.md §15.1 SOLID-O — Factory 추출 (EquipmentPatternFactory)
+        private static IAttackPattern CreatePattern(AttackPatternType type) => EquipmentPatternFactory.Create(type);
+        private static System.Type GetPatternType(AttackPatternType type) => EquipmentPatternFactory.GetType(type);
     }
 }
