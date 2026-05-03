@@ -36,7 +36,33 @@ namespace LittleHero
 
             int rarityIdx = Mathf.Clamp((int)tpl.rarity, 0, _rarityLabels.Length - 1);
             string lvl = inst.enhanceLevel > 0 ? $"+{inst.enhanceLevel}  " : "";
-            if (_enhanceRarityText != null) _enhanceRarityText.text = $"{lvl}{_rarityLabels[rarityIdx]}";
+            // weapon_v2 — 헤더에 직업 + 카테고리 추가 (예 "+5 영웅 — 전사 / 둔기")
+            string classLabel = "";
+            if (tpl.category != WeaponCategory.None)
+            {
+                string cls = tpl.requiredClass switch {
+                    CharacterClass.Warrior => "전사",
+                    CharacterClass.Archer => "궁수",
+                    CharacterClass.Mage => "마법사",
+                    _ => "",
+                };
+                string cat = tpl.category switch {
+                    WeaponCategory.Sword => "검",
+                    WeaponCategory.Axe => "도끼",
+                    WeaponCategory.Mace => "둔기",
+                    WeaponCategory.Spear => "창",
+                    WeaponCategory.Bow => "활",
+                    WeaponCategory.Crossbow => "석궁",
+                    WeaponCategory.Dagger => "단검",
+                    WeaponCategory.Boomerang => "부메랑",
+                    WeaponCategory.Staff => "지팡이",
+                    WeaponCategory.Wand => "완드",
+                    WeaponCategory.Tome => "마도서",
+                    _ => "",
+                };
+                classLabel = $"  —  {cls} / {cat}";
+            }
+            if (_enhanceRarityText != null) _enhanceRarityText.text = $"{lvl}{_rarityLabels[rarityIdx]}{classLabel}";
 
             ClearContainer(_mainAffixContainer);
             ClearContainer(_subAffixContainer);

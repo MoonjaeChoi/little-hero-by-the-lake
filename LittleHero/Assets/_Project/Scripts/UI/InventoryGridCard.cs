@@ -55,10 +55,51 @@ namespace LittleHero
             if (_enhanceText != null) _enhanceText.text = inst != null && inst.enhanceLevel > 0 ? $"+{inst.enhanceLevel}" : "";
             int rarityIdx = tpl != null ? Mathf.Clamp((int)tpl.rarity, 0, _rarityColors.Length - 1) : 0;
             Color rcol = _rarityColors[rarityIdx];
-            if (_rarityText != null) { _rarityText.text = _rarityLabels[rarityIdx]; _rarityText.color = rcol; }
+            // weapon_v2 — 잘못된 직업 무기 회색 + 라벨 (rarity 라벨 자리에 직업 표시)
+            if (tpl != null && tpl.category != WeaponCategory.None)
+            {
+                var playerClass = EquipmentManager.ResolvePlayerClass();
+                bool wrongClass = tpl.requiredClass != playerClass;
+                if (_rarityText != null)
+                {
+                    if (wrongClass)
+                    {
+                        _rarityText.text = ClassLabel(tpl.requiredClass) + " 전용";
+                        _rarityText.color = ClassColor(tpl.requiredClass);
+                    }
+                    else
+                    {
+                        _rarityText.text = _rarityLabels[rarityIdx];
+                        _rarityText.color = rcol;
+                    }
+                }
+                if (_icon != null) _icon.color = wrongClass ? new Color(0.5f, 0.5f, 0.5f, 0.5f) : Color.white;
+            }
+            else
+            {
+                if (_rarityText != null) { _rarityText.text = _rarityLabels[rarityIdx]; _rarityText.color = rcol; }
+                if (_icon != null) _icon.color = Color.white;
+            }
             if (_border != null) _border.color = rcol;
             if (_equippedBadge != null) _equippedBadge.SetActive(isEquipped);
             SetSelected(false);
+        }
+
+        private static readonly Color[] _classColors = {
+            new Color(0.85f, 0.20f, 0.20f),  // Warrior 빨강
+            new Color(0.30f, 0.85f, 0.40f),  // Archer 녹
+            new Color(0.65f, 0.42f, 0.95f),  // Mage 보라
+        };
+        private static string ClassLabel(CharacterClass c) => c switch {
+            CharacterClass.Warrior => "전사",
+            CharacterClass.Archer => "궁수",
+            CharacterClass.Mage => "마법사",
+            _ => "",
+        };
+        private static Color ClassColor(CharacterClass c) {
+            int i = (int)c;
+            if (i < 0 || i >= _classColors.Length) return Color.white;
+            return _classColors[i];
         }
 
         public void SetSelected(bool selected)
