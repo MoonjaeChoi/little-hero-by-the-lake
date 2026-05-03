@@ -88,12 +88,25 @@ namespace LittleHero
         private void StartNextWave()
         {
             int wave = GameManager.Instance.CurrentWave;
+
+            // 5002 T07 — 챕터 보스 wave 진입 시 BossEncounter 씬으로 분리 (옵션 C)
+            if (wave >= _chapterData.totalWaves && _chapterData.bossEnemy != null)
+            {
+                SaveSession();   // 진행 저장
+                BossEncounterLauncher.Launch(new BossEncounterRequest
+                {
+                    mode = BossEncounterContext.Mode.ChapterBoss,
+                    boss = _chapterData.bossEnemy,
+                    chapter = _chapterData,
+                    returnSceneName = "Attic",
+                });
+                return;
+            }
+
             WaveConfig config = BuildWaveConfig(wave);
 
-            // BGM — 보스 웨이브(20) 진입 시 보스 트랙으로 crossfade
-            if (config.boss != null)
-                AudioManager.Instance?.PlayBgm("boss_chapter", crossFadeSec: 1.5f);
-            else if (config.miniBoss != null)
+            // BGM — 미니보스 wave 진입 시 트랙 crossfade (보스 wave 는 BossEncounter 씬으로 분리)
+            if (config.miniBoss != null)
                 AudioManager.Instance?.PlayBgm("miniboss_chase", crossFadeSec: 1.0f);
 
             _waveManager.StartWave(config, OnWaveComplete);
@@ -134,17 +147,8 @@ namespace LittleHero
                 var bgGO = GameObject.Find("Background");
                 if (bgGO != null) _backgroundRenderer = bgGO.GetComponent<SpriteRenderer>();
             }
-            if (_backgroundRenderer == null || _chapterData?.coverArt == null) return;
-            // PIVOT v3 — 정적 BG (사용자 요청 2026-05-03: BG 안 움직이고 player·적만 이동).
-            // Tiled 절대 좌표 + 매우 큰 size → player 가 영역 벗어나도 안 보일 때까지 충분.
-            _backgroundRenderer.sprite = _chapterData.coverArt;
-            _backgroundRenderer.sortingOrder = -100;
-            _backgroundRenderer.drawMode = SpriteDrawMode.Tiled;
-            _backgroundRenderer.tileMode = SpriteTileMode.Continuous;
-            _backgroundRenderer.size = new Vector2(300f, 300f);  // 300×300 unit, 절대 좌표
-            _backgroundRenderer.transform.localScale = Vector3.one;
-            _backgroundRenderer.transform.position = Vector3.zero;
-            _backgroundRenderer.color = Color.white;
+            // 5002 D1 Rebuttal — BackgroundApplier 정적 헬퍼로 위임 (DRY).
+            BackgroundApplier.Apply(_backgroundRenderer, _chapterData);
         }
 
         private WaveConfig BuildWaveConfig(int waveNumber)
@@ -152,7 +156,7 @@ namespace LittleHero
             BalanceConfig balance = GameManager.Instance.Balance;
             bool isMiniB = waveNumber % balance.miniBossWaveInterval == 0
                            && waveNumber < _chapterData.totalWaves;
-            bool isBoss = waveNumber >= _chapterData.totalWaves;
+            // 5002 T07 — bool isBoss 변수 제거. 챕터 보스는 StartNextWave 분기에서 BossEncounter 씬으로 진입.
 
             int spawnCount = Mathf.RoundToInt(
                 10f * (1f + balance.waveScalingFactor * waveNumber));
@@ -160,7 +164,7 @@ namespace LittleHero
             EnemyData mb = isMiniB && _chapterData.miniBossPool != null && _chapterData.miniBossPool.Length > 0
                            ? _chapterData.miniBossPool[Random.Range(0, _chapterData.miniBossPool.Length)]
                            : null;
-            EnemyData bs = isBoss ? _chapterData.bossEnemy : null;
+            // 5002 T07 — 챕터 보스는 BossEncounter 씬에서 처리 (StartNextWave 분기). isBoss 분기 제거.
 
             return new WaveConfig
             {
@@ -168,7 +172,7 @@ namespace LittleHero
                 spawnCount = spawnCount,
                 duration   = _chapterData.waveDuration,
                 miniBoss   = mb,
-                boss       = bs,
+                boss       = null,
             };
         }
 
