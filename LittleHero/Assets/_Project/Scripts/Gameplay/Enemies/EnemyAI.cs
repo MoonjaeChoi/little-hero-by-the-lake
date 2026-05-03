@@ -40,9 +40,8 @@ namespace LittleHero
 
         private void FindPlayer()
         {
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player != null)
-                _target = player.transform;
+            // CLAUDE.md §15.3 GC 최소화 — PlayerFinder 정적 cache
+            _target = PlayerFinder.Get();
         }
     }
 }

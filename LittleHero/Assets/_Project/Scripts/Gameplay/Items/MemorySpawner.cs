@@ -62,8 +62,8 @@ namespace LittleHero
 
         private void Spawn(MemoryData data)
         {
-            GameObject player = GameObject.FindWithTag("Player");
-            Vector3 origin = player != null ? player.transform.position : transform.position;
+            var pt = PlayerFinder.Get();
+            Vector3 origin = pt != null ? pt.position : transform.position;
             float angle = Random.Range(0f, Mathf.PI * 2f);
             Vector3 pos = origin + new Vector3(Mathf.Cos(angle) * _spawnRadius, Mathf.Sin(angle) * _spawnRadius, 0f);
 

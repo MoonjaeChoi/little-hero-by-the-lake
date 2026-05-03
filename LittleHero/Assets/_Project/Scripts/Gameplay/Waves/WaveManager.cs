@@ -133,8 +133,9 @@ namespace LittleHero
 
         private static Vector3 GetBossSpawnPosition()
         {
-            GameObject player = GameObject.FindWithTag("Player");
-            Vector3 origin = player != null ? player.transform.position : Vector3.zero;
+            // CLAUDE.md §15.3 GC 최소화 — PlayerFinder 정적 cache
+            var pt = PlayerFinder.Get();
+            Vector3 origin = pt != null ? pt.position : Vector3.zero;
             float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
             return origin + new Vector3(Mathf.Cos(angle) * BossSpawnRadius, Mathf.Sin(angle) * BossSpawnRadius, 0f);
         }
