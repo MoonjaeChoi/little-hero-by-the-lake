@@ -194,6 +194,7 @@ MonoBehaviour:
   _atticSceneName: Attic
   _returnDelay: 2
   _battleDuration: 90
+  _backgroundRenderer: {fileID: 424984882}
 --- !u!1 &88155523
 GameObject:
   m_ObjectHideFlags: 0
