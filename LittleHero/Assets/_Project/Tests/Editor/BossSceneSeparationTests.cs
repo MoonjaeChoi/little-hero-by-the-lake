@@ -132,6 +132,21 @@ namespace LittleHero.Tests
 
         // === Reflection 검증 ===
 
+        // === 5003 — Mini Boss Scene Separation ===
+
+        [Test]
+        public void Mode_Enum_Has_MiniBoss()
+        {
+            var values = System.Enum.GetValues(typeof(BossEncounterContext.Mode));
+            CollectionAssert.Contains(values, BossEncounterContext.Mode.MiniBoss);
+        }
+
+        [Test]
+        public void CompleteMiniBoss_Null_NoOp()
+        {
+            Assert.DoesNotThrow(() => BossEncounterService.CompleteMiniBoss(null, null));
+        }
+
         [Test]
         public void BossEncounterRequest_Has_AllFields()
         {
