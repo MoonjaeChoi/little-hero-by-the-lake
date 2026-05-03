@@ -13,7 +13,8 @@
 | 3 | EquipmentManager 검증 + WeaponClassBonus | 2 | 45분 |
 | 4 | UI (InventorySelectionPanel + GachaResultPanel + EquipmentCardPanel) | 2 | 60분 |
 | 5 | Test + ProjectValidator | 1 | 30분 |
-| **총** | | **9** | **3시간** |
+| **6** | **GachaService 직업 필터** (`gacha_class_filter_v1.md`) | **2** | **30분** |
+| **총** | | **11** | **3.5시간** |
 
 ## Sprint 1 — 인프라 (3 commit)
 
@@ -385,6 +386,104 @@ weapon_v2 Sprint 5 — Test + Validator (검증 자동화)
 
 ---
 
+## Sprint 6 — GachaService 직업 필터 (2 commit)
+
+### 6.1 GachaPool + GachaService 갱신
+
+**디자인 문서**: `gacha_class_filter_v1.md` (옵션 B 권장)
+
+**파일**: `Scripts/Data/GachaPool.cs` + `Scripts/Core/GachaService.cs` (갱신)
+
+**GachaPool 신규 헬퍼**:
+```
+public List<EquipmentTemplate> GetTemplatesByRarityAndClass(Rarity r, CharacterClass cls);
+```
+
+**GachaService 시그니처 확장**:
+- `RollSingle(pool, currency)` → `RollSingle(pool, currency, cls)`
+- `Roll10x(pool, currency)` → `Roll10x(pool, currency, cls)`
+- `GrantWeaponByRarity(pool, rarity)` → `GrantWeaponByRarity(pool, rarity, cls)` (한정 상점)
+- `GrantSpecificWeapon(pool, templateId)` 변경 X (특정 무기)
+- 기본값: `cls = ResolvePlayerClass()` (호환성)
+
+**RollOne 흐름**:
+```
+1. 등급 결정 (소환 레벨 분포 — 변경 X)
+2. pool.GetTemplatesByRarityAndClass(rarity, cls) → 매칭 list
+3. 비어있으면 rarity-1 재시도 (Warrior Magic 부재 fallback)
+4. 여전히 비어있으면 같은 직업 어떤 등급이든 (안전)
+5. 균등 추출
+```
+
+**ResolvePlayerClass 정적**:
+- `MetaProgression.Instance.SelectedCharacter.className` → enum 매핑
+- 미선택 시 default Warrior
+
+**검증 기준**:
+- 마법사 캐릭터로 가챠 → 결과 모두 Mage 무기
+- 전사로 가챠 100회 → Warrior 무기만 누적
+- LimitedShopService.GrantWeaponByRarity 도 직업 매칭
+
+**완료 조건**:
+- 가챠 시연 — 직업별 결과 검증
+- 한정 상점 보상도 직업 매칭
+
+---
+
+### 6.2 GachaPanel UI 직업 표시
+
+**파일**: `Scripts/UI/GachaPanel.cs` + `Scripts/UI/GachaResultPanel.cs` (갱신)
+
+**GachaPanel 헤더**:
+- "현재 캐릭터: 마법사" 라벨 추가
+- "이 캐릭터의 무기만 가챠 풀에 포함됩니다" 안내
+- 캐릭터 클래스 색 (전사 빨강 / 궁수 녹 / 마법사 보라)
+
+**GachaResultPanel**:
+- 결과 카드 라벨 (이미 weapon_system_v2 §4.2 적용)
+- 모두 본인 직업이라 라벨 자동 일치
+
+**다락방 캐릭터 변경 시 토스트**:
+- AtticController.HandleSelectCharacter — "가챠 결과가 [직업] 무기로 변경됩니다" 안내
+
+**검증 기준**:
+- GachaPanel 진입 시 직업 헤더 표시
+- 캐릭터 변경 → 다음 가챠 풀 변경
+
+### Sprint 6 commit
+```
+weapon_v2 Sprint 6.1 — GachaService 직업 필터 (gacha_class_filter_v1)
+
+[GachaPool 헬퍼]
+  - GetTemplatesByRarityAndClass(rarity, cls)
+
+[GachaService 시그니처 확장]
+  - RollSingle/Roll10x/GrantWeaponByRarity 모두 cls 인자 추가
+  - 기본값 ResolvePlayerClass() (호환성)
+
+[RollOne 흐름]
+  - 등급 결정 → 직업+등급 매칭 → 빈 풀 시 rarity-1 fallback
+  - Warrior Magic 부재 시 Common 으로 fallback
+
+[검증]
+  - 마법사 100회 가챠 → 모두 Mage 무기
+  - 전사 100회 가챠 → 모두 Warrior 무기 (Magic 부재 시 Common)
+```
+
+```
+weapon_v2 Sprint 6.2 — GachaPanel UI 직업 표시
+
+[GachaPanel]
+  - 헤더 "현재 캐릭터: 마법사" 라벨
+  - "이 캐릭터의 무기만 가챠" 안내
+  - 클래스 색 적용
+
+[AtticController]
+  - 캐릭터 변경 시 "가챠 결과 직업 변경" 토스트
+```
+
+---
+
 ## 의존성 그래프
 
 ```
@@ -394,12 +493,14 @@ Sprint 2 (18 SO 마이그레이션)  ← Sprint 1 EquipmentTemplate 의존
    ↓
 Sprint 3 (검증 + Bonus)        ← Sprint 1+2 의존
    ↓
-Sprint 4 (UI)                   ← Sprint 1+2 의존 (검증 X 가능)
+Sprint 4 (UI)                   ← Sprint 1+2 의존
    ↓
 Sprint 5 (Test + Validator)     ← 모두 의존
+   ↓
+Sprint 6 (Gacha 직업 필터)     ← Sprint 1+2 의존 (Sprint 3 의 검증과 독립)
 ```
 
-병렬 가능: Sprint 3 + 4 (검증과 UI 독립)
+병렬 가능: Sprint 3 + 4, Sprint 5 + 6
 
 ## 완료 정의 (Definition of Done)
 
