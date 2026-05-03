@@ -44,12 +44,29 @@ namespace LittleHero
 
         private void OnEnable()
         {
+            // 5006 D3=C — Panel 자체 검증 (CH 35 클리어 OR 추억 4종 발견 둘 중 하나 만족)
+            if (!IsEndgameUnlocked())
+            {
+                Debug.Log("[EndgameMenuPanel] CH 35 클리어 후 도전 가능 (또는 추억 4종 발견)");
+                gameObject.SetActive(false);
+                return;
+            }
+
             if (_dailyButton != null)    _dailyButton.onClick.AddListener(OnDailyClicked);
             if (_weeklyButton != null)   _weeklyButton.onClick.AddListener(OnWeeklyClicked);
             if (_infiniteButton != null) _infiniteButton.onClick.AddListener(OnInfiniteClicked);
             if (_hardcoreButton != null) _hardcoreButton.onClick.AddListener(() => Enter(_hardcoreChapter, true));
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             Refresh();
+        }
+
+        private static bool IsEndgameUnlocked()
+        {
+            long mask = MetaProgression.Instance?.Data?.firstClearedChapters ?? 0L;
+            const long target35 = (1L << 35) - 1;
+            bool allChapters = (mask & target35) == target35;
+            bool allMemories = MetaProgression.Instance != null && MetaProgression.Instance.AllMemoriesDiscovered();
+            return allChapters || allMemories;
         }
 
         private void OnDailyClicked()
