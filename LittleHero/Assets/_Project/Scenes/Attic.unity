@@ -39381,7 +39381,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b83a18084064e438c9523103b951b1fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticPanelEntryView
-  _entries: []
+  _entries:
+  - id: diary
+    button: {fileID: 1330382154}
+    panelRoot: {fileID: 578348407}
+  - id: bestiary
+    button: {fileID: 2044618105}
+    panelRoot: {fileID: 1331402943}
+  - id: char_info
+    button: {fileID: 930246109}
+    panelRoot: {fileID: 746708456}
+  - id: meta_upgrade
+    button: {fileID: 61379151}
+    panelRoot: {fileID: 374776823}
+  - id: inventory
+    button: {fileID: 539592699}
+    panelRoot: {fileID: 1775096378}
+  - id: starlight_shop
+    button: {fileID: 1332521134}
+    panelRoot: {fileID: 1857073301}
+  - id: wondrous_map
+    button: {fileID: 1302153675}
+    panelRoot: {fileID: 489548769}
+  - id: conversion_forge
+    button: {fileID: 1371187349}
+    panelRoot: {fileID: 1629340165}
+  - id: endgame_menu
+    button: {fileID: 1636783544}
+    panelRoot: {fileID: 130553658}
 --- !u!1 &1220013253
 GameObject:
   m_ObjectHideFlags: 0
