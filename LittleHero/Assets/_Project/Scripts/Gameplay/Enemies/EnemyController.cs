@@ -60,24 +60,9 @@ namespace LittleHero
             // PIVOT v3 Phase 2 — 단일 Update 패턴 (EnemyAnimationManager 위임)
             EnemyAnimationManager.Register(this);
 
-            // 보스 공격 패턴 (CH6+ chapter boss 만)
-            _bossAttack = CreateBossAttack(data.bossAttackType);
+            // 보스 공격 패턴 (CH6+ chapter boss 만) — 5001 Sprint 1.3: BossPatternFactory 분리
+            _bossAttack = BossPatternFactory.Create(data.bossAttackType);
             _bossAttack?.Initialize(this, data);
-        }
-
-        private static IBossAttackPattern CreateBossAttack(BossAttackType type)
-        {
-            switch (type)
-            {
-                case BossAttackType.Charge: return new BossChargeAttack();
-                case BossAttackType.Pulse:  return new BossPulseAttack();
-                case BossAttackType.Spread:    return new BossSpreadAttack();
-                case BossAttackType.Summon:    return new BossSummonAttack();
-                case BossAttackType.Vine:      return new BossVineAttack();
-                case BossAttackType.Tornado:   return new BossTornadoAttack();
-                case BossAttackType.BlackHole: return new BossBlackHoleAttack();
-                default: return null;
-            }
         }
 
         // PIVOT v3 Phase 2 — EnemyAnimationManager 가 매 프레임 호출 (Unity Update callback 폐기)
