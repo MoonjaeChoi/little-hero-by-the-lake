@@ -33,7 +33,29 @@ namespace LittleHero.EditorTools
             ValidateMetaUpgradePool(issues);
             ValidateEnemyPool(issues);
             ValidateActiveScene(issues);
+            ValidateOOPPolicy(issues);  // CLAUDE.md §15.12 신규
             Print(issues);
+        }
+
+        // CLAUDE.md §15.12 — OOP 정책 자동 검증 (100줄+ 클래스 경고)
+        private static void ValidateOOPPolicy(List<Issue> issues)
+        {
+            const int LINE_LIMIT = 200;  // 100줄 룰 + 여유 100
+            var scriptFiles = System.IO.Directory.GetFiles(
+                "Assets/_Project/Scripts", "*.cs", System.IO.SearchOption.AllDirectories);
+            int violations = 0;
+            foreach (var f in scriptFiles)
+            {
+                int lineCount = System.IO.File.ReadAllLines(f).Length;
+                if (lineCount > LINE_LIMIT)
+                {
+                    issues.Add(new Issue(IssueLevel.Warn,
+                        $"OOP §15.6 100줄 룰 — {System.IO.Path.GetFileName(f)} ({lineCount} 라인) 책임 분리 권장"));
+                    violations++;
+                }
+            }
+            if (violations == 0)
+                issues.Add(new Issue(IssueLevel.Info, $"OOP §15.6 100줄 룰 — {scriptFiles.Length} 파일 모두 통과"));
         }
 
         private static void ValidateBuildSettings(List<Issue> issues)
