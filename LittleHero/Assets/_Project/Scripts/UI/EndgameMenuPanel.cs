@@ -67,9 +67,15 @@ namespace LittleHero
             }
             else
             {
-                BossEncounterContext.Set(BossEncounterContext.Mode.Daily, boss, _dailyBoss, _mythicPool);
-                Time.timeScale = 1f;
-                SceneManager.LoadScene(_bossEncounterSceneName);
+                // 5002 T08 — Launcher 위임 (정적 Context.Set 직접 호출 제거)
+                BossEncounterLauncher.Launch(new BossEncounterRequest
+                {
+                    mode = BossEncounterContext.Mode.Daily,
+                    boss = boss,
+                    endgameMode = _dailyBoss,
+                    mythicPool = _mythicPool,
+                    returnSceneName = "Attic",
+                });
             }
         }
 
@@ -94,9 +100,15 @@ namespace LittleHero
             }
             else
             {
-                BossEncounterContext.Set(BossEncounterContext.Mode.Weekly, boss, _weeklyBoss, _mythicPool);
-                Time.timeScale = 1f;
-                SceneManager.LoadScene(_bossEncounterSceneName);
+                // 5002 T08 — Launcher 위임 (정적 Context.Set 직접 호출 제거)
+                BossEncounterLauncher.Launch(new BossEncounterRequest
+                {
+                    mode = BossEncounterContext.Mode.Weekly,
+                    boss = boss,
+                    endgameMode = _weeklyBoss,
+                    mythicPool = _mythicPool,
+                    returnSceneName = "Attic",
+                });
             }
         }
 
