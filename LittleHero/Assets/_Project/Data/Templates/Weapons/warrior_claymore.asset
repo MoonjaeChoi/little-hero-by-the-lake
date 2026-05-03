@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77dc62b5207834b08818fbd59085232a, type: 3}
+  m_Name: warrior_claymore
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EquipmentTemplate
+  id: warrior_claymore
+  displayName: "\uB300\uAC80"
+  description: "\uD070 \uBD80\uCC44\uAF34 \uAC80\uAE30 3 \uD0C0\uAE43"
+  icon: {fileID: 0}
+  slot: 5
+  rarity: 1
+  baseStats:
+    maxHealthBonus: 0
+    speedBonus: 0
+    attackDamageBonus: 0
+    attackSpeedBonus: 0
+    rangeBonus: 0
+    xpGainBonus: 0
+  attackPattern: 8
+  attackConfig:
+    damage: 0
+    attackInterval: 0
+    range: 0
+    projectileSpeed: 0
+    count: 0
+    projectilePrefab: {fileID: 0}
+    pierceCount: 0
+    chainCount: 0
+    chainRange: 0
+    slowAmount: 0
+    slowDuration: 0
+    stunDuration: 0
+    dotDamage: 0
+    dotDuration: 0
+    lifestealRatio: 0
+    healOnHit: 0
+    maxTargets: 0
+    spreadAngle: 0
+    isBoomerang: 0
+  requiredClass: 0
+  category: 0
+  maxEnhanceLevel: 25
+  mainAffixLineCount: 3
+  subAffixLineCount: 3

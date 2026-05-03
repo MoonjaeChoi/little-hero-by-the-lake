@@ -21,21 +21,27 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 36c859eb8eca74d0ea1fd8e8d07c2154, type: 2}
   - {fileID: 11400000, guid: b9673f554ea5c4e2f93cbeb6868daf86, type: 2}
   - {fileID: 11400000, guid: 488ecf76abce94f629bbd26a2b519a7d, type: 2}
+  - {fileID: 11400000, guid: ac9a2b6b0893c4bd2a72eebdac99a7ba, type: 2}
   magicPool:
   - {fileID: 11400000, guid: 6e71e24b1c87f4ab5b34b442cce6d163, type: 2}
   - {fileID: 11400000, guid: 941fb9d23a1484afab764431e55d4952, type: 2}
   - {fileID: 11400000, guid: f8979179d3b6e4b2cb045c94d274c2cf, type: 2}
   - {fileID: 11400000, guid: aee07cdff11bd4ed4bd6a012ef923bbd, type: 2}
+  - {fileID: 11400000, guid: a52f1814c9c1a4468891057b97a4e481, type: 2}
+  - {fileID: 11400000, guid: 8e6828f8d89de4282b5c56c924c0c531, type: 2}
   rarePool:
   - {fileID: 11400000, guid: 88d7bbb8001014678b19a95b166eb12f, type: 2}
   - {fileID: 11400000, guid: 8e7bd2da691ff42bd964fc44d617e81e, type: 2}
   - {fileID: 11400000, guid: 5ce7bdae31cbe4f94b6eb6f802502d2d, type: 2}
   - {fileID: 11400000, guid: ffc8ffdae0c88479bb6fc390bfb036dd, type: 2}
+  - {fileID: 11400000, guid: 2913677d1456c42a886dfee7c2e1d4ad, type: 2}
+  - {fileID: 11400000, guid: cd112f4570ffc4fe4afd0e4046f6f895, type: 2}
   epicPool:
   - {fileID: 11400000, guid: f6b95a2b6fd384986ac6dd01b8670c28, type: 2}
   - {fileID: 11400000, guid: 8007ab5fb0788403194648b35fa39ab9, type: 2}
   - {fileID: 11400000, guid: 1a03f6251823340f297fee94136cca01, type: 2}
   - {fileID: 11400000, guid: 007859d3b553b4e7cbdb4e73b2911cd5, type: 2}
+  - {fileID: 11400000, guid: 743ad9786997c4c3c89cf89ef30f72d7, type: 2}
   legendaryPool: []
   mythicPool: []
   probabilities:
