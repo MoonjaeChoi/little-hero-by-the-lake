@@ -7,6 +7,7 @@ namespace LittleHero
     {
         public string id;
         public string displayName;
+        public string className;       // stats_v2 — '전사' / '궁수' / '마법사'
         [TextArea] public string description;
         public Sprite portrait;
         public GameObject prefab;
@@ -21,11 +22,11 @@ namespace LittleHero
         [Header("외형")]
         public Color tintColor = Color.white;
 
-        [Header("코어 스탯 비중 (stats_v1 §3.3)")]
+        [Header("코어 스탯 비중 (stats_v2 §6 — 3 코어 직업 차별화)")]
         public float strengthMultiplier = 1f;
         public float agilityMultiplier = 1f;
         public float wisdomMultiplier = 1f;
-        public float spiritMultiplier = 1f;
+        // spiritMultiplier 폐기 (Spirit 코어 제거)
 
         [Header("언락 조건")]
         public int starFragmentCost;

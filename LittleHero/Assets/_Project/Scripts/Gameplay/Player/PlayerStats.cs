@@ -2,13 +2,18 @@ using UnityEngine;
 
 namespace LittleHero
 {
+    /// <summary>
+    /// stats_v2_infinite.md — 3 코어 (힘·민첩·지혜) + 무한 레벨 + 24 파생 스탯.
+    /// Spirit (마음) 폐기, 기능 흡수: HP→힘, XP→지혜.
+    /// 보스/일반 분기 제거 — 단일 데미지 공식.
+    /// </summary>
     public class PlayerStats : MonoBehaviour
     {
         private BalanceConfig _config;
         private CharacterData _character;
         private StatModifiers _equipmentBonus = new StatModifiers();
 
-        // 기존 파생 스탯 (유지)
+        // ===== 기존 파생 (보존) =====
         public float MaxHealth { get; private set; }
         public float MoveSpeed { get; private set; }
         public float AttackDamage { get; private set; }
@@ -16,34 +21,51 @@ namespace LittleHero
         public float Range { get; private set; }
         public float XpGainMultiplier { get; private set; }
 
-        // ✦ A1: 4 코어 스탯 (stats_v1 §1) — 레벨업 시 +1 × character multiplier 누적
-        public float StrengthRaw { get; private set; }   // 누적 소수점 (반올림 전)
+        // ===== 3 코어 (Spirit 폐기) =====
+        public float StrengthRaw { get; private set; }
         public float AgilityRaw { get; private set; }
         public float WisdomRaw { get; private set; }
-        public float SpiritRaw { get; private set; }
         public int Strength => Mathf.RoundToInt(StrengthRaw);
         public int Agility  => Mathf.RoundToInt(AgilityRaw);
         public int Wisdom   => Mathf.RoundToInt(WisdomRaw);
-        public int Spirit   => Mathf.RoundToInt(SpiritRaw);
 
-        // ✦ A1: 신규 파생 스탯 (stats_v1 §6)
-        public float CritChance { get; private set; }            // 0.0 ~ 1.0
-        public float CritDamage { get; private set; }            // 1.5 = 베이스
+        // ===== 데미지 채널 (3) — 보스/일반 분기 제거 =====
+        public float FinalDamageBonus { get; private set; }      // 곱연산 (망토·하의·안경)
+        public float AdditiveDamageBonus { get; private set; }   // 합연산 (옵션 라인)
+
+        // ===== 크리티컬 (4) =====
+        public float CritChance { get; private set; }
+        public float CritDamage { get; private set; }
+        public float MagicCritChance { get; private set; }       // v2 신규
+        public float MagicCritDamage { get; private set; }       // v2 신규
+
+        // ===== 방어 (5) =====
         public float Armor { get; private set; }
-        public float DamageReduction { get; private set; }       // 0.0 ~ 1.0
-        public float DustGainMultiplier { get; private set; }    // 1.0 = 베이스
-        public float DropRateMultiplier { get; private set; }    // 1.0 = 베이스
+        public float DamageReduction { get; private set; }
+        public float EvasionRate { get; private set; }           // v2 신규 (민첩 비례)
+        public float StatusResist { get; private set; }          // v2 신규
+        public float ArmorIgnore { get; private set; }           // v2 신규 (메이플 방무)
 
-        // ✦ A1: 메이플 키우기 채널 (stats_v1 §1, 스킬 시스템 제외)
-        public float FinalDamageBonus { get; private set; }      // 망토·하의·안경 (버킷 2)
-        public int   ExtraAttackTargets { get; private set; }    // 상의 (Projectile.count 가산)
-        public float ArmorPenetration { get; private set; }      // 0.0 ~ 1.0, 무기
-        public float CompanionDurationBonus { get; private set; }// 신발·펫
+        // ===== 공격 (4) =====
+        public int ExtraAttackTargets { get; private set; }
+        public int ChainTargets { get; private set; }            // v2 신규
+        public float ArmorPenetration { get; private set; }      // 기존 (별개 채널)
 
-        // ✦ A1: 데미지 버킷 1 (합산 데미지%) — 옵션 라인·신화·메타
-        public float AdditiveDamageBonus { get; private set; }
+        // ===== 회복 (3) =====
+        public float HpRegenPerSec { get; private set; }         // v2 신규
+        public float LifestealRatio { get; private set; }        // v2 신규 (cap 0.5)
 
-        // 현재 플레이어 레벨 (A2 PlayerProgress가 SetLevel 호출, A1 단계에선 1로 고정)
+        // ===== 메타 (5) =====
+        public float DustGainMultiplier { get; private set; }
+        public float DropRateMultiplier { get; private set; }
+        public float CompanionDurationBonus { get; private set; }
+        public float CompanionDamage { get; private set; }       // v2 신규
+
+        // ===== 마법 (2) =====
+        public float MagicDamage { get; private set; }           // v2 신규 — 지팡이·룬 무기
+        public float MagicDamageMul { get; private set; }        // v2 신규
+
+        // 무한 레벨 — cap X
         public int Level { get; private set; } = 1;
 
         public void Initialize(BalanceConfig config, CharacterData character = null)
@@ -51,19 +73,17 @@ namespace LittleHero
             _config = config;
             _character = character;
 
-            // 코어 스탯 시작값 (Lv1 = 0, 레벨업마다 +1 × multiplier 누적)
+            // 코어 시작값 (Lv1 = 0, SetLevel 호출 시 누적)
             StrengthRaw = 0f;
             AgilityRaw  = 0f;
             WisdomRaw   = 0f;
-            SpiritRaw   = 0f;
             Level = 1;
 
-            // 크리티컬 베이스
+            // 베이스
             CritDamage = 1.5f;
-
-            // 배수 베이스 1.0
             DustGainMultiplier = 1f;
             DropRateMultiplier = 1f;
+            LifestealRatio = 0f;
 
             RecalculateStats();
         }
@@ -90,80 +110,136 @@ namespace LittleHero
             RecalculateStats();
         }
 
-        // 절대 동기화 — 씬 진입 시점에 PlayerProgress 가 SaveData 의 Level 을 그대로 적용.
-        // 코어 스탯은 `Level × character.multiplier` 로 절대 재계산되므로
-        // 같은 Level 을 두 번 호출해도 누적되지 않는다 (안전).
+        // 절대 동기화 — Level 무한 (cap X), 누적 안 됨 (Mathf.Max(1, level))
         public void SetLevel(int level)
         {
             Level = Mathf.Max(1, level);
 
-            // 코어 스탯 = level × character multiplier (절대값, character_progression §7.3)
             float sm = _character != null ? _character.strengthMultiplier : 1f;
             float am = _character != null ? _character.agilityMultiplier  : 1f;
             float wm = _character != null ? _character.wisdomMultiplier   : 1f;
-            float pm = _character != null ? _character.spiritMultiplier   : 1f;
             StrengthRaw = Level * sm;
             AgilityRaw  = Level * am;
             WisdomRaw   = Level * wm;
-            SpiritRaw   = Level * pm;
 
             RecalculateStats();
         }
 
-        // A1 호환 — 1 레벨 증가 헬퍼. SetLevel 의 단순 래퍼.
         public void ApplyLevelUp() => SetLevel(Level + 1);
+
+        /// <summary>
+        /// EffectResolver 결과를 PlayerStats 채널에 합산 (Sprint 3 통합).
+        /// affix MUL% / FinalDamage% / CritChance% / ArmorIgnore% 등 자동 반영.
+        /// </summary>
+        public void ApplyResolvedBonus(ResolvedEquipmentBonus bonus)
+        {
+            if (bonus == null) return;
+            // 코어 가산 (AllStats / Strength / Agility / Wisdom affix)
+            StrengthRaw += bonus.StrengthAdd;
+            AgilityRaw  += bonus.AgilityAdd;
+            WisdomRaw   += bonus.WisdomAdd;
+            // 전투 채널 — RecalculateStats 가 코어 누적 후 호출됨, 여기서 추가 가산
+            // (실제 호출 흐름: SetLevel → RecalculateStats → ApplyResolvedBonus → 채널 갱신)
+            AdditiveDamageBonus    += bonus.AttackDamageMulPercent;
+            FinalDamageBonus       += bonus.FinalDamageBonusPercent;
+            CritChance              = Mathf.Clamp01(CritChance + bonus.CritChancePercent / 100f);
+            CritDamage             += bonus.CritDamageAddPercent / 100f;
+            ExtraAttackTargets     += bonus.ExtraAttackTargets;
+            ArmorPenetration        = Mathf.Clamp01(ArmorPenetration + bonus.ArmorPenetrationPercent / 100f);
+            ArmorIgnore             = Mathf.Clamp01(ArmorIgnore + bonus.ArmorPenetrationPercent / 100f);
+            Armor                  += bonus.ArmorAdd;
+            DamageReduction         = Mathf.Clamp01(DamageReduction + bonus.DamageReductionPercent / 100f);
+            HpRegenPerSec          += bonus.HpRegenAdd;
+            // MaxHealthMulPercent 적용
+            MaxHealth              *= 1f + bonus.MaxHealthMulPercent / 100f;
+            MaxHealth              += bonus.MaxHealthAdd;
+            AttackSpeed            *= 1f + bonus.AttackSpeedMulPercent / 100f;
+            MoveSpeed              += bonus.MoveSpeedAdd;
+            Range                  += bonus.RangeAdd;
+            // 메타 채널
+            XpGainMultiplier       += bonus.XpGainPercent / 100f;
+            DustGainMultiplier     += bonus.DustGainPercent / 100f;
+            DropRateMultiplier      = 1f + bonus.DropRatePercent / 100f;
+            CompanionDurationBonus += bonus.CompanionDurationBonusPercent / 100f;
+        }
 
         private void RecalculateStats()
         {
-            // Initialize() 이전에 장비가 장착되면 config가 없으므로 대기
             if (_config == null) return;
 
-            // 캐릭터 선택 시 그 스탯을 base로, 미선택 시 BalanceConfig 기본값
             float baseHp  = _character != null ? _character.maxHealth     : _config.baseMaxHealth;
             float baseSpd = _character != null ? _character.moveSpeed     : _config.baseMoveSpeed;
             float baseDmg = _character != null ? _character.attackDamage  : _config.baseAttackDamage;
             float baseAs  = _character != null ? _character.attackSpeed   : _config.baseAttackSpeed;
             float baseR   = _character != null ? _character.range         : _config.baseRange;
 
-            float metaHp  = MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.MaxHealth) : 0f;
+            float metaHp  = MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.MaxHealth)    : 0f;
             float metaDmg = MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.AttackDamage) : 0f;
             float metaDust= MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.StarDustGain) : 0f;
 
-            // 레벨업 자동 증가 (character_progression §4.1·§4.3) — L1~L50 빠름, L51+ 둔화
-            int lvOffset = Mathf.Max(0, Level - 1);
-            int lvFast = Mathf.Min(lvOffset, 49);          // L1~L50 구간 (최대 49)
-            int lvSlow = Mathf.Max(0, lvOffset - 49);      // L51+ 구간
-            float lvHp  = lvFast * 10f + lvSlow * 5f;       // +10/Lv → L51+ +5/Lv
-            float lvDmg = lvFast * 1f;                      // L51+ +0
-            float lvSpd = (lvFast / 5) * 0.05f;             // L51+ 동결
-            float lvCrit= (lvFast / 5) * 0.01f;             // L51+ 동결
+            // 무한 레벨 chunk 곡선 (stats_v2 §5)
+            int lvOff = Mathf.Max(0, Level - 1);
+            int chunk1 = Mathf.Min(lvOff, 49);                            // L1~50  +10HP +1ATK
+            int chunk2 = Mathf.Clamp(lvOff - 49, 0, 50);                  // L51~100 +5  +0.5
+            int chunk3 = Mathf.Clamp(lvOff - 99, 0, 100);                 // L101~200 +3 +0.3
+            int chunk4 = Mathf.Clamp(lvOff - 199, 0, 300);                // L201~500 +2 +0.2
+            int chunk5 = Mathf.Clamp(lvOff - 499, 0, 500);                // L501~1000 +1 +0.1
+            int chunk6 = Mathf.Max(0, lvOff - 999);                       // L1001+    +0.5 +0.05
 
-            // 코어 스탯 100점당 효과 (stats_v1 §3.2)
-            float coreHp   = SpiritRaw   * 0.5f;     // 마음 100 → +50 HP
-            float coreDmg  = StrengthRaw * 0.1f;     // 힘 100 → +10 공격력
-            float coreArmor= StrengthRaw * 0.1f;     // 힘 100 → +10 방어력
-            float coreAS   = AgilityRaw  * 0.0005f;  // 빠름 100 → +5% (= 0.05) 공속
-            float coreSpd  = AgilityRaw  * 0.005f;   // 빠름 100 → +0.5 이속
-            float coreCrit = WisdomRaw   * 0.0002f;  // 슬기 100 → +2% 크리확
-            float coreRange= WisdomRaw   * 0.005f;   // 슬기 100 → +0.5 사거리
-            float coreXp   = SpiritRaw   * 0.0005f;  // 마음 100 → +5% xp
+            float lvHp  = chunk1 * 10f + chunk2 * 5f + chunk3 * 3f + chunk4 * 2f + chunk5 * 1f + chunk6 * 0.5f;
+            float lvDmg = chunk1 * 1f  + chunk2 * 0.5f + chunk3 * 0.3f + chunk4 * 0.2f + chunk5 * 0.1f + chunk6 * 0.05f;
+            float lvSpd = (chunk1 / 5) * 0.05f;
+            float lvCrit= (chunk1 / 5) * 0.01f;
 
-            MaxHealth        = baseHp  + lvHp  + metaHp  + coreHp   + _equipmentBonus.maxHealthBonus;
-            MoveSpeed        = baseSpd + lvSpd + coreSpd + _equipmentBonus.speedBonus;
-            AttackDamage     = baseDmg + lvDmg + metaDmg + coreDmg  + _equipmentBonus.attackDamageBonus;
-            AttackSpeed      = baseAs  + coreAS + _equipmentBonus.attackSpeedBonus;
-            Range            = baseR   + coreRange + _equipmentBonus.rangeBonus;
-            XpGainMultiplier = 1f + coreXp + _equipmentBonus.xpGainBonus;
+            // 코어 100점당 효과 (stats_v2 §2)
+            // 힘: 공격력 +0.1 / 방어 +0.1 / HP +0.5 (마음 흡수)
+            float coreHp     = StrengthRaw * 0.5f;
+            float coreDmg    = StrengthRaw * 0.1f;
+            float coreArmor  = StrengthRaw * 0.1f;
+            // 민첩: 공속 +0.0005 / 이속 +0.005 / 회피 +0.0002 (신규)
+            float coreAS     = AgilityRaw * 0.0005f;
+            float coreSpd    = AgilityRaw * 0.005f;
+            float coreEvasion= AgilityRaw * 0.0002f;
+            // 지혜: 크확 +0.0002 / 사거리 +0.005 / XP +0.0005 (마음 흡수) / 마법 데미지 +0.1
+            float coreCrit   = WisdomRaw * 0.0002f;
+            float coreRange  = WisdomRaw * 0.005f;
+            float coreXp     = WisdomRaw * 0.0005f;
+            float coreMagicDmg = WisdomRaw * 0.1f;
 
-            // 신규 파생 — 코어에서 받는 부분만 계산. affix·옵션·신화 영향분은
-            // 별도 ApplyAffix… 채널이 들어오기 전까지 0/베이스 유지 (B2~C4).
-            // PIVOT v4 — Cinematic Combat 베이스 5% 보장 (cinematic_combat_v1.md §3.2)
-            CritChance         = Mathf.Max(0.05f, lvCrit + coreCrit);
-            // CritDamage/Armor/DamageReduction/FinalDamageBonus/ExtraAttackTargets/
-            // ArmorPenetration/CompanionDurationBonus/AdditiveDamageBonus 는 affix 도입 시 합산.
-            Armor              = coreArmor;
+            // 파생 스탯 합산
+            MaxHealth         = baseHp  + lvHp  + metaHp + coreHp  + _equipmentBonus.maxHealthBonus;
+            MoveSpeed         = baseSpd + lvSpd + coreSpd + _equipmentBonus.speedBonus;
+            AttackDamage      = baseDmg + lvDmg + metaDmg + coreDmg + _equipmentBonus.attackDamageBonus;
+            AttackSpeed       = baseAs  + coreAS + _equipmentBonus.attackSpeedBonus;
+            Range             = baseR   + coreRange + _equipmentBonus.rangeBonus;
+            XpGainMultiplier  = 1f + coreXp + _equipmentBonus.xpGainBonus;
+
+            // PIVOT v4 — 베이스 5% 보장
+            CritChance        = Mathf.Max(0.05f, lvCrit + coreCrit);
+            CritDamage        = 1.5f;  // 기본 (affix → ApplyResolvedBonus 에서 가산)
+            Armor             = coreArmor;
+            EvasionRate       = coreEvasion;
+
+            // 신규 v2 — 코어 베이스만 (affix → ApplyResolvedBonus 에서 가산)
+            DamageReduction   = 0f;
+            StatusResist      = 0f;
+            ArmorIgnore       = 0f;
+            ArmorPenetration  = 0f;
+            HpRegenPerSec     = 0f;
+            LifestealRatio    = 0f;
+            ExtraAttackTargets = 0;
+            ChainTargets      = 0;
+            FinalDamageBonus  = 0f;
+            AdditiveDamageBonus = 0f;
+            CompanionDurationBonus = 0f;
+            CompanionDamage   = 0f;
+            MagicCritChance   = 0f;
+            MagicCritDamage   = 0f;
+            MagicDamage       = coreMagicDmg;  // 지혜 비례
+            MagicDamageMul    = 0f;
 
             DustGainMultiplier = 1f + metaDust;
+            DropRateMultiplier = 1f;
         }
     }
 }

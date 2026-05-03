@@ -83,25 +83,24 @@ namespace LittleHero
             if (_xpText != null)    _xpText.text = $"{xp:N0} / {nextXp:N0}";
             if (_xpBar != null)     _xpBar.value = nextXp > 0 ? Mathf.Clamp01((float)xp / nextXp) : 0f;
 
-            // 4 코어 (PlayerStats 우선, 없으면 캐릭터 비중 × level 시뮬)
-            int strength, agility, wisdom, spirit;
+            // 3 코어 (stats_v2 — Spirit 폐기, 한국어 라벨 갱신)
+            int strength, agility, wisdom;
             if (_stats != null)
             {
-                strength = _stats.Strength; agility = _stats.Agility; wisdom = _stats.Wisdom; spirit = _stats.Spirit;
+                strength = _stats.Strength; agility = _stats.Agility; wisdom = _stats.Wisdom;
             }
             else if (character != null)
             {
                 strength = Mathf.RoundToInt(level * character.strengthMultiplier);
                 agility  = Mathf.RoundToInt(level * character.agilityMultiplier);
                 wisdom   = Mathf.RoundToInt(level * character.wisdomMultiplier);
-                spirit   = Mathf.RoundToInt(level * character.spiritMultiplier);
             }
-            else { strength = agility = wisdom = spirit = level; }
+            else { strength = agility = wisdom = level; }
 
             if (_strengthText != null) _strengthText.text = $"힘 {strength}";
-            if (_agilityText != null)  _agilityText.text  = $"빠름 {agility}";
-            if (_wisdomText != null)   _wisdomText.text   = $"슬기 {wisdom}";
-            if (_spiritText != null)   _spiritText.text   = $"마음 {spirit}";
+            if (_agilityText != null)  _agilityText.text  = $"민첩 {agility}";
+            if (_wisdomText != null)   _wisdomText.text   = $"지혜 {wisdom}";
+            if (_spiritText != null)   _spiritText.gameObject.SetActive(false);  // Spirit 폐기
 
             if (_stats != null)
             {
