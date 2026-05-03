@@ -88,17 +88,40 @@ namespace LittleHero
         private void StartNextWave()
         {
             int wave = GameManager.Instance.CurrentWave;
+            BalanceConfig balance = GameManager.Instance.Balance;
 
-            // 5002 T07 — 챕터 보스 wave 진입 시 BossEncounter 씬으로 분리 (옵션 C)
+            // 5002 — 챕터 보스 wave 진입 시 BossEncounter 씬으로 분리 (옵션 C)
             if (wave >= _chapterData.totalWaves && _chapterData.bossEnemy != null)
             {
-                SaveSession();   // 진행 저장
+                SaveSession();
                 BossEncounterLauncher.Launch(new BossEncounterRequest
                 {
                     mode = BossEncounterContext.Mode.ChapterBoss,
                     boss = _chapterData.bossEnemy,
                     chapter = _chapterData,
                     returnSceneName = "Attic",
+                });
+                return;
+            }
+
+            // 5003 — 미니보스 wave 분리 (BalanceConfig.miniBossSeparation 토글)
+            bool isMiniBossWave = wave > 0 && balance.miniBossWaveInterval > 0
+                && wave % balance.miniBossWaveInterval == 0
+                && wave < _chapterData.totalWaves;
+            int lastMiniBossWave = _chapterData.totalWaves - balance.miniBossWaveInterval;
+            bool shouldSeparateMini = isMiniBossWave && _chapterData.miniBossPool != null && _chapterData.miniBossPool.Length > 0
+                && (balance.miniBossSeparation == MiniBossSeparationMode.All
+                    || (balance.miniBossSeparation == MiniBossSeparationMode.LastOnly && wave == lastMiniBossWave));
+            if (shouldSeparateMini)
+            {
+                var mb = _chapterData.miniBossPool[Random.Range(0, _chapterData.miniBossPool.Length)];
+                SaveSession();
+                BossEncounterLauncher.Launch(new BossEncounterRequest
+                {
+                    mode = BossEncounterContext.Mode.MiniBoss,
+                    boss = mb,
+                    chapter = _chapterData,
+                    returnSceneName = "Chapter",  // 챕터 씬 복귀 + wave 재개
                 });
                 return;
             }
