@@ -8,18 +8,9 @@ namespace LittleHero
 {
     public class AtticController : MonoBehaviour
     {
-        [Serializable]
-        public class ChapterButton
-        {
-            public ChapterData chapter;
-            public Button button;
-        }
-
-        [SerializeField] private string _chapterSceneName = "Chapter";
-        [SerializeField] private ChapterButton[] _chapterButtons;
-
         // 5005 Sprint 1 — 4 화폐 표시는 AtticCurrencyView 로 추출
-        // 5005 Sprint 2 — 캐릭터 선택은 AtticCharacterSelector 로 추출 (CharacterButton 클래스 + 3 SerializeField + 5 메서드)
+        // 5005 Sprint 2 — 캐릭터 선택은 AtticCharacterSelector 로 추출
+        // 5005 Sprint 3 — 챕터 진입 + 5002 D2 toast 는 AtticChapterEntry 로 추출 (ChapterButton 클래스 + _chapterButtons + _chapterSceneName + HandleStart + HandlePendingChapterCleared + ResolveChapterById)
 
         [Header("D2 — Endgame 메뉴 (선택, CH35 클리어 후 활성)")]
         [SerializeField] private GameObject _endgameMenuRoot;
@@ -117,17 +108,6 @@ namespace LittleHero
             GameEvents.OnLimitedOfferPurchased += HandleLimitedOfferChanged;
             GameEvents.OnLimitedOfferExpired   += HandleLimitedOfferChanged;
 
-            if (_chapterButtons != null)
-            {
-                for (int i = 0; i < _chapterButtons.Length; i++)
-                {
-                    var entry = _chapterButtons[i];
-                    if (entry?.button == null) continue;
-                    var captured = entry.chapter;
-                    entry.button.onClick.AddListener(() => HandleStart(captured));
-                }
-            }
-
         }
 
         private void OnDisable()
@@ -142,9 +122,6 @@ namespace LittleHero
             GameEvents.OnLimitedOfferPurchased -= HandleLimitedOfferChanged;
             GameEvents.OnLimitedOfferExpired   -= HandleLimitedOfferChanged;
 
-            if (_chapterButtons != null)
-                foreach (var entry in _chapterButtons)
-                    if (entry?.button != null) entry.button.onClick.RemoveAllListeners();
         }
 
         private void Start()
@@ -154,7 +131,7 @@ namespace LittleHero
             RefreshLimitedShopBadge();
             RefreshEndgameMenu();
             HandleReturnFromBossEncounter();
-            HandlePendingChapterCleared();   // 5002 D2 — 챕터 클리어 후 1회 toast
+            // 5005 Sprint 3 — HandlePendingChapterCleared 는 AtticChapterEntry.Start 가 담당
 
             // 다락방 BGM (Joe Hisaishi 풍 nostalgic)
             AudioManager.Instance?.PlayBgm("attic_nostalgic");
@@ -245,38 +222,7 @@ namespace LittleHero
             return $"{d}일 {h}시";
         }
 
-        private void HandleStart(ChapterData chapter)
-        {
-            if (MetaProgression.Instance != null)
-                MetaProgression.Instance.SelectedChapter = chapter;
-            SceneTransitionService.Transition(_chapterSceneName);
-        }
-
-        // 5002 D2 — 챕터 클리어 후 다락방 1회 toast (BossEncounterService.CompleteChapterBoss 가 set)
-        private void HandlePendingChapterCleared()
-        {
-            var data = MetaProgression.Instance?.Data;
-            if (data == null || string.IsNullOrEmpty(data.pendingChapterClearedId)) return;
-
-            var ch = ResolveChapterById(data.pendingChapterClearedId);
-            if (ch != null)
-            {
-                // Attic 씬에 ChapterClearedPanel prefab 가 있다면 OnChapterCleared 구독으로 표시.
-                // StarlightGrantService 이중 raise 안전 (chapterStarlightGranted bit 으로 1회 보상 보장).
-                GameEvents.RaiseChapterCleared(ch);
-                Debug.Log($"[Attic] 챕터 클리어 1회 toast: {ch.displayName} (5002 D2)");
-            }
-            data.pendingChapterClearedId = "";
-            SaveSystem.Save(data);
-        }
-
-        private ChapterData ResolveChapterById(string id)
-        {
-            if (string.IsNullOrEmpty(id) || _chapterButtons == null) return null;
-            foreach (var entry in _chapterButtons)
-                if (entry?.chapter != null && entry.chapter.id == id) return entry.chapter;
-            return null;
-        }
+        // 5005 Sprint 3 — HandleStart / HandlePendingChapterCleared / ResolveChapterById 모두 AtticChapterEntry 로 이동
 
         // F5 — 보스 씬에서 신화 발현된 경우 다락방 복귀 시 1회 무지개 Overlay
         private void HandleReturnFromBossEncounter()
