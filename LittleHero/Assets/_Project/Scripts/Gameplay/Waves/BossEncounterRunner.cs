@@ -20,6 +20,8 @@ namespace LittleHero
         [SerializeField] private float _returnDelay = 2.0f;
         [Tooltip("보스 전투 최대 시간 (초). 제한 시간 도달 시 보스 도주 처리(=사망과 동일).")]
         [SerializeField] private float _battleDuration = 90f;
+        [Tooltip("5002 — ChapterBoss 모드에서 챕터 BG 적용용 (BackgroundApplier 호출 대상)")]
+        [SerializeField] private SpriteRenderer _backgroundRenderer;
 
         private WaveManager _wave;
         private EnemySpawner _spawner;
@@ -48,6 +50,10 @@ namespace LittleHero
 
             var boss = BossEncounterContext.PendingBoss;
             _spawner.RegisterEnemy(boss);
+
+            // 5002 T04 — ChapterBoss 모드 시 챕터 BG 적용
+            if (BossEncounterContext.PendingType == BossEncounterContext.Mode.ChapterBoss)
+                BackgroundApplier.Apply(_backgroundRenderer, BossEncounterContext.PendingChapter);
 
             var config = new WaveConfig
             {
@@ -85,9 +91,17 @@ namespace LittleHero
                         result.mythicGranted?.mythicId,
                         BossEncounterContext.PendingMythicPool);
                     break;
+                case BossEncounterContext.Mode.ChapterBoss:
+                    // 5002 T04 — T06 에서 본체 구현. 본 시점에는 stub 호출 (T06 추가)
+                    BossEncounterService.CompleteChapterBoss(
+                        BossEncounterContext.PendingBoss,
+                        BossEncounterContext.PendingChapter);
+                    break;
             }
+            string returnScene = !string.IsNullOrEmpty(BossEncounterContext.PendingReturnScene)
+                ? BossEncounterContext.PendingReturnScene : _atticSceneName;
             BossEncounterContext.Clear();
-            StartCoroutine(LoadAtticAfterDelay());
+            StartCoroutine(LoadSceneAfterDelay(returnScene));
         }
 
         private void HandleDied()
@@ -95,16 +109,18 @@ namespace LittleHero
             if (_resolved) return;
             _resolved = true;
             Debug.Log("[BossEncounter] 사망 — 보상 없이 Attic 복귀");
+            string returnScene = !string.IsNullOrEmpty(BossEncounterContext.PendingReturnScene)
+                ? BossEncounterContext.PendingReturnScene : _atticSceneName;
             BossEncounterContext.Clear();
             BossEncounterContext.LastMythicGranted = null;
-            StartCoroutine(LoadAtticAfterDelay());
+            StartCoroutine(LoadSceneAfterDelay(returnScene));
         }
 
-        private IEnumerator LoadAtticAfterDelay()
+        private IEnumerator LoadSceneAfterDelay(string scene)
         {
             yield return new WaitForSecondsRealtime(_returnDelay);
             Time.timeScale = 1f;
-            SceneManager.LoadScene(_atticSceneName);
+            SceneManager.LoadScene(scene);
         }
 
         private static MythicDefinition ResolveMythicDef(string id, MythicDefinition[] pool)

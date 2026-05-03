@@ -62,6 +62,13 @@ namespace LittleHero
 
         // ===== 처치 처리 =====
 
+        /// <summary>5002 T04 — 챕터 보스 처치 stub. T06 에서 본체 구현 (BossLootGrantService.Apply + RaiseChapterCleared + pendingChapterClearedId).</summary>
+        public static void CompleteChapterBoss(EnemyData boss, ChapterData chapter)
+        {
+            Debug.Log($"[BossEncounterService] CompleteChapterBoss stub: boss={boss?.displayName} chapter={chapter?.id}");
+            // T06 에서 본체 구현
+        }
+
         /// <summary>일일 보스 처치 시점에 호출. 가용성 미충족 또는 mode 결손 시 false.</summary>
         public static bool CompleteDailyBoss(EndgameModeData mode)
         {
