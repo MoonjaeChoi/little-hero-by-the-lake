@@ -17,8 +17,23 @@ namespace LittleHero
             bool isCrit = RollCrit();
             float critMul = isCrit ? GetCritDamageMul() : 1f;
             float final = damage * MythicEffectRuntime.CalcOutgoingDamageMultiplier(enemy) * critMul;
-            // PIVOT v4 — OnHit 먼저 (적 1발 처치 시 SetActive(false) 후 coroutine 시작 실패 방지).
-            // floater/audio/shake 는 enemy 비활성과 무관, punch/flash coroutine 만 적이 alive 일 때 동작.
+
+            // stats_v2 §10 — armor reduction (메이플 공식: dmg × (1 - def/(def+1000)))
+            var s = GetStats();
+            if (s != null && enemy.Data != null && enemy.Data.armor > 0)
+            {
+                float defense = enemy.Data.armor * (1f - s.ArmorIgnore);
+                if (defense > 0) final *= 1f - defense / (defense + 1000f);
+            }
+
+            // stats_v2 — Lifesteal (cap 50%)
+            if (s != null && s.LifestealRatio > 0)
+            {
+                var health = Object.FindFirstObjectByType<PlayerHealth>(FindObjectsInactive.Include);
+                if (health != null) health.Heal(final * Mathf.Min(s.LifestealRatio, 0.5f));
+            }
+
+            // PIVOT v4 — OnHit 먼저 (적 1발 처치 시 SetActive(false) 후 coroutine 실패 방지).
             enemy.OnHit(final, isCrit);
             enemy.TakeDamage(final);
         }

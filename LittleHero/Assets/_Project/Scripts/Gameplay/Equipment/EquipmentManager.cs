@@ -87,27 +87,31 @@ namespace LittleHero
 
         // ===== 옵션 Z 사이클 1 — 가챠 무기 인스턴스 장착 =====
 
-        /// <summary>SaveData.equipmentInstances 의 isEquipped=true 인스턴스 모두 자동 장착.</summary>
+        /// <summary>
+        /// SaveData.equipmentInstances 의 isEquipped=true 인스턴스 모두 자동 장착.
+        /// stats_v2 §11 — EffectResolver 호출 + ApplyResolvedBonus 통합 (affix MUL% 자동 반영).
+        /// </summary>
         public void SyncEquippedInstances()
         {
             EnsureTemplateCache();
             var data = MetaProgression.Instance?.Data;
             if (data == null || data.equipmentInstances == null) return;
 
-            int activated = 0;
+            // 장착 인스턴스만 모음
+            var equippedList = new List<EquipmentInstance>();
             foreach (var inst in data.equipmentInstances)
+                if (inst != null && inst.isEquipped) equippedList.Add(inst);
+
+            int activated = 0;
+            foreach (var inst in equippedList)
             {
-                if (inst == null || !inst.isEquipped) continue;
                 if (string.IsNullOrEmpty(inst.templateId)) continue;
                 if (_instancePatterns.ContainsKey(inst.instanceId)) continue;
 
                 EquipmentTemplate template;
                 if (!_templateCache.TryGetValue(inst.templateId, out template) || template == null) continue;
 
-                // 1. baseStats 적용 (StatModifiers — PlayerStats 합산)
-                if (template.baseStats != null) _stats.ApplyEquipmentBonus(template.baseStats);
-
-                // 2. attackPattern 활성화 (None 제외)
+                // attackPattern 활성화 (None 제외) — baseStats 가산은 EffectResolver 통합 (아래)
                 if (template.attackPattern != AttackPatternType.None && template.attackConfig != null)
                 {
                     var pattern = CreatePattern(template.attackPattern);
@@ -120,7 +124,27 @@ namespace LittleHero
                     }
                 }
             }
-            if (activated > 0) Debug.Log($"[EquipmentManager] 가챠 무기 {activated}종 활성화");
+
+            // stats_v2 — EffectResolver 일괄 + PlayerStats.ApplyResolvedBonus
+            // baseStats × StarforceMul + affix MUL% / FinalDmg% / CritChance% / ArmorIgnore% 등 반영
+            var resolved = EffectResolver.Resolve(equippedList, _templateCache);
+            if (resolved != null && _stats != null)
+            {
+                // baseStats 채널 (MaxHealth/Speed/AtkDmg/AtkSpd/Range/XpGain) 적용
+                var statMod = new StatModifiers
+                {
+                    maxHealthBonus    = resolved.MaxHealthAdd,
+                    speedBonus        = resolved.MoveSpeedAdd,
+                    attackDamageBonus = resolved.AttackDamageAdd,
+                    attackSpeedBonus  = 0f,  // EffectResolver 가 이미 % 처리, 별도 가산 X
+                    rangeBonus        = resolved.RangeAdd,
+                    xpGainBonus       = 0f,
+                };
+                _stats.ApplyEquipmentBonus(statMod);
+                // affix MUL% / 신규 채널 적용
+                _stats.ApplyResolvedBonus(resolved);
+            }
+            if (activated > 0) Debug.Log($"[EquipmentManager] 가챠 무기 {activated}종 활성화 + EffectResolver 통합");
         }
 
         /// <summary>인스턴스 단일 장착 (InventoryPanel 등에서 호출).</summary>

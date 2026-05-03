@@ -10,11 +10,10 @@ namespace LittleHero
     /// </summary>
     public class ResolvedEquipmentBonus
     {
-        // 4 코어 (절대 가산)
+        // 3 코어 (Spirit 폐기, stats_v2)
         public int StrengthAdd;
         public int AgilityAdd;
         public int WisdomAdd;
-        public int SpiritAdd;
 
         // 전투 베이스 (ADD 절대값 + MUL %)
         public float MaxHealthAdd;
@@ -147,12 +146,12 @@ namespace LittleHero
                 case StatTarget.Strength: bonus.StrengthAdd += Mathf.RoundToInt(line.value); break;
                 case StatTarget.Agility:  bonus.AgilityAdd  += Mathf.RoundToInt(line.value); break;
                 case StatTarget.Wisdom:   bonus.WisdomAdd   += Mathf.RoundToInt(line.value); break;
-                case StatTarget.Spirit:   bonus.SpiritAdd   += Mathf.RoundToInt(line.value); break;
+                // Spirit 폐기 — Wisdom 으로 흡수
                 case StatTarget.AllStats:
                 {
                     int v = Mathf.RoundToInt(line.value);
-                    bonus.StrengthAdd += v; bonus.AgilityAdd += v;
-                    bonus.WisdomAdd   += v; bonus.SpiritAdd  += v;
+                    bonus.StrengthAdd += v; bonus.AgilityAdd += v; bonus.WisdomAdd += v;
+                    // SpiritAdd 제거 (Spirit 코어 폐기)
                     break;
                 }
 

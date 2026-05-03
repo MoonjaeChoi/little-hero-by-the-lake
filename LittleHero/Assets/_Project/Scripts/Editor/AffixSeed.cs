@@ -45,9 +45,9 @@ namespace LittleHero.EditorTools
 
             // §2.4 코어 스탯
             MakeAffix("affix_strength",      "힘 +N",             StatTarget.Strength,          AffixOp.ADD, new[]{1f,2f,4f,7f,12f}, new[]{1f,2f,4f,7f,12f}, "", 0);
-            MakeAffix("affix_agility",       "빠름 +N",           StatTarget.Agility,           AffixOp.ADD, new[]{1f,2f,4f,7f,12f}, new[]{1f,2f,4f,7f,12f}, "", 0);
-            MakeAffix("affix_wisdom",        "슬기 +N",           StatTarget.Wisdom,            AffixOp.ADD, new[]{1f,2f,4f,7f,12f}, new[]{1f,2f,4f,7f,12f}, "", 0);
-            MakeAffix("affix_spirit",        "마음 +N",           StatTarget.Spirit,            AffixOp.ADD, new[]{1f,2f,4f,7f,12f}, new[]{1f,2f,4f,7f,12f}, "", 0);
+            MakeAffix("affix_agility",       "민첩 +N",           StatTarget.Agility,           AffixOp.ADD, new[]{1f,2f,4f,7f,12f}, new[]{1f,2f,4f,7f,12f}, "", 0);
+            MakeAffix("affix_wisdom",        "지혜 +N",           StatTarget.Wisdom,            AffixOp.ADD, new[]{1f,2f,4f,7f,12f}, new[]{1f,2f,4f,7f,12f}, "", 0);
+            // affix_spirit 폐기 (Spirit → Wisdom 흡수)
             MakeAffix("affix_all_stats",     "모든 스탯 +N",      StatTarget.AllStats,          AffixOp.ADD, new[]{1f,1f,2f,3f,5f}, new[]{1f,1f,2f,3f,5f}, "", 0);
 
             // §2.5 메타·드랍
@@ -58,9 +58,9 @@ namespace LittleHero.EditorTools
 
             // === 부옵션 12종 (item_drop §3.1) — 가중치는 §3.2 ===
             MakeSub("sub_strength",    "힘 +N",            StatTarget.Strength,        AffixOp.ADD, new[]{1f,1f,2f,3f,5f}, new[]{1f,1f,2f,3f,5f}, 0.15f, "", 0);
-            MakeSub("sub_agility",     "빠름 +N",          StatTarget.Agility,         AffixOp.ADD, new[]{1f,1f,2f,3f,5f}, new[]{1f,1f,2f,3f,5f}, 0.15f, "", 0);
-            MakeSub("sub_wisdom",      "슬기 +N",          StatTarget.Wisdom,          AffixOp.ADD, new[]{1f,1f,2f,3f,5f}, new[]{1f,1f,2f,3f,5f}, 0.15f, "", 0);
-            MakeSub("sub_spirit",      "마음 +N",          StatTarget.Spirit,          AffixOp.ADD, new[]{1f,1f,2f,3f,5f}, new[]{1f,1f,2f,3f,5f}, 0.15f, "", 0);
+            MakeSub("sub_agility",     "민첩 +N",          StatTarget.Agility,         AffixOp.ADD, new[]{1f,1f,2f,3f,5f}, new[]{1f,1f,2f,3f,5f}, 0.15f, "", 0);
+            MakeSub("sub_wisdom",      "지혜 +N",          StatTarget.Wisdom,          AffixOp.ADD, new[]{1f,1f,2f,3f,5f}, new[]{1f,1f,2f,3f,5f}, 0.15f, "", 0);
+            // sub_spirit 폐기 (Spirit → Wisdom 흡수, stats_v2)
             MakeSub("sub_max_hp",      "최대 HP +%",       StatTarget.MaxHealth,       AffixOp.MUL, new[]{1f,2f,3f,5f,7f}, new[]{2f,3f,5f,7f,10f}, 0.10f, "%", 1);
             MakeSub("sub_attack_dmg",  "공격력 +%",        StatTarget.AttackDamage,    AffixOp.MUL, new[]{1f,2f,3f,5f,8f}, new[]{2f,3f,5f,8f,12f}, 0.08f, "%", 1);
             MakeSub("sub_armor",       "방어력 +N",        StatTarget.Armor,           AffixOp.ADD, new[]{1f,3f,6f,10f,15f},new[]{3f,6f,10f,15f,22f}, 0.05f, "", 0);

@@ -10,12 +10,18 @@ namespace LittleHero
     /// </summary>
     public enum StatTarget
     {
+        // 기존 (Spirit 폐기, stats_v2)
         FinalDamage, AttackDamage, CritDamage, CritChance, AttackSpeed,
         ArmorPenetration, ExtraAttackTargets,
         MaxHealth, Armor, DamageReduction, HpRegen,
         MoveSpeed, Range,
-        Strength, Agility, Wisdom, Spirit, AllStats,
+        Strength, Agility, Wisdom, AllStats,  // Spirit 제거
         XpGain, DustGain, DropRate, CompanionDuration,
+
+        // stats_v2 신규 9 (메이플 키우기 풀 채용)
+        EvasionRate, StatusResist, ArmorIgnore,
+        ChainTargets, LifestealRatio, CompanionDamage,
+        MagicDamage, MagicCritChance, MagicCritDamage,
     }
 
     /// <summary>
