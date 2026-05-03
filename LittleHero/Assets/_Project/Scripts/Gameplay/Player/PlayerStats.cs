@@ -65,7 +65,8 @@ namespace LittleHero
         public float MagicDamage { get; private set; }           // v2 신규 — 지팡이·룬 무기
         public float MagicDamageMul { get; private set; }        // v2 신규
 
-        // 무한 레벨 — cap X
+        // stats_v2.5 — L100 cap 복원 (사용자 결정 2026-05-03). 장비 강화는 무한.
+        public const int LEVEL_CAP = 100;
         public int Level { get; private set; } = 1;
 
         public void Initialize(BalanceConfig config, CharacterData character = null)
@@ -110,10 +111,10 @@ namespace LittleHero
             RecalculateStats();
         }
 
-        // 절대 동기화 — Level 무한 (cap X), 누적 안 됨 (Mathf.Max(1, level))
+        // stats_v2.5 — Level [1, 100] cap. 장비 강화는 별도 무한.
         public void SetLevel(int level)
         {
-            Level = Mathf.Max(1, level);
+            Level = Mathf.Clamp(level, 1, LEVEL_CAP);
 
             float sm = _character != null ? _character.strengthMultiplier : 1f;
             float am = _character != null ? _character.agilityMultiplier  : 1f;
@@ -177,17 +178,13 @@ namespace LittleHero
             float metaDmg = MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.AttackDamage) : 0f;
             float metaDust= MetaProgression.Instance != null ? MetaProgression.Instance.GetMetaBonus(MetaUpgradeStat.StarDustGain) : 0f;
 
-            // 무한 레벨 chunk 곡선 (stats_v2 §5)
-            int lvOff = Mathf.Max(0, Level - 1);
-            int chunk1 = Mathf.Min(lvOff, 49);                            // L1~50  +10HP +1ATK
-            int chunk2 = Mathf.Clamp(lvOff - 49, 0, 50);                  // L51~100 +5  +0.5
-            int chunk3 = Mathf.Clamp(lvOff - 99, 0, 100);                 // L101~200 +3 +0.3
-            int chunk4 = Mathf.Clamp(lvOff - 199, 0, 300);                // L201~500 +2 +0.2
-            int chunk5 = Mathf.Clamp(lvOff - 499, 0, 500);                // L501~1000 +1 +0.1
-            int chunk6 = Mathf.Max(0, lvOff - 999);                       // L1001+    +0.5 +0.05
+            // stats_v2.5 — L100 cap chunk 곡선 단순화
+            int lvOff = Mathf.Clamp(Level - 1, 0, LEVEL_CAP - 1);
+            int chunk1 = Mathf.Min(lvOff, 49);              // L1~50  +10HP +1ATK
+            int chunk2 = Mathf.Max(0, lvOff - 49);          // L51~100 +5  +0.5
 
-            float lvHp  = chunk1 * 10f + chunk2 * 5f + chunk3 * 3f + chunk4 * 2f + chunk5 * 1f + chunk6 * 0.5f;
-            float lvDmg = chunk1 * 1f  + chunk2 * 0.5f + chunk3 * 0.3f + chunk4 * 0.2f + chunk5 * 0.1f + chunk6 * 0.05f;
+            float lvHp  = chunk1 * 10f + chunk2 * 5f;
+            float lvDmg = chunk1 * 1f  + chunk2 * 0.5f;
             float lvSpd = (chunk1 / 5) * 0.05f;
             float lvCrit= (chunk1 / 5) * 0.01f;
 

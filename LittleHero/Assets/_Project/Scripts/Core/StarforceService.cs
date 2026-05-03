@@ -14,7 +14,12 @@ namespace LittleHero
     /// </summary>
     public static class StarforceService
     {
-        public const int MAX_LEVEL = 25;
+        // stats_v2.5 — 무한 강화 (사용자 결정 2026-05-03). +25+ 는 곡선 외삽.
+        public const int MAX_LEVEL = int.MaxValue;
+        public const int CURVE_LAST = 25;          // 정의된 곡선 마지막 단계
+        public const float MUL_GROWTH_OVER = 0.05f;  // ⭐25+ 단계마다 +5% baseMul (200% → 205% → ...)
+        public const float COST_GROWTH_OVER = 1.4f;  // ⭐25+ 비용 1.4^N 증가
+        public const float RATE_FLOOR = 0.30f;       // ⭐25+ 성공률 30% 동결
 
         // gacha_v1.md §3.2 데이터포인트 + 보간으로 채운 25 길이 곡선.
         // 인덱스 N = ⭐N → ⭐N+1 강화 (성공 시 ⭐N+1 도달).
@@ -95,27 +100,25 @@ namespace LittleHero
 
         // ===== 조회 =====
 
-        /// <summary>슬롯의 현재 ⭐ 단계 (0~25). 미초기화 SaveData 시 0.</summary>
+        /// <summary>슬롯의 현재 ⭐ 단계 (0~무한). 미초기화 SaveData 시 0.</summary>
         public static int GetLevel(EquipSlot slot)
         {
             var data = MetaProgression.Instance?.Data;
             if (data == null || data.slotStarforceLevels == null) return 0;
             int idx = (int)slot;
             if (idx < 0 || idx >= data.slotStarforceLevels.Length) return 0;
-            return Mathf.Clamp(data.slotStarforceLevels[idx], 0, MAX_LEVEL);
+            return Mathf.Max(0, data.slotStarforceLevels[idx]);
         }
 
-        /// <summary>슬롯에 적용되는 base 곱셈 비율 (0.0 = +0%, 1.6 = +160%, 2.0 = +200%).</summary>
-        public static float GetBaseMultiplier(EquipSlot slot)
-        {
-            int lv = GetLevel(slot);
-            return _baseMulPercent[lv] / 100f;
-        }
+        /// <summary>슬롯에 적용되는 base 곱셈 비율 (⭐25 +200%, ⭐25+ 단계마다 +5% 추가 무한).</summary>
+        public static float GetBaseMultiplier(EquipSlot slot) => GetBaseMultiplierForLevel(GetLevel(slot));
 
         public static float GetBaseMultiplierForLevel(int level)
         {
-            int lv = Mathf.Clamp(level, 0, MAX_LEVEL);
-            return _baseMulPercent[lv] / 100f;
+            if (level < 0) return 0f;
+            if (level <= CURVE_LAST) return _baseMulPercent[level] / 100f;
+            // stats_v2.5 — 무한 ⭐25+ 매 단계 +5%
+            return (_baseMulPercent[CURVE_LAST] + (level - CURVE_LAST) * MUL_GROWTH_OVER * 100f) / 100f;
         }
 
         /// <summary>현재 단계에서 다음 강화 시도 비용.</summary>
@@ -123,9 +126,11 @@ namespace LittleHero
 
         public static int GetCostForLevel(int currentLevel)
         {
-            if (currentLevel >= MAX_LEVEL) return 0;
-            int idx = Mathf.Clamp(currentLevel, 0, _shardCost.Length - 1);
-            return _shardCost[idx];
+            if (currentLevel < 0) return 0;
+            if (currentLevel < _shardCost.Length) return _shardCost[currentLevel];
+            // stats_v2.5 — 무한 (last × 1.4^over)
+            int over = currentLevel - _shardCost.Length + 1;
+            return Mathf.RoundToInt(_shardCost[_shardCost.Length - 1] * Mathf.Pow(COST_GROWTH_OVER, over));
         }
 
         /// <summary>현재 단계에서 다음 강화 시도 성공 확률 (0~1).</summary>
@@ -133,12 +138,12 @@ namespace LittleHero
 
         public static float GetSuccessRateForLevel(int currentLevel)
         {
-            if (currentLevel >= MAX_LEVEL) return 0f;
-            int idx = Mathf.Clamp(currentLevel, 0, _successRate.Length - 1);
-            return _successRate[idx];
+            if (currentLevel < 0) return 0f;
+            if (currentLevel < _successRate.Length) return _successRate[currentLevel];
+            return RATE_FLOOR;  // ⭐25+ 무한 동결
         }
 
-        public static bool IsMaxLevel(EquipSlot slot) => GetLevel(slot) >= MAX_LEVEL;
+        public static bool IsMaxLevel(EquipSlot slot) => false;  // 무한 (cap 없음)
 
         // ===== 강화 =====
 
@@ -175,18 +180,8 @@ namespace LittleHero
             }
 
             int idx = (int)slot;
-            int currentLevel = Mathf.Clamp(data.slotStarforceLevels[idx], 0, MAX_LEVEL);
-            if (currentLevel >= MAX_LEVEL)
-            {
-                return new StarforceResult
-                {
-                    outcome = StarforceOutcome.AtMaxLevel,
-                    slot = slot,
-                    previousLevel = currentLevel,
-                    newLevel = currentLevel,
-                };
-            }
-
+            int currentLevel = Mathf.Max(0, data.slotStarforceLevels[idx]);
+            // stats_v2.5 — 무한 강화 (cap X), AtMaxLevel 폐기
             int cost = GetCostForLevel(currentLevel);
             if (data.starforceShards < cost)
             {

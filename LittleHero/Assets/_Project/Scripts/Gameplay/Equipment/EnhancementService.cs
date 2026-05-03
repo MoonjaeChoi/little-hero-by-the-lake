@@ -38,15 +38,17 @@ namespace LittleHero
     /// </summary>
     public static class EnhancementService
     {
-        public const int MAX_ENHANCE_LEVEL = 25;
-        // [0, 15) = 결정론 (15회 시도: +0→+1 ~ +14→+15 모두 100%).
-        // level 15 = 첫 RNG 시도 (+15→+16, 마법 결정 ◇3 소비). p = 0.50 × 0.85^0 = 0.50.
+        // stats_v2.5 — 무한 강화 (사용자 결정 2026-05-03).
+        // 기존 +25 cap 폐기. +26+ 는 P_FLOOR (30%) 동결 + 비용 1.5^N 지수 증가.
+        public const int MAX_ENHANCE_LEVEL = int.MaxValue;
         public const int DETERMINISTIC_LEVEL_CAP = 15;
         public const int SOFT_PITY_START_FAILS = 5;
         public const float SOFT_PITY_BONUS_PER_FAIL = 0.05f;
         public const int HARD_PITY_FAILS = 20;
         public const float P_BASE = 0.50f;
         public const float P_DECAY = 0.85f;
+        public const float P_FLOOR = 0.30f;       // 무한 강화 성공률 동결 (+25+)
+        public const float COST_GROWTH = 1.5f;    // L25+ 비용 1.5^N 증가
 
         private static readonly System.Random _defaultRng = new System.Random();
 
@@ -123,7 +125,9 @@ namespace LittleHero
         {
             if (level < DETERMINISTIC_LEVEL_CAP) return 1f;
             if (failCount >= HARD_PITY_FAILS) return 1f;
-            float p = P_BASE * Mathf.Pow(P_DECAY, level - DETERMINISTIC_LEVEL_CAP);
+            // stats_v2.5 — +25+ 무한 강화 P_FLOOR 동결
+            int over = level - DETERMINISTIC_LEVEL_CAP;
+            float p = (over <= 10) ? P_BASE * Mathf.Pow(P_DECAY, over) : P_FLOOR;
             if (failCount >= SOFT_PITY_START_FAILS)
                 p += SOFT_PITY_BONUS_PER_FAIL * (failCount - (SOFT_PITY_START_FAILS - 1));
             return Mathf.Clamp01(p);
@@ -132,15 +136,25 @@ namespace LittleHero
         public static int GetDustCost(int level, BalanceConfig config)
         {
             if (config?.enhanceCostByLevel == null) return 0;
-            if (level < 0 || level >= config.enhanceCostByLevel.Length) return 0;
-            return config.enhanceCostByLevel[level];
+            if (level < 0) return 0;
+            // stats_v2.5 — 무한 강화 (배열 외 cost = last × 1.5^over)
+            if (level < config.enhanceCostByLevel.Length)
+                return config.enhanceCostByLevel[level];
+            int last = config.enhanceCostByLevel[config.enhanceCostByLevel.Length - 1];
+            int over = level - config.enhanceCostByLevel.Length + 1;
+            return Mathf.RoundToInt(last * Mathf.Pow(COST_GROWTH, over));
         }
 
         public static int GetCrystalCost(int level, BalanceConfig config)
         {
             if (config?.enhanceCrystalByLevel == null) return 0;
-            if (level < 0 || level >= config.enhanceCrystalByLevel.Length) return 0;
-            return config.enhanceCrystalByLevel[level];
+            if (level < 0) return 0;
+            if (level < config.enhanceCrystalByLevel.Length)
+                return config.enhanceCrystalByLevel[level];
+            // stats_v2.5 — 무한 (last × 1.3^over, crystal 더 천천히 증가)
+            int last = config.enhanceCrystalByLevel[config.enhanceCrystalByLevel.Length - 1];
+            int over = level - config.enhanceCrystalByLevel.Length + 1;
+            return Mathf.RoundToInt(last * Mathf.Pow(1.3f, over));
         }
     }
 }
