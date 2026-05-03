@@ -494,5 +494,5 @@ SO 인스턴스 400+는 코드 시드로 생성. 신규 시작 / 재시드 시 �
 5. 구현 (`little-hero-dev` 스킬)
 6. `prd-evaluate` → Sprint Contract 검증, FAIL 시 5번으로 재진입 (max 2회)
 
-5001 boss_system_v2 가 첫 풀 시연 사례 (`docs/little_hero/5001_*.md` 참조).
+5001 boss_system_v2 가 첫 풀 시연 사례 (`docs/prd/5001_*.md` 참조).
 

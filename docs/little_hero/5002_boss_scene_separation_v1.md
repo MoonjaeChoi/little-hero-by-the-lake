@@ -225,7 +225,7 @@ private void ApplyChapterBackground(ChapterData ch) { /* ChapterRunner.ApplyChap
 
 ## 9. Sources
 
-- `docs/little_hero/5001_boss_system_v2.md` (BossTier·IBossPhase·BossLootTable 4)
+- `docs/prd/5001_boss_system_v2.md` (BossTier·IBossPhase·BossLootTable 4)
 - `docs/little_hero/endgame_v1.md` §4·§5 (Daily/Weekly 보스 흐름)
 - `docs/little_hero/architecture_analysis_v1.md` (§15 OOP 정책 출처)
 - `CLAUDE.md` §13 #8 "F4/F5 보스 씬 분리"
