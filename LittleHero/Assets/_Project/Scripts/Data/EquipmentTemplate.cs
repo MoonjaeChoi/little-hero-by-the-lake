@@ -24,6 +24,11 @@ namespace LittleHero
         public AttackPatternType attackPattern;
         public AttackPatternConfig attackConfig;
 
+        // weapon_system_v2.md §4 — 직업·카테고리 (무기 슬롯만 사용)
+        [Header("직업·카테고리 (Weapon 슬롯)")]
+        public CharacterClass requiredClass;   // 전사/궁수/마법사
+        public WeaponCategory category = WeaponCategory.None;  // Sword/Bow/Staff 등
+
         [Header("강화·옵션 사양")]
         [Tooltip("강화 +0 ~ +N (equipment §3.3, 기본 25)")]
         public int maxEnhanceLevel = 25;
