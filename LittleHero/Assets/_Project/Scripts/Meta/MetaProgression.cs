@@ -27,6 +27,8 @@ namespace LittleHero
         public int EnemyTotalCount => _enemyPool?.enemies?.Length ?? 0;
 
         public event System.Action<CharacterData> OnCharacterChanged;
+        // weapon_v2 후속 — 직업 변경 시 무기 자동 unequip 트리거
+        public event System.Action<CharacterClass> OnCharacterClassChanged;
         public event System.Action<MetaUpgradeData> OnUpgradeChanged;
         public event System.Action<EnemyData> OnEnemyDefeated;
 
@@ -235,11 +237,30 @@ namespace LittleHero
 
         public void SelectCharacter(CharacterData character)
         {
+            // weapon_v2 — 직업 변경 감지 (이전 → 신규)
+            var prevClass = ResolveCharacterClass(SelectedCharacter);
+            var newClass = ResolveCharacterClass(character);
+
             SelectedCharacter = character;
             Data.selectedCharacterId = character != null ? character.id : null;
             SaveSystem.Save(Data);
             OnCharacterChanged?.Invoke(character);
             if (character != null) LimitedShopService.HandleCharacterFirstSelect(character.id);  // 핫딜 트리거
+
+            // 직업 enum 변경 시만 발행 (같은 직업 내 캐릭터 교체 시 X)
+            if (prevClass != newClass) OnCharacterClassChanged?.Invoke(newClass);
+        }
+
+        private static CharacterClass ResolveCharacterClass(CharacterData ch)
+        {
+            if (ch == null || string.IsNullOrEmpty(ch.className)) return CharacterClass.Warrior;
+            switch (ch.className)
+            {
+                case "전사": return CharacterClass.Warrior;
+                case "궁수": return CharacterClass.Archer;
+                case "마법사": return CharacterClass.Mage;
+                default: return CharacterClass.Warrior;
+            }
         }
 
         public int GetUpgradeLevel(string id)

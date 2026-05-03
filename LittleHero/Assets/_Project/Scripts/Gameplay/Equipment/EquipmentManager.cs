@@ -35,12 +35,43 @@ namespace LittleHero
         {
             GameEvents.OnPlayerDied     += ClearAllPatterns;
             GameEvents.OnChapterCleared += HandleChapterCleared;
+            // weapon_v2 후속 — 직업 변경 시 무기 자동 unequip
+            if (MetaProgression.Instance != null)
+                MetaProgression.Instance.OnCharacterClassChanged += HandleClassChanged;
         }
 
         private void OnDisable()
         {
             GameEvents.OnPlayerDied     -= ClearAllPatterns;
             GameEvents.OnChapterCleared -= HandleChapterCleared;
+            if (MetaProgression.Instance != null)
+                MetaProgression.Instance.OnCharacterClassChanged -= HandleClassChanged;
+        }
+
+        // weapon_v2 후속 — 직업 변경 시 잘못된 직업 무기 자동 해제
+        private void HandleClassChanged(CharacterClass newClass)
+        {
+            EnsureTemplateCache();
+            var data = MetaProgression.Instance?.Data;
+            if (data?.equipmentInstances == null) return;
+            int unequipped = 0;
+            foreach (var inst in data.equipmentInstances)
+            {
+                if (inst == null || !inst.isEquipped) continue;
+                if (string.IsNullOrEmpty(inst.templateId)) continue;
+                if (!_templateCache.TryGetValue(inst.templateId, out var tpl) || tpl == null) continue;
+                if (tpl.category == WeaponCategory.None) continue;  // 비-무기 슬롯 스킵
+                if (tpl.requiredClass == newClass) continue;  // 매칭 OK
+
+                inst.isEquipped = false;
+                UnequipInstance(inst);
+                unequipped++;
+            }
+            if (unequipped > 0)
+            {
+                SaveSystem.Save(data);
+                Debug.Log($"[EquipmentManager] 캐릭터 직업 변경 ({newClass}) — {unequipped}개 무기 자동 해제");
+            }
         }
 
         private void HandleChapterCleared(ChapterData _) => ClearAllPatterns();
