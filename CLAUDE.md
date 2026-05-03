@@ -101,9 +101,14 @@ Assets/_Project/
 - **24 파생 스탯** — 데미지 3 / 크리 4 / 방어 5 / 공격 4 / 회복 3 / 메타 5
 - **3 직업** — 전사(STR 2.0×) / 궁수(AGI 2.0×) / 마법사(WIS 2.0×) — 모두 무료, 첫 시작 강제 선택
 
-### 장비
+### 장비 (weapon_v2)
 - **12 슬롯** — 주 7 (Hat/Top/Bottom/Cloak/Gloves/Weapon/Shoes) + 장신구 5 (Earring/Glasses/Necklace/Ring/Pet)
 - **8 attack pattern** — Projectile / Aura / Orbit / Rain / Trail / Pulse / Summon / Slash (IAttackPattern, EquipmentPatternFactory)
+- **24 무기 + 직업별 분류** — Warrior 8 / Archer 8 / Mage 8 (가챠 풀)
+  - WeaponCategory 11종 (Sword/Axe/Mace/Spear / Bow/Crossbow/Dagger/Boomerang / Staff/Wand/Tome / None)
+  - 직업+카테고리 시너지 (WeaponClassBonus): Warrior+검·둔기 +Dmg 10% / Archer+활·단검 +AS 5% / Mage+지팡이·완드 +MagicDmg 10%
+  - 잘못된 직업 무기 — EquipmentManager.EquipInstance 거부 + UI 회색
+  - 가챠 결과 — 본인 직업만 (PickFromRarityPool 자동 필터)
 - **장비 강화** — +N 무한 (stats_v2.5 cap 폐기). +0~+15 결정론 / +16~+25 RNG / +25+ P_FLOOR 30% 동결, 비용 1.5^N
 - **슬롯 ⭐ 스타포스** — ⭐0~⭐25 곡선 + ⭐25+ 무한 (+5%/단계), 비용 1.4^N
 - **Affix** — 주옵션 3 + 부옵션 3 라인 (EffectResolver + ApplyResolvedBonus 통합)
@@ -197,6 +202,7 @@ Assets/_Project/
 | **stats_v2** | 3 코어 + 무한 강화 + 메이플 키우기 능력치 | ✅ 2026-05-03 |
 | **Damage v2** | 충돌 폐기 + DamageQuery + 다중 타깃 보정 | ✅ 2026-05-03 |
 | **OOP §15** | 정책 + Editor Test + Validator | ✅ 2026-05-03 |
+| **weapon_v2** | 직업별 분류 + 24 무기 균형 + 가챠 필터 | ✅ 2026-05-03 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
@@ -252,11 +258,11 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
+- 2026-05-03: **weapon_v2** — 무기 OOP 재설계 (직업별 분류 + 24 균형 + 가챠 필터, 7 commit)
 - 2026-05-03: **CLAUDE.md §1~14 대폭 압축** — 예제 코드 제거, 시스템 현황 간략화
 - 2026-05-03: **CLAUDE.md §15 OOP 정책** — 12 섹션 (필수 준수, §1~14 보다 상위)
 - 2026-05-03: **stats_v2.5** — L100 cap 복원 + 장비 무한 강화 (사용자 결정)
-- 2026-05-03: **stats_v2_infinite** — 3 코어 (힘/민첩/지혜) + 보스/일반 분기 제거 + 마음 폐기
-- 2026-05-03: **architecture_analysis_v1** — Unity OOP + Claude Code 평가 (8/10)
+- 2026-05-03: **stats_v2_infinite** — 3 코어 (힘/민첩/지혜) + 보스/일반 분기 제거
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 
