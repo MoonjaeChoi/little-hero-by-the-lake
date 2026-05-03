@@ -204,6 +204,7 @@ Assets/_Project/
 | **OOP §15** | 정책 + Editor Test + Validator | ✅ 2026-05-03 |
 | **weapon_v2** | 직업별 분류 + 24 무기 균형 + 가챠 필터 | ✅ 2026-05-03 |
 | **boss_system_v2** | 4 Tier + IBossPhase State + BossPatternFactory + BossLootTable 4 (PGE 6-Phase 첫 시연) | ✅ 2026-05-04 |
+| **boss_scene_separation_v1** | 챕터 보스 별 씬 + Launcher DTO + BackgroundApplier (5002) | ✅ 2026-05-04 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
@@ -211,11 +212,11 @@ Assets/_Project/
 > 자세한 작업 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 
 ### 활성 시스템 (요약)
-- **Core**: GameManager / MetaProgression / SaveSystem / ObjectPool / VfxPool / AudioManager / IAPService / SeasonPassService / CurrencyService / ConversionForge / EndgameResetService / StarlightGrantService / LimitedShopService / BossEncounterService / BossLootGrantService / GachaService / StarforceService / PlayerFinder
+- **Core**: GameManager / MetaProgression / SaveSystem / ObjectPool / VfxPool / AudioManager / IAPService / SeasonPassService / CurrencyService / ConversionForge / EndgameResetService / StarlightGrantService / LimitedShopService / BossEncounterService / BossLootGrantService / GachaService / StarforceService / PlayerFinder / **BossEncounterLauncher (5002)** / **BackgroundApplier (5002)**
 - **Data SO 클래스**: EquipmentTemplate / EquipmentInstance / AffixDefinition / SubAffixDefinition / SlotAffixPool / GlobalSubAffixPool / MythicDefinition / GachaPool / EnemyData / ChapterData / CharacterData / MemoryData / BalanceConfig / EndgameModeData / MetaUpgradeData / LimitedShopOffer / **BossLootTable** (5001)
 - **Gameplay**: PlayerStats v2 (3 코어 + 24 파생) / PlayerController / PlayerProgress / PlayerHealth / EnemyController + AI + AnimationManager / WaveManager / ChapterRunner / InfiniteTowerRunner / BossEncounterRunner / EquipmentManager + PatternFactory / 8 IAttackPattern / 7 IBossAttackPattern + **BossPatternFactory** / **IBossPhase + BossPhase1Default + BossPhase2Aggressive + BossPhaseManager (5001 State 패턴)** / DamageSystem + Query + Dealer / EnhancementService + AffixRoller + EffectResolver + MythicMileageService / ItemDropService / CinematicEffects + DamageNumberFloater
 - **UI**: HUDController / WaveTransitionToast / BossHealthBar / GameOverPanel / ChapterClearedPanel / AtticController + 14 진입 버튼 / InventoryPanel + InventoryModel + InventorySelectionPanel v2 (페이징 + 썸네일 + 옵션) + InventoryGridCard + InventoryDetailView / EquipmentCardPanel + Row + EnhanceModalPanel / WondrousMapPanel + Node + RecommendedLevelWarningModal / GachaPanel + ResultPanel + StarforceEnhanceModal + SlotStarforcePanel + View / EndgameMenuPanel / ConversionForgePanel / MemoryEffectOverlay / CharacterInfoPanel / LimitedShopPanel + ItemView / StarlightShopPanel
-- **Tests/Editor**: 46 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10 + WeaponSystem 13 + **BossSystem 10**)
+- **Tests/Editor**: 54 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10 + WeaponSystem 13 + BossSystem 10 + **BossSceneSeparation 8** (5002))
 - **씬**: Attic / Chapter / InfiniteTower / BossEncounter
 
 ### SO 인스턴스 (400+)
@@ -240,7 +241,10 @@ Assets/_Project/
 4. 🟡 **G3 한국어 검수** — UI 어휘 정합 (남은 영역)
 5. 🟢 **G4 iOS 빌드 + TestFlight** — Apple Developer 인증 + 베타 배포
 6. 🟢 **F1~F3 적 디자인 패스** — 30 archetype → 챕터별 고유 (디자인 작업)
-7. 🟢 **F4/F5 보스 씬 분리** — BossEncounterService 완성, 별도 보스 전투 씬
+7. ✅ **F4/F5 보스 씬 분리** — 5002 boss_scene_separation_v1 완료 (2026-05-04, 옵션 C)
+8. 🟢 **5003 미니보스(5/10/15) 씬 분리 검토** (사용자 결정 시) — 옵션 D 답습. UX 단조로움 위험.
+9. 🟢 **5004 LoadSceneAsync + fade-in 통합 sprint** — 모든 씬 전환 일관 적용.
+10. 🟢 **AtticController 책임 분리** — 415L → 200L 권장 (§15.6).
 
 ### 빠른 시작 명령
 - `리틀히어로 구현 계속` → 자동 선정
@@ -260,11 +264,11 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
+- 2026-05-04: **5002 boss_scene_separation_v1** — 챕터 보스 BossEncounter 씬 분리 + Launcher DTO + BackgroundApplier (옵션 C, D1+D5 자동 수용 + D2/D3/D4 mediator, 10 commit, NUnit 46→54)
 - 2026-05-04: **5001 boss_system_v2** — BossTier 4 + IBossPhase State + Factory + LootTable 4 (PGE 6-Phase 풀파이프라인 첫 시연, 10 commit, NUnit 36→46)
 - 2026-05-04: **PGE 6-Phase 풀세트 도입** — 4 신규 스킬 (rebuttal/mediator/breakdown/contract) + pipeline/evaluate 개편 (Anthropic Planner-Generator-Evaluator)
 - 2026-05-03: **weapon_v2** — 무기 OOP 재설계 (직업별 분류 + 24 균형 + 가챠 필터, 7 commit)
 - 2026-05-03: **CLAUDE.md §15 OOP 정책** — 12 섹션 (필수 준수, §1~14 보다 상위)
-- 2026-05-03: **stats_v2_infinite** — 3 코어 (힘/민첩/지혜) + 보스/일반 분기 제거
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 
