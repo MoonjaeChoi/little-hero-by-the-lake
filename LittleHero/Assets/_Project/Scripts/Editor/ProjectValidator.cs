@@ -49,13 +49,13 @@ namespace LittleHero.EditorTools
                 int lineCount = System.IO.File.ReadAllLines(f).Length;
                 if (lineCount > LINE_LIMIT)
                 {
-                    issues.Add(new Issue(IssueLevel.Warn,
-                        $"OOP §15.6 100줄 룰 — {System.IO.Path.GetFileName(f)} ({lineCount} 라인) 책임 분리 권장"));
+                    issues.Add(new Issue(Severity.Warning, "OOP",
+                        $"§15.6 100줄 룰 — {System.IO.Path.GetFileName(f)} ({lineCount} 라인) 책임 분리 권장"));
                     violations++;
                 }
             }
             if (violations == 0)
-                issues.Add(new Issue(IssueLevel.Info, $"OOP §15.6 100줄 룰 — {scriptFiles.Length} 파일 모두 통과"));
+                issues.Add(new Issue(Severity.Warning, "OOP", $"§15.6 100줄 룰 — {scriptFiles.Length} 파일 모두 통과 (LINE_LIMIT={LINE_LIMIT})"));
         }
 
         private static void ValidateBuildSettings(List<Issue> issues)
