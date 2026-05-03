@@ -38910,6 +38910,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1218918685}
   - component: {fileID: 1218918684}
+  - component: {fileID: 1218918686}
   m_Layer: 0
   m_Name: AtticController
   m_TagString: Untagged
@@ -38929,7 +38930,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 554e66a1655ee4f369910162f0d72e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticController
-  _starFragmentsText: {fileID: 1175195915}
   _selectedCharacterText: {fileID: 1154938487}
   _chapterSceneName: Chapter
   _chapterButtons:
@@ -38950,8 +38950,6 @@ MonoBehaviour:
     button: {fileID: 1880573227}
     highlight: {fileID: 1440392245}
   _defaultCharacter: {fileID: 11400000, guid: 9b5cbef40766e4eb891d5d6ba9ead3fa, type: 2}
-  _magicCrystalText: {fileID: 1521473913}
-  _starlightText: {fileID: 1880748829}
   _endgameMenuRoot: {fileID: 0}
   _dailyBossCooldownText: {fileID: 0}
   _weeklyBossCooldownText: {fileID: 0}
@@ -38963,7 +38961,6 @@ MonoBehaviour:
   _gachaPanel: {fileID: 403127697}
   _starforceButton: {fileID: 1420940061}
   _starforcePanel: {fileID: 1216281487}
-  _starforceShardsHud: {fileID: 1393872434}
   _limitedShopButton: {fileID: 978622848}
   _limitedShopPanel: {fileID: 1976050112}
   _limitedShopBadgeText: {fileID: 2036509826}
@@ -38982,6 +38979,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1218918686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218918683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f829709dbadb4308b8fddcaf38f488f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticCurrencyView
+  _starFragmentsText: {fileID: 0}
+  _magicCrystalText: {fileID: 0}
+  _starlightText: {fileID: 0}
+  _starforceShardsHud: {fileID: 0}
 --- !u!1 &1220013253
 GameObject:
   m_ObjectHideFlags: 0

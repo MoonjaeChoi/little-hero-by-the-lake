@@ -23,17 +23,14 @@ namespace LittleHero
             public Image highlight;   // 선택된 캐릭터 강조용 (선택사항)
         }
 
-        [SerializeField] private Text _starFragmentsText;
         [SerializeField] private Text _selectedCharacterText;
         [SerializeField] private string _chapterSceneName = "Chapter";
         [SerializeField] private ChapterButton[] _chapterButtons;
         [SerializeField] private CharacterButton[] _characterButtons;
         [SerializeField] private CharacterData _defaultCharacter;
 
-        // ✦ D2 — 4 화폐 + endgame placeholder (ui_v1 §6)
-        [Header("D2 — 추가 화폐 (선택)")]
-        [SerializeField] private Text _magicCrystalText;     // ◇
-        [SerializeField] private Text _starlightText;        // ⋆
+        // 5005 Sprint 1 — 4 화폐 표시는 AtticCurrencyView 로 추출
+        // (_starFragmentsText / _magicCrystalText / _starlightText / _starforceShardsHud 모두 컴포넌트 이동)
 
         [Header("D2 — Endgame 메뉴 (선택, CH35 클리어 후 활성)")]
         [SerializeField] private GameObject _endgameMenuRoot;
@@ -54,7 +51,7 @@ namespace LittleHero
         [SerializeField] private GachaPanel _gachaPanel;
         [SerializeField] private Button _starforceButton;
         [SerializeField] private SlotStarforcePanel _starforcePanel;
-        [SerializeField] private Text _starforceShardsHud;
+        // _starforceShardsHud → AtticCurrencyView 로 이동
 
         // ✦ PIVOT 한정 상점 (limited_shop_v1.md §7.3)
         [Header("PIVOT 한정 상점")]
@@ -123,12 +120,9 @@ namespace LittleHero
         {
             if (MetaProgression.Instance != null)
             {
-                MetaProgression.Instance.OnStarFragmentsChanged += UpdateStarFragments;
                 MetaProgression.Instance.OnCharacterChanged     += UpdateSelectedCharacter;
             }
-            GameEvents.OnMagicCrystalChanged += UpdateMagicCrystals;
-            GameEvents.OnStarlightChanged    += UpdateStarlight;
-            GameEvents.OnStarforceShardsChanged += UpdateStarforceShards;
+            // 5005 Sprint 1 — 4 화폐 이벤트 구독은 AtticCurrencyView 가 담당
 
             if (_gachaButton != null) _gachaButton.onClick.AddListener(OpenGachaPanel);
             if (_starforceButton != null) _starforceButton.onClick.AddListener(OpenStarforcePanel);
@@ -164,12 +158,9 @@ namespace LittleHero
         {
             if (MetaProgression.Instance != null)
             {
-                MetaProgression.Instance.OnStarFragmentsChanged -= UpdateStarFragments;
                 MetaProgression.Instance.OnCharacterChanged     -= UpdateSelectedCharacter;
             }
-            GameEvents.OnMagicCrystalChanged -= UpdateMagicCrystals;
-            GameEvents.OnStarlightChanged    -= UpdateStarlight;
-            GameEvents.OnStarforceShardsChanged -= UpdateStarforceShards;
+            // 5005 Sprint 1 — 4 화폐 이벤트 해제는 AtticCurrencyView 가 담당
 
             if (_gachaButton != null) _gachaButton.onClick.RemoveAllListeners();
             if (_starforceButton != null) _starforceButton.onClick.RemoveAllListeners();
@@ -189,11 +180,7 @@ namespace LittleHero
         private void Start()
         {
             Time.timeScale = 1f;
-            int frags = MetaProgression.Instance != null ? MetaProgression.Instance.StarFragments : 0;
-            UpdateStarFragments(frags);
-            UpdateMagicCrystals(CurrencyService.MagicCrystals);
-            UpdateStarlight(CurrencyService.Starlight);
-            UpdateStarforceShards(StarforceService.Shards);
+            // 5005 Sprint 1 — 4 화폐 초기 표시는 AtticCurrencyView.Start 가 담당
             RefreshLimitedShopBadge();
             RefreshEndgameMenu();
             HandleReturnFromBossEncounter();
@@ -259,29 +246,7 @@ namespace LittleHero
                         entry.highlight.enabled = (entry.character == character);
         }
 
-        private void UpdateStarFragments(int amount)
-        {
-            if (_starFragmentsText != null)
-                _starFragmentsText.text = $"무지개 구슬 ✦ {amount}";
-        }
-
-        private void UpdateMagicCrystals(int amount)
-        {
-            if (_magicCrystalText != null)
-                _magicCrystalText.text = $"마법 결정 ◇ {amount}";
-        }
-
-        private void UpdateStarlight(int amount)
-        {
-            if (_starlightText != null)
-                _starlightText.text = $"별빛 ⋆ {amount}";
-        }
-
-        private void UpdateStarforceShards(int amount)
-        {
-            if (_starforceShardsHud != null)
-                _starforceShardsHud.text = $"스타포스 조각 ◈ {amount}";
-        }
+        // 5005 Sprint 1 — UpdateStarFragments / UpdateMagicCrystals / UpdateStarlight / UpdateStarforceShards 모두 AtticCurrencyView 로 이동
 
         private void OpenGachaPanel()
         {
