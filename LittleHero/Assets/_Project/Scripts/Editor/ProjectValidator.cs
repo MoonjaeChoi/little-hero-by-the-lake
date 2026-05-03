@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -36,7 +37,44 @@ namespace LittleHero.EditorTools
             ValidateOOPPolicy(issues);  // CLAUDE.md §15.12 신규
             ValidateWeaponSystem(issues);  // weapon_v2 신규
             ValidateBossSystem(issues);   // 5001 boss_system_v2 신규 (T09)
+            ValidateBossEncounterContextAccess(issues);  // 5002 T09 — 정적 Context 외부 직접 R/W 검사 (§15.7 DI)
             Print(issues);
+        }
+
+        // 5002 T09 — BossEncounterContext.Set / PendingChapter / PendingReturnScene / PendingBoss 등
+        // 외부 직접 R/W 검사 (§15.7 DI). 허용 파일: BossEncounterLauncher / BossEncounterRunner / BossEncounterContext.
+        private static void ValidateBossEncounterContextAccess(List<Issue> issues)
+        {
+            var allowedFiles = new HashSet<string>
+            {
+                "BossEncounterLauncher.cs",
+                "BossEncounterRunner.cs",
+                "BossEncounterContext.cs",
+                "BossEncounterService.cs",  // Last* property R 만 (필요 시 향후 좁힘)
+                "AtticController.cs",       // LastMythicGranted/Definition R + 1회 표시
+            };
+            string scriptDir = Path.Combine(Application.dataPath, "_Project/Scripts");
+            if (!Directory.Exists(scriptDir)) return;
+
+            int violations = 0;
+            foreach (var file in Directory.GetFiles(scriptDir, "*.cs", SearchOption.AllDirectories))
+            {
+                string filename = Path.GetFileName(file);
+                if (allowedFiles.Contains(filename)) continue;
+                string content = File.ReadAllText(file);
+                if (content.Contains("BossEncounterContext.Set(")
+                    || content.Contains("BossEncounterContext.PendingBoss =")
+                    || content.Contains("BossEncounterContext.PendingChapter =")
+                    || content.Contains("BossEncounterContext.PendingMode =")
+                    || content.Contains("BossEncounterContext.PendingReturnScene ="))
+                {
+                    issues.Add(new Issue(Severity.Warning, "5002 §15.7",
+                        $"BossEncounterContext 외부 직접 R/W: {filename} — Launcher 위임 권장"));
+                    violations++;
+                }
+            }
+            if (violations == 0)
+                Debug.Log("[ProjectValidator] 5002 §15.7 OK — BossEncounterContext 외부 직접 R/W 0건");
         }
 
         // 5001 boss_system_v2 — 모든 보스 SO BossTier wiring 검증 (T09 Sprint 6)
