@@ -27,6 +27,10 @@ namespace LittleHero
         public float waveScalingFactor = 0.1f;
         public int miniBossWaveInterval = 5;
 
+        [Header("5003 — 미니보스 씬 분리 옵션")]
+        [Tooltip("None=분리 X (5002 종료 상태) / LastOnly=마지막 미니보스 wave (15)만 분리 / All=5/10/15 모두 분리")]
+        public MiniBossSeparationMode miniBossSeparation = MiniBossSeparationMode.None;
+
         // ===== B9 — economy_v1 §9.1 =====
         [Header("강화 비용 (B9, economy §4.1 / §7.3)")]
         [Tooltip("길이 25. enhanceCostByLevel[i] = +i → +(i+1) 단계의 별가루 ★ 비용")]

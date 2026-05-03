@@ -8,7 +8,7 @@ namespace LittleHero
     /// </summary>
     public static class BossEncounterContext
     {
-        public enum Mode { Daily, Weekly, ChapterBoss }   // 5002 T03 — ChapterBoss 추가
+        public enum Mode { Daily, Weekly, ChapterBoss, MiniBoss }   // 5002 ChapterBoss / 5003 MiniBoss
 
         public static EnemyData PendingBoss;
         public static EndgameModeData PendingMode;
