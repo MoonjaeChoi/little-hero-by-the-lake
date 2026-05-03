@@ -26,8 +26,10 @@ namespace LittleHero
         private System.Collections.IEnumerator _punchCo;
         private System.Collections.IEnumerator _flashCo;
 
-        // 보스 공격 패턴 (boss_attack_v1.md)
-        private IBossAttackPattern _bossAttack;
+        // 보스 공격 패턴 (boss_attack_v1.md) — 5001 T07: IBossPhase State 패턴으로 대체
+        // _bossAttack 제거. CurrentPhase 가 내부에서 BossPatternFactory 로 IBossAttackPattern 생성.
+        public IBossPhase CurrentPhase { get; private set; }
+        public void SetCurrentPhase(IBossPhase phase) => CurrentPhase = phase;
 
         public EnemyData Data => _data;
         public bool IsDead => _isDead;
@@ -60,9 +62,10 @@ namespace LittleHero
             // PIVOT v3 Phase 2 — 단일 Update 패턴 (EnemyAnimationManager 위임)
             EnemyAnimationManager.Register(this);
 
-            // 보스 공격 패턴 (CH6+ chapter boss 만) — 5001 Sprint 1.3: BossPatternFactory 분리
-            _bossAttack = BossPatternFactory.Create(data.bossAttackType);
-            _bossAttack?.Initialize(this, data);
+            // 5001 T07 — IBossPhase State 패턴으로 보스 공격 통합.
+            // BossPhaseManager.CreateInitial 이 bossTier 따라 Phase 1 또는 null 반환.
+            CurrentPhase = BossPhaseManager.CreateInitial(this);
+            CurrentPhase?.OnEnter(this);
         }
 
         // PIVOT v3 Phase 2 — EnemyAnimationManager 가 매 프레임 호출 (Unity Update callback 폐기)
@@ -70,8 +73,8 @@ namespace LittleHero
         {
             if (_isDead || _sr == null) return;
 
-            // 보스 공격 패턴 Tick (active 시)
-            if (_bossAttack != null) _bossAttack.Tick(Time.deltaTime);
+            // 5001 T07 — IBossPhase State Tick + Phase 전환 검사 (BossPhaseManager 위임)
+            BossPhaseManager.Update(this, Time.deltaTime);
 
             // 1) 좌우 flip — 이동 방향 따라 sprite 반전
             if (_rb != null)
@@ -196,8 +199,8 @@ namespace LittleHero
             _isDead = true;
             // PIVOT v3 Phase 2 — Animation Manager 에서 unregister (Update 폐기)
             EnemyAnimationManager.Unregister(this);
-            // 보스 공격 패턴 Cleanup
-            if (_bossAttack != null) { _bossAttack.Cleanup(); _bossAttack = null; }
+            // 5001 T07 — IBossPhase 정리 (Phase OnExit + null)
+            if (CurrentPhase != null) { CurrentPhase.OnExit(this); CurrentPhase = null; }
             GameEvents.RaiseEnemyKilled(_data);
             OnDied?.Invoke(this);
 
