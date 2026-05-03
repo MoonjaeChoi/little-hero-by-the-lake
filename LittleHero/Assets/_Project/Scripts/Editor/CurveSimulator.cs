@@ -857,5 +857,104 @@ namespace LittleHero.EditorTools
             if (n <= 25) return 2;
             return 3;
         }
+
+        // ===== weapon_v2 후속 Sprint B — 24 무기 가챠 분포 시뮬 =====
+
+        [MenuItem("Tools/LittleHero/Weapon Gacha 24 Simulation")]
+        public static void RunWeaponGachaSim()
+        {
+            const int TRIALS = 1000;
+            // GachaPool 로드
+            var poolGuids = AssetDatabase.FindAssets("t:GachaPool");
+            GachaPool pool = null;
+            foreach (var g in poolGuids) {
+                pool = AssetDatabase.LoadAssetAtPath<GachaPool>(AssetDatabase.GUIDToAssetPath(g));
+                if (pool != null) break;
+            }
+            if (pool == null) { Debug.LogError("GachaPool 못 찾음"); return; }
+
+            var sb = new StringBuilder();
+            sb.AppendLine("# Weapon Gacha v2 시뮬 (24 무기, 직업별 " + TRIALS + "회)");
+            sb.AppendLine();
+
+            CharacterClass[] classes = { CharacterClass.Warrior, CharacterClass.Archer, CharacterClass.Mage };
+            string[] classNames = { "Warrior 전사", "Archer 궁수", "Mage 마법사" };
+
+            // 등급 분포 (소환 레벨 5 가정 — Lv5 분포)
+            var rarityDist = new[] { 0.50f, 0.25f, 0.20f, 0.05f }; // C/M/R/E
+            var rng = new System.Random(22222);
+
+            for (int ci = 0; ci < classes.Length; ci++)
+            {
+                var cls = classes[ci];
+                sb.AppendLine("## " + classNames[ci]);
+                int[] rarityCount = new int[4];
+                var weaponCount = new System.Collections.Generic.Dictionary<string, int>();
+                int wrongClass = 0;
+
+                for (int trial = 0; trial < TRIALS; trial++)
+                {
+                    // 등급 결정
+                    float roll = (float)rng.NextDouble();
+                    int rarity = 0;
+                    float cum = 0f;
+                    for (int r = 0; r < 4; r++) { cum += rarityDist[r]; if (roll < cum) { rarity = r; break; } }
+                    rarityCount[rarity]++;
+
+                    // 풀에서 본인 직업 무기만 추출
+                    var arr = GetPoolForRarity(pool, (Rarity)rarity);
+                    var live = new System.Collections.Generic.List<EquipmentTemplate>();
+                    if (arr != null)
+                        foreach (var t in arr)
+                            if (t != null && (t.category == WeaponCategory.None || t.requiredClass == cls)) live.Add(t);
+                    // fallback — rarity-1 재시도
+                    int fbRarity = rarity;
+                    while (live.Count == 0 && fbRarity > 0) {
+                        fbRarity--;
+                        var fbArr = GetPoolForRarity(pool, (Rarity)fbRarity);
+                        if (fbArr != null)
+                            foreach (var t in fbArr)
+                                if (t != null && (t.category == WeaponCategory.None || t.requiredClass == cls)) live.Add(t);
+                    }
+                    if (live.Count == 0) continue;
+
+                    var picked = live[rng.Next(live.Count)];
+                    if (picked.requiredClass != cls && picked.category != WeaponCategory.None) wrongClass++;
+                    weaponCount.TryGetValue(picked.id, out int c);
+                    weaponCount[picked.id] = c + 1;
+                }
+
+                sb.AppendLine("### 등급 분포 (목표: 50/25/20/5)");
+                sb.AppendLine("- Common: " + rarityCount[0] + " (" + (rarityCount[0] * 100f / TRIALS).ToString("F1") + "%)");
+                sb.AppendLine("- Magic:  " + rarityCount[1] + " (" + (rarityCount[1] * 100f / TRIALS).ToString("F1") + "%)");
+                sb.AppendLine("- Rare:   " + rarityCount[2] + " (" + (rarityCount[2] * 100f / TRIALS).ToString("F1") + "%)");
+                sb.AppendLine("- Epic:   " + rarityCount[3] + " (" + (rarityCount[3] * 100f / TRIALS).ToString("F1") + "%)");
+                sb.AppendLine();
+                sb.AppendLine("### 무기별 분포");
+                foreach (var kv in weaponCount)
+                    sb.AppendLine("- " + kv.Key + ": " + kv.Value);
+                sb.AppendLine();
+                sb.AppendLine("### 직업 필터 — wrongClass = " + wrongClass + (wrongClass == 0 ? " ✅" : " ❌"));
+                sb.AppendLine();
+            }
+
+            // simulation_report.md 갱신 (append §15)
+            var path = Path.Combine(Application.dataPath, "../../docs/little_hero/weapon_gacha_v2_simulation.md");
+            File.WriteAllText(path, sb.ToString());
+            Debug.Log("[WeaponGachaSim] 보고서 저장: " + path);
+            Debug.Log(sb.ToString());
+        }
+
+        private static EquipmentTemplate[] GetPoolForRarity(GachaPool pool, Rarity rarity)
+        {
+            return rarity switch
+            {
+                Rarity.Common => pool.commonPool,
+                Rarity.Magic => pool.magicPool,
+                Rarity.Rare => pool.rarePool,
+                Rarity.Epic => pool.epicPool,
+                _ => null,
+            };
+        }
     }
 }
