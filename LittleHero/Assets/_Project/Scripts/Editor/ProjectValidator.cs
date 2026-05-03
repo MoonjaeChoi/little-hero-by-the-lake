@@ -52,6 +52,7 @@ namespace LittleHero.EditorTools
                 "BossEncounterContext.cs",
                 "BossEncounterService.cs",  // Last* property R 만 (필요 시 향후 좁힘)
                 "AtticController.cs",       // LastMythicGranted/Definition R + 1회 표시
+                "ProjectValidator.cs",      // 룰 정의 파일 자체 (string 매칭 false-positive 회피)
             };
             string scriptDir = Path.Combine(Application.dataPath, "_Project/Scripts");
             if (!Directory.Exists(scriptDir)) return;
