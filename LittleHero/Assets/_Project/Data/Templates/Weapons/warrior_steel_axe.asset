@@ -15,7 +15,7 @@ MonoBehaviour:
   id: warrior_steel_axe
   displayName: "\uAC15\uCCA0 \uB3C4\uB07C"
   description: "\uAD11\uC5ED \uCDA9\uACA9\uD30C \uB3C4\uB07C"
-  icon: {fileID: 21300000, guid: 88bda94ef69ca42f890a93b2331d1290, type: 3}
+  icon: {fileID: 21300000, guid: 21274f1a7f8704aada1ffeeb6e2dd4d2, type: 3}
   slot: 5
   rarity: 1
   baseStats:

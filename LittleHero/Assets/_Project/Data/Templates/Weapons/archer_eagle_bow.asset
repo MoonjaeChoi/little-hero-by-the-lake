@@ -15,7 +15,7 @@ MonoBehaviour:
   id: archer_eagle_bow
   displayName: "\uB9E4\uB208 \uD65C"
   description: "\uC815\uD655\uD55C \uAD00\uD1B5 \uD654\uC0B4"
-  icon: {fileID: 21300000, guid: 439c172c7cd224fd89e2540611b28050, type: 3}
+  icon: {fileID: 21300000, guid: df7bf3b3a96fb41058df17e69bd9e32b, type: 3}
   slot: 5
   rarity: 2
   baseStats:

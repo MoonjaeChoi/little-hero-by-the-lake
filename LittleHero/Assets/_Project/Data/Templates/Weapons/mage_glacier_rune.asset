@@ -15,7 +15,7 @@ MonoBehaviour:
   id: mage_glacier_rune
   displayName: "\uC5BC\uC74C \uB8EC"
   description: "\uB454\uD654 \uC624\uB77C (\uC774\uC18D -30%)"
-  icon: {fileID: 21300000, guid: 9b3ee942a0092400d93fdfdca99f9c70, type: 3}
+  icon: {fileID: 21300000, guid: 7bcca3da71b0c4a3db219eac9177b9c9, type: 3}
   slot: 5
   rarity: 2
   baseStats:

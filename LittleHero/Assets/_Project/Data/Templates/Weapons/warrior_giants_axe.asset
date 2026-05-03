@@ -15,7 +15,7 @@ MonoBehaviour:
   id: warrior_giants_axe
   displayName: "\uAC70\uC778\uC758 \uB3C4\uB07C"
   description: "\uAC15\uB825\uD55C \uAD11\uC5ED \uCDA9\uACA9 4 \uD0C0\uAE43"
-  icon: {fileID: 21300000, guid: b23a19a252a7b47a79dbf9b10257dfab, type: 3}
+  icon: {fileID: 21300000, guid: f3ae6859bb0bf40f5981056026eee4cc, type: 3}
   slot: 5
   rarity: 3
   baseStats:
