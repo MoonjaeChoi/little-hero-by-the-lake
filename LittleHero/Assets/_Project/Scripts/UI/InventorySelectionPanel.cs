@@ -37,8 +37,9 @@ namespace LittleHero
         private const int PAGE_SIZE = 9;
         private EquipSlot _currentSlot;
         private int _currentPage;
-        private readonly List<(EquipmentInstance inst, EquipmentTemplate tpl)> _matches
-            = new List<(EquipmentInstance, EquipmentTemplate)>();
+        // architecture_analysis_v1 §A — Model 분리. View 는 데이터 collect/equip 직접 책임 X
+        private InventoryModel _model;
+        private List<InventoryMatch> _matches = new List<InventoryMatch>();
         private EquipmentInstance _selected;
         private EquipmentTemplate _selectedTpl;
 
@@ -96,26 +97,10 @@ namespace LittleHero
 
         private void CollectMatches()
         {
-            _matches.Clear();
-            var data = MetaProgression.Instance?.Data;
-            if (data?.equipmentInstances == null) return;
-            for (int i = 0; i < data.equipmentInstances.Length; i++)
-            {
-                var inst = data.equipmentInstances[i];
-                if (inst == null) continue;
-                var tpl = FindTemplate(inst.templateId);
-                if (tpl == null || tpl.slot != _currentSlot) continue;
-                _matches.Add((inst, tpl));
-            }
-            // 장착중 우선 → 등급 내림차순 → 강화 +N 내림차순
-            _matches.Sort((a, b) =>
-            {
-                int e = (b.inst.isEquipped ? 1 : 0) - (a.inst.isEquipped ? 1 : 0);
-                if (e != 0) return e;
-                int r = ((int)b.tpl.rarity).CompareTo((int)a.tpl.rarity);
-                if (r != 0) return r;
-                return b.inst.enhanceLevel.CompareTo(a.inst.enhanceLevel);
-            });
+            // architecture_analysis_v1 §A — Model 위임 (CollectMatches + 정렬)
+            if (_model == null) _model = new InventoryModel(_templateLookup);
+            else _model.SetTemplates(_templateLookup);
+            _matches = _model.CollectMatches(_currentSlot);
         }
 
         private void DrawPage(int page)
@@ -135,8 +120,8 @@ namespace LittleHero
                 {
                     _cards[i].gameObject.SetActive(true);
                     var m = _matches[idx];
-                    _cards[i].Bind(m.inst, m.tpl, m.inst.isEquipped);
-                    _cards[i].SetSelected(m.inst == _selected);
+                    _cards[i].Bind(m.instance, m.template, m.instance.isEquipped);
+                    _cards[i].SetSelected(m.instance == _selected);
                 }
                 else _cards[i].gameObject.SetActive(false);
             }
@@ -196,36 +181,9 @@ namespace LittleHero
 
         private void ToggleEquip()
         {
-            if (_selected == null || _selectedTpl == null) return;
-            var data = MetaProgression.Instance?.Data;
-            if (data?.equipmentInstances == null) return;
-
-            if (_selected.isEquipped)
-            {
-                _selected.isEquipped = false;
-                SaveSystem.Save(data);
-                var em = Object.FindFirstObjectByType<EquipmentManager>(FindObjectsInactive.Include);
-                if (em != null) em.UnequipInstance(_selected);
-            }
-            else
-            {
-                // 같은 슬롯의 다른 isEquipped=true 해제
-                for (int i = 0; i < data.equipmentInstances.Length; i++)
-                {
-                    var other = data.equipmentInstances[i];
-                    if (other == null || other == _selected || !other.isEquipped) continue;
-                    var ot = FindTemplate(other.templateId);
-                    if (ot == null || ot.slot != _selectedTpl.slot) continue;
-                    other.isEquipped = false;
-                    var em2 = Object.FindFirstObjectByType<EquipmentManager>(FindObjectsInactive.Include);
-                    if (em2 != null) em2.UnequipInstance(other);
-                }
-                _selected.isEquipped = true;
-                SaveSystem.Save(data);
-                var em3 = Object.FindFirstObjectByType<EquipmentManager>(FindObjectsInactive.Include);
-                if (em3 != null) em3.EquipInstance(_selected);
-            }
-
+            // architecture_analysis_v1 §A — Model 위임 (장착 비즈니스 로직)
+            if (_model == null || _selected == null || _selectedTpl == null) return;
+            _model.ToggleEquip(_selected, _selectedTpl);
             CollectMatches();
             DrawPage(_currentPage);
             UpdateActionButtons();
