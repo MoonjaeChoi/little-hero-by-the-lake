@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace LittleHero
@@ -13,13 +10,7 @@ namespace LittleHero
         // 5005 Sprint 3 — 챕터 진입 + 5002 D2 toast 는 AtticChapterEntry 로 추출 (ChapterButton 클래스 + _chapterButtons + _chapterSceneName + HandleStart + HandlePendingChapterCleared + ResolveChapterById)
 
         // 5005 Sprint 4 — Endgame 메뉴는 AtticEndgameMenuView 로 추출 (4 SerializeField + Refresh + AllChaptersFirstCleared + FormatHm/FormatDh)
-
-        // 출시 전 fix #1 — 한 번에 하나의 패널만 활성화 보장
-        // _managedPanels 가 비어있으면 Awake 에서 Canvas 자식 중 Panel/Modal/Overlay 접미어 자동 탐색.
-        // _excludePanelNames 에 명시된 이름은 제외 (CharacterPanel 같은 다락방 본체 UI).
-        [Header("패널 토글 관리 (한 번에 하나만 활성, 출시 전 fix #1)")]
-        [SerializeField] private GameObject[] _managedPanels;
-        [SerializeField] private string[] _excludePanelNames = { "CharacterPanel" };
+        // 5005 Sprint 5 — 패널 토글 관리는 AtticPanelToggleManager 로 추출 (_managedPanels + _excludePanelNames + Update + AutoDiscoverPanels)
 
         // ✦ PIVOT D-가챠 — 진입 버튼 (gacha_v1.md §5)
         [Header("PIVOT D-가챠 — 진입 버튼")]
@@ -34,63 +25,6 @@ namespace LittleHero
         [SerializeField] private Button _limitedShopButton;
         [SerializeField] private LimitedShopPanel _limitedShopPanel;
         [SerializeField] private Text _limitedShopBadgeText;  // 활성 핫딜 N개 뱃지
-
-        private GameObject _lastActivePanel;
-
-        private void Awake()
-        {
-            if (_managedPanels == null || _managedPanels.Length == 0) AutoDiscoverPanels();
-        }
-
-        private void AutoDiscoverPanels()
-        {
-            var canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
-            if (canvas == null) { _managedPanels = new GameObject[0]; return; }
-
-            var list = new List<GameObject>();
-            foreach (Transform child in canvas.transform)
-            {
-                string n = child.name;
-                if (_excludePanelNames != null && System.Array.IndexOf(_excludePanelNames, n) >= 0) continue;
-                if (n.EndsWith("Panel") || n.EndsWith("Modal") || n.EndsWith("Overlay"))
-                    list.Add(child.gameObject);
-            }
-            _managedPanels = list.ToArray();
-        }
-
-        private void Update()
-        {
-            // 출시 전 fix #1 — 다른 패널이 활성화되면 이전 패널 자동 비활성화 (한 번에 하나만)
-            if (_managedPanels == null || _managedPanels.Length == 0) return;
-
-            GameObject newlyActive = null;
-            for (int i = 0; i < _managedPanels.Length; i++)
-            {
-                var p = _managedPanels[i];
-                if (p != null && p.activeSelf && p != _lastActivePanel)
-                {
-                    newlyActive = p;
-                    break;
-                }
-            }
-
-            if (newlyActive != null)
-            {
-                for (int i = 0; i < _managedPanels.Length; i++)
-                {
-                    var p = _managedPanels[i];
-                    if (p != null && p != newlyActive && p.activeSelf) p.SetActive(false);
-                }
-                _lastActivePanel = newlyActive;
-            }
-            else
-            {
-                bool any = false;
-                for (int i = 0; i < _managedPanels.Length; i++)
-                    if (_managedPanels[i] != null && _managedPanels[i].activeSelf) { any = true; break; }
-                if (!any) _lastActivePanel = null;
-            }
-        }
 
         private void OnEnable()
         {
