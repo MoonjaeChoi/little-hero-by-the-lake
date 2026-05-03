@@ -62,11 +62,35 @@ namespace LittleHero
 
         // ===== 처치 처리 =====
 
-        /// <summary>5002 T04 — 챕터 보스 처치 stub. T06 에서 본체 구현 (BossLootGrantService.Apply + RaiseChapterCleared + pendingChapterClearedId).</summary>
+        /// <summary>5002 T06 — 챕터 보스 처치. BossLootGrantService.Apply + ChapterCleared + pendingChapterClearedId set (D2).</summary>
         public static void CompleteChapterBoss(EnemyData boss, ChapterData chapter)
         {
-            Debug.Log($"[BossEncounterService] CompleteChapterBoss stub: boss={boss?.displayName} chapter={chapter?.id}");
-            // T06 에서 본체 구현
+            if (boss == null || chapter == null)
+            {
+                Debug.LogWarning($"[BossEncounterService] CompleteChapterBoss: boss={boss} chapter={chapter}");
+                return;
+            }
+
+            // 1) 보상 — BossLootTable 우선
+            if (boss.lootTable != null)
+                BossLootGrantService.Apply(boss.lootTable);
+            else
+                Debug.LogWarning($"[BossEncounterService] {boss.id}: lootTable null — fallback 보상 생략");
+
+            // 2) 챕터 클리어 이벤트 (ChapterRunner 가 더 이상 동작 X — 직접 raise)
+            GameEvents.RaiseChapterCleared(chapter);
+
+            // 3) MetaProgression — firstClearedChapters bit set + pendingChapterClearedId set (D2 mediator)
+            var data = MetaProgression.Instance?.Data;
+            if (data != null)
+            {
+                int idx = chapter.chapterNumber - 1;
+                if (idx >= 0 && idx < 50) data.firstClearedChapters |= (1L << idx);
+                data.pendingChapterClearedId = chapter.id;  // D2: Attic 1회 toast 트리거
+                SaveSystem.Save(data);
+            }
+
+            Debug.Log($"[BossEncounterService] CompleteChapterBoss: {boss.displayName} (chapter {chapter.chapterNumber})");
         }
 
         /// <summary>일일 보스 처치 시점에 호출. 가용성 미충족 또는 mode 결손 시 false.</summary>

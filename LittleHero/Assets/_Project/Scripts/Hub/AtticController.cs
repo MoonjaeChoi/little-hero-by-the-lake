@@ -197,6 +197,7 @@ namespace LittleHero
             RefreshLimitedShopBadge();
             RefreshEndgameMenu();
             HandleReturnFromBossEncounter();
+            HandlePendingChapterCleared();   // 5002 D2 — 챕터 클리어 후 1회 toast
 
             // 다락방 BGM (Joe Hisaishi 풍 nostalgic)
             AudioManager.Instance?.PlayBgm("attic_nostalgic");
@@ -366,6 +367,32 @@ namespace LittleHero
             if (MetaProgression.Instance != null)
                 MetaProgression.Instance.SelectedChapter = chapter;
             SceneManager.LoadScene(_chapterSceneName);
+        }
+
+        // 5002 D2 — 챕터 클리어 후 다락방 1회 toast (BossEncounterService.CompleteChapterBoss 가 set)
+        private void HandlePendingChapterCleared()
+        {
+            var data = MetaProgression.Instance?.Data;
+            if (data == null || string.IsNullOrEmpty(data.pendingChapterClearedId)) return;
+
+            var ch = ResolveChapterById(data.pendingChapterClearedId);
+            if (ch != null)
+            {
+                // Attic 씬에 ChapterClearedPanel prefab 가 있다면 OnChapterCleared 구독으로 표시.
+                // StarlightGrantService 이중 raise 안전 (chapterStarlightGranted bit 으로 1회 보상 보장).
+                GameEvents.RaiseChapterCleared(ch);
+                Debug.Log($"[Attic] 챕터 클리어 1회 toast: {ch.displayName} (5002 D2)");
+            }
+            data.pendingChapterClearedId = "";
+            SaveSystem.Save(data);
+        }
+
+        private ChapterData ResolveChapterById(string id)
+        {
+            if (string.IsNullOrEmpty(id) || _chapterButtons == null) return null;
+            foreach (var entry in _chapterButtons)
+                if (entry?.chapter != null && entry.chapter.id == id) return entry.chapter;
+            return null;
         }
 
         // F5 — 보스 씬에서 신화 발현된 경우 다락방 복귀 시 1회 무지개 Overlay

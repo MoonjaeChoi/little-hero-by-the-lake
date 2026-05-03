@@ -73,6 +73,9 @@ namespace LittleHero
         // ✦ 챕터 진행 일시 정지 + 재개 (사용자 요청 2026-05-03)
         public string activeChapterId;                               // 진행 중인 챕터 ID (빈 문자열 = 활성 X)
         public int activeChapterWave;                                // 진행 wave 번호
+
+        // ✦ 5002 D2 — 챕터 클리어 후 Attic 1회 toast 트리거 (mediator 결정)
+        public string pendingChapterClearedId = "";                  // BossEncounterService.CompleteChapterBoss 가 set, AtticController 가 1회 표시 후 clear
     }
 
     [System.Serializable]
