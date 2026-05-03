@@ -46,6 +46,8 @@ MonoBehaviour:
     maxTargets: 0
     spreadAngle: 0
     isBoomerang: 0
+  requiredClass: 2
+  category: 9
   maxEnhanceLevel: 25
   mainAffixLineCount: 3
   subAffixLineCount: 3
