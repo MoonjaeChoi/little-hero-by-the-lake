@@ -15,22 +15,11 @@ namespace LittleHero
             public Button button;
         }
 
-        [Serializable]
-        public class CharacterButton
-        {
-            public CharacterData character;
-            public Button button;
-            public Image highlight;   // 선택된 캐릭터 강조용 (선택사항)
-        }
-
-        [SerializeField] private Text _selectedCharacterText;
         [SerializeField] private string _chapterSceneName = "Chapter";
         [SerializeField] private ChapterButton[] _chapterButtons;
-        [SerializeField] private CharacterButton[] _characterButtons;
-        [SerializeField] private CharacterData _defaultCharacter;
 
         // 5005 Sprint 1 — 4 화폐 표시는 AtticCurrencyView 로 추출
-        // (_starFragmentsText / _magicCrystalText / _starlightText / _starforceShardsHud 모두 컴포넌트 이동)
+        // 5005 Sprint 2 — 캐릭터 선택은 AtticCharacterSelector 로 추출 (CharacterButton 클래스 + 3 SerializeField + 5 메서드)
 
         [Header("D2 — Endgame 메뉴 (선택, CH35 클리어 후 활성)")]
         [SerializeField] private GameObject _endgameMenuRoot;
@@ -118,11 +107,8 @@ namespace LittleHero
 
         private void OnEnable()
         {
-            if (MetaProgression.Instance != null)
-            {
-                MetaProgression.Instance.OnCharacterChanged     += UpdateSelectedCharacter;
-            }
             // 5005 Sprint 1 — 4 화폐 이벤트 구독은 AtticCurrencyView 가 담당
+            // 5005 Sprint 2 — OnCharacterChanged 구독은 AtticCharacterSelector 가 담당
 
             if (_gachaButton != null) _gachaButton.onClick.AddListener(OpenGachaPanel);
             if (_starforceButton != null) _starforceButton.onClick.AddListener(OpenStarforcePanel);
@@ -142,25 +128,12 @@ namespace LittleHero
                 }
             }
 
-            if (_characterButtons != null)
-            {
-                for (int i = 0; i < _characterButtons.Length; i++)
-                {
-                    var entry = _characterButtons[i];
-                    if (entry?.button == null) continue;
-                    var captured = entry.character;
-                    entry.button.onClick.AddListener(() => HandleSelectCharacter(captured));
-                }
-            }
         }
 
         private void OnDisable()
         {
-            if (MetaProgression.Instance != null)
-            {
-                MetaProgression.Instance.OnCharacterChanged     -= UpdateSelectedCharacter;
-            }
             // 5005 Sprint 1 — 4 화폐 이벤트 해제는 AtticCurrencyView 가 담당
+            // 5005 Sprint 2 — OnCharacterChanged 해제는 AtticCharacterSelector 가 담당
 
             if (_gachaButton != null) _gachaButton.onClick.RemoveAllListeners();
             if (_starforceButton != null) _starforceButton.onClick.RemoveAllListeners();
@@ -171,9 +144,6 @@ namespace LittleHero
 
             if (_chapterButtons != null)
                 foreach (var entry in _chapterButtons)
-                    if (entry?.button != null) entry.button.onClick.RemoveAllListeners();
-            if (_characterButtons != null)
-                foreach (var entry in _characterButtons)
                     if (entry?.button != null) entry.button.onClick.RemoveAllListeners();
         }
 
@@ -189,62 +159,10 @@ namespace LittleHero
             // 다락방 BGM (Joe Hisaishi 풍 nostalgic)
             AudioManager.Instance?.PlayBgm("attic_nostalgic");
 
-            // 저장된 캐릭터 ID 복원
-            if (MetaProgression.Instance != null)
-            {
-                var saved = MetaProgression.Instance.SelectedCharacter;
-                if (saved == null)
-                {
-                    string id = MetaProgression.Instance.Data?.selectedCharacterId;
-                    saved = ResolveCharacterById(id);
-                    // stats_v2 §6.2 — 첫 시작 강제 선택 (자동 default 폐기)
-                    if (saved == null)
-                    {
-                        ShowFirstStartCharacterPrompt();
-                        return;
-                    }
-                    MetaProgression.Instance.SelectCharacter(saved);
-                }
-                UpdateSelectedCharacter(saved);
-            }
+            // 5005 Sprint 2 — 캐릭터 복원/선택은 AtticCharacterSelector.Start 가 담당
         }
 
-        /// <summary>
-        /// stats_v2 §6.2 — 첫 시작 시 강제 캐릭터 선택.
-        /// 자동 default_boy 폐기 — 다락방 _characterButtons 클릭 대기.
-        /// </summary>
-        private void ShowFirstStartCharacterPrompt()
-        {
-            if (_selectedCharacterText != null)
-                _selectedCharacterText.text = "영웅을 선택하세요!";
-            // 다락방 _characterButtons 가 화면에 표시됨 — 사용자가 클릭하면 HandleSelectCharacter 호출
-            Debug.Log("[AtticController] 첫 시작 — 캐릭터 선택 강제 (자동 선택 폐기)");
-        }
-
-        private CharacterData ResolveCharacterById(string id)
-        {
-            if (string.IsNullOrEmpty(id) || _characterButtons == null) return null;
-            foreach (var entry in _characterButtons)
-                if (entry?.character != null && entry.character.id == id) return entry.character;
-            return null;
-        }
-
-        private void HandleSelectCharacter(CharacterData character)
-        {
-            if (MetaProgression.Instance == null || character == null) return;
-            MetaProgression.Instance.SelectCharacter(character);
-        }
-
-        private void UpdateSelectedCharacter(CharacterData character)
-        {
-            if (_selectedCharacterText != null)
-                _selectedCharacterText.text = character != null ? $"선택: {character.displayName}" : "선택: -";
-
-            if (_characterButtons != null)
-                foreach (var entry in _characterButtons)
-                    if (entry?.highlight != null)
-                        entry.highlight.enabled = (entry.character == character);
-        }
+        // 5005 Sprint 2 — ShowFirstStartCharacterPrompt / ResolveCharacterById (캐릭터 한정) / HandleSelectCharacter / UpdateSelectedCharacter 모두 AtticCharacterSelector 로 이동
 
         // 5005 Sprint 1 — UpdateStarFragments / UpdateMagicCrystals / UpdateStarlight / UpdateStarforceShards 모두 AtticCurrencyView 로 이동
 

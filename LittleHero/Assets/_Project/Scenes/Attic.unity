@@ -38911,6 +38911,7 @@ GameObject:
   - component: {fileID: 1218918685}
   - component: {fileID: 1218918684}
   - component: {fileID: 1218918686}
+  - component: {fileID: 1218918687}
   m_Layer: 0
   m_Name: AtticController
   m_TagString: Untagged
@@ -38930,7 +38931,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 554e66a1655ee4f369910162f0d72e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticController
-  _selectedCharacterText: {fileID: 1154938487}
   _chapterSceneName: Chapter
   _chapterButtons:
   - chapter: {fileID: 11400000, guid: 2517a83c10d674ce8b622e80bb1c8c20, type: 2}
@@ -38939,17 +38939,6 @@ MonoBehaviour:
     button: {fileID: 371328171}
   - chapter: {fileID: 11400000, guid: 222abd4bd1d1e403a9ce55da7efbc288, type: 2}
     button: {fileID: 1585863915}
-  _characterButtons:
-  - character: {fileID: 11400000, guid: 9b5cbef40766e4eb891d5d6ba9ead3fa, type: 2}
-    button: {fileID: 400287319}
-    highlight: {fileID: 732654942}
-  - character: {fileID: 11400000, guid: eb19874a8f9594e4e90ca400e33ffaaf, type: 2}
-    button: {fileID: 28990596}
-    highlight: {fileID: 1897507506}
-  - character: {fileID: 11400000, guid: c3422e805d1b649a482511786e46e0e9, type: 2}
-    button: {fileID: 1880573227}
-    highlight: {fileID: 1440392245}
-  _defaultCharacter: {fileID: 11400000, guid: 9b5cbef40766e4eb891d5d6ba9ead3fa, type: 2}
   _endgameMenuRoot: {fileID: 0}
   _dailyBossCooldownText: {fileID: 0}
   _weeklyBossCooldownText: {fileID: 0}
@@ -38995,6 +38984,21 @@ MonoBehaviour:
   _magicCrystalText: {fileID: 0}
   _starlightText: {fileID: 0}
   _starforceShardsHud: {fileID: 0}
+--- !u!114 &1218918687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218918683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4edc5b501815342158bd684fd0038f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticCharacterSelector
+  _selectedCharacterText: {fileID: 0}
+  _buttons: []
+  _defaultCharacter: {fileID: 0}
 --- !u!1 &1220013253
 GameObject:
   m_ObjectHideFlags: 0
