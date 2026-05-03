@@ -31,3 +31,7 @@ MonoBehaviour:
   bossAttackCooldown: 4.35
   bossAttackDamage: 25.5
   bossAttackRange: 5
+  bossTier: 2
+  phase2Pattern: 2
+  phase2Threshold: 0.5
+  phase2SpeedMultiplier: 1.3

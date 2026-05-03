@@ -35,5 +35,19 @@ namespace LittleHero
         public float bossAttackCooldown = 4f;
         public float bossAttackDamage = 20f;
         public float bossAttackRange = 5f;
+
+        // 5001 boss_system_v2 — Tier·Phase·Loot 분리. 기존 isMiniB/isBoss boolean 호환 유지.
+        [Header("Boss System v2 (5001)")]
+        [Tooltip("보스 분류 — None=일반 적, MiniBoss=5/10/15 wave, ChapterBoss=20 wave, Daily/Weekly=Endgame")]
+        public BossTier bossTier = BossTier.None;
+
+        [Tooltip("Phase 2 패턴 (ChapterBoss+ 만). MiniBoss = None (D3=A PRD 그대로)")]
+        public BossAttackType phase2Pattern = BossAttackType.None;
+
+        [Range(0f, 1f), Tooltip("Phase 2 진입 HP 임계 (기본 50%)")]
+        public float phase2Threshold = 0.5f;
+
+        [Tooltip("Phase 2 공격 속도 배율 (D2=C SerializeField, 기본 1.3×). 보스별 차별 가능")]
+        public float phase2SpeedMultiplier = 1.3f;
     }
 }
