@@ -495,3 +495,164 @@ CLAUDE.md §11 의 Phase 3 "🔄 진행 중" 은 **사실상 종료** (메타 �
 - 2026-05-03: **Damage System v2** — 충돌 폐기 + DamageQuery + 메이플 다중 타깃 보정
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
+
+## 15. OOP 개발 방법론 정책 (필수 준수)
+
+> **출처**: `architecture_analysis_v1.md` (Unity OOP + Claude Code 평가) + 웹 조사 4 쿼리 (2026-05-03)
+> **우선순위**: 본 정책은 §1~14 보다 **상위** — 신규 코드 작성·기존 코드 수정 시 본 정책 우선 적용
+> **위반 발견 시**: 즉시 보고 + fix (또는 사용자 승인 후 후속 사이클)
+
+### 15.1 SOLID 5 원칙 (Unity 적용)
+
+| 원칙 | Unity 적용 |
+|---|---|
+| **S — 단일 책임** | 클래스당 1 책임. PlayerInput / Health / WeaponHandler 분리 (Player.cs 모놀리식 ❌) |
+| **O — 개방-폐쇄** | switch 폐기, Strategy/Factory 활용 (예 IAttackPattern 8 구현체) |
+| **L — 리스코프** | 인터페이스 구현체 모두 호환 (계약 위반 X) |
+| **I — 인터페이스 분리** | 작은 interface (IAttackPattern + IBossAttackPattern 분리) |
+| **D — 의존성 역전** | Initialize(stats, config) 명시 주입 / Singleton.Instance 직접 참조 최소 |
+
+### 15.2 네이밍 컨벤션 (Unity 공식 + Little Hero)
+
+| 종류 | 규칙 | 예시 |
+|---|---|---|
+| 클래스/인터페이스/메서드 | PascalCase | `PlayerStats`, `IAttackPattern`, `RecalculateStats()` |
+| public 필드 (가능한 회피) | camelCase | `public float damage;` (SO 필드 한정 허용) |
+| private/protected 필드 | `_camelCase` | `private float _attackDamage;` |
+| 상수 | UPPER_SNAKE | `MAX_ENHANCE_LEVEL` |
+| 정적 readonly | UPPER_SNAKE | `static readonly int[] _shardCost` |
+| Boolean | 동사 접두사 | `isDead`, `hasAttacked`, `canEquip` |
+| 약어 | 사용 X (수학 제외) | `playerHealth` ✅ / `pHp` ❌ |
+
+**SerializeField 패턴**:
+```csharp
+[SerializeField] private float _attackDamage;  // ✅ private + SerializeField
+public float AttackDamage => _attackDamage;     // ✅ readonly property
+public float damage;                             // ❌ public 필드 회피
+```
+
+### 15.3 GC 최소화 패턴 (모바일 핵심)
+
+| 패턴 | 적용 |
+|---|---|
+| **ObjectPool 필수** | Instantiate/Destroy in Update ❌. ObjectPool<T> + VfxPool + DamageFloaterPool 활용 |
+| **String 회피** | `$"{x}"` in Update ❌. StringBuilder 또는 StringBuffer 캐시 |
+| **LINQ 회피** | 성능 critical 영역 ❌. for/foreach 사용 |
+| **Boxing 회피** | `int → object` ❌. 제네릭 List<T> 사용 |
+| **Update() 최소화** | 1500+ 객체 매 프레임 callback ❌. 단일 Manager Update + List 일괄 처리 (예 EnemyAnimationManager) |
+| **사전 buffer** | `new Collider2D[]` in loop ❌. 정적 buffer 64 (DamageQuery._buffer) |
+| **Resources.Load 캐시** | 매 호출 로드 ❌. 1회 + Dictionary cache |
+
+### 15.4 ScriptableObject 우선 (Data-Driven Design)
+
+- **모든 밸런스/콘텐츠** → ScriptableObject (BalanceConfig / EnemyData / EquipmentTemplate / AffixDefinition)
+- **마법 숫자 금지** — 코드 hardcode ❌, SO 필드 또는 const ✅
+- **Designer 친화** — Inspector 편집 + Prefab 변형
+- **메모리 효율** — 1회 로드 + 다수 컴포넌트 공유
+
+### 15.5 이벤트 아키텍처
+
+| 종류 | 사용처 |
+|---|---|
+| **정적 EventBus (GameEvents)** | 게임플레이 핵심 (OnEnemyKilled / OnLevelUp 등) — 빠른 라우팅 |
+| **SO Event Channel** | UI/디자이너 wiring (VoidEventChannel + GameEventListener) — 코드 X |
+| **C# event delegate** | 컴포넌트 내부 (Health.OnDamaged 등) — 결합도 낮음 |
+| **MonoBehaviour 직접 참조** | ❌ 회피 (높은 결합도) |
+
+### 15.6 Component 패턴 + 100줄 룰
+
+**100줄 룰** (CLAUDE.md §5 기존):
+- MonoBehaviour 100줄 넘으면 책임 분리
+- 위반 시 — Model/View/Presenter 분리 또는 Component 추출
+
+**Component 분리 예시** (모범 — EnemyController):
+```
+EnemyController     (Initialize + 외형 적용)     ~50 라인
+EnemyAI             (이동 AI)                    ~60 라인
+EnemyAnimationMgr  (단일 Update 매니저)         ~40 라인
+```
+
+### 15.7 Dependency Injection (Lightweight)
+
+```csharp
+// ❌ Singleton 직접 참조 (결합도 ↑)
+public void Start() {
+    var stats = GameManager.Instance.PlayerStats;
+}
+
+// ✅ Initialize 명시 주입 (테스트 가능)
+public void Initialize(PlayerStats stats, BalanceConfig config) {
+    _stats = stats;
+    _config = config;
+}
+
+// ✅ Constructor 주입 (정적 service 권장)
+public class GachaService {
+    public static void Initialize(SlotAffixPool[] pools, GlobalSubAffixPool global) {...}
+}
+```
+
+**Zenject IoC**: 도입 ❌ (모바일 GC 우려 + 학습 비용)
+
+### 15.8 패턴 우선순위
+
+| 패턴 | Little Hero 적용 |
+|---|---|
+| **Strategy** | ✅ IAttackPattern 8 / IBossAttackPattern 7 |
+| **Object Pool** | ✅ ObjectPool<T> + VfxPool + DamageFloaterPool |
+| **Service Locator (정적)** | ✅ CurrencyService / GachaService / DamageQuery |
+| **Singleton** | △ GameManager / MetaProgression / AudioManager (DontDestroyOnLoad 만) |
+| **Factory** | △ CreatePattern switch — 향후 SO Registry 전환 |
+| **MVC/MVP** | △ InventoryModel 분리 시작 — 향후 다른 Panel 도 |
+| **Observer (EventBus)** | ✅ GameEvents 정적 + SO Event Channel 인프라 |
+| **State** | △ 게임 상태 enum 만 (PlayerState / GameState 미도입) |
+
+### 15.9 단위 테스트 패턴 (향후 도입)
+
+- Unity Test Framework (NUnit) + Editor Test
+- ScriptableObject Mock — `ScriptableObject.CreateInstance<>()`
+- 핵심 정적 service (DamageQuery / DamageDealer / EnhancementService) 우선 테스트
+- MonoBehaviour 는 Logic 분리 (Component → Model 위임)
+- **PIVOT v4 Cinematic Combat 시뮬** — `Editor/CurveSimulator.cs` 패턴 답습
+
+### 15.10 Claude Code 워크플로 정책
+
+1. **디자인 문서 → 코드 → 검증** 3단계 (한 commit = 한 의미 단위)
+2. **CLAUDE.md** 핵심만 + changelog 분리 (changelog-manager 스킬)
+3. **MCP 자동화** — 씬 wiring / SO 생성 / Reflection 검증
+4. **단일 책임 commit** — 회수 용이
+5. **사용자 결정 우선** — 옵션 X/Y/Z 채택 시 디자인 문서 + commit 반드시 명시
+
+### 15.11 안티 패턴 (절대 금지)
+
+| 안티 패턴 | 이유 |
+|---|---|
+| `public float damage;` (캡슐화 X) | SerializeField + private 사용 |
+| `Player.cs` 500+ 라인 | 100줄 룰 + Component 분리 |
+| `Update()` in 1500 객체 | 단일 Manager Update + List |
+| `Instantiate()` in Update | ObjectPool 필수 |
+| `new List<T>()` in Update | 정적 buffer 또는 사전 할당 |
+| `string + string` in Update | StringBuilder + 캐시 |
+| `LINQ.Where(...)` in critical | for/foreach 직접 |
+| `GameObject.Find()` in Update | Awake 1회 캐시 |
+| switch 9 분기 (Factory 미사용) | Strategy + SO Registry |
+| Singleton 직접 참조 | Initialize 명시 주입 |
+
+### 15.12 정책 검증 (Editor 자동화)
+
+`Editor/ProjectValidator.cs` 룰 추가 권장:
+- public 필드 검사 (SO 제외)
+- 100줄+ 클래스 경고
+- Update() 멀티플 검사 (단일 Manager 권장)
+- Resources.Load in Update 검사
+- string concat in Update 정적 분석
+
+**현재 적용 상태** (점검):
+- ✅ Object Pool 사용 (10+ 영역)
+- ✅ ScriptableObject 우선 (400+ SO)
+- ✅ Strategy 8+7 패턴
+- △ MVC/MVP (InventoryModel 만 분리)
+- △ Factory (switch 잔존)
+- ❌ DI 명시 주입 (Singleton 직접 참조 다수)
+- ❌ 단위 테스트 (Editor Test 0)
+
