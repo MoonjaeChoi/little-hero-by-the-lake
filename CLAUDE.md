@@ -203,6 +203,7 @@ Assets/_Project/
 | **Damage v2** | 충돌 폐기 + DamageQuery + 다중 타깃 보정 | ✅ 2026-05-03 |
 | **OOP §15** | 정책 + Editor Test + Validator | ✅ 2026-05-03 |
 | **weapon_v2** | 직업별 분류 + 24 무기 균형 + 가챠 필터 | ✅ 2026-05-03 |
+| **boss_system_v2** | 4 Tier + IBossPhase State + BossPatternFactory + BossLootTable 4 (PGE 6-Phase 첫 시연) | ✅ 2026-05-04 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
@@ -210,11 +211,11 @@ Assets/_Project/
 > 자세한 작업 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 
 ### 활성 시스템 (요약)
-- **Core**: GameManager / MetaProgression / SaveSystem / ObjectPool / VfxPool / AudioManager / IAPService / SeasonPassService / CurrencyService / ConversionForge / EndgameResetService / StarlightGrantService / LimitedShopService / BossEncounterService / GachaService / StarforceService / PlayerFinder
-- **Data SO 클래스**: EquipmentTemplate / EquipmentInstance / AffixDefinition / SubAffixDefinition / SlotAffixPool / GlobalSubAffixPool / MythicDefinition / GachaPool / EnemyData / ChapterData / CharacterData / MemoryData / BalanceConfig / EndgameModeData / MetaUpgradeData / LimitedShopOffer
-- **Gameplay**: PlayerStats v2 (3 코어 + 24 파생) / PlayerController / PlayerProgress / PlayerHealth / EnemyController + AI + AnimationManager / WaveManager / ChapterRunner / InfiniteTowerRunner / BossEncounterRunner / EquipmentManager + PatternFactory / 8 IAttackPattern / 7 IBossAttackPattern / DamageSystem + Query + Dealer / EnhancementService + AffixRoller + EffectResolver + MythicMileageService / ItemDropService / CinematicEffects + DamageNumberFloater
+- **Core**: GameManager / MetaProgression / SaveSystem / ObjectPool / VfxPool / AudioManager / IAPService / SeasonPassService / CurrencyService / ConversionForge / EndgameResetService / StarlightGrantService / LimitedShopService / BossEncounterService / BossLootGrantService / GachaService / StarforceService / PlayerFinder
+- **Data SO 클래스**: EquipmentTemplate / EquipmentInstance / AffixDefinition / SubAffixDefinition / SlotAffixPool / GlobalSubAffixPool / MythicDefinition / GachaPool / EnemyData / ChapterData / CharacterData / MemoryData / BalanceConfig / EndgameModeData / MetaUpgradeData / LimitedShopOffer / **BossLootTable** (5001)
+- **Gameplay**: PlayerStats v2 (3 코어 + 24 파생) / PlayerController / PlayerProgress / PlayerHealth / EnemyController + AI + AnimationManager / WaveManager / ChapterRunner / InfiniteTowerRunner / BossEncounterRunner / EquipmentManager + PatternFactory / 8 IAttackPattern / 7 IBossAttackPattern + **BossPatternFactory** / **IBossPhase + BossPhase1Default + BossPhase2Aggressive + BossPhaseManager (5001 State 패턴)** / DamageSystem + Query + Dealer / EnhancementService + AffixRoller + EffectResolver + MythicMileageService / ItemDropService / CinematicEffects + DamageNumberFloater
 - **UI**: HUDController / WaveTransitionToast / BossHealthBar / GameOverPanel / ChapterClearedPanel / AtticController + 14 진입 버튼 / InventoryPanel + InventoryModel + InventorySelectionPanel v2 (페이징 + 썸네일 + 옵션) + InventoryGridCard + InventoryDetailView / EquipmentCardPanel + Row + EnhanceModalPanel / WondrousMapPanel + Node + RecommendedLevelWarningModal / GachaPanel + ResultPanel + StarforceEnhanceModal + SlotStarforcePanel + View / EndgameMenuPanel / ConversionForgePanel / MemoryEffectOverlay / CharacterInfoPanel / LimitedShopPanel + ItemView / StarlightShopPanel
-- **Tests/Editor**: 23 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10)
+- **Tests/Editor**: 46 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10 + WeaponSystem 13 + **BossSystem 10**)
 - **씬**: Attic / Chapter / InfiniteTower / BossEncounter
 
 ### SO 인스턴스 (400+)
@@ -224,6 +225,7 @@ Assets/_Project/
 - Affix 22 + SubAffix 12 = 34
 - SlotAffixPool 12 + GlobalPool 1
 - Mythic 4 / EndgameMode 4 / MetaUpgrade 3 / LimitedShop 12 / Memory 4
+- **BossLootTable 4** (5001 — Mini/Chapter/Daily/Weekly)
 
 ### 아트 V5 sticker dynamic 톤 (PIVOT 후 통일)
 - 캐릭터 portrait 3 + 적 sprite 262 + 보스 11 + 무기 icon 18 + 장비 icon 16 + 챕터 BG 35 + ground tile 35 + UI Attic 4 + 슬롯 placeholder 12 + 화폐 4
@@ -258,10 +260,10 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
+- 2026-05-04: **5001 boss_system_v2** — BossTier 4 + IBossPhase State + Factory + LootTable 4 (PGE 6-Phase 풀파이프라인 첫 시연, 10 commit, NUnit 36→46)
+- 2026-05-04: **PGE 6-Phase 풀세트 도입** — 4 신규 스킬 (rebuttal/mediator/breakdown/contract) + pipeline/evaluate 개편 (Anthropic Planner-Generator-Evaluator)
 - 2026-05-03: **weapon_v2** — 무기 OOP 재설계 (직업별 분류 + 24 균형 + 가챠 필터, 7 commit)
-- 2026-05-03: **CLAUDE.md §1~14 대폭 압축** — 예제 코드 제거, 시스템 현황 간략화
 - 2026-05-03: **CLAUDE.md §15 OOP 정책** — 12 섹션 (필수 준수, §1~14 보다 상위)
-- 2026-05-03: **stats_v2.5** — L100 cap 복원 + 장비 무한 강화 (사용자 결정)
 - 2026-05-03: **stats_v2_infinite** — 3 코어 (힘/민첩/지혜) + 보스/일반 분기 제거
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
