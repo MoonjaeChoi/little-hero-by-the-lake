@@ -11,6 +11,8 @@ description: |
 
 > **목적**: discussion_topics.md 의 미결 항목 각각에 결정을 내리고, **decisions.md (결정 + 근거)** 와 **v2_prd.md (최종)** 을 산출.
 > Clayve `prd-mediator.md` 의 Unity 게임 개발 특화 변형 (PGE 패턴 Planner 마무리).
+>
+> **저장 위치 (5001/5002 정착 패턴)**: 입력 discussion_topics + rebuttal 의 v2 초안 + 산출 decisions / v2_prd 최종 모두 `docs/prd/<번호>/` 폴더 (자동 추론, prd-rebuttal 출력과 같은 위치).
 
 ## 0. 입력
 

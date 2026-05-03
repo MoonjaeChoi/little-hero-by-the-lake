@@ -10,28 +10,33 @@ description: |
 
 > **목적**: 확정된 PRD v2 → 구현 가능한 세부 태스크 N개. 4 레이어 분해 (Data SO / Logic / UI / Test).
 > Clayve `prd-implementation-breakdown` 의 Unity 게임 개발 특화 변형 (PGE Planner 단계).
+>
+> **저장 위치 (5001/5002 정착 패턴)**:
+> - 입력 PRD v2: `docs/prd/<번호>/<system>_v2_prd.md`
+> - 산출 breakdown_00 ~ breakdown_NN: 모두 같은 `docs/prd/<번호>/` 폴더
+> - 번호 자동 추출 + `mkdir -p`
 
 ## 0. 입력
 
 ```bash
 # Mode 1: 새 PRD 분해
-/prd-breakdown --prd docs/little_hero/<system>_v2_prd.md
+/prd-breakdown --prd docs/prd/<번호>/<system>_v2_prd.md
 
 # Mode 2: 문서번호 자동 탐색
-/prd-breakdown --prd 5001    # 5001_*_v2_prd.md 자동 매칭
+/prd-breakdown --prd 5001    # docs/prd/5001/5001_*_v2_prd.md 자동 매칭
 
 # Mode 3: 범위 재작성
 /prd-breakdown --rewrite 5001_03~5001_06
 ```
 
 PRD 자동 탐색 순서:
-1. `docs/little_hero/<번호>_*_v2_prd.md` (mediator 최종)
-2. `docs/little_hero/<번호>_*_prd.md` (rebuttal 또는 generator)
+1. `docs/prd/<번호>/<번호>_*_v2_prd.md` (mediator 최종)
+2. `docs/prd/<번호>/<번호>_*_prd.md` (rebuttal 또는 generator)
 3. 둘 다 없으면 → `prd-mediator` (또는 `prd-generator`) 자동 호출 후 진행
 
 ## 1. 출력 (N+1 파일)
 
-`docs/little_hero/` 내 평탄 구조:
+`docs/prd/<번호>/` 내 평탄 구조 (번호 폴더 미존재 시 자동 생성):
 
 | 파일 | 용도 |
 |---|---|

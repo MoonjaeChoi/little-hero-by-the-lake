@@ -10,10 +10,16 @@ description: |
 
 > **목적**: critique.md 의 각 Discussion Point 에 우선순위별 반박/수용 후, **수용된 항목은 PRD v2 초안에 반영**·**미결 항목은 discussion_topics 로 분리**.
 > Clayve `prd-rebuttal-agent` 의 Unity 게임 개발 특화 변형 (PGE 패턴 Planner 강화).
+>
+> **저장 위치 (5001/5002 정착 패턴)**:
+> - 입력 PRD: `docs/prd/<번호>/<system>_v1_prd.md`
+> - 산출 (rebuttal / v2_prd 초안 / discussion_topics): 모두 같은 `docs/prd/<번호>/` 폴더
+> - 디자인 컨텍스트: `docs/prd/<system>_v1.md` (prd/ 루트)
+> - 번호는 시스템 prefix 4자리 자동 추출, 폴더 미존재 시 `mkdir -p`
 
 ## 0. 입력
 
-- `--prd <path>` (Required): 원본 PRD 파일 (예 `docs/little_hero/5001_boss_system_v2_prd.md`)
+- `--prd <path>` (Required): 원본 PRD 파일 (예 `docs/prd/5001/5001_boss_system_v2_prd.md`)
 - `--crv <path>` (Optional): critical_review 파일. 생략 시 자동 탐색:
   1. `<prd_dir>/<prd_basename>_critique.md`
   2. `<prd_dir>/<prd_basename>_critical_review.md`
@@ -23,7 +29,7 @@ description: |
 
 ## 1. 출력 (3 파일)
 
-`docs/little_hero/` 또는 PRD 디렉토리 내:
+`docs/prd/<번호>/` (PRD 디렉토리) 내:
 
 | 파일 | 생성 조건 |
 |---|---|
@@ -38,7 +44,7 @@ description: |
 - 원본 PRD 전체
 - critical_review 전체
 - `CLAUDE.md` §15 (OOP 정책)
-- `docs/little_hero/<system>_v1.md` (디자인 — 옵션 비교 컨텍스트)
+- `docs/prd/<system>_v1.md` (디자인 — 옵션 비교 컨텍스트, prd/ 루트)
 
 ### Step 2 — 우선순위별 대응 깊이
 

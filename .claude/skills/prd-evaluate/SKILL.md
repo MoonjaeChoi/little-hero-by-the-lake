@@ -12,13 +12,15 @@ description: |
 > **목적**: 구현 후 Sprint Contract 의 객관 기준으로 독립 검증. **Generator(Phase 5)와 분리** → 편향 제거.
 > **Anthropic PGE 핵심**: 자기평가 편향 제거 + 반복 루프 (FAIL → 수정 지시 → Phase 5 재진입).
 > Clayve `prd-evaluate.md` 의 Unity 게임 개발 특화 변형.
+>
+> **저장 위치 (5001/5002 정착 패턴)**: 입력 Contract / PRD v2 + 산출 evaluation 모두 `docs/prd/<번호>/` 폴더. 번호 자동 추출.
 
 ## 0. 입력
 
 ```bash
 # Sprint Contract 기반 검증 (권장 — 단일 진실원)
 /prd-evaluate --prd 5001
-/prd-evaluate --prd docs/little_hero/<system>_v2_prd.md
+/prd-evaluate --prd docs/prd/<번호>/<system>_v2_prd.md
 
 # Contract 없이 PRD 직접 (legacy)
 /prd-evaluate --prd 5001 --no-contract

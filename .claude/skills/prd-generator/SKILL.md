@@ -3,7 +3,12 @@
 > **목적**: 사용자 요청을 받아 `docs/prd/` 폴더에 **디자인 문서 + Sprint PRD** 2 종을 자동 작성한다.
 > Clayve의 prd-generator를 Unity 게임 개발 환경에 맞게 재구성.
 >
-> **저장 위치 (2026-05-04 정리)**: PRD 산출은 `docs/prd/` 로 통합. 디자인 문서는 시스템 색인 역할이라 `docs/prd/` 루트에, Sprint PRD 등 산출 문서는 후속 mediator/breakdown/contract 단계에서 `docs/prd/<번호>/` 하위로 분리 가능 (5001/5002 패턴 답습). `docs/little_hero/` 는 시스템 디자인 외 일반 문서 (changelog / architecture_analysis / *_v1.md 등) 만 유지.
+> **저장 위치 (2026-05-04 정리, 5001/5002 정착 패턴)**:
+> - **디자인 1개**: `docs/prd/<system>_v1.md` (시스템 색인, prd/ 루트)
+> - **PRD v1 + 후속 산출 모두**: `docs/prd/<번호>/<system>_*.md` 하위 폴더
+> - 번호 자동 추출: 시스템 이름 prefix 의 4자리 숫자 (예 `5003_X_시스템` → 번호 `5003` → 폴더 `docs/prd/5003/`)
+> - 번호 폴더 미존재 시 자동 생성 (`mkdir -p`)
+> - changelog_v1.md / architecture_analysis_v1.md 등 일반 문서는 `docs/little_hero/` 그대로 유지
 
 ## 0. 단일 진실원
 
@@ -11,7 +16,7 @@
 |---|---|
 | `CLAUDE.md` §15 OOP 정책 | 신규 코드 작성 시 우선 (SOLID·SO·GC·100줄) |
 | `docs/prd/<system>_v1.md` | 디자인 문서 (분석·옵션·결정) — 시스템 색인 (prd/ 루트) |
-| `docs/prd/<system>_v1_prd.md` | Sprint PRD (작업 명세·검증 기준) — 후속 단계에서 `docs/prd/<번호>/` 로 이동 가능 |
+| `docs/prd/<번호>/<system>_v1_prd.md` | Sprint PRD (작업 명세·검증 기준) — 후속 단계에서 `docs/prd/<번호>/` 로 이동 가능 |
 | `docs/little_hero/changelog_v1.md` | 변경 이력 (changelog-manager 자동, 위치 그대로) |
 
 ## 1. 입력
@@ -38,7 +43,7 @@
 
 ### Step 2 — Sprint PRD 작성
 
-`docs/prd/<system>_v1_prd.md` 작성:
+`docs/prd/<번호>/<system>_v1_prd.md` 작성:
 1. 전체 개요 (Sprint × commit × 시간 표)
 2. 각 Sprint 명세:
    - 작업 항목 (파일별)

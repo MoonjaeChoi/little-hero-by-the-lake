@@ -11,6 +11,12 @@ description: |
 > **목적**: 사용자 요청 하나로 디자인 → PRD → 리뷰(3단) → 분해 → 검증계약 → 구현 → 검증 자동.
 > **Anthropic PGE 패턴**: 구현 전 검증 기준 사전 정의 + 구현/검증 분리 + 반복 루프 (3 핵심 품질 향상 요소).
 > Clayve `prd-pipeline` 5단계 + 자체 Generate Phase 1 → 6 Phase 변형.
+>
+> **저장 위치 (5001/5002 정착 패턴)**:
+> - **디자인 1개**: `docs/prd/<system>_v1.md` (시스템 색인, prd/ 루트)
+> - **모든 Phase 산출**: `docs/prd/<번호>/<system>_*.md` 하위 폴더 (PRD v1 / critique / rebuttal / discussion / decisions / v2 / breakdown_NN / contract / checklist / evaluation)
+> - 번호 자동 추출 (시스템 prefix 4자리 숫자), 폴더 미존재 시 `mkdir -p` 자동 생성
+> - 모든 6 Phase 자매 스킬 (generator/critiquer/rebuttal/mediator/breakdown/contract/evaluate) 가 같은 번호 폴더 공유
 
 ## 0. 6 Phase 흐름
 
@@ -43,7 +49,7 @@ description: |
 
 # 또는 명시적
 /prd-pipeline --system <name>
-/prd-pipeline --prd docs/little_hero/<system>_prd.md
+/prd-pipeline --prd docs/prd/<번호>/<system>_prd.md
 
 # 특정 Phase 부터
 /prd-pipeline --from review        # Phase 2 부터 (PRD 가 있을 때)

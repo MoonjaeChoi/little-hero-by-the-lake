@@ -11,12 +11,14 @@ description: |
 > **목적**: 구현 전에 객관 검증 기준 + Play 시나리오를 분리 정의 → Evaluator(독립 검증자) 가 사용.
 > **Anthropic PGE 핵심**: Generator(구현자) 의 자기평가 편향 제거. Contract 가 단일 진실원.
 > Clayve `prd-contract.md` 의 Unity 게임 개발 특화 변형.
+>
+> **저장 위치 (5001/5002 정착 패턴)**: 입력 PRD v2 + 산출 contract / contract_checklist 모두 `docs/prd/<번호>/` 폴더. 번호 자동 추출 + `mkdir -p`.
 
 ## 0. 입력
 
 ```bash
 # PRD v2 (mediator 최종) 기준
-/prd-contract --prd docs/little_hero/<system>_v2_prd.md
+/prd-contract --prd docs/prd/<번호>/<system>_v2_prd.md
 
 # 문서번호 자동 탐색
 /prd-contract --prd 5001
