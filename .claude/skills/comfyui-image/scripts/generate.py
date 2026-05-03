@@ -90,7 +90,10 @@ def patch_workflow(wf: dict, args, ids: dict) -> dict:
 
 def queue_prompt(server: str, workflow: dict, client_id: str) -> str:
     url = f"{server.rstrip('/')}/prompt"
-    body = {"prompt": workflow, "client_id": client_id}
+    # Strip non-node keys (e.g. "_comment") — ComfyUI treats every top-level key as a node id
+    # and 500s if it can't parse it. Allow JSON files to carry inline comments via "_*" keys.
+    clean = {k: v for k, v in workflow.items() if not k.startswith("_")}
+    body = {"prompt": clean, "client_id": client_id}
     try:
         result = http_post_json(url, body, timeout=30)
     except urllib.error.HTTPError as e:
@@ -139,8 +142,12 @@ def main(argv=None) -> int:
     parser.add_argument("--seed", type=int, default=22222, help="Sampler seed (-1 = random)")
     parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--height", type=int, default=1024)
-    parser.add_argument("--steps", type=int, default=25)
-    parser.add_argument("--cfg", type=float, default=7.0)
+    parser.add_argument("--steps", type=int, default=8,
+                        help="Sampling steps. Default 8 (DreamShaperXL Turbo). "
+                             "Use 25 for SDXL base, 4 for SDXL Turbo, ~30 for SD1.5.")
+    parser.add_argument("--cfg", type=float, default=2.0,
+                        help="Classifier-free guidance. Default 2.0 (DreamShaperXL Turbo). "
+                             "Use 7.0 for SDXL base, 1.0 for SDXL Turbo.")
     parser.add_argument("--workflow", default=None,
                         help="Workflow JSON (API format). Default: assets/workflow_template.json next to this script.")
     parser.add_argument("--server", default="http://localhost:8188")

@@ -1,13 +1,13 @@
 {
-  "_comment": "Generic SDXL workflow placeholder — replace with your project-specific workflow. Export from ComfyUI: Settings (gear) → Save (API Format). Standard node ids: positive=6 (CLIPTextEncode), negative=7 (CLIPTextEncode), sampler=3 (KSampler), latent=5 (EmptyLatentImage). The script auto-detects but pass --positive-node etc. if your ids differ.",
+  "_comment": "DreamShaperXL Turbo SDXL workflow — 192.168.75.194 ComfyUI 의 실제 로딩 checkpoint. Turbo 모델은 steps=4~8 / cfg=1~2 / sampler dpmpp_sde / scheduler karras 권장. V5 sticker tone 등 다른 모델 사용 시 ComfyUI Settings → Save (API Format) 으로 export 한 JSON 으로 본 파일 교체. 표준 노드 id 유지 (positive=6, negative=7, sampler=3, latent=5).",
   "3": {
     "class_type": "KSampler",
     "inputs": {
       "seed": 22222,
-      "steps": 25,
-      "cfg": 7.0,
-      "sampler_name": "euler",
-      "scheduler": "normal",
+      "steps": 8,
+      "cfg": 2.0,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
       "denoise": 1.0,
       "model": ["4", 0],
       "positive": ["6", 0],
@@ -18,7 +18,7 @@
   "4": {
     "class_type": "CheckpointLoaderSimple",
     "inputs": {
-      "ckpt_name": "sd_xl_base_1.0.safetensors"
+      "ckpt_name": "DreamShaperXL_Turbo_SFWdpmppSde_half_pruned.safetensors"
     }
   },
   "5": {

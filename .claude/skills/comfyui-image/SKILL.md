@@ -58,8 +58,8 @@ Optional (sensible defaults):
 - `--negative "<text>"` — negative prompt. Default: `"low quality, blurry, watermark, text"`
 - `--seed <int>` — sampler seed. Default `22222` (Little Hero V5 tone batch consistency). Use `-1` for random.
 - `--width <int>` / `--height <int>` — image size. Default `1024 1024`.
-- `--steps <int>` — sampling steps. Default `25`.
-- `--cfg <float>` — classifier-free guidance scale. Default `7.0`.
+- `--steps <int>` — sampling steps. Default `8` (DreamShaperXL Turbo). Use `25` for SDXL base, `4` for SDXL Turbo, `~30` for SD1.5.
+- `--cfg <float>` — classifier-free guidance scale. Default `2.0` (DreamShaperXL Turbo). Use `7.0` for SDXL base, `1.0` for SDXL Turbo.
 - `--workflow <path>` — workflow JSON. Default: bundled `assets/workflow_template.json`.
 - `--server <url>` — ComfyUI base URL. Default `http://localhost:8188`.
 - `--timeout <sec>` — max wait for completion. Default `300`.
