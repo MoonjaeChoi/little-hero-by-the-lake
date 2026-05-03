@@ -207,6 +207,7 @@ Assets/_Project/
 | **boss_scene_separation_v1** | 챕터 보스 별 씬 + Launcher DTO + BackgroundApplier (5002) | ✅ 2026-05-04 |
 | **mini_boss_scene_separation_v1** | 미니보스 wave 15 별 씬 분리 (5003 옵션 B, BalanceConfig 토글) | ✅ 2026-05-04 |
 | **scene_transition_async_v1** | 모든 씬 전환 LoadSceneAsync + fade-in/out (5004, 11 호출처 통합) | ✅ 2026-05-04 |
+| **attic_decomposition_v1** | AtticController 책임 분리 6 컴포넌트 (5005, 420L → 111L, §15.1 SRP) | ✅ 2026-05-04 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
@@ -217,8 +218,8 @@ Assets/_Project/
 - **Core**: GameManager / MetaProgression / SaveSystem / ObjectPool / VfxPool / AudioManager / IAPService / SeasonPassService / CurrencyService / ConversionForge / EndgameResetService / StarlightGrantService / LimitedShopService / BossEncounterService / BossLootGrantService / GachaService / StarforceService / PlayerFinder / BossEncounterLauncher (5002) / BackgroundApplier (5002) / **SceneTransitionService (5004)** / **FadeOverlay (5004)**
 - **Data SO 클래스**: EquipmentTemplate / EquipmentInstance / AffixDefinition / SubAffixDefinition / SlotAffixPool / GlobalSubAffixPool / MythicDefinition / GachaPool / EnemyData / ChapterData / CharacterData / MemoryData / BalanceConfig / EndgameModeData / MetaUpgradeData / LimitedShopOffer / **BossLootTable** (5001)
 - **Gameplay**: PlayerStats v2 (3 코어 + 24 파생) / PlayerController / PlayerProgress / PlayerHealth / EnemyController + AI + AnimationManager / WaveManager / ChapterRunner / InfiniteTowerRunner / BossEncounterRunner / EquipmentManager + PatternFactory / 8 IAttackPattern / 7 IBossAttackPattern + **BossPatternFactory** / **IBossPhase + BossPhase1Default + BossPhase2Aggressive + BossPhaseManager (5001 State 패턴)** / DamageSystem + Query + Dealer / EnhancementService + AffixRoller + EffectResolver + MythicMileageService / ItemDropService / CinematicEffects + DamageNumberFloater
-- **UI**: HUDController / WaveTransitionToast / BossHealthBar / GameOverPanel / ChapterClearedPanel / AtticController + 14 진입 버튼 / InventoryPanel + InventoryModel + InventorySelectionPanel v2 (페이징 + 썸네일 + 옵션) + InventoryGridCard + InventoryDetailView / EquipmentCardPanel + Row + EnhanceModalPanel / WondrousMapPanel + Node + RecommendedLevelWarningModal / GachaPanel + ResultPanel + StarforceEnhanceModal + SlotStarforcePanel + View / EndgameMenuPanel / ConversionForgePanel / MemoryEffectOverlay / CharacterInfoPanel / LimitedShopPanel + ItemView / StarlightShopPanel
-- **Tests/Editor**: 61 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10 + WeaponSystem 13 + BossSystem 10 + BossSceneSeparation 10 (5002+5003) + **SceneTransition 5** (5004))
+- **UI**: HUDController / WaveTransitionToast / BossHealthBar / GameOverPanel / ChapterClearedPanel / AtticController (111L 본체 — 가챠/한정상점 진입) + **AtticCurrencyView / AtticCharacterSelector / AtticChapterEntry / AtticEndgameMenuView / AtticPanelToggleManager / AtticReturnHandler (5005 6 컴포넌트, §15.1 SRP)** / InventoryPanel + InventoryModel + InventorySelectionPanel v2 (페이징 + 썸네일 + 옵션) + InventoryGridCard + InventoryDetailView / EquipmentCardPanel + Row + EnhanceModalPanel / WondrousMapPanel + Node + RecommendedLevelWarningModal / GachaPanel + ResultPanel + StarforceEnhanceModal + SlotStarforcePanel + View / EndgameMenuPanel / ConversionForgePanel / MemoryEffectOverlay / CharacterInfoPanel / LimitedShopPanel + ItemView / StarlightShopPanel
+- **Tests/Editor**: 67 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10 + WeaponSystem 13 + BossSystem 10 + BossSceneSeparation 10 (5002+5003) + SceneTransition 5 (5004) + **AtticDecomposition 6** (5005))
 - **씬**: Attic / Chapter / InfiniteTower / BossEncounter
 
 ### SO 인스턴스 (400+)
@@ -266,11 +267,11 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
+- 2026-05-04: **5005 attic_decomposition_v1** — AtticController 책임 분리 6 컴포넌트 (CurrencyView/CharacterSelector/ChapterEntry/EndgameMenuView/PanelToggleManager/ReturnHandler, 420L → 111L, §15.1 SRP, 8 commit, NUnit 61→67)
 - 2026-05-04: **5004 scene_transition_async_v1** — 모든 씬 전환 LoadSceneAsync + fade-in/out (SceneTransitionService 정적 + FadeOverlay DontDestroyOnLoad, 11 호출처 통합, 7 commit, NUnit 56→61)
 - 2026-05-04: **5003 mini_boss_scene_separation_v1** — 미니보스 wave 15 분리 (옵션 B 재진입 채택, BalanceConfig 토글, 5 commit, NUnit 54→56). PGE 첫 RESERVED 해제 사례
 - 2026-05-04: **5002 boss_scene_separation_v1** — 챕터 보스 BossEncounter 씬 분리 + Launcher DTO + BackgroundApplier (옵션 C, 10 commit, NUnit 46→54)
 - 2026-05-04: **5001 boss_system_v2** — BossTier 4 + IBossPhase State + Factory + LootTable 4 (PGE 6-Phase 풀파이프라인 첫 시연, 10 commit, NUnit 36→46)
-- 2026-05-04: **PGE 6-Phase 풀세트 도입** — 4 신규 스킬 (rebuttal/mediator/breakdown/contract) + pipeline/evaluate 개편 (Anthropic Planner-Generator-Evaluator)
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 
