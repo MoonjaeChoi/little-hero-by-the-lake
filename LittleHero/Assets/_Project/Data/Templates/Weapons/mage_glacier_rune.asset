@@ -15,29 +15,29 @@ MonoBehaviour:
   id: mage_glacier_rune
   displayName: "\uC5BC\uC74C \uB8EC"
   description: "\uB454\uD654 \uC624\uB77C (\uC774\uC18D -30%)"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9b3ee942a0092400d93fdfdca99f9c70, type: 3}
   slot: 5
   rarity: 2
   baseStats:
     maxHealthBonus: 0
     speedBonus: 0
-    attackDamageBonus: 0
+    attackDamageBonus: 8
     attackSpeedBonus: 0
     rangeBonus: 0
     xpGainBonus: 0
   attackPattern: 2
   attackConfig:
-    damage: 0
-    attackInterval: 0
-    range: 0
+    damage: 12
+    attackInterval: 0.8
+    range: 3.5
     projectileSpeed: 0
     count: 0
     projectilePrefab: {fileID: 0}
     pierceCount: 0
     chainCount: 0
     chainRange: 0
-    slowAmount: 0
-    slowDuration: 0
+    slowAmount: 0.3
+    slowDuration: 1.5
     stunDuration: 0
     dotDamage: 0
     dotDuration: 0

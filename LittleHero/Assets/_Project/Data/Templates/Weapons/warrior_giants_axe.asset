@@ -15,21 +15,21 @@ MonoBehaviour:
   id: warrior_giants_axe
   displayName: "\uAC70\uC778\uC758 \uB3C4\uB07C"
   description: "\uAC15\uB825\uD55C \uAD11\uC5ED \uCDA9\uACA9 4 \uD0C0\uAE43"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b23a19a252a7b47a79dbf9b10257dfab, type: 3}
   slot: 5
   rarity: 3
   baseStats:
-    maxHealthBonus: 0
+    maxHealthBonus: 20
     speedBonus: 0
-    attackDamageBonus: 0
+    attackDamageBonus: 15
     attackSpeedBonus: 0
     rangeBonus: 0
     xpGainBonus: 0
   attackPattern: 6
   attackConfig:
-    damage: 0
-    attackInterval: 0
-    range: 0
+    damage: 25
+    attackInterval: 2
+    range: 4
     projectileSpeed: 0
     count: 0
     projectilePrefab: {fileID: 0}
@@ -43,7 +43,7 @@ MonoBehaviour:
     dotDuration: 0
     lifestealRatio: 0
     healOnHit: 0
-    maxTargets: 0
+    maxTargets: 4
     spreadAngle: 0
     isBoomerang: 0
   requiredClass: 0

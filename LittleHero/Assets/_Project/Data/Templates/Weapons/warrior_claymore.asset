@@ -15,23 +15,23 @@ MonoBehaviour:
   id: warrior_claymore
   displayName: "\uB300\uAC80"
   description: "\uD070 \uBD80\uCC44\uAF34 \uAC80\uAE30 3 \uD0C0\uAE43"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 986e148573095470fa31df855731288a, type: 3}
   slot: 5
   rarity: 1
   baseStats:
     maxHealthBonus: 0
     speedBonus: 0
-    attackDamageBonus: 0
+    attackDamageBonus: 7
     attackSpeedBonus: 0
     rangeBonus: 0
     xpGainBonus: 0
   attackPattern: 8
   attackConfig:
-    damage: 0
-    attackInterval: 0
-    range: 0
+    damage: 10
+    attackInterval: 1
+    range: 2.5
     projectileSpeed: 0
-    count: 0
+    count: 1
     projectilePrefab: {fileID: 0}
     pierceCount: 0
     chainCount: 0
@@ -43,8 +43,8 @@ MonoBehaviour:
     dotDuration: 0
     lifestealRatio: 0
     healOnHit: 0
-    maxTargets: 0
-    spreadAngle: 0
+    maxTargets: 3
+    spreadAngle: 90
     isBoomerang: 0
   requiredClass: 0
   category: 0

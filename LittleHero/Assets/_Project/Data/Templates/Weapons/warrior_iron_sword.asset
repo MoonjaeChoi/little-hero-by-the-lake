@@ -15,23 +15,23 @@ MonoBehaviour:
   id: warrior_iron_sword
   displayName: "\uCCA0\uAC80"
   description: "\uAE30\uBCF8 \uAC80"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 986e148573095470fa31df855731288a, type: 3}
   slot: 5
   rarity: 0
   baseStats:
     maxHealthBonus: 0
     speedBonus: 0
-    attackDamageBonus: 0
+    attackDamageBonus: 5
     attackSpeedBonus: 0
     rangeBonus: 0
     xpGainBonus: 0
   attackPattern: 8
   attackConfig:
-    damage: 0
-    attackInterval: 0
-    range: 0
+    damage: 8
+    attackInterval: 0.6
+    range: 1.5
     projectileSpeed: 0
-    count: 0
+    count: 1
     projectilePrefab: {fileID: 0}
     pierceCount: 0
     chainCount: 0
@@ -43,8 +43,8 @@ MonoBehaviour:
     dotDuration: 0
     lifestealRatio: 0
     healOnHit: 0
-    maxTargets: 0
-    spreadAngle: 0
+    maxTargets: 1
+    spreadAngle: 60
     isBoomerang: 0
   requiredClass: 0
   category: 0
