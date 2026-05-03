@@ -31,7 +31,7 @@ namespace LittleHero
             var runner = FindFirstObjectByType<ChapterRunner>(FindObjectsInactive.Include);
             if (runner != null) runner.SaveSession();
             Time.timeScale = 1f;
-            SceneManager.LoadScene(_atticSceneName);
+            SceneTransitionService.Transition(_atticSceneName);
         }
     }
 }

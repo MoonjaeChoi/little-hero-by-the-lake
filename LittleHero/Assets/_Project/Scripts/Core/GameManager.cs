@@ -79,8 +79,8 @@ namespace LittleHero
         {
             Time.timeScale = 1f;
             ResetRun();
-            UnityEngine.SceneManagement.SceneManager.LoadScene(
-                UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+            SceneTransitionService.Transition(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
 
         public void StartWave()

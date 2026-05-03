@@ -170,7 +170,7 @@ namespace LittleHero
             Debug.Log($"[EndgameMenu] 무한 다락방 진입 — scene={_infiniteTowerSceneName}");
             if (string.IsNullOrEmpty(_infiniteTowerSceneName)) return;
             Time.timeScale = 1f;
-            SceneManager.LoadScene(_infiniteTowerSceneName);
+            SceneTransitionService.Transition(_infiniteTowerSceneName);
         }
 
         public void Close() => gameObject.SetActive(false);

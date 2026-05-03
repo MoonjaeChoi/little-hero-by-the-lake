@@ -117,7 +117,7 @@ namespace LittleHero
         {
             yield return new WaitForSecondsRealtime(_returnDelay);
             Time.timeScale = 1f;
-            SceneManager.LoadScene(_atticSceneName);
+            SceneTransitionService.Transition(_atticSceneName);
         }
     }
 }

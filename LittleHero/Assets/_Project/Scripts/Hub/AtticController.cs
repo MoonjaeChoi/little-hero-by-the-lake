@@ -366,7 +366,7 @@ namespace LittleHero
         {
             if (MetaProgression.Instance != null)
                 MetaProgression.Instance.SelectedChapter = chapter;
-            SceneManager.LoadScene(_chapterSceneName);
+            SceneTransitionService.Transition(_chapterSceneName);
         }
 
         // 5002 D2 — 챕터 클리어 후 다락방 1회 toast (BossEncounterService.CompleteChapterBoss 가 set)

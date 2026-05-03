@@ -21,7 +21,7 @@ namespace LittleHero
                 BossEncounterContext.PendingChapter = req.chapter;
                 BossEncounterContext.PendingReturnScene = req.returnSceneName;
                 Time.timeScale = 1f;
-                SceneManager.LoadScene("BossEncounter");
+                SceneTransitionService.Transition("BossEncounter");
             }
         }
     }

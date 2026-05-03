@@ -36,7 +36,7 @@ namespace LittleHero
         private void HandleRestart()
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene(_hubSceneName);
+            SceneTransitionService.Transition(_hubSceneName);
         }
     }
 }

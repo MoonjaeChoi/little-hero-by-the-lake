@@ -41,7 +41,7 @@ namespace LittleHero
             if (!BossEncounterContext.HasPending)
             {
                 Debug.LogWarning("[BossEncounter] PendingBoss null — Attic 복귀");
-                SceneManager.LoadScene(_atticSceneName);
+                SceneTransitionService.Transition(_atticSceneName);
                 return;
             }
 
@@ -127,7 +127,7 @@ namespace LittleHero
         {
             yield return new WaitForSecondsRealtime(_returnDelay);
             Time.timeScale = 1f;
-            SceneManager.LoadScene(scene);
+            SceneTransitionService.Transition(scene);
         }
 
         private static MythicDefinition ResolveMythicDef(string id, MythicDefinition[] pool)
