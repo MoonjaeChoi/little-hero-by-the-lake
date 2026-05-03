@@ -12,10 +12,31 @@ namespace LittleHero
     /// 1. EndgameMenuPanel.Enter → ResolveBoss(mode) 로 오늘의 보스 결정
     /// 2. 보스 처치 시점에 CompleteDailyBoss / CompleteWeeklyBoss 호출 (현재는 placeholder — 보스 씬 분리 시 wiring)
     /// 3. 가용성 검사·보상 적용·MarkXxxCleared·StarlightGrant·신화 보장
+    ///
+    /// 5001 boss_system_v2 — BossTier enum 호환 (T08).
+    /// 본 클래스는 mode-based 흐름이라 isBoss 직접 분기 없이 호환.
+    /// IsTierMatch 헬퍼로 BossTier enum 점진 마이그레이션 지원.
     /// </summary>
     public static class BossEncounterService
     {
         private static readonly TimeSpan KstOffset = TimeSpan.FromHours(EndgameResetService.KST_OFFSET_HOURS);
+
+        // ===== 5001 BossTier 호환 헬퍼 =====
+
+        /// <summary>EnemyData 의 BossTier 가 지정 tier 와 일치하는지 검사 (T08 — 점진 마이그레이션 지원).</summary>
+        public static bool IsTierMatch(EnemyData data, BossTier tier)
+        {
+            return data != null && data.bossTier == tier;
+        }
+
+        /// <summary>주간 보스 처치 시 신화 보장 가능 여부 — bossTier == WeeklyBoss && lootTable.guaranteedMythicChance >= 1.0.</summary>
+        public static bool ShouldGuaranteeMythic(EnemyData data)
+        {
+            return data != null
+                && data.bossTier == BossTier.WeeklyBoss
+                && data.lootTable != null
+                && data.lootTable.guaranteedMythicChance >= 1.0f;
+        }
 
         // ===== 보스 선택 =====
 
