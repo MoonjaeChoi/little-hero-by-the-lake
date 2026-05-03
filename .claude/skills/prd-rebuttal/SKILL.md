@@ -12,9 +12,9 @@ description: |
 > Clayve `prd-rebuttal-agent` 의 Unity 게임 개발 특화 변형 (PGE 패턴 Planner 강화).
 >
 > **저장 위치 (5001/5002 정착 패턴)**:
-> - 입력 PRD: `docs/prd/<번호>/<system>_v1_prd.md`
+> - 입력 PRD: `docs/prd/<번호>/<system>_prd.md`
 > - 산출 (rebuttal / v2_prd 초안 / discussion_topics): 모두 같은 `docs/prd/<번호>/` 폴더
-> - 디자인 컨텍스트: `docs/prd/<system>_v1.md` (prd/ 루트)
+> - 디자인 컨텍스트: `docs/prd/<system>.md` (prd/ 루트)
 > - 번호는 시스템 prefix 4자리 자동 추출, 폴더 미존재 시 `mkdir -p`
 
 ## 0. 입력
@@ -44,7 +44,7 @@ description: |
 - 원본 PRD 전체
 - critical_review 전체
 - `CLAUDE.md` §15 (OOP 정책)
-- `docs/prd/<system>_v1.md` (디자인 — 옵션 비교 컨텍스트, prd/ 루트)
+- `docs/prd/<system>.md` (디자인 — 옵션 비교 컨텍스트, prd/ 루트)
 
 ### Step 2 — 우선순위별 대응 깊이
 

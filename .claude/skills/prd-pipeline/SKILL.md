@@ -13,7 +13,7 @@ description: |
 > Clayve `prd-pipeline` 5단계 + 자체 Generate Phase 1 → 6 Phase 변형.
 >
 > **저장 위치 (5001/5002 정착 패턴)**:
-> - **디자인 1개**: `docs/prd/<system>_v1.md` (시스템 색인, prd/ 루트)
+> - **디자인 1개**: `docs/prd/<system>.md` (시스템 색인, prd/ 루트)
 > - **모든 Phase 산출**: `docs/prd/<번호>/<system>_*.md` 하위 폴더 (PRD v1 / critique / rebuttal / discussion / decisions / v2 / breakdown_NN / contract / checklist / evaluation)
 > - 번호 자동 추출 (시스템 prefix 4자리 숫자), 폴더 미존재 시 `mkdir -p` 자동 생성
 > - 모든 6 Phase 자매 스킬 (generator/critiquer/rebuttal/mediator/breakdown/contract/evaluate) 가 같은 번호 폴더 공유
@@ -23,7 +23,7 @@ description: |
 ```
 사용자 요청
   ↓
-[Phase 1] Generate    → <system>_v1.md + <system>_prd.md
+[Phase 1] Generate    → <system>.md + <system>_prd.md
   ↓
 [Phase 2] Review (3단)
   2.1 Critique  → <system>_critique.md (Accept/Reject/Discuss)
@@ -78,10 +78,10 @@ description: |
 
 ### Phase 1 — Generate (prd-generator)
 
-**호출 조건**: `<system>_v1.md` + `<system>_prd.md` 둘 중 하나라도 없음
+**호출 조건**: `<system>.md` + `<system>_prd.md` 둘 중 하나라도 없음
 
 **산출**:
-- `<system>_v1.md` (디자인)
+- `<system>.md` (디자인)
 - `<system>_prd.md` (Sprint PRD)
 
 **스킵 조건**:
@@ -278,7 +278,7 @@ C5 SO 검증     — AssetDatabase.LoadAllAssetsAtPath 필드 검사
 ═══════════════════════════════════════════
 
 Phase 1 — Generate:
-  ✓ 디자인 <system>_v1.md (X 라인)
+  ✓ 디자인 <system>.md (X 라인)
   ✓ PRD    <system>_prd.md (Y 라인, Z Sprint)
 
 Phase 2 — Review (3단):

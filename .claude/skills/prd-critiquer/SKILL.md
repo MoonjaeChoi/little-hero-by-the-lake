@@ -4,14 +4,14 @@
 > Clayve prd-critiquer 의 Unity 게임 개발 특화 변형.
 >
 > **저장 위치 (5001/5002 정착 패턴)**:
-> - 입력 PRD: `docs/prd/<번호>/<system>_v1_prd.md` (mediator 단계 v2 도 같은 폴더)
-> - 산출 critique: `docs/prd/<번호>/<system>_v1_critique.md`
+> - 입력 PRD: `docs/prd/<번호>/<system>_prd.md` (mediator 단계 v2 도 같은 폴더)
+> - 산출 critique: `docs/prd/<번호>/<system>_critique.md`
 > - 번호는 시스템 이름 prefix 4자리 숫자 자동 추출 (예 `5003_X` → `5003`). 폴더 미존재 시 `mkdir -p` 자동 생성.
 > - 일반 참조 문서 (changelog / architecture_analysis 등) 는 `docs/little_hero/` 그대로
 
 ## 0. 입력
 
-- PRD 파일 경로 (예 `docs/prd/<번호>/<system>_v1_prd.md`)
+- PRD 파일 경로 (예 `docs/prd/<번호>/<system>_prd.md`)
 - 또는 시스템 이름 (자동 매칭 — 번호 폴더 자동 탐색)
 
 ## 1. 워크플로 (4 단계)
@@ -19,7 +19,7 @@
 ### Step 1 — 컨텍스트 로드
 
 병렬 Read:
-- 대상 PRD + 디자인 문서 (`<system>_v1.md`)
+- 대상 PRD + 디자인 문서 (`<system>.md`)
 - `CLAUDE.md` §1·§5·§15 (정책 핵심)
 - `docs/little_hero/architecture_analysis_v1.md` (현재 시스템 평가)
 - `docs/little_hero/changelog_v1.md` 마지막 5건 (직전 변경)
@@ -73,7 +73,7 @@
 
 ### Step 4 — 리뷰 보고서 작성
 
-`docs/prd/<번호>/<system>_v1_critique.md`:
+`docs/prd/<번호>/<system>_critique.md`:
 
 ```markdown
 # <system> PRD 리뷰
@@ -160,7 +160,7 @@ Reject (0):
 다음:
   - PRD 그대로 진행 → /prd-pipeline
   - Discuss 항목 사용자 결정 후 진행
-  - critique.md: docs/prd/<번호>/<system>_v1_critique.md
+  - critique.md: docs/prd/<번호>/<system>_critique.md
 ```
 
 ## 5. 출처

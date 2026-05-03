@@ -91,7 +91,7 @@ PRD 의 Sprint 가 작업량 단위라면, breakdown 은 **commit / 클래스 / 
 
 병렬 Read:
 - `<system>_v2_prd.md` (mediator 최종)
-- `<system>_v1.md` (디자인 — 옵션 비교 + 권장 설계)
+- `<system>.md` (디자인 — 옵션 비교 + 권장 설계)
 - `<system>_decisions.md` (mediator 결정)
 - CLAUDE.md §3 폴더 구조 + §4 아키텍처 + §15 OOP
 

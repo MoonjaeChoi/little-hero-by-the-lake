@@ -4,7 +4,7 @@
 > Clayve의 prd-generator를 Unity 게임 개발 환경에 맞게 재구성.
 >
 > **저장 위치 (2026-05-04 정리, 5001/5002 정착 패턴)**:
-> - **디자인 1개**: `docs/prd/<system>_v1.md` (시스템 색인, prd/ 루트)
+> - **디자인 1개**: `docs/prd/<system>.md` (시스템 색인, prd/ 루트)
 > - **PRD v1 + 후속 산출 모두**: `docs/prd/<번호>/<system>_*.md` 하위 폴더
 > - 번호 자동 추출: 시스템 이름 prefix 의 4자리 숫자 (예 `5003_X_시스템` → 번호 `5003` → 폴더 `docs/prd/5003/`)
 > - 번호 폴더 미존재 시 자동 생성 (`mkdir -p`)
@@ -15,8 +15,8 @@
 | 파일 | 역할 |
 |---|---|
 | `CLAUDE.md` §15 OOP 정책 | 신규 코드 작성 시 우선 (SOLID·SO·GC·100줄) |
-| `docs/prd/<system>_v1.md` | 디자인 문서 (분석·옵션·결정) — 시스템 색인 (prd/ 루트) |
-| `docs/prd/<번호>/<system>_v1_prd.md` | Sprint PRD (작업 명세·검증 기준) — 후속 단계에서 `docs/prd/<번호>/` 로 이동 가능 |
+| `docs/prd/<system>.md` | 디자인 문서 (분석·옵션·결정) — 시스템 색인 (prd/ 루트) |
+| `docs/prd/<번호>/<system>_prd.md` | Sprint PRD (작업 명세·검증 기준) — 후속 단계에서 `docs/prd/<번호>/` 로 이동 가능 |
 | `docs/little_hero/changelog_v1.md` | 변경 이력 (changelog-manager 자동, 위치 그대로) |
 
 ## 1. 입력
@@ -30,7 +30,7 @@
 
 ### Step 1 — 분석 + 디자인 문서
 
-`docs/prd/<system>_v1.md` 작성:
+`docs/prd/<system>.md` 작성:
 1. 결정 이력 (날짜·사용자 결정)
 2. 현재 시스템 분석 (코드 grep + SO 분포 + 위반 사항)
 3. 옵션 비교 표 (장점/단점/권장)
@@ -43,7 +43,7 @@
 
 ### Step 2 — Sprint PRD 작성
 
-`docs/prd/<번호>/<system>_v1_prd.md` 작성:
+`docs/prd/<번호>/<system>_prd.md` 작성:
 1. 전체 개요 (Sprint × commit × 시간 표)
 2. 각 Sprint 명세:
    - 작업 항목 (파일별)
@@ -60,8 +60,8 @@
 ### Step 3 — 사용자 검토 요청
 
 ```
-✅ 디자인 문서 완료: docs/prd/<system>_v1.md
-✅ Sprint PRD 완료: docs/prd/<system>_v1_prd.md
+✅ 디자인 문서 완료: docs/prd/<system>.md
+✅ Sprint PRD 완료: docs/prd/<system>_prd.md
 
 [Sprint 요약]
   Sprint 1: <작업> (N commit, M분)
@@ -225,8 +225,8 @@ Sprint 1 → Sprint 2 → Sprint 3 ┐
 ## 9. 출력 형식 (보고)
 
 ```
-✅ 디자인 문서: docs/prd/<system>_v1.md (X 라인)
-✅ Sprint PRD: docs/prd/<system>_v1_prd.md (Y 라인)
+✅ 디자인 문서: docs/prd/<system>.md (X 라인)
+✅ Sprint PRD: docs/prd/<system>_prd.md (Y 라인)
 
 [디자인 핵심]
   - 옵션 N 비교 (★권장: B)
