@@ -38,7 +38,37 @@ namespace LittleHero.EditorTools
             ValidateWeaponSystem(issues);  // weapon_v2 신규
             ValidateBossSystem(issues);   // 5001 boss_system_v2 신규 (T09)
             ValidateBossEncounterContextAccess(issues);  // 5002 T09 — 정적 Context 외부 직접 R/W 검사 (§15.7 DI)
+            ValidateSceneManagerDirectAccess(issues);  // 5004 T06 — SceneManager.LoadScene 외부 직접 호출 검사 (§15.7 DI)
             Print(issues);
+        }
+
+        // 5004 T06 — SceneManager.LoadScene 외부 직접 호출 검사 (§15.7 DI).
+        // 허용: SceneTransitionService.cs (Service 내부 LoadSceneAsync 호출만), ProjectValidator.cs (룰 정의 자체).
+        private static void ValidateSceneManagerDirectAccess(List<Issue> issues)
+        {
+            var allowedFiles = new HashSet<string>
+            {
+                "SceneTransitionService.cs",
+                "ProjectValidator.cs",
+            };
+            string scriptDir = Path.Combine(Application.dataPath, "_Project/Scripts");
+            if (!Directory.Exists(scriptDir)) return;
+
+            int violations = 0;
+            foreach (var file in Directory.GetFiles(scriptDir, "*.cs", SearchOption.AllDirectories))
+            {
+                string filename = Path.GetFileName(file);
+                if (allowedFiles.Contains(filename)) continue;
+                string content = File.ReadAllText(file);
+                if (content.Contains("SceneManager.LoadScene("))
+                {
+                    issues.Add(new Issue(Severity.Warning, "5004 §15.7",
+                        $"SceneManager.LoadScene 외부 직접 호출: {filename} — SceneTransitionService.Transition 권장"));
+                    violations++;
+                }
+            }
+            if (violations == 0)
+                Debug.Log("[ProjectValidator] 5004 §15.7 OK — SceneManager.LoadScene 외부 직접 호출 0건");
         }
 
         // 5002 T09 — BossEncounterContext.Set / PendingChapter / PendingReturnScene / PendingBoss 등
