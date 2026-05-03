@@ -128,6 +128,11 @@ namespace LittleHero
 
         public void ApplyLevelUp() => SetLevel(Level + 1);
 
+        // weapon_v2 시너지 setter (WeaponClassBonus 가 호출)
+        public void AddAdditiveDamageBonus(float percent) => AdditiveDamageBonus += percent;
+        public void MultiplyAttackSpeed(float mul) => AttackSpeed *= mul;
+        public void AddMagicDamageMul(float ratio) => MagicDamageMul += ratio;
+
         /// <summary>
         /// EffectResolver 결과를 PlayerStats 채널에 합산 (Sprint 3 통합).
         /// affix MUL% / FinalDamage% / CritChance% / ArmorIgnore% 등 자동 반영.

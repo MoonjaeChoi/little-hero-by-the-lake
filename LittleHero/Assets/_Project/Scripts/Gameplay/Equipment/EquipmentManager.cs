@@ -97,7 +97,8 @@ namespace LittleHero
             var data = MetaProgression.Instance?.Data;
             if (data == null || data.equipmentInstances == null) return;
 
-            // 장착 인스턴스만 모음
+            // 장착 인스턴스만 모음 + weapon_v2 직업 검증
+            var playerClass = ResolvePlayerClass();
             var equippedList = new List<EquipmentInstance>();
             foreach (var inst in data.equipmentInstances)
                 if (inst != null && inst.isEquipped) equippedList.Add(inst);
@@ -111,6 +112,13 @@ namespace LittleHero
                 EquipmentTemplate template;
                 if (!_templateCache.TryGetValue(inst.templateId, out template) || template == null) continue;
 
+                // weapon_v2 — 직업 검증 (잘못된 직업 무기 거부)
+                if (template.category != WeaponCategory.None && template.requiredClass != playerClass)
+                {
+                    Debug.LogWarning($"[EquipmentManager] {template.id} 는 {template.requiredClass} 전용 (현재 {playerClass}) — 활성화 거부");
+                    continue;
+                }
+
                 // attackPattern 활성화 (None 제외) — baseStats 가산은 EffectResolver 통합 (아래)
                 if (template.attackPattern != AttackPatternType.None && template.attackConfig != null)
                 {
@@ -123,6 +131,16 @@ namespace LittleHero
                         activated++;
                     }
                 }
+            }
+
+            // weapon_v2 시너지 — 본인 직업 무기 카테고리 보너스
+            foreach (var inst in equippedList)
+            {
+                if (string.IsNullOrEmpty(inst.templateId)) continue;
+                if (!_templateCache.TryGetValue(inst.templateId, out var tpl) || tpl == null) continue;
+                if (tpl.category == WeaponCategory.None) continue;
+                if (tpl.requiredClass != playerClass) continue;
+                WeaponClassBonus.Apply(_stats, playerClass, tpl.category);
             }
 
             // stats_v2 — EffectResolver 일괄 + PlayerStats.ApplyResolvedBonus
@@ -200,6 +218,20 @@ namespace LittleHero
             foreach (var t in all)
                 if (t != null && !string.IsNullOrEmpty(t.id) && !_templateCache.ContainsKey(t.id))
                     _templateCache[t.id] = t;
+        }
+
+        // weapon_v2 — CharacterData.className 한국어 → CharacterClass enum
+        public static CharacterClass ResolvePlayerClass()
+        {
+            var ch = MetaProgression.Instance?.SelectedCharacter;
+            if (ch == null || string.IsNullOrEmpty(ch.className)) return CharacterClass.Warrior;
+            switch (ch.className)
+            {
+                case "전사": return CharacterClass.Warrior;
+                case "궁수": return CharacterClass.Archer;
+                case "마법사": return CharacterClass.Mage;
+                default: return CharacterClass.Warrior;
+            }
         }
 
         public static void RegisterTemplates(IEnumerable<EquipmentTemplate> templates)
