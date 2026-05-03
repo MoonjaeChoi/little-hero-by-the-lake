@@ -18,9 +18,10 @@ namespace LittleHero
         [SerializeField] private Text _mythicLabel;
         [SerializeField] private GameObject _emptyHint;       // "카드를 선택하세요"
 
-        private static readonly Color _mainColor = new Color(0.65f, 0.42f, 0.79f);  // 보라
-        private static readonly Color _subColor  = new Color(0.31f, 0.76f, 0.84f);  // 청록
-        private static readonly Color _mythicColor = new Color(1f, 0.84f, 0f);      // 골드
+        // 가독성 ↑ — 어두운 BG 위 밝은 톤 (사용자 검수 Image #21)
+        private static readonly Color _mainColor = new Color(0.95f, 0.75f, 1.00f);  // 밝은 보라
+        private static readonly Color _subColor  = new Color(0.65f, 0.95f, 1.00f);  // 밝은 청록
+        private static readonly Color _mythicColor = new Color(1f, 0.92f, 0.3f);    // 밝은 골드
 
         private static readonly string[] _rarityLabels = {
             "일반", "고급", "희귀", "영웅", "전설", "신화"
