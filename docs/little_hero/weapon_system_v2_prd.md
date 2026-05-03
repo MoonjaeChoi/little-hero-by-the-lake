@@ -13,8 +13,9 @@
 | 3 | EquipmentManager 검증 + WeaponClassBonus | 2 | 45분 |
 | 4 | UI (InventorySelectionPanel + GachaResultPanel + EquipmentCardPanel) | 2 | 60분 |
 | 5 | Test + ProjectValidator | 1 | 30분 |
-| **6** | **GachaService 직업 필터** (`gacha_class_filter_v1.md`) | **2** | **30분** |
-| **총** | | **11** | **3.5시간** |
+| 6 | GachaService 직업 필터 (`gacha_class_filter_v1.md`) | 2 | 30분 |
+| **7** | **24 무기 균형 매트릭스** (`weapon_balance_24_v1.md`) | **1** | **30분** |
+| **총** | | **12** | **4시간** |
 
 ## Sprint 1 — 인프라 (3 commit)
 
@@ -484,6 +485,68 @@ weapon_v2 Sprint 6.2 — GachaPanel UI 직업 표시
 
 ---
 
+## Sprint 7 — 24 무기 균형 매트릭스 (1 commit)
+
+### 7.1 신규 6 무기 SO + GachaPool 자동 갱신
+
+**디자인 문서**: `weapon_balance_24_v1.md`
+
+**파일**: `Scripts/Editor/WeaponBalanceSeed.cs` (신규)
+
+**메뉴**: `Tools > LittleHero > Seed Balance Weapons (24)`
+
+**신규 6 무기**:
+| ID | 직업 | 등급 | Pattern | Category |
+|---|---|---|---|---|
+| `warrior_iron_sword` | Warrior | Common | Slash | Sword |
+| `warrior_steel_axe` | Warrior | Magic | Pulse | Axe |
+| `warrior_claymore` | Warrior | Magic | Slash | Sword |
+| `warrior_giants_axe` | Warrior | Epic | Pulse | Axe |
+| `archer_eagle_bow` | Archer | Rare | Projectile | Bow |
+| `mage_glacier_rune` | Mage | Rare | Aura | Tome |
+
+**작업**:
+1. 신규 6 EquipmentTemplate.asset 생성 (Data/Templates/Weapons/)
+2. attackPattern + attackConfig + baseStats + requiredClass + category wiring
+3. GachaPool 자동 갱신 (commonPool += iron_sword 등)
+4. icon = null (별도 ComfyUI batch 후 wiring)
+
+**검증 기준**:
+- 24 EquipmentTemplate.asset 정확 (Warrior 8 / Archer 8 / Mage 8)
+- GachaPool 등급별 풀 정합 (Common 7 / Magic 6 / Rare 6 / Epic 5)
+- gacha_class_filter_v1 fallback 위험 해소 (Warrior Magic 부재 → 2종 보유)
+
+**완료 조건**:
+- 컴파일 0
+- ProjectValidator 통과 (24 무기 모두 requiredClass + category wired)
+
+### Sprint 7 commit
+```
+weapon_v2 Sprint 7 — 24 무기 균형 매트릭스 (신규 6, weapon_balance_24_v1)
+
+[신규 6 EquipmentTemplate]
+  - warrior_iron_sword (Common Slash) — 철검
+  - warrior_steel_axe (Magic Pulse) — 강철 도끼
+  - warrior_claymore (Magic Slash 3타깃) — 대검
+  - warrior_giants_axe (Epic Pulse 4타깃) — 거인의 도끼
+  - archer_eagle_bow (Rare Projectile pierce 2) — 매눈 활
+  - mage_glacier_rune (Rare Aura slow 30%) — 얼음 룬
+
+[GachaPool 자동 갱신]
+  Common 7 / Magic 6 / Rare 6 / Epic 5 = 24
+
+[직업×등급 매트릭스]
+  Warrior 8 (2:2:2:2 균등 ✅)
+  Archer 8 (3:2:2:1, Common 3 메이플 식)
+  Mage 8 (2:2:2:2 균등 ✅)
+
+[fallback 위험 해소]
+  - Warrior Magic 부재 → 2종 (steel_axe + claymore) 보유
+  - Mage Rare 부족 → 2종 (meteor + glacier_rune) 보유
+```
+
+---
+
 ## 의존성 그래프
 
 ```
@@ -497,10 +560,12 @@ Sprint 4 (UI)                   ← Sprint 1+2 의존
    ↓
 Sprint 5 (Test + Validator)     ← 모두 의존
    ↓
-Sprint 6 (Gacha 직업 필터)     ← Sprint 1+2 의존 (Sprint 3 의 검증과 독립)
+Sprint 6 (Gacha 직업 필터)     ← Sprint 1+2 의존
+   ↓
+Sprint 7 (24 무기 균형 매트릭스) ← Sprint 1+2 의존, Sprint 6 의 fallback 보강
 ```
 
-병렬 가능: Sprint 3 + 4, Sprint 5 + 6
+병렬 가능: Sprint 3 + 4 / Sprint 5 + 6 / Sprint 7 (독립 가능, 단 Sprint 1+2 의존)
 
 ## 완료 정의 (Definition of Done)
 
