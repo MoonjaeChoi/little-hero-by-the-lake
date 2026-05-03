@@ -62,6 +62,24 @@ namespace LittleHero
 
         // ===== 처치 처리 =====
 
+        /// <summary>5003 — 미니보스 처치. BossLootGrantService.Apply 만 (챕터 클리어 X — firstClearedChapters / pendingChapterClearedId 변동 X).</summary>
+        public static void CompleteMiniBoss(EnemyData boss, ChapterData chapter)
+        {
+            if (boss == null || chapter == null)
+            {
+                Debug.LogWarning($"[BossEncounterService] CompleteMiniBoss: boss={boss} chapter={chapter}");
+                return;
+            }
+
+            if (boss.lootTable != null)
+                BossLootGrantService.Apply(boss.lootTable);
+            else
+                Debug.LogWarning($"[BossEncounterService] {boss.id}: lootTable null — fallback 보상 생략");
+
+            // 미니보스 = 챕터 클리어 아님. RaiseChapterCleared 호출 X / pendingChapterClearedId set X.
+            Debug.Log($"[BossEncounterService] CompleteMiniBoss: {boss.displayName} (chapter {chapter.chapterNumber})");
+        }
+
         /// <summary>5002 T06 — 챕터 보스 처치. BossLootGrantService.Apply + ChapterCleared + pendingChapterClearedId set (D2).</summary>
         public static void CompleteChapterBoss(EnemyData boss, ChapterData chapter)
         {

@@ -51,8 +51,9 @@ namespace LittleHero
             var boss = BossEncounterContext.PendingBoss;
             _spawner.RegisterEnemy(boss);
 
-            // 5002 T04 — ChapterBoss 모드 시 챕터 BG 적용
-            if (BossEncounterContext.PendingType == BossEncounterContext.Mode.ChapterBoss)
+            // 5002 ChapterBoss / 5003 MiniBoss — 챕터 BG 적용
+            if (BossEncounterContext.PendingType == BossEncounterContext.Mode.ChapterBoss
+                || BossEncounterContext.PendingType == BossEncounterContext.Mode.MiniBoss)
                 BackgroundApplier.Apply(_backgroundRenderer, BossEncounterContext.PendingChapter);
 
             var config = new WaveConfig
@@ -94,6 +95,12 @@ namespace LittleHero
                 case BossEncounterContext.Mode.ChapterBoss:
                     // 5002 T04 — T06 에서 본체 구현. 본 시점에는 stub 호출 (T06 추가)
                     BossEncounterService.CompleteChapterBoss(
+                        BossEncounterContext.PendingBoss,
+                        BossEncounterContext.PendingChapter);
+                    break;
+                case BossEncounterContext.Mode.MiniBoss:
+                    // 5003 T02 — 미니보스 처치. 챕터 클리어 X (firstClearedChapters 변동 X).
+                    BossEncounterService.CompleteMiniBoss(
                         BossEncounterContext.PendingBoss,
                         BossEncounterContext.PendingChapter);
                     break;
