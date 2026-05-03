@@ -48,6 +48,17 @@
 사용자 발화: "5003 폐기"           → docs/prd/5003/ 삭제 (또는 _archive 이동)
 ```
 
+## 재진입 결정 (2026-05-04)
+
+사용자 발화: `/prd-pipeline 5003 --from breakdown` — RESERVED 해제 + Phase 3 진행.
+
+**갱신 결정**:
+- **D1: E → B** (분리 X → wave 15만 분리). 옵션 B = PRD v2 가정 그대로. 보스 빌드업 효과 채택.
+- **D2: C → A** (자동 폐기 → §11 마일스톤 등재). D1 변경에 따른 자동 갱신.
+
+**진행 사유**: 사용자가 명시적으로 `--from breakdown` 호출 → RESERVED 영구 해제 의지. 5 Sprint × 5 commit × 1시간 40분 진행.
+
 ## 변경 이력
 
-- 2026-05-04: 사용자 권장안 일괄 채택 (Phase 2.3 mediator). D1=E, D2=C → PRD 폐기 / RESERVED 영구.
+- 2026-05-04 (1차): 사용자 권장안 일괄 채택. D1=E, D2=C → RESERVED 영구.
+- 2026-05-04 (2차 / 재진입): D1=E → D1=B, D2=C → D2=A. Phase 3~6 진행.

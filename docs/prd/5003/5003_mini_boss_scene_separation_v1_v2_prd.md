@@ -1,10 +1,11 @@
-# 5003 — Mini Boss Scene Separation v2 PRD (Mediator 확정 — RESERVED 영구)
+# 5003 — Mini Boss Scene Separation v2 PRD (재진입 — 옵션 B 채택)
 
-> **PRD v2 (Mediator 확정)**
-> 원본: `5003_*_v1_prd.md` · Decisions: `5003_*_decisions.md`
-> Phase 2.3 사용자 결정: **D1=E (분리 X), D2=C (자동 폐기)** (권장안 일괄 채택, 2026-05-04)
+> **PRD v2 (재진입 후 Mediator 확정)**
+> 원본: `5003_*_v1_prd.md` · Decisions: `5003_*_decisions.md` (재진입 2차)
+> 재진입: 사용자 `/prd-pipeline 5003 --from breakdown` (2026-05-04)
+> Phase 2.3 재결정: **D1=B (wave 15만 분리), D2=A (§11 등재)** — RESERVED 영구 해제
 >
-> **상태**: 🔵 **RESERVED 영구** — 디자인 §2 권장 (옵션 E) 답습. **Phase 3~6 진행 X**. 5002 종료 상태 유지.
+> **상태**: 🟢 **진행 중** — Phase 3 Breakdown 시작. 5 Sprint × 5 commit × 1시간 40분.
 >
 > **번호**: 5003 / **출처**: `docs/prd/5003_mini_boss_scene_separation_v1.md` (디자인)
 > **본 PRD Sprint 1~5 명세는 미래 옵션 변경 시 활용 가능** (옵션 B 가정 그대로 보존).
