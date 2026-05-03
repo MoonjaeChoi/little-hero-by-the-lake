@@ -201,18 +201,36 @@ namespace LittleHero
             // 다락방 BGM (Joe Hisaishi 풍 nostalgic)
             AudioManager.Instance?.PlayBgm("attic_nostalgic");
 
-            // 저장된 캐릭터 ID 복원, 없으면 기본 캐릭터 자동 선택
+            // 저장된 캐릭터 ID 복원
             if (MetaProgression.Instance != null)
             {
                 var saved = MetaProgression.Instance.SelectedCharacter;
                 if (saved == null)
                 {
                     string id = MetaProgression.Instance.Data?.selectedCharacterId;
-                    saved = ResolveCharacterById(id) ?? _defaultCharacter;
-                    if (saved != null) MetaProgression.Instance.SelectCharacter(saved);
+                    saved = ResolveCharacterById(id);
+                    // stats_v2 §6.2 — 첫 시작 강제 선택 (자동 default 폐기)
+                    if (saved == null)
+                    {
+                        ShowFirstStartCharacterPrompt();
+                        return;
+                    }
+                    MetaProgression.Instance.SelectCharacter(saved);
                 }
                 UpdateSelectedCharacter(saved);
             }
+        }
+
+        /// <summary>
+        /// stats_v2 §6.2 — 첫 시작 시 강제 캐릭터 선택.
+        /// 자동 default_boy 폐기 — 다락방 _characterButtons 클릭 대기.
+        /// </summary>
+        private void ShowFirstStartCharacterPrompt()
+        {
+            if (_selectedCharacterText != null)
+                _selectedCharacterText.text = "영웅을 선택하세요!";
+            // 다락방 _characterButtons 가 화면에 표시됨 — 사용자가 클릭하면 HandleSelectCharacter 호출
+            Debug.Log("[AtticController] 첫 시작 — 캐릭터 선택 강제 (자동 선택 폐기)");
         }
 
         private CharacterData ResolveCharacterById(string id)
