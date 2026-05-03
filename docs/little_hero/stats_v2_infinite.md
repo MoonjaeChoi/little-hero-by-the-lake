@@ -114,13 +114,80 @@ STR/AGI/WIS = Level × characterMultiplier  // cap X
 | L501~1000 | +1 | +0.1 | 0 | 0 |
 | L1001+ | +0.5 | +0.05 | 0 | 0 |
 
-## 6. 캐릭터별 직업 차별화
+## 6. 캐릭터별 직업 차별화 + 첫 시작 무료
 
-| 캐릭터 | 직업 | 주스탯 | 부스탯 |
-|---|---|---|---|
-| default_boy | 전사 | **힘 2.0×** | 민첩/지혜 0.5× |
-| brave_girl | 궁수 | **민첩 2.0×** | 힘/지혜 0.5× |
-| quiet_friend | 마법사 | **지혜 2.0×** | 힘/민첩 0.5× |
+### 6.1 3 직업 (전사 / 궁수 / 마법사)
+
+| 캐릭터 | 직업 (className) | 주스탯 | 부스탯 | 베이스 | 시작 비용 |
+|---|---|---|---|---|---|
+| default_boy | **전사** | 힘 2.0× | 민첩/지혜 0.5× | HP 100 / Spd 5 / Atk 10 | **0 ✦** |
+| brave_girl | **궁수** | 민첩 2.0× | 힘/지혜 0.5× | HP 130 / Spd 4.5 / Atk 9 | **0 ✦** (변경: 10→0) |
+| quiet_friend | **마법사** | 지혜 2.0× | 힘/민첩 0.5× | HP 90 / Spd 6 / Atk 11 | **0 ✦** (변경: 25→0) |
+
+### 6.2 첫 시작 강제 선택 흐름 (신규)
+
+기존 — 사용자가 명시적 선택 안 하면 default_boy 자동 (구조적 결함).
+v2 — **selectedCharacterId 비어 있으면 캐릭터 선택 modal 강제**.
+
+```
+앱 첫 실행 → MetaProgression.Awake
+  → SaveData.selectedCharacterId 검사
+  → 비어 있으면 → CharacterSelectionModal 강제 진입
+  → 3 캐릭터 카드 표시 (직업·스탯 미리보기)
+  → 사용자 선택 → SelectCharacter + Save
+  → 정상 흐름 (다락방 진입)
+```
+
+### 6.3 신규 필드 + 갱신
+
+**CharacterData.cs**:
+```csharp
+public string className;  // 신규 — "전사" / "궁수" / "마법사"
+public float strengthMultiplier;
+public float agilityMultiplier;
+public float wisdomMultiplier;
+// public float spiritMultiplier; ← 폐기
+public int starFragmentCost;  // 모두 0 으로
+```
+
+**3 SO 갱신**:
+- Char_DefaultBoy: className="전사", str=2.0, agi=0.5, wis=0.5, cost=0
+- Char_BraveGirl:  className="궁수", str=0.5, agi=2.0, wis=0.5, cost=0 (10→0)
+- Char_QuietFriend: className="마법사", str=0.5, agi=0.5, wis=2.0, cost=0 (25→0)
+
+### 6.4 CharacterSelectionModal (신규)
+
+```
+┌─ CharacterSelectionModal (첫 시작 또는 다락방) ────────┐
+│  영웅을 선택하세요                                       │
+│                                                          │
+│  ┌─ 전사 ──┐ ┌─ 궁수 ──┐ ┌─ 마법사 ─┐                  │
+│  │[portrait]│ │[portrait]│ │[portrait]│                  │
+│  │ 용감한   │ │ 씩씩한   │ │ 조용한   │                  │
+│  │  소년    │ │  소녀    │ │  친구    │                  │
+│  │          │ │          │ │          │                  │
+│  │힘 2.0×  │ │민첩 2.0×│ │지혜 2.0× │                  │
+│  │HP 100    │ │HP 130    │ │HP 90     │                  │
+│  │공격 10   │ │공격 9    │ │공격 11   │                  │
+│  │          │ │          │ │          │                  │
+│  │ [선택]   │ │ [선택]   │ │ [선택]   │                  │
+│  └──────────┘ └──────────┘ └──────────┘                  │
+│                                                          │
+│  ※ 첫 시작 시 무료 선택, 변경은 다락방에서             │
+└──────────────────────────────────────────────────────────┘
+```
+
+기존 AtticController 의 캐릭터 선택 UI 그대로 활용 가능. 첫 시작 강제 진입만 추가.
+
+## 6.5 변경 흐름 (요약)
+
+| 변경 | 위치 |
+|---|---|
+| className 필드 | CharacterData.cs |
+| multiplier 직업화 (×2.0/×0.5) | 3 SO |
+| starFragmentCost 0 통일 | 3 SO |
+| 첫 시작 강제 modal | MetaProgression.Awake 또는 AtticController.Start |
+| spiritMultiplier 제거 | CharacterData.cs + 3 SO |
 
 ## 7. PlayerStats v2 신규 필드 (12개)
 
