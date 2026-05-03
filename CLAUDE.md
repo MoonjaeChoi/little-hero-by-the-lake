@@ -433,3 +433,62 @@ public class GachaService {
 - △ DI 명시 주입 (신규 클래스 §15 정책, 기존 Singleton 점진 전환)
 - △ 100줄+ 클래스 10개 (CurveSimulator/GachaService 등 — 후속 Sprint)
 
+## 16. 개발 명령어
+
+### Unity 환경
+- Unity **6000.4.4f1** (LTS), 프로젝트 루트: `LittleHero/` (저장소 루트가 아님)
+- 패키지: URP / Cinemachine 3.1.6 / Test Framework / IAP 5.0.0
+- 솔루션: `LittleHero/LittleHero.slnx` (Assembly-CSharp / Assembly-CSharp-Editor / LittleHero.Tests.Editor)
+
+### Editor 메뉴 (Tools/LittleHero) — 콘텐츠 시드
+SO 인스턴스 400+는 코드 시드로 생성. 신규 시작 / 재시드 시 사용:
+- `Seed 35 Chapter SOs` — 챕터 35 + 적 262
+- `Seed BalanceConfig Curves` — 곡선 재계산
+- `Seed Affix SOs` / `Seed Pool SOs` / `Seed Mythic SOs` / `Seed Gacha Pool`
+- `Seed Boss Loot Tables (4)` — 5001 boss_system_v2
+- `Seed Limited Shop` / `Seed Endgame Modes` / `Seed Phase F Content`
+- `Migrate Equipment Templates` / `Migrate Boss Tier (5001)` — 기존 SO 변환
+- `Validate Project` — §15.12 OOP 정책 검사 (200줄+ / public 필드 / Update 멀티플)
+- `Curve Simulator` / `Weapon Gacha 24 Simulation` — 밸런스 시뮬
+- `Reset SaveData (디스크 save.json 삭제)` / `Show SaveData Path`
+- `Reset Boss Cooldown` / `Set Endgame Menu Active (firstClearedChapters 35비트 ON)`
+
+### 테스트 (NUnit 46)
+- **Editor**: Window > General > Test Runner > **EditMode** 탭 → Run All
+- **단일 테스트**: 트리 노드 선택 후 Run Selected
+- **배치 모드 (전체)**:
+  ```bash
+  /Applications/Unity/Hub/Editor/6000.4.4f1/Unity.app/Contents/MacOS/Unity \
+    -batchmode -projectPath "$(pwd)/LittleHero" \
+    -runTests -testPlatform EditMode \
+    -testResults "$(pwd)/LittleHero/test-results.xml" -quit
+  ```
+- **단일 클래스**: 위 명령에 `-testFilter "BossSystemTests"` 추가
+- **단일 메서드**: `-testFilter "BossSystemTests.BossPhaseManager_Transitions_AtHpThreshold"`
+- 테스트 어셈블리: `LittleHero.Tests.Editor`, 위치: `Assets/_Project/Tests/Editor/`
+- 현재 5 클래스: BossSystemTests(10) / DamageDealerTests(7) / EnhancementServiceTests(6) / StarforceServiceTests(10) / WeaponSystemTests(13)
+
+### iOS 빌드
+- Editor: File > Build Settings > iOS > Build → Xcode workspace 생성
+- Xcode: `xcodebuild -workspace LittleHero/Builds/iOS/Unity-iPhone.xcworkspace -scheme Unity-iPhone -configuration Release`
+- TestFlight 배포는 Phase 4 진행 중 (§11)
+
+### Unity MCP (주요 개발 도구)
+이 저장소는 Claude Code + Unity MCP 로 개발됩니다:
+- `mcpforunity://instances` — 활성 Unity 세션 확인
+- `set_active_instance` — 다중 세션 시 라우팅 고정
+- `manage_script` — 스크립트 편집 → 직후 `read_console` 로 컴파일 검증
+- `editor_state.isCompiling` polling — 도메인 리로드 종료 확인
+- **§13 알려진 제약 재확인**: 다중 `execute_code` + `refresh_unity` 연쇄 시 Mono SIGSEGV 위험. 안전 패턴 — 스크립트 편집 후 5~10초 대기, 씬 저장 후 10초+ 대기, 한 사이클 분리 commit.
+
+### PGE 6-Phase 파이프라인 (시스템 단위 작업 워크플로)
+`/prd-pipeline` 으로 시스템 디자인부터 검증까지 자동:
+1. `prd-generator` → 디자인 PRD
+2. `prd-critiquer` → `prd-rebuttal` → `prd-mediator` (3단 리뷰)
+3. `prd-breakdown` → 구현 태스크 분해
+4. `prd-contract` → C1~C6 검증 기준 사전 정의
+5. 구현 (`little-hero-dev` 스킬)
+6. `prd-evaluate` → Sprint Contract 검증, FAIL 시 5번으로 재진입 (max 2회)
+
+5001 boss_system_v2 가 첫 풀 시연 사례 (`docs/little_hero/5001_*.md` 참조).
+
