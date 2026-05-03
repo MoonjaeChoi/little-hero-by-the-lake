@@ -207,6 +207,12 @@ namespace LittleHero
             // PIVOT v3 Phase 2 — VfxPool 재사용 (Instantiate 매 처치 폐기, GC critical)
             VfxPool.SpawnStarBurst(transform.position);
 
+            // 5001 Sprint 3.2 — BossLootTable 보상 적용 (lootTable wired 시만)
+            if (_data != null && _data.lootTable != null)
+            {
+                BossLootGrantService.Apply(_data.lootTable);
+            }
+
             // 풀에서 반환되지 않은 경우 안전 비활성화
             if (gameObject.activeSelf)
                 gameObject.SetActive(false);

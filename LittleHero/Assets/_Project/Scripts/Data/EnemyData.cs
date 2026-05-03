@@ -49,5 +49,8 @@ namespace LittleHero
 
         [Tooltip("Phase 2 공격 속도 배율 (D2=C SerializeField, 기본 1.3×). 보스별 차별 가능")]
         public float phase2SpeedMultiplier = 1.3f;
+
+        [Tooltip("보스 처치 보상 테이블 — Tier 별 4 인스턴스 중 하나 wiring (T06)")]
+        public BossLootTable lootTable;
     }
 }
