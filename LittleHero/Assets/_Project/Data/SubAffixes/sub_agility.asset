@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: sub_agility
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.SubAffixDefinition
   id: sub_agility
-  displayName: "\uBE60\uB984 +N"
+  displayName: "\uBBFC\uCCA9 +N"
   target: 14
   op: 0
   minByRarity:

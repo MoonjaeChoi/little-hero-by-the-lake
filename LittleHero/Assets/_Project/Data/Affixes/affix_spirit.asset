@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: affix_spirit
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AffixDefinition
   id: affix_spirit
-  displayName: "\uB9C8\uC74C +N"
-  target: 16
+  displayName: "\uC9C0\uD61C +N"
+  target: 15
   op: 0
   minByRarity:
   - 1

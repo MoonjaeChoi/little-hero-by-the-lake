@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: sub_wisdom
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.SubAffixDefinition
   id: sub_wisdom
-  displayName: "\uC2AC\uAE30 +N"
+  displayName: "\uC9C0\uD61C +N"
   target: 15
   op: 0
   minByRarity:

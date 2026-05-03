@@ -25,14 +25,24 @@ namespace LittleHero
                 case "MoveSpeed":          return "이동속도";
                 case "Range":              return "사거리";
                 case "Strength":           return "힘";
-                case "Agility":            return "빠름";
-                case "Wisdom":             return "슬기";
-                case "Spirit":             return "마음";
+                case "Agility":            return "민첩";    // stats_v2 (빠름 → 민첩)
+                case "Wisdom":             return "지혜";    // stats_v2 (슬기 → 지혜)
+                // Spirit 폐기 (Wisdom 흡수)
                 case "AllStats":           return "올스탯";
                 case "XpGain":             return "경험치 획득";
                 case "DustGain":           return "별가루 획득";
                 case "DropRate":           return "드랍률";
                 case "CompanionDuration":  return "동료 지속";
+                // stats_v2 신규 9
+                case "EvasionRate":        return "회피";
+                case "StatusResist":       return "상태이상 저항";
+                case "ArmorIgnore":        return "방어 무시";
+                case "ChainTargets":       return "연쇄 타깃";
+                case "LifestealRatio":     return "흡혈";
+                case "CompanionDamage":    return "동료 데미지";
+                case "MagicDamage":        return "마법 데미지";
+                case "MagicCritChance":    return "마법 치명타 확률";
+                case "MagicCritDamage":    return "마법 치명타 피해";
                 default:                   return targetName;
             }
         }
