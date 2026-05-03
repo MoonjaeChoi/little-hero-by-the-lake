@@ -38913,6 +38913,7 @@ GameObject:
   - component: {fileID: 1218918686}
   - component: {fileID: 1218918687}
   - component: {fileID: 1218918688}
+  - component: {fileID: 1218918689}
   m_Layer: 0
   m_Name: AtticController
   m_TagString: Untagged
@@ -38932,10 +38933,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 554e66a1655ee4f369910162f0d72e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticController
-  _endgameMenuRoot: {fileID: 0}
-  _dailyBossCooldownText: {fileID: 0}
-  _weeklyBossCooldownText: {fileID: 0}
-  _infiniteDepthText: {fileID: 0}
   _managedPanels: []
   _excludePanelNames:
   - CharacterPanel
@@ -39006,6 +39003,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticChapterEntry
   _buttons: []
   _chapterSceneName: Chapter
+--- !u!114 &1218918689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218918683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ccff643b3c7447b9931c01e247d2c3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticEndgameMenuView
+  _endgameMenuRoot: {fileID: 0}
+  _dailyBossCooldownText: {fileID: 0}
+  _weeklyBossCooldownText: {fileID: 0}
+  _infiniteDepthText: {fileID: 0}
 --- !u!1 &1220013253
 GameObject:
   m_ObjectHideFlags: 0
