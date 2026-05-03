@@ -34,7 +34,36 @@ namespace LittleHero.EditorTools
             ValidateEnemyPool(issues);
             ValidateActiveScene(issues);
             ValidateOOPPolicy(issues);  // CLAUDE.md §15.12 신규
+            ValidateWeaponSystem(issues);  // weapon_v2 신규
             Print(issues);
+        }
+
+        // weapon_system_v2.md — 모든 무기 SO requiredClass + category 검증
+        private static void ValidateWeaponSystem(List<Issue> issues)
+        {
+            var guids = UnityEditor.AssetDatabase.FindAssets("t:EquipmentTemplate", new[] { "Assets/_Project/Data/Templates/Weapons" });
+            int violations = 0;
+            foreach (var g in guids)
+            {
+                var p = UnityEditor.AssetDatabase.GUIDToAssetPath(g);
+                var t = UnityEditor.AssetDatabase.LoadAssetAtPath<EquipmentTemplate>(p);
+                if (t == null) continue;
+                if (t.category == WeaponCategory.None)
+                {
+                    issues.Add(new Issue(Severity.Warning, "Weapon",
+                        $"weapon_v2 — {t.id} category=None (Weapon SO 인데 카테고리 미지정)"));
+                    violations++;
+                }
+                // 직업+카테고리 매칭 검증
+                if (!WeaponClassBonus.IsClassMatch(t.requiredClass, t.category))
+                {
+                    issues.Add(new Issue(Severity.Warning, "Weapon",
+                        $"weapon_v2 — {t.id}: {t.requiredClass} + {t.category} 매칭 X (시너지 발동 X)"));
+                    violations++;
+                }
+            }
+            if (violations == 0)
+                issues.Add(new Issue(Severity.Warning, "Weapon", $"weapon_v2 — {guids.Length} 무기 SO 모두 통과"));
         }
 
         // CLAUDE.md §15.12 — OOP 정책 자동 검증 (100줄+ 클래스 경고)
