@@ -62,10 +62,10 @@ description: |
 /prd-pipeline --to review          # Phase 1+2 만
 /prd-pipeline --to contract        # Phase 1~4 만 (구현은 별도)
 
-# 모드
-/prd-pipeline --mode ai-assisted   # 기본 — Claude 추천 + 사용자 확인
-/prd-pipeline --mode user          # 사용자 전체 결정
-/prd-pipeline --mode auto          # Claude best practice 자동
+# 모드 — 사용자가 --mode 명시 안 하면 항상 ai-assisted 자동 적용 (Phase 2.3 mediator 단계 토론·결정 과정)
+/prd-pipeline --mode ai-assisted   # ★ 기본값 (명시 안 해도 자동) — Claude 추천 + 사용자 응답 대기
+/prd-pipeline --mode user          # 사용자 전체 결정 (Claude 권장 X — 항목별 입력 받음)
+/prd-pipeline --mode auto          # Claude best practice 자동 (사용자 확인 X — 빠른 진행)
 
 # 반복 루프
 /prd-pipeline --iterate 2          # Phase 6 FAIL 시 재진입 횟수 (기본 2)
@@ -113,10 +113,10 @@ description: |
 
 **호출 조건**: discussion_topics.md 존재 + decisions.md 없음
 
-**사용자 인터랙션**:
-- `--mode ai-assisted` (기본): Claude 권장 + 사용자 응답 대기
-- `--mode auto`: 자동 결정
-- `--mode user`: 항목별 사용자 입력
+**사용자 인터랙션** (사용자가 mode 옵션 명시 안 하면 항상 ai-assisted 적용 — `/prd-pipeline 5005` 같은 단순 호출도 자동 ai-assisted):
+- `--mode ai-assisted` ★ **기본값 (명시 안 해도 자동)**: Claude 권장 + 사용자 응답 대기 (예: "권장안대로", "D1=A, D2=B" 등). Phase 2.3 mediator 단계의 토론·결정은 항상 이 모드로 진행
+- `--mode auto`: 자동 결정 (사용자 확인 X, 빠른 진행)
+- `--mode user`: 항목별 사용자 입력 (Claude 권장 X)
 
 **사용자 결정 입력**:
 ```
@@ -377,6 +377,7 @@ CLAUDE.md §11 마일스톤 행 추가 (예 "boss_system_v2 — 4 Tier + Phase S
 
 ## 9. 원칙
 
+- **기본 모드 = ai-assisted** — 사용자가 `--mode` 옵션을 명시하지 않으면 항상 `ai-assisted` 모드 적용. Phase 2.3 mediator 의 토론·결정 과정은 Claude 가 권장안을 제시하고 사용자 응답 (예: "권장안대로", "D1=A, D2=B", "권장 그대로 진행" 등) 을 대기. `auto` 모드 (사용자 확인 X) 는 명시 호출 시에만 사용.
 - **사용자 결정 우선** — Phase 2.3 mediator 명시적 결정 후 진행
 - **단일 책임 commit** — 한 commit = 한 의미 단위 (Sprint × commit 분해)
 - **OOP §15 정합** — Phase 2 Review 자동 검증 (rebuttal 수용 강제)
