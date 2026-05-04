@@ -113,6 +113,40 @@ Always export API format for use with this skill.
 
 The script auto-detects (first CLIPTextEncode = positive, second = negative, first KSampler = seed). Pass `--positive-node`, `--negative-node`, `--seed-node`, `--latent-node` to override if your workflow differs.
 
+## LayerDiffuse 노드 (huchenlei/ComfyUI-layerdiffuse)
+
+The `assets/workflow_layerdiffuse.json` workflow uses the [huchenlei/ComfyUI-layerdiffuse](https://github.com/huchenlei/ComfyUI-layerdiffuse) Custom Node for native RGBA SDXL output. Two nodes are added on top of the standard SDXL pipeline:
+
+| Node id | class_type | Role |
+|---|---|---|
+| `10` | `LayeredDiffusionApply` | Patches the model with transparent diffusion (config: `"SDXL, Conv Injection"` for SDXL) |
+| `11` | `LayeredDiffusionDecode` | Decodes latent + RGB image to RGBA (replaces / supplements VAEDecode for the final SaveImage input) |
+
+### Node wiring (LayerDiffuse)
+
+```
+CheckpointLoader (4) ──────────┐
+                               ▼
+                 LayeredDiffusionApply (10) ────┐
+                                                ▼
+CLIPTextEncode pos (6) ──┐                 KSampler (3)
+CLIPTextEncode neg (7) ──┤                      │
+EmptyLatentImage (5) ────┘                      ▼
+                                           VAEDecode (8) ──┐
+                                                           ▼
+                                  LayeredDiffusionDecode (11) ──→ SaveImage (9)
+```
+
+The `LayeredDiffusionDecode` node takes both the sampler latent AND the VAE-decoded RGB to produce final RGBA — this is how the alpha channel is recovered without dark BG flood-fill.
+
+### Class names by version
+
+The exact class_type names can change between LayerDiffuse versions. The shipped JSON uses `LayeredDiffusionApply` / `LayeredDiffusionDecode` (huchenlei v1.0+). If the server returns a 400 with "node class not found", export a fresh workflow from the server's ComfyUI UI (Settings → Save API Format) after dropping the LayerDiffuse nodes from the node browser, then copy that JSON over `workflow_layerdiffuse.json`.
+
+### Fallback workflow alpha limit
+
+When LayerDiffuse is not available, `workflow_template.json` runs without it. Output is RGB on a (model-implied) dark background — **not** native RGBA. Recovering alpha requires post-processing (flood-fill from corners with tolerance), which has ~80% accuracy and can leak on dark interior pixels (eyes, hair, shadows). This was the root cause of the "1라운드 적 흰 박스" report before 5008.
+
 ## Common failure modes
 
 - **Connection refused on localhost:8188** → tunnel is not running. Re-establish.

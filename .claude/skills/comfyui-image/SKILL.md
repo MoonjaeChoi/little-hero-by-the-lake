@@ -75,6 +75,37 @@ Optional (sensible defaults):
 
 Stdlib only (no `requests` dependency) — uses `urllib.request` so it runs anywhere with Python 3.8+.
 
+## LayerDiffuse 워크플로 (5008 — RGBA native transparency)
+
+For sticker / sprite generation that needs **clean RGBA output** (no dark BG / flood-fill post-processing), use the LayerDiffuse workflow shipped at `assets/workflow_layerdiffuse.json`.
+
+### Prerequisites
+
+Install the [huchenlei/ComfyUI-layerdiffuse](https://github.com/huchenlei/ComfyUI-layerdiffuse) Custom Node on the ComfyUI server (192.168.75.194). Once installed, the workflow's `LayeredDiffusionApply` + `LayeredDiffusionDecode` nodes become available.
+
+### Usage
+
+```bash
+python3 .claude/skills/comfyui-image/scripts/generate.py \
+  --workflow .claude/skills/comfyui-image/assets/workflow_layerdiffuse.json \
+  --prompt "<your sticker prompt>" \
+  --seed 22222 \
+  --output ./output/sprite.png
+```
+
+The workflow keeps the standard SDXL node ids (positive `6`, negative `7`, sampler `3`, latent `5`) so the script's auto-detection still works.
+
+### Fallback limit (when LayerDiffuse node not installed)
+
+If the LayerDiffuse node is unavailable on the server, fall back to the default `assets/workflow_template.json`. **Be aware of the limit**:
+
+- DreamShaperXL Turbo has **no native alpha output**.
+- The fallback workflow generates with a **dark background** and relies on **flood-fill post-processing** to recover transparency.
+- Flood-fill alpha accuracy is **~80%** (anti-aliased edges on dark hair / dark colors can leak).
+- For full RGBA fidelity (especially on sprites with dark interior pixels), **install LayerDiffuse**.
+
+The skill itself does not auto-fallback — passing `--workflow workflow_layerdiffuse.json` to a server without the node will return a 400. Choose the workflow explicitly based on what the server supports.
+
 ## Customizing for Little Hero V5 tone
 
 The default `assets/workflow_template.json` is a placeholder. To produce actual V5 sticker dynamic tone images:

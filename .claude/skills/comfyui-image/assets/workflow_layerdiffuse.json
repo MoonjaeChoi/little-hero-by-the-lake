@@ -1,0 +1,76 @@
+{
+  "_comment": "LayerDiffuse SDXL workflow — huchenlei/ComfyUI-layerdiffuse Custom Node 기반 RGBA native transparent 출력. DreamShaperXL Turbo + Layered Diffusion Apply (model patch) + Layered Diffusion Decode (RGBA 디코더). Turbo 권장: steps=8 / cfg=2.0 / sampler dpmpp_sde / scheduler karras. 노드 class_type 명은 huchenlei/ComfyUI-layerdiffuse 의 v1.0+ 기준. 다른 버전 사용 시 ComfyUI Settings → Save (API Format) 으로 export 한 JSON 으로 본 파일 교체. 표준 노드 id 유지 (positive=6, negative=7, sampler=3, latent=5, model_apply=10, decode=11). LayerDiffuse 노드 미설치 시 fallback (workflow_template.json) 사용 — 한계: DreamShaperXL Turbo는 native alpha 출력 X, dark BG + flood-fill 후처리 정확도 ~80%.",
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 22222,
+      "steps": 8,
+      "cfg": 2.0,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1.0,
+      "model": ["10", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["5", 0]
+    }
+  },
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "DreamShaperXL_Turbo_SFWdpmppSde_half_pruned.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "PLACEHOLDER POSITIVE PROMPT",
+      "clip": ["4", 1]
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "PLACEHOLDER NEGATIVE PROMPT",
+      "clip": ["4", 1]
+    }
+  },
+  "10": {
+    "class_type": "LayeredDiffusionApply",
+    "inputs": {
+      "model": ["4", 0],
+      "config": "SDXL, Conv Injection",
+      "weight": 1.0
+    }
+  },
+  "11": {
+    "class_type": "LayeredDiffusionDecode",
+    "inputs": {
+      "samples": ["3", 0],
+      "images": ["8", 0],
+      "sub_batch_size": 1
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["4", 2]
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "ComfyUI_LayerDiffuse",
+      "images": ["11", 0]
+    }
+  }
+}
