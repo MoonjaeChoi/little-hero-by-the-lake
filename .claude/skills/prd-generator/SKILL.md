@@ -3,56 +3,60 @@
 > **목적**: 사용자 요청을 받아 `docs/prd/` 폴더에 **디자인 문서 + Sprint PRD** 2 종을 자동 작성한다.
 > Clayve의 prd-generator를 Unity 게임 개발 환경에 맞게 재구성.
 >
-> **저장 위치 + 명명 규칙 (2026-05-04 갱신 — 사용자 결정)**:
+> **저장 위치 + 명명 규칙 (2026-05-05 갱신 — 사용자 결정)**:
 >
 > ### 파일명 형식 (필수)
 >
-> **모든 prd-generator 산출물은 `<문서번호>_<내용설명>_prd.md` 형식 강제**.
+> **모든 prd-generator 산출물은 `<문서번호>_<내용>_prd.md` 형식 강제**.
 >
 > | 파일 | 위치 | 명명 |
 > |---|---|---|
-> | 디자인 (시스템 색인) | `docs/prd/` 루트 | `<문서번호>_<내용설명>_prd.md` |
-> | Sprint PRD | `docs/prd/<문서번호>/` 하위 | `<문서번호>_<내용설명>_prd.md` (동일 파일명, 경로로 구분) |
+> | 디자인 (시스템 색인) | `docs/prd/` 루트 | `<문서번호>_<내용>_prd.md` |
+> | Sprint PRD | `docs/prd/<문서번호>/` 하위 | `<문서번호>_<내용>_prd.md` (동일 파일명, 경로로 구분) |
 >
 > ### 명명 규칙
 >
 > - **문서번호**: 4자리 (예: `5008`, `5009`)
-> - **내용설명**: snake_case 영문 + 버전 표기 (예: `enemy_visual_pipeline_v2`, `attic_decomposition_v1`)
+> - **내용**: snake_case 영문 — 시스템/feature 명칭만 (예: `enemy_visual_pipeline`, `attic_decomposition`, `litmotion_migration`)
 > - **suffix**: `_prd.md` 고정
+> - 🚫 **`_v1` / `_v2` 등 버전 표기 자제** (2026-05-05 사용자 결정 — 파일명 단순화). 버전 진화는 commit history + 문서번호로 추적. 새 버전이 필요하면 신규 문서번호 사용 (예: `5001_boss_system` → 후속은 `5040_boss_system_overhaul` 등).
 >
 > ### 예시
 >
 > ```
-> ✅ 5008_enemy_visual_pipeline_v2_prd.md
-> ✅ 5009_mpb_hue_shift_v1_prd.md
-> ❌ 5008_enemy_visual_pipeline_v2.md  (기존 형식 — 신규 사용 X)
-> ❌ enemy_visual_pipeline_v2_prd.md   (번호 누락)
-> ❌ 5008_v2.md                        (suffix 누락)
+> ✅ 5008_enemy_visual_pipeline_prd.md
+> ✅ 5009_mpb_hue_shift_prd.md
+> ✅ 5016_litmotion_migration_prd.md
+> ❌ 5008_enemy_visual_pipeline_v2_prd.md  (v2 표기 자제)
+> ❌ 5009_mpb_hue_shift_v1_prd.md          (v1 표기 자제)
+> ❌ 5008_enemy_visual_pipeline.md         (suffix 누락)
+> ❌ enemy_visual_pipeline_prd.md          (번호 누락)
 > ```
 >
 > ### 후속 산출 (다른 prd-* 스킬 — critique/rebuttal/decisions 등)
 >
-> - `<문서번호>_<내용설명>_critique.md`
-> - `<문서번호>_<내용설명>_rebuttal.md`
-> - `<문서번호>_<내용설명>_decisions.md`
-> - `<문서번호>_<내용설명>_v2.md` (mediator 최종)
-> - `<문서번호>_<내용설명>_breakdown_NN.md`
-> - `<문서번호>_<내용설명>_contract.md`
-> - `<문서번호>_<내용설명>_evaluation.md`
+> - `<문서번호>_<내용>_critique.md`
+> - `<문서번호>_<내용>_rebuttal.md`
+> - `<문서번호>_<내용>_decisions.md`
+> - `<문서번호>_<내용>_v2.md` (mediator 최종 — `v2` 는 PGE 단계 표기, 버전 표기 X)
+> - `<문서번호>_<내용>_breakdown_NN.md`
+> - `<문서번호>_<내용>_contract.md`
+> - `<문서번호>_<내용>_evaluation.md`
 >
 > ### 마이그레이션 정책
 >
-> - 기존 5001~5008 파일은 **유지** (rename 시 commit churn 발생)
-> - **5009+** 부터 새 명명 규칙 적용 (디자인 root 도 `_prd.md` suffix)
-> - changelog_v1.md / architecture_analysis_v1.md 등 일반 문서는 `docs/little_hero/` 그대로 유지
+> - 기존 5001~5015 파일은 **유지** (rename 시 commit churn 발생, history 보존 우선)
+> - **5016+** 부터 신규 명명 규칙 적용 (`_v1` 표기 자제, snake_case 시스템명 만)
+> - 신규 PRD 작성 시 자동 적용. 기존 파일 rename 은 사용자 명시 시에만 (선택)
+> - changelog_v1.md / architecture_analysis_v1.md 등 일반 문서는 `docs/little_hero/` 그대로 유지 (PRD 외 일반 docs 의 v1 표기는 별도 규칙)
 
 ## 0. 단일 진실원
 
 | 파일 | 역할 |
 |---|---|
 | `CLAUDE.md` §15 OOP 정책 | 신규 코드 작성 시 우선 (SOLID·SO·GC·100줄) |
-| `docs/prd/<문서번호>_<내용설명>_prd.md` | 디자인 문서 (분석·옵션·결정) — 시스템 색인 (prd/ 루트) |
-| `docs/prd/<문서번호>/<문서번호>_<내용설명>_prd.md` | Sprint PRD (작업 명세·검증 기준) — 동일 파일명, 경로로 구분 |
+| `docs/prd/<문서번호>_<내용>_prd.md` | 디자인 문서 (분석·옵션·결정) — 시스템 색인 (prd/ 루트) |
+| `docs/prd/<문서번호>/<문서번호>_<내용>_prd.md` | Sprint PRD (작업 명세·검증 기준) — 동일 파일명, 경로로 구분 |
 | `docs/little_hero/changelog_v1.md` | 변경 이력 (changelog-manager 자동, 위치 그대로) |
 
 ## 1. 입력
@@ -63,13 +67,13 @@
 - **사용자 결정**: 옵션 X/Y/Z 채택 또는 미결정 (디자인 문서에서 옵션 제시)
 - **참조 시스템**: 기존 `stats_v2_infinite.md` / `gacha_v1.md` 등
 
-**최종 파일명**: `<문서번호>_<내용설명>_prd.md` (예: `5009_mpb_hue_shift_v1_prd.md`)
+**최종 파일명**: `<문서번호>_<내용>_prd.md` (예: `5009_mpb_hue_shift_v1_prd.md`)
 
 ## 2. 워크플로 (3 단계)
 
 ### Step 1 — 분석 + 디자인 문서
 
-`docs/prd/<문서번호>_<내용설명>_prd.md` 작성:
+`docs/prd/<문서번호>_<내용>_prd.md` 작성:
 1. 결정 이력 (날짜·사용자 결정)
 2. 현재 시스템 분석 (코드 grep + SO 분포 + 위반 사항)
 3. 옵션 비교 표 (장점/단점/권장)
@@ -82,7 +86,7 @@
 
 ### Step 2 — Sprint PRD 작성
 
-`docs/prd/<문서번호>/<문서번호>_<내용설명>_prd.md` 작성:
+`docs/prd/<문서번호>/<문서번호>_<내용>_prd.md` 작성:
 1. 전체 개요 (Sprint × commit × 시간 표)
 2. 각 Sprint 명세:
    - 작업 항목 (파일별)
@@ -99,8 +103,8 @@
 ### Step 3 — 사용자 검토 요청
 
 ```
-✅ 디자인 문서 완료: docs/prd/<문서번호>_<내용설명>_prd.md
-✅ Sprint PRD 완료: docs/prd/<문서번호>/<문서번호>_<내용설명>_prd.md
+✅ 디자인 문서 완료: docs/prd/<문서번호>_<내용>_prd.md
+✅ Sprint PRD 완료: docs/prd/<문서번호>/<문서번호>_<내용>_prd.md
 
 [Sprint 요약]
   Sprint 1: <작업> (N commit, M분)
@@ -264,8 +268,8 @@ Sprint 1 → Sprint 2 → Sprint 3 ┐
 ## 9. 출력 형식 (보고)
 
 ```
-✅ 디자인 문서: docs/prd/<문서번호>_<내용설명>_prd.md (X 라인)
-✅ Sprint PRD: docs/prd/<문서번호>/<문서번호>_<내용설명>_prd.md (Y 라인)
+✅ 디자인 문서: docs/prd/<문서번호>_<내용>_prd.md (X 라인)
+✅ Sprint PRD: docs/prd/<문서번호>/<문서번호>_<내용>_prd.md (Y 라인)
 
 [디자인 핵심]
   - 옵션 N 비교 (★권장: B)

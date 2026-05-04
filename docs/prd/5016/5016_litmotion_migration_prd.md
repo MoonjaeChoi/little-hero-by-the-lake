@@ -1,6 +1,6 @@
 # 5016 — LitMotion 마이그레이션 — Sprint PRD
 
-> **출처**: `docs/prd/5016_litmotion_migration_v1_prd.md` (디자인) — 옵션 A (22 파일 일괄)
+> **출처**: `docs/prd/5016_litmotion_migration_prd.md` (디자인) — 옵션 A (22 파일 일괄)
 > **사전조사**: `docs/prd/5016_premigration_research.md`
 > **측정 결과**: GCAllocMeasurer 시나리오 C (> 50 KB/s) — 전체 마이그레이션 정당화
 
@@ -482,4 +482,4 @@ Sprint 2~5 = 영역 독립 (병렬 가능). 다만 컴파일 통합 + 회귀 검
 
 ## 7. 변경 이력
 
-- 2026-05-05: v1 작성 (5015 RESERVED 후속, 사용자 측정 시나리오 C 기반).
+- 2026-05-05: 초기 작성 (5015 RESERVED 후속, 사용자 측정 시나리오 C 기반).

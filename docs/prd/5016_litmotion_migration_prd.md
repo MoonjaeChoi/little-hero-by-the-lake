@@ -1,4 +1,4 @@
-# 5016 — IEnumerator+Lerp → LitMotion 마이그레이션 v1 (디자인)
+# 5016 — IEnumerator+Lerp → LitMotion 마이그레이션 (디자인)
 
 > **목적**: IEnumerator + Lerp 패턴 22 파일 → LitMotion v2.0.1 (MIT, 0 GC, Burst 가속) 일괄 전환.
 > 5016 GCAllocMeasurer 측정 결과 시나리오 C (> 50 KB/s) 임계 초과 — 전체 마이그레이션 정당화.
@@ -235,7 +235,7 @@ yield return LMotion.Create(0f, 1f, 0.5f).Bind(...).ToYieldInteraction();
 
 ## 7. 변경 이력
 
-- 2026-05-05: v1 작성 (5015 RESERVED 후속 — 측정 결과 시나리오 C 기반).
+- 2026-05-05: 초기 작성 (5015 RESERVED 후속 — 측정 결과 시나리오 C 기반).
 
 ## 8. Sources
 
