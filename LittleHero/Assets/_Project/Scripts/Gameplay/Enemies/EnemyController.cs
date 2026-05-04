@@ -37,6 +37,16 @@ namespace LittleHero
         public float AttackDamage => _attackDamage;
         public float HealthRatio => _maxHealth > 0f ? _currentHealth / _maxHealth : 0f;
 
+        // 5013 — Off-screen culling. Manager(EnemyAnimationManager) 가 매 0.1s 호출.
+        private bool _isVisible = true;
+        public bool IsVisible => _isVisible;
+        public void SetVisible(bool visible)
+        {
+            if (_isVisible == visible) return;
+            _isVisible = visible;
+            if (_sr != null) _sr.enabled = visible;
+        }
+
         // A4 — chapter_curve §9.1: HP/공격력에 챕터 곱셈 적용. multiplier=1f면 영향 없음.
         public void Initialize(EnemyData data, float statMultiplier = 1f)
         {
