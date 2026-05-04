@@ -52,11 +52,12 @@
     }
   },
   "11": {
-    "class_type": "LayeredDiffusionDecode",
+    "class_type": "LayeredDiffusionDecodeRGBA",
     "inputs": {
       "samples": ["3", 0],
       "images": ["8", 0],
-      "sub_batch_size": 1
+      "sd_version": "SDXL",
+      "sub_batch_size": 16
     }
   },
   "8": {
