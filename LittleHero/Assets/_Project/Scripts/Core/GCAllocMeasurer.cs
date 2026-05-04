@@ -1,9 +1,11 @@
 using System.Collections;
 using Unity.Profiling;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-namespace LittleHero.EditorTools
+namespace LittleHero
 {
     /// <summary>
     /// 5015b 사전조사 — Profiler GC Alloc/sec 자동 측정 도구.
@@ -19,11 +21,14 @@ namespace LittleHero.EditorTools
     ///   - GC < 30 KB/s → 5015b 보류 (IEnumerator 마진 충분)
     ///   - 30~50 KB/s → 5015b 부분 (3 핫 패스 파일)
     ///   - > 50 KB/s → 5015b 전체 (22 파일)
+    ///
+    /// MonoBehaviour 라 runtime 자산 (Scripts/Core/) 이 됨. MenuItem 은 #if UNITY_EDITOR.
     /// </summary>
     public class GCAllocMeasurer : MonoBehaviour
     {
         private const float MEASURE_DURATION = 60f;
 
+#if UNITY_EDITOR
         [MenuItem("Tools/LittleHero/Measure GC Alloc (60s)")]
         public static void StartMeasure()
         {
@@ -37,6 +42,7 @@ namespace LittleHero.EditorTools
             var measurer = go.AddComponent<GCAllocMeasurer>();
             measurer.StartCoroutine(measurer.Measure());
         }
+#endif
 
         private IEnumerator Measure()
         {
