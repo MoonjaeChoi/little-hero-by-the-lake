@@ -13,6 +13,10 @@ namespace LittleHero
     /// </summary>
     public class EnemyAnimationManager : MonoBehaviour
     {
+        // 5013 — visibility throttle (D1=A 0.1s)
+        private const float VIS_THROTTLE_SEC = 0.1f;
+        private static float _lastVisCheck;
+
         private static EnemyAnimationManager _instance;
         private static readonly List<EnemyController> _active = new List<EnemyController>(1024);
 
@@ -41,11 +45,20 @@ namespace LittleHero
         private void Update()
         {
             float t = Time.time;
+            // 5013 — 0.1s 간격 visibility 체크 (PIVOT v4 §7 cap 300 60fps 마진)
+            bool checkVis = (Time.unscaledTime - _lastVisCheck) >= VIS_THROTTLE_SEC;
+            if (checkVis) _lastVisCheck = Time.unscaledTime;
+
             for (int i = _active.Count - 1; i >= 0; i--)
             {
                 var e = _active[i];
                 if (e == null) { _active.RemoveAt(i); continue; }
-                e.UpdateAnim(t);
+                if (checkVis)
+                {
+                    bool vis = EnemyVisibilityCuller.IsVisible(e.transform.position);
+                    e.SetVisible(vis);
+                }
+                if (e.IsVisible) e.UpdateAnim(t);  // off-screen 적 anim skip
             }
         }
     }
