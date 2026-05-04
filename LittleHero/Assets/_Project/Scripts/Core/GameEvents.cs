@@ -27,7 +27,7 @@ namespace LittleHero
         public static event Action<EnemyController> OnBossSpawned;
         public static event Action OnBossDespawned;
 
-        // ✦ PIVOT Phase C3 — 가챠·스타포스 (gacha_v1.md)
+        // ✦ PIVOT Phase C3 — 가챠·마법의돌 (gacha_v1.md)
         public static event Action<EquipmentInstance, Rarity> OnGachaResult;  // 단일 결과
         public static event Action<int> OnSummonLevelUp;                       // 소환 레벨 N 도달
         public static event Action<int> OnStarforceShardsChanged;              // 조각 잔량

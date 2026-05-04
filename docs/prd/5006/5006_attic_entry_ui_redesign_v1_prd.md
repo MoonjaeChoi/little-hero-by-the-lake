@@ -136,7 +136,7 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 **검증 기준**:
 - Play 시 10개 버튼 클릭 → 해당 panel 활성화
 - AtticPanelToggleManager 가 이전 panel 자동 비활성화 (한 번에 하나만)
-- 가챠/스타포스/한정상점 (5005 잔여) 동작 유지
+- 가챠/마법의돌/한정상점 (5005 잔여) 동작 유지
 
 #### Sprint 2.2 commit
 
@@ -363,7 +363,7 @@ Sprint 1 (Layout + tint) ─┬→ Sprint 2 (PanelEntryView) ─→ Sprint 3 (�
 2. **검증**: 콘솔 로그 없음 (자동 wiring), Panel 표시
 3. 도감 버튼 클릭
 4. **검증**: DiaryPanel 자동 비활 (5005 PanelToggleManager) + BestiaryPanel 활성
-5. 10개 버튼 모두 반복 — 가챠/스타포스/한정상점 (5005 잔여) 동작 회귀 X
+5. 10개 버튼 모두 반복 — 가챠/마법의돌/한정상점 (5005 잔여) 동작 회귀 X
 
 ### S3 — 신규 아이콘 V5 톤 일관성
 
@@ -383,7 +383,7 @@ Sprint 1 (Layout + tint) ─┬→ Sprint 2 (PanelEntryView) ─→ Sprint 3 (�
 
 ### S6 — 5005 회귀
 
-1. AtticController 의 가챠/스타포스/한정상점 진입 — 동작 유지
+1. AtticController 의 가챠/마법의돌/한정상점 진입 — 동작 유지
 2. AtticCurrencyView 4 화폐 표시 — 동작 유지
 3. AtticCharacterSelector 3 캐릭터 선택 — 동작 유지
 4. AtticChapterEntry 35 챕터 진입 + 5002 D2 toast — 동작 유지
@@ -394,7 +394,7 @@ Sprint 1 (Layout + tint) ─┬→ Sprint 2 (PanelEntryView) ─→ Sprint 3 (�
 
 - [ ] Sprint 1~6 모두 commit (10 commit)
 - [ ] AtticPanelEntryView (~80L) + AtticGroupLayoutPresenter (~50L) + AtticUIIconImporter (~60L) 신규 — 모두 §15.6 100L 이내
-- [ ] AtticController 본체 라인 변동 X (BGM + 가챠/스타포스/한정상점 잔여 책임 그대로, 111L 유지)
+- [ ] AtticController 본체 라인 변동 X (BGM + 가챠/마법의돌/한정상점 잔여 책임 그대로, 111L 유지)
 - [ ] 13 진입 버튼 모두 onClick → panel 활성화
 - [ ] 14 PNG 신규 임포트 (13 버튼 + 4 화폐, V5 톤)
 - [ ] NUnit AtticEntryUITests 6 PASS (누적 67 → 73)

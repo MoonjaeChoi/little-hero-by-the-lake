@@ -37,7 +37,7 @@ namespace LittleHero
         /// <summary>
         /// 옵션 Z — 패턴 베이스 데미지 + PlayerStats.AttackDamage 합산 + FinalDamage% 곱셈.
         /// 메이플 키우기 표준: STR+1 = ATK+1, FinalDamage% = 곱셈 채널.
-        /// 강화/affix/스타포스 → PlayerStats.AttackDamage 갱신 → 모든 패턴 자동 반영.
+        /// 강화/affix/마법의돌 → PlayerStats.AttackDamage 갱신 → 모든 패턴 자동 반영.
         /// </summary>
         public static float EnhanceDamage(float baseDamage)
         {

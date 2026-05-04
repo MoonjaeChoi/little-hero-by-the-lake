@@ -164,7 +164,7 @@ EquipmentManager — SaveData.equipmentInstances.isEquipped 자동 복원
 
 | 위험 | 완화 |
 |---|---|
-| Brotato 매력 상실 (웨이브 사이 빌드 결정) | 가챠/스타포스/리롤 의 메타 빌드 결정으로 보완 |
+| Brotato 매력 상실 (웨이브 사이 빌드 결정) | 가챠/마법의돌/리롤 의 메타 빌드 결정으로 보완 |
 | 챕터 진행 동기 약화 (장비 영구) | 챕터 권장 레벨/스탯 게이팅 강화 (D12 RecommendedLevelWarningModal 활용) |
 | 별가루 사용처 X | 메타 강화 가격 인플레이션 + 변환 모루 + 신규 메타 업그레이드 |
 | 시뮬 §2~16 재구성 | 별도 사이클 (Phase 4) |

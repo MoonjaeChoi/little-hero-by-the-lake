@@ -24,7 +24,7 @@ namespace LittleHero
         public const int DAILY_BOSS_AMOUNT = 5;
         public const int WEEKLY_BOSS_AMOUNT = 20;
 
-        // C7 (PIVOT) — 스타포스 조각 무료 출처 (gacha_v1.md §3.4).
+        // C7 (PIVOT) — 마법의돌 조각 무료 출처 (gacha_v1.md §3.4).
         // 본 서비스는 별빛과 동일 hook 에서 조각도 동시 grant.
         public const int SHARDS_DAILY_LOGIN = 5;
         public const int SHARDS_DAILY_BOSS = 20;

@@ -314,7 +314,7 @@ Sprint 1 (Layout + tint 영구) ─→ Sprint 2 (PanelEntryView + wiring) ─→
 2. **검증**: Panel 표시 + 데이터 갱신
 3. 도감 버튼 클릭
 4. **검증**: DiaryPanel 자동 비활 (5005) + BestiaryPanel 활성
-5. 10 버튼 모두 반복 — 가챠/스타포스/한정상점 (5005 잔여) 회귀 X
+5. 10 버튼 모두 반복 — 가챠/마법의돌/한정상점 (5005 잔여) 회귀 X
 
 ### S3 — EndgameMenu 가용성 (D3=C)
 
@@ -332,7 +332,7 @@ Sprint 1 (Layout + tint 영구) ─→ Sprint 2 (PanelEntryView + wiring) ─→
 
 ### S5 — 5005 회귀
 
-1. AtticController 가챠/스타포스/한정상점 → 동작 유지
+1. AtticController 가챠/마법의돌/한정상점 → 동작 유지
 2. AtticCurrencyView 4 화폐 → 동작 유지
 3. AtticCharacterSelector 3 캐릭터 → 동작 유지
 4. AtticChapterEntry 35 챕터 + 5002 D2 toast → 동작 유지
@@ -343,7 +343,7 @@ Sprint 1 (Layout + tint 영구) ─→ Sprint 2 (PanelEntryView + wiring) ─→
 
 - [ ] Sprint 1~5 모두 commit (8 commit)
 - [ ] AtticPanelEntryView (~80L) + AtticGroupLayoutPresenter (~50L) — 모두 §15.6 100L 이내
-- [ ] AtticController 본체 라인 변동 X (BGM + 가챠/스타포스/한정상점 그대로, 111L 유지)
+- [ ] AtticController 본체 라인 변동 X (BGM + 가챠/마법의돌/한정상점 그대로, 111L 유지)
 - [ ] 13 진입 버튼 모두 onClick → panel 활성화
 - [ ] 13 버튼 4 그룹 RectTransform 안에 재배치 + tint 영구
 - [ ] EndgameMenuPanel.OnEnable 자체 검증 (D3=C)

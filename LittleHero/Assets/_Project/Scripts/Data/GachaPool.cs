@@ -34,7 +34,7 @@ namespace LittleHero
         public int starlightCostSingle = 100;
         public int starlightCost10Pull = 900;
 
-        [Header("스타포스 조각 부수 획득 (등급별)")]
+        [Header("마법의돌 조각 부수 획득 (등급별)")]
         public int shardsCommon = 1;
         public int shardsMagic = 2;
         public int shardsRare = 5;

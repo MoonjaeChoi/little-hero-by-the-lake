@@ -24,7 +24,7 @@
 - ✅ **D2=B 4 그룹 카테고리** (전투/장비/상점/기록) — 자연스러운 분류, 13 버튼 균형 분산
 - ✅ **D4=B 2 컴포넌트 분할** — AtticPanelEntryView (~80L) + AtticGroupLayoutPresenter (~50L) 각 §15.6 통과 + SRP 명확
 - ✅ **D5=B 화폐 4 아이콘 동시** — V5 톤 일관성 (별도 사이클 X)
-- ✅ **5005 Hub 컴포넌트 보존** — AtticController 의 가챠/스타포스/한정상점 잔여 책임 유지 (재진입 X)
+- ✅ **5005 Hub 컴포넌트 보존** — AtticController 의 가챠/마법의돌/한정상점 잔여 책임 유지 (재진입 X)
 - ✅ **§15.7 DI** — 모든 reference SerializeField 명시 (Singleton 직접 참조 X)
 - ✅ **44pt 터치 타겟 OnValidate** — Editor 자동 검증 (CLAUDE.md §2)
 - ✅ **NUnit Reflection 정적 검증** — 5005 패턴 답습 (Type_Exists 6 + 5005 회귀)

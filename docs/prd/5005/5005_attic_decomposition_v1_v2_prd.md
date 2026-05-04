@@ -89,7 +89,7 @@ namespace LittleHero
         private void UpdateStarFragments(int n) { if (_starFragmentsText != null) _starFragmentsText.text = $"무지개 구슬 ✦ {n}"; }
         private void UpdateMagicCrystals(int n) { if (_magicCrystalText != null) _magicCrystalText.text = $"마법 결정 ◇ {n}"; }
         private void UpdateStarlight(int n) { if (_starlightText != null) _starlightText.text = $"별빛 ⋆ {n}"; }
-        private void UpdateStarforceShards(int n) { if (_starforceShardsHud != null) _starforceShardsHud.text = $"스타포스 조각 ◈ {n}"; }
+        private void UpdateStarforceShards(int n) { if (_starforceShardsHud != null) _starforceShardsHud.text = $"마법의돌 조각 ◈ {n}"; }
     }
 }
 ```

@@ -20,7 +20,7 @@
 | 3 | 캐릭터 정보 | CharacterInfoPanel | ⚠️ _closeButton 만 | `CharacterInfoPanel` |
 | 4 | 마음 단련 | MetaUpgradePanel | ✅ Panel._openButton | `MetaUpgradePanel` |
 | 5 | **가챠** | GachaPanel | ✅ AtticController._gachaButton | `AtticController` |
-| 6 | **스타포스** | SlotStarforcePanel | ✅ AtticController._starforceButton | `AtticController` |
+| 6 | **마법의돌** | SlotStarforcePanel | ✅ AtticController._starforceButton | `AtticController` |
 | 7 | **한정 상점** | LimitedShopPanel | ✅ AtticController._limitedShopButton | `AtticController` |
 | 8 | 별빛 상점 | StarlightShopPanel | ❌ Open button 미구현 | `StarlightShopPanel` |
 | 9 | 신기한 지도 | WondrousMapPanel | ❌ Open button 미구현 | `WondrousMapPanel` |
@@ -35,7 +35,7 @@
 
 | 컴포넌트 | 책임 | 라인 |
 |---|---|---|
-| `AtticController` | 가챠/스타포스/한정상점 (3 버튼) + BGM | 111 |
+| `AtticController` | 가챠/마법의돌/한정상점 (3 버튼) + BGM | 111 |
 | `AtticCurrencyView` | ✦◇⋆◈ 4 화폐 표시 | 47 |
 | `AtticCharacterSelector` | 3 캐릭터 선택 + highlight | 101 |
 | `AtticChapterEntry` | 35 챕터 + toast | 80 |
@@ -103,7 +103,7 @@ Group 2 — 캐릭터·장비 (좌측 하단)
 
 Group 3 — 상점·소환 (우측 상단)
   • 가챠 (소환)
-  • 스타포스
+  • 마법의돌
   • 한정 상점
   • 별빛 상점
   • 변환 모루
@@ -163,7 +163,7 @@ Group 4 — 진행 기록 (우측 하단)
 │ ┌─────────┐                              ┌─────────┐   │
 │ │ G1 전투  │                              │ G3 상점  │   │
 │ │ • 챕터   │                              │ • 가챠   │   │
-│ │ • Endgame│                              │ • 스타포스│   │
+│ │ • Endgame│                              │ • 마법의돌│   │
 │ │ • 지도   │                              │ • 한정   │   │
 │ └─────────┘                              │ • 별빛   │   │
 │                                           │ • 모루   │   │
@@ -333,7 +333,7 @@ namespace LittleHero
 ## 6. Definition of Done
 
 - [ ] AtticPanelEntryView + AtticGroupLayoutPresenter 신규 (각 100L 이내)
-- [ ] AtticController 잔여 책임 그대로 (BGM + 가챠/스타포스/한정상점 3 버튼)
+- [ ] AtticController 잔여 책임 그대로 (BGM + 가챠/마법의돌/한정상점 3 버튼)
 - [ ] 13 진입 버튼 모두 onClick 수신 → 해당 panel 활성화
 - [ ] 4 그룹 RectTransform 좌상/좌하/우상/우하 anchor 적용
 - [ ] 신규 아이콘 14 PNG 임포트 (사용자 작업 후) + Sprite import 일괄 정합

@@ -123,7 +123,7 @@ BossEncounter 씬 (Phase 1 → Phase 2)
 |---|---|
 | **무기 가챠** | 다락방 가챠 버튼 (별빛 ⋆ 100/단판 — 첫 사용자는 일일 로그인 5⋆ 누적 필요) |
 | **장비 강화** | InventoryPanel 의 EnhanceModal — ★ (별가루) + ◇ 16+ (마법 결정) |
-| **스타포스** | SlotStarforcePanel — 12 슬롯 ⭐ 강화 (스타포스 조각 ◈) |
+| **마법의돌** | SlotStarforcePanel — 12 슬롯 ⭐ 강화 (마법의돌 조각 ◈) |
 | **추억 일기** | 다락방 DiaryPanel — 챕터 진행 중 발견한 4종 표시 |
 | **도감** | BestiaryPanel — 처치한 적 자동 등록 + 챕터별 100% 시 ⋆ 50 |
 | **시즌 패스** | 시즌 진행도 누적 (free 100⋆ + premium 500⋆ 등) |

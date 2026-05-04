@@ -35,13 +35,13 @@ namespace LittleHero.EditorTools
 
         const int ENEMIES_PER_CHAPTER = 1000;
 
-        // ── PIVOT: 가챠·스타포스 (gacha_v1.md §1·§3) ─────────────────────────
+        // ── PIVOT: 가챠·마법의돌 (gacha_v1.md §1·§3) ─────────────────────────
         const int GACHA_COST_SINGLE = 100;          // 별빛 ⋆ / 단판
         const int GACHA_COST_10X = 900;             // 별빛 ⋆ / 10연차 (10% 할인 + Rare+ 보장)
         // 등급별 부수 조각 (Common~Mythic)
         static readonly int[] SHARDS_BY_RARITY = { 1, 2, 5, 15, 50, 200 };
         static readonly int[] SUMMON_LEVEL_THRESHOLDS = { 0, 100, 300, 700, 1500, 3000, 5500, 9500, 16000, 27000 };
-        // 스타포스 단계별 비용 (⭐0→⭐25, 25 길이) — StarforceService._shardCost 와 정합
+        // 마법의돌 단계별 비용 (⭐0→⭐25, 25 길이) — StarforceService._shardCost 와 정합
         static readonly int[] STARFORCE_COST = {
             100, 150, 220, 320, 400, 500, 700, 1000, 1300, 1600,
             2000, 2700, 3700, 5000, 6500, 8000, 10500, 14000, 18500, 24000,
@@ -87,7 +87,7 @@ namespace LittleHero.EditorTools
             SimulateEndgameMonthly(sb);      // ✦ endgame 월간
             SimulateLevelChapterAlignment(sb);
             SimulateGachaCurrency(sb);       // ✦ PIVOT — 가챠 별빛 흐름
-            SimulateStarforceShards(sb);     // ✦ PIVOT — 스타포스 조각 흐름
+            SimulateStarforceShards(sb);     // ✦ PIVOT — 마법의돌 조각 흐름
             SimulateFullBuildEstimate(sb);   // ✦ PIVOT — ⭐25 풀빌드 도달 추정
             SimulateLimitedShop(sb);         // ✦ PIVOT — 한정 상점 retention 보완
             SimulateSmallSwarm(sb);          // ✦ PIVOT v3 — 작은 적 무리
@@ -525,10 +525,10 @@ namespace LittleHero.EditorTools
             sb.AppendLine();
         }
 
-        // ── §12. 스타포스 조각 흐름 (PIVOT) ──────────────────────────────
+        // ── §12. 마법의돌 조각 흐름 (PIVOT) ──────────────────────────────
         static void SimulateStarforceShards(StringBuilder sb)
         {
-            sb.AppendLine("## 12. 스타포스 조각 흐름 (PIVOT — gacha_v1 §3.4)");
+            sb.AppendLine("## 12. 마법의돌 조각 흐름 (PIVOT — gacha_v1 §3.4)");
             sb.AppendLine();
 
             int chapterShards = 0;
@@ -668,7 +668,7 @@ namespace LittleHero.EditorTools
             sb.AppendLine("| 항목 | 한정 상점 전 | 한정 상점 후 | 증가 |");
             sb.AppendLine("|---|---|---|---|");
             sb.AppendLine($"| 별빛 ⋆ (1개월) | 3,430 | {3430 - spentStarlight:N0} | -{spentStarlight} (소비) |");
-            sb.AppendLine($"| 스타포스 조각 ◈ | ~3,070 | {totalShardsAfter:N0} | **+{totalShardsAfter - 3070:N0}** |");
+            sb.AppendLine($"| 마법의돌 조각 ◈ | ~3,070 | {totalShardsAfter:N0} | **+{totalShardsAfter - 3070:N0}** |");
             sb.AppendLine($"| 무기 소환권 | 0 | {totalSummonTickets} | **+{totalSummonTickets}** |");
             sb.AppendLine($"| Epic 무기 확정 | 0 | {totalEpicConfirmed} | **+{totalEpicConfirmed}** |");
             sb.AppendLine($"| Rare 무기 확정 | 0 | {totalRareConfirmed} | (⭐2 미도달) |");

@@ -16,7 +16,7 @@ namespace LittleHero
 
         [Header("연결")]
         [SerializeField] private StarforceEnhanceModal _enhanceModal;
-        [SerializeField] private Text _shardsText;          // 스타포스 조각 잔량
+        [SerializeField] private Text _shardsText;          // 마법의돌 조각 잔량
         [SerializeField] private Button _closeButton;
 
         private void OnEnable()
@@ -65,7 +65,7 @@ namespace LittleHero
 
         private void HandleShardsChanged(int amount)
         {
-            if (_shardsText != null) _shardsText.text = $"스타포스 조각 ◈ {amount}";
+            if (_shardsText != null) _shardsText.text = $"마법의돌 조각 ◈ {amount}";
             Refresh();
         }
 

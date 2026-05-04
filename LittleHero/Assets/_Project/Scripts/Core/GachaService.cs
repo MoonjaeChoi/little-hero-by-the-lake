@@ -6,7 +6,7 @@ namespace LittleHero
     /// <summary>
     /// PIVOT Phase C3 — 무기 가챠 정적 서비스 (gacha_v1.md §1).
     ///
-    /// 단판/10연차 굴림 + 등급 굴림 + Rare+ 보장 + 누적 카운트 + 소환 레벨 갱신 + 스타포스 조각 부수 획득.
+    /// 단판/10연차 굴림 + 등급 굴림 + Rare+ 보장 + 누적 카운트 + 소환 레벨 갱신 + 마법의돌 조각 부수 획득.
     /// 무기 슬롯은 EquipSlot.Weapon 고정 — drop 풀과 분리.
     ///
     /// 비용:

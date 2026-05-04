@@ -16,7 +16,7 @@ namespace LittleHero
         [Header("표시")]
         [SerializeField] private Text _summaryText;        // 결과 요약 (단판: 1줄, 10연차: 그리드)
         [SerializeField] private Text _rarityText;         // 단판 전용 — 등급 색 강조
-        [SerializeField] private Text _bonusText;          // 스타포스 조각 + 소환 레벨업
+        [SerializeField] private Text _bonusText;          // 마법의돌 조각 + 소환 레벨업
         [SerializeField] private Image _backdrop;
         [SerializeField] private Button _closeButton;
 
@@ -71,7 +71,7 @@ namespace LittleHero
             if (_bonusText != null)
             {
                 var sb = new StringBuilder();
-                sb.Append($"+{result.starforceShards} 스타포스 조각");
+                sb.Append($"+{result.starforceShards} 마법의돌 조각");
                 if (result.causedSummonLevelUp)
                     sb.Append($"\n소환 레벨 ⭐ {result.newSummonLevel} 도달!");
                 _bonusText.text = sb.ToString();
@@ -123,7 +123,7 @@ namespace LittleHero
             if (_bonusText != null)
             {
                 var bsb = new StringBuilder();
-                bsb.Append($"+{totalShards} 스타포스 조각");
+                bsb.Append($"+{totalShards} 마법의돌 조각");
                 if (newLevel > 0)
                     bsb.Append($"\n소환 레벨 ⭐ {newLevel} 도달!");
                 _bonusText.text = bsb.ToString();

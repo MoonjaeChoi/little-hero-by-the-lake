@@ -85,7 +85,7 @@ namespace LittleHero.EditorTools
             so.starlightCostSingle  = 100;
             so.starlightCost10Pull  = 900;
 
-            // 스타포스 조각 부수 획득 (gacha_v1.md §3)
+            // 마법의돌 조각 부수 획득 (gacha_v1.md §3)
             so.shardsCommon    = 1;
             so.shardsMagic     = 2;
             so.shardsRare      = 5;
