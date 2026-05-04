@@ -17,7 +17,8 @@ MonoBehaviour:
   baseAttackDamage: 10
   baseAttackSpeed: 1
   baseRange: 5
-  xpThresholds: 
+  attackIntervalMul: 0.7
+  xpThresholds:
   shopItemCount: 6
   shopRefreshBaseCost: 2
   shopRefreshCostMultiplier: 1.5

@@ -12,6 +12,10 @@ namespace LittleHero
         public float baseAttackSpeed = 1f;
         public float baseRange = 5f;
 
+        [Header("공격 간격 (사용자 baseline 2026-05-05)")]
+        [Tooltip("AttackPatternUtil.EffectiveInterval 에 곱해지는 multiplier. 0.7 = 30% 단축. 1.0 = 기본.")]
+        public float attackIntervalMul = 0.7f;
+
         [Header("레벨업")]
         public int[] xpThresholds;
 

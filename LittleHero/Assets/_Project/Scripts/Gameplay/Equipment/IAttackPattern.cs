@@ -20,9 +20,12 @@ namespace LittleHero
     /// </summary>
     public static class AttackPatternUtil
     {
-        /// <summary>baseInterval / max(0.1, AttackSpeed) — AttackSpeed 1.0 = 베이스.</summary>
+        /// <summary>(baseInterval × BalanceConfig.attackIntervalMul) / max(0.1, AttackSpeed). AttackSpeed 1.0 = 베이스.</summary>
         public static float EffectiveInterval(float baseInterval, PlayerStats stats)
-            => baseInterval / Mathf.Max(0.1f, stats != null ? stats.AttackSpeed : 1f);
+        {
+            float intervalMul = GameManager.Instance?.Balance?.attackIntervalMul ?? 1f;
+            return (baseInterval * intervalMul) / Mathf.Max(0.1f, stats != null ? stats.AttackSpeed : 1f);
+        }
 
         /// <summary>max(1, baseCount) + ExtraAttackTargets.</summary>
         public static int EffectiveCount(int baseCount, PlayerStats stats)

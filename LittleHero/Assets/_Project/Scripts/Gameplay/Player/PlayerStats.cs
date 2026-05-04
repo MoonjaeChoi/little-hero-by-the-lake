@@ -212,7 +212,8 @@ namespace LittleHero
             MaxHealth         = baseHp  + lvHp  + metaHp + coreHp  + _equipmentBonus.maxHealthBonus;
             MoveSpeed         = baseSpd + lvSpd + coreSpd + _equipmentBonus.speedBonus;
             AttackDamage      = baseDmg + lvDmg + metaDmg + coreDmg + _equipmentBonus.attackDamageBonus;
-            AttackSpeed       = (baseAs  + coreAS + _equipmentBonus.attackSpeedBonus) * 10f;  // TEMP — 5015b GC 측정 환경 (cap 300 hit 빈도 ↑)
+            // 사용자 baseline (2026-05-05) — AttackSpeed × 5 영구 적용. 정상 IEnumerator+Lerp + cap 300 환경에서 적 처치 X 문제 해결.
+            AttackSpeed       = (baseAs  + coreAS + _equipmentBonus.attackSpeedBonus) * 5f;
             Range             = baseR   + coreRange + _equipmentBonus.rangeBonus;
             XpGainMultiplier  = 1f + coreXp + _equipmentBonus.xpGainBonus;
 
