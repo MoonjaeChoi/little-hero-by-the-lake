@@ -156,6 +156,9 @@ namespace LittleHero
             if (player != null && stats != null) player.Heal(stats.MaxHealth * 0.5f);
             // 사용자 baseline (2026-05-05) — Realtime 사용 (timeScale 영향 X). HitPause 누적 시 wave 진행 막힘 회피.
             yield return new WaitForSecondsRealtime(5f);
+            // 사용자 보고 (2026-05-05) — wave 2+ 진입 시 CurrentWave++ 누락 fix.
+            // PIVOT v2 상점 폐기 시 CloseShop() 의 StartWave() 호출이 사라지며 발생한 회귀.
+            GameManager.Instance.StartWave();
             StartNextWave();
         }
 
