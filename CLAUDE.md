@@ -214,6 +214,7 @@ Assets/_Project/
 | **enemy_visibility_culler_v1** | Off-screen 적 cull — EnemyVisibilityCuller 정적 + Manager visibility throttle 0.1s + 1.5x margin (5013, NUnit 81→87, 60fps 마진 강화) | ✅ 2026-05-04 |
 | **mpb_hue_shift_v1** | EnemyHueVariation 5단계 hue 변형 + EnemyController hook + WaveManager 7 prime spread (5012, D1=B/D2=A/D3=B, NUnit 87→93, 30 archetype → 150 변형) | ✅ 2026-05-04 |
 | **chapter_overrides_v1** | 210 chapter override PNG 5008 baseline 재생성 (5009, 5 카테고리 batch — Meta/Nature/Animal/Civ/Fantasy, 6 commit, GUID 보존 재wiring 0) | ✅ 2026-05-04 |
+| **endgame_boss_sprites_v1** | Daily 7 + Weekly 4 = 11 endgame 보스 sprite 재생성 (5011, D2=A+ V5 sticker 강화 + 인형 실사판 회피, 3 commit, GUID 보존) | ✅ 2026-05-05 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
@@ -274,11 +275,11 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
+- 2026-05-05: **5011 endgame_boss_sprites_v1** — Daily 7 + Weekly 4 = 11 보스 sprite 재생성 (D2=A+ prompt 강화 / D3=A GUID 보존, 3 commit). 사용자 시각 review "인형 실사판" 톤 발견 → V5 sticker 강조 + 인형/3D/realistic negative 강화. ComfyUI 11/11 성공, healthy 6/11 (5건 transparent 80%+ 캐릭터 작음 — 사용자 시각 review 후 retry 결정). Bosses/ 폴더 (PRD 원안 Enemies/ 위치 정정).
 - 2026-05-04: **5009 chapter_overrides_v1** — 210 chapter override PNG 5008 baseline 재생성 (RESERVED 해제, 6 commit). 사용자 5012 Play Mode 검수 "예전 적 그대로" 보고 → C 옵션 즉시 재진입 + chapter override 자체 갱신. 5 카테고리 batch: Meta CH 1~5 30 PNG (22222+) / Nature CH 6~14 54 (33333+) / Animal CH 15~20 36 (44444+) / Civ CH 21~27 42 (55555+) / Fantasy CH 28~35 48 (77777+). 시드 공식 base+(CH-1)*6+archetype offset. ComfyUI 210/210 성공. PNG 만 갱신 + .meta GUID 보존 → SO 재wiring 불필요. 5012.1 결합 효과 — saturated sprite 픽셀에 multiplicative hue tint visible 가능
 - 2026-05-04: **5012 mpb_hue_shift_v1 + 5012.1 패치** — Enemy sprite 5단계 hue 변형 (D1=B SpriteRenderer.color tint / D2=A const / D3=B \_baseColor 갱신, 5 commit + 1 패치, NUnit 87→94). EnemyHueVariation 정적 헬퍼 + EnemyController.ApplyAppearance hook + WaveManager 7 prime spread. **5012.1 핵심 fix**: 사용자 검수 — icon!=null 인 5008 sprite 의 sr.color=Color.white 라 HueShift(white, x)=white 효과 0 발견. HUE_BASE_TINT(1, 0.92, 0.92) saturated baseline 도입 → multiplicative tint 가 sprite 픽셀에 visible 효과. 30 archetype × 5 hue offset = 150 variation 발생. Boss 원색 유지 + flash 후 hue 색상 유지
 - 2026-05-04: **5013 enemy_visibility_culler_v1** — Off-screen 적 cull (D1=A 0.1s throttle / D2=A 1.5x margin, 5 commit, NUnit 81→87). EnemyVisibilityCuller 정적 헬퍼 + EnemyAnimationManager visibility throttle 통합 (Manager 단일 Update 패턴 활용, EnemyController.Update 미존재) + ProjectValidator 룰 + SceneManager.sceneLoaded 자동 InvalidateCache hook. PIVOT v4 §7 cap 300 60fps 마진 강화
 - 2026-05-04: **5008 chapter_enemy_asset_quality_v1** — 30 archetype + 3 chapter override LayerDiffuse RGBA 재생성 (SDXL base 1.0 + 768×1024 portrait + cfg 6 + Danbooru "solo, 1character" 태그 + 17종 grid keyword negative, D1=C/D2=C/D3=A+B, 11 commit). 사용자 "아주 만족" 승인 baseline 메모리 저장. comfyui-image 스킬에 sprite_generation_rules.md (8 섹션 207L) 정착. 후속 anchor 5009~5011 명시
-- 2026-05-04: **5007 damage_hit_effect_v2** — 적 타격 이펙트 강화 (CinematicEffectsConfig SO + HitEffectResolver 정적 + ResolvedHitEffect struct + cap 2.0× + Pool 50→300 prewarm + 12 commit, NUnit 73→81). BossTier 5종 × 4 multiplier + WeaponCategory 4 그룹 색 + damage intensity 동적 + Camera zoom 신규
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 
