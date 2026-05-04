@@ -17,7 +17,7 @@ description: |
 ## 0. 입력
 
 - `--dis <path>` (Required): discussion_topics 파일
-- `--prd-v2 <path>` (Optional): rebuttal 단계의 v2 PRD 초안. 미지정 시 자동 추론 (`<prd>_v2_prd.md`)
+- `--prd-v2 <path>` (Optional): rebuttal 단계의 v2 PRD 초안. 미지정 시 자동 추론 (`<prd>_v2.md`)
 - `--mode <user|ai-assisted|auto>` (Optional): 결정 모드. 기본 `ai-assisted`
 - `--priority <high|medium|low|all>` (Optional): 우선순위 필터
 - `--decisions <text>` (Optional): 사용자 결정 인라인 입력 (예 `"D1=A, D2=옵션B 1.2x, D3=A"`)
@@ -27,9 +27,9 @@ description: |
 | 파일 | 용도 |
 |---|---|
 | `<prd>_decisions.md` | 결정 기록 + 근거 + PRD diff 명세 |
-| `<prd>_v2_prd.md` (덮어쓰기) | 결정 반영된 **최종** PRD v2 |
+| `<prd>_v2.md` (덮어쓰기) | 결정 반영된 **최종** PRD v2 |
 
-> rebuttal 단계의 `_v2_prd.md` 초안을 mediator 가 덮어쓰기 — 한 파일이 단계별 진화. commit 으로 추적.
+> rebuttal 단계의 `_v2.md` 초안을 mediator 가 덮어쓰기 — 한 파일이 단계별 진화. commit 으로 추적.
 
 ## 2. 모드별 특성
 
@@ -195,7 +195,7 @@ rebuttal 단계의 v2 초안에 결정 반영:
 
 [산출 파일]
   - <prd>_decisions.md (결정 + 근거)
-  - <prd>_v2_prd.md (최종 — Sprint 7행, X commit, Y시간)
+  - <prd>_v2.md (최종 — Sprint 7행, X commit, Y시간)
 
 [v2 주요 변경]
   - <변경 1>

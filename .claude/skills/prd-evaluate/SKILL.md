@@ -20,7 +20,7 @@ description: |
 ```bash
 # Sprint Contract 기반 검증 (권장 — 단일 진실원)
 /prd-evaluate --prd 5001
-/prd-evaluate --prd docs/prd/<번호>/<system>_v2_prd.md
+/prd-evaluate --prd docs/prd/<번호>/<system>_v2.md
 
 # Contract 없이 PRD 직접 (legacy)
 /prd-evaluate --prd 5001 --no-contract
@@ -45,7 +45,7 @@ description: |
 ## 1. 검증 대상 자동 탐색
 
 1. `<system>_contract.md` + `<system>_contract_checklist.md` (Phase 4 산출 — 권장)
-2. `<system>_v2_prd.md` (mediator 최종, `--no-contract` 모드)
+2. `<system>_v2.md` (mediator 최종, `--no-contract` 모드)
 3. `<system>_prd.md` (generator 초안, `--no-contract` + 경고)
 4. 모두 없음 → 에러 + `prd-contract` 실행 권장
 

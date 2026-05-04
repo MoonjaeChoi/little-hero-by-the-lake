@@ -18,7 +18,7 @@ description: |
 
 ```bash
 # PRD v2 (mediator 최종) 기준
-/prd-contract --prd docs/prd/<번호>/<system>_v2_prd.md
+/prd-contract --prd docs/prd/<번호>/<system>_v2.md
 
 # 문서번호 자동 탐색
 /prd-contract --prd 5001
@@ -31,7 +31,7 @@ description: |
 ```
 
 PRD 자동 탐색 순서:
-1. `<system>_v2_prd.md` (mediator 최종)
+1. `<system>_v2.md` (mediator 최종)
 2. `<system>_prd.md` (rebuttal/generator)
 3. 둘 다 없으면 → `prd-mediator` (또는 `prd-generator`) 자동 호출
 
@@ -58,7 +58,7 @@ PRD 자동 탐색 순서:
 ### Step 1 — PRD + breakdown 분석
 
 병렬 Read:
-- `<system>_v2_prd.md` (mediator 최종)
+- `<system>_v2.md` (mediator 최종)
 - `<system>_breakdown_*.md` (있으면 — 구체적 메서드 명세 추출)
 - `<system>_decisions.md` (mediator 결정 — Trade-off)
 - CLAUDE.md §7 성능 목표 + §15 OOP
@@ -99,7 +99,7 @@ CLAUDE.md §4 3 계층 (Data/Logic/UI) 정합:
 # Sprint Contract: <system>
 
 > **PGE Planner — Phase 4 Contract**
-> PRD: <system>_v2_prd.md · breakdown: <breakdown_00.md>
+> PRD: <system>_v2.md · breakdown: <breakdown_00.md>
 > 생성일: YYYY-MM-DD
 
 ---

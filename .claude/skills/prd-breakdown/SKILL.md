@@ -12,7 +12,7 @@ description: |
 > Clayve `prd-implementation-breakdown` 의 Unity 게임 개발 특화 변형 (PGE Planner 단계).
 >
 > **저장 위치 (5001/5002 정착 패턴)**:
-> - 입력 PRD v2: `docs/prd/<번호>/<system>_v2_prd.md`
+> - 입력 PRD v2: `docs/prd/<번호>/<system>_v2.md`
 > - 산출 breakdown_00 ~ breakdown_NN: 모두 같은 `docs/prd/<번호>/` 폴더
 > - 번호 자동 추출 + `mkdir -p`
 
@@ -20,17 +20,17 @@ description: |
 
 ```bash
 # Mode 1: 새 PRD 분해
-/prd-breakdown --prd docs/prd/<번호>/<system>_v2_prd.md
+/prd-breakdown --prd docs/prd/<번호>/<system>_v2.md
 
 # Mode 2: 문서번호 자동 탐색
-/prd-breakdown --prd 5001    # docs/prd/5001/5001_*_v2_prd.md 자동 매칭
+/prd-breakdown --prd 5001    # docs/prd/5001/5001_*_v2.md 자동 매칭
 
 # Mode 3: 범위 재작성
 /prd-breakdown --rewrite 5001_03~5001_06
 ```
 
 PRD 자동 탐색 순서:
-1. `docs/prd/<번호>/<번호>_*_v2_prd.md` (mediator 최종)
+1. `docs/prd/<번호>/<번호>_*_v2.md` (mediator 최종)
 2. `docs/prd/<번호>/<번호>_*_prd.md` (rebuttal 또는 generator)
 3. 둘 다 없으면 → `prd-mediator` (또는 `prd-generator`) 자동 호출 후 진행
 
@@ -90,7 +90,7 @@ PRD 의 Sprint 가 작업량 단위라면, breakdown 은 **commit / 클래스 / 
 ### Step 1 — PRD v2 + 디자인 로드
 
 병렬 Read:
-- `<system>_v2_prd.md` (mediator 최종)
+- `<system>_v2.md` (mediator 최종)
 - `<system>.md` (디자인 — 옵션 비교 + 권장 설계)
 - `<system>_decisions.md` (mediator 결정)
 - CLAUDE.md §3 폴더 구조 + §4 아키텍처 + §15 OOP
@@ -188,7 +188,7 @@ T06 (Migration) ─┘                 │
 > **레이어**: <Data/Logic/UI/Test>
 > **의존성**: T<MM>, T<KK> (또는 없음)
 > **예상 시간**: N분 / 1 commit
-> **PRD 출처**: <system>_v2_prd.md §<섹션>
+> **PRD 출처**: <system>_v2.md §<섹션>
 
 ## 1. 작업 항목
 

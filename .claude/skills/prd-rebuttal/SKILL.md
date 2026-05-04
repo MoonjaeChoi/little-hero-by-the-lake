@@ -34,7 +34,7 @@ description: |
 | 파일 | 생성 조건 |
 |---|---|
 | `<prd>_rebuttal.md` | 항상 — 반박 요약 + Detailed Responses |
-| `<prd>_v2_prd.md` | 항상 — 수용 항목 반영된 PRD 초안 (mediator 가 최종 확정) |
+| `<prd>_v2.md` | 항상 — 수용 항목 반영된 PRD 초안 (mediator 가 최종 확정) |
 | `<prd>_discussion_topics.md` | 기본 — 미결 항목만 추출 (`--no-dis` 시 생략) |
 
 ## 2. 워크플로 (4 단계)
@@ -166,7 +166,7 @@ description: |
 - 권장 mode: ai-assisted (Claude 추천 + 사용자 확인)
 ```
 
-#### 4.3 `<prd>_v2_prd.md` (PRD 초안)
+#### 4.3 `<prd>_v2.md` (PRD 초안)
 
 원본 PRD 복제 + Accept 된 변경만 반영. **Discuss 항목은 미반영** (mediator 가 최종 확정).
 
@@ -214,7 +214,7 @@ PRD 텍스트에서 다음 키워드 발견 시 — **반박이 아닌 수용** 
 
 [산출 파일]
   - <prd>_rebuttal.md (반박 + 근거)
-  - <prd>_v2_prd.md (Accept 반영 초안)
+  - <prd>_v2.md (Accept 반영 초안)
   - <prd>_discussion_topics.md (미결 M건)
 
 [다음 단계]
@@ -240,7 +240,7 @@ PRD 텍스트에서 다음 키워드 발견 시 — **반박이 아닌 수용** 
                                        ↓
                                 /prd-mediator (Phase 2.3)
                                        ↓
-                       _v2_prd.md (최종) + decisions.md
+                       _v2.md (최종) + decisions.md
                                        ↓
                               /prd-breakdown / /prd-contract
 ```

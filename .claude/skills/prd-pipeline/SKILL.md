@@ -27,8 +27,8 @@ description: |
   ↓
 [Phase 2] Review (3단)
   2.1 Critique  → <system>_critique.md (Accept/Reject/Discuss)
-  2.2 Rebuttal  → <system>_rebuttal.md + _v2_prd.md (초안) + _discussion_topics.md
-  2.3 Mediator  → <system>_decisions.md + _v2_prd.md (최종)
+  2.2 Rebuttal  → <system>_rebuttal.md + _v2.md (초안) + _discussion_topics.md
+  2.3 Mediator  → <system>_decisions.md + _v2.md (최종)
   ↓
 [Phase 3] Breakdown   → <system>_breakdown_00~NN.md (구현 태스크 N개)
   ↓
@@ -102,7 +102,7 @@ description: |
 
 **산출**: 3 파일
 - `<system>_rebuttal.md`
-- `<system>_v2_prd.md` (초안)
+- `<system>_v2.md` (초안)
 - `<system>_discussion_topics.md`
 
 **자동 처리**:
@@ -127,7 +127,7 @@ description: |
 
 **산출**:
 - `<system>_decisions.md`
-- `<system>_v2_prd.md` (최종 — 초안 덮어쓰기)
+- `<system>_v2.md` (최종 — 초안 덮어쓰기)
 
 **스킵 조건**: discussion_topics 항목 0건 → 즉시 v2 = 초안 확정
 
@@ -240,7 +240,7 @@ C5 SO 검증     — AssetDatabase.LoadAllAssetsAtPath 필드 검사
 ```
 [Pipeline 5001 — Phase 3/6 in progress] Breakdown
   ✓ Phase 1 Generate (5001_v1.md, _prd.md)
-  ✓ Phase 2 Review  (5001_critique.md, _rebuttal.md, _decisions.md, _v2_prd.md)
+  ✓ Phase 2 Review  (5001_critique.md, _rebuttal.md, _decisions.md, _v2.md)
   → Phase 3 Breakdown (in progress)
   ⏸ Phase 4 Contract
   ⏸ Phase 5 Implement
