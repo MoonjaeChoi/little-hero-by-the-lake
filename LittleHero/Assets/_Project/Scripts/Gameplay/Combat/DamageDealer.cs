@@ -18,6 +18,15 @@ namespace LittleHero
         // 옵션 Z 사이클 2 — PlayerStats 캐시 (DamageSystem 패턴 답습)
         private static PlayerStats _statsCache;
 
+        // 5007 — 현재 장착 무기 카테고리 cache (EquipmentManager 가 무기 변경 시 SetActiveWeaponCategory 호출)
+        private static WeaponCategory? _activeWeaponCategory;
+
+        /// <summary>5007 T06 — EquipmentManager 가 무기 장착·해제 시 호출 (cache 갱신).</summary>
+        public static void SetActiveWeaponCategory(WeaponCategory? category)
+        {
+            _activeWeaponCategory = category;
+        }
+
         private static PlayerStats GetStats()
         {
             if (_statsCache != null) return _statsCache;
@@ -41,23 +50,25 @@ namespace LittleHero
             return dmg * mul;
         }
 
-        /// <summary>다중 타깃 데미지 — 거리 정렬된 list 가정. PIVOT v4 OnHit 자동. 5007 — weaponCategory 전달.</summary>
+        /// <summary>다중 타깃 데미지 — 거리 정렬된 list 가정. PIVOT v4 OnHit 자동. 5007 — weaponCategory cache 자동 사용 (인자 default null = cache 사용).</summary>
         public static void ApplyMulti(List<EnemyController> targets, float baseDamage, WeaponCategory? weaponCategory = null)
         {
+            var wc = weaponCategory ?? _activeWeaponCategory;  // 5007 — IAttackPattern 미명시 시 cache 자동 사용
             float effective = EnhanceDamage(baseDamage);
             for (int i = 0; i < targets.Count; i++)
             {
                 if (targets[i] == null || targets[i].IsDead) continue;
                 float penalty = i < _multiTargetPenalty.Length ? _multiTargetPenalty[i] : MULTI_PENALTY_FLOOR;
-                DamageSystem.DealDamage(targets[i], effective * penalty, weaponCategory);
+                DamageSystem.DealDamage(targets[i], effective * penalty, wc);
             }
         }
 
-        /// <summary>단일 타깃 — 100% 데미지. 5007 — weaponCategory 전달.</summary>
+        /// <summary>단일 타깃 — 100% 데미지. 5007 — weaponCategory cache 자동 사용.</summary>
         public static void ApplySingle(EnemyController target, float damage, WeaponCategory? weaponCategory = null)
         {
             if (target == null || target.IsDead) return;
-            DamageSystem.DealDamage(target, EnhanceDamage(damage), weaponCategory);
+            var wc = weaponCategory ?? _activeWeaponCategory;
+            DamageSystem.DealDamage(target, EnhanceDamage(damage), wc);
         }
 
         /// <summary>다중 타깃 보정 비율 미리보기 (UI / 시뮬용).</summary>

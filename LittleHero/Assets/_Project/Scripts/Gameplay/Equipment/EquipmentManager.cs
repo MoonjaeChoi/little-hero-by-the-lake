@@ -194,6 +194,9 @@ namespace LittleHero
                 _stats.ApplyResolvedBonus(resolved);
             }
             if (activated > 0) Debug.Log($"[EquipmentManager] 가챠 무기 {activated}종 활성화 + EffectResolver 통합");
+
+            // 5007 T06 — DamageDealer 의 정적 cache 갱신 (IAttackPattern 변경 X)
+            DamageDealer.SetActiveWeaponCategory(GetActiveWeaponCategory());
         }
 
         /// <summary>인스턴스 단일 장착 (InventoryPanel 등에서 호출).</summary>
@@ -217,6 +220,9 @@ namespace LittleHero
                     _instancePatterns[inst.instanceId] = pattern;
                 }
             }
+
+            // 5007 T06 — 무기 장착 시 DamageDealer cache 갱신
+            DamageDealer.SetActiveWeaponCategory(GetActiveWeaponCategory());
         }
 
         /// <summary>인스턴스 단일 해제.</summary>
@@ -236,6 +242,9 @@ namespace LittleHero
                 _activePatterns.Remove(pattern);
                 _instancePatterns.Remove(inst.instanceId);
             }
+
+            // 5007 T06 — 무기 해제 시 DamageDealer cache 갱신
+            DamageDealer.SetActiveWeaponCategory(GetActiveWeaponCategory());
         }
 
         private static void EnsureTemplateCache()
