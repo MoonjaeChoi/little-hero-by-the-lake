@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69c29160b74254c3eabf2f406b79f498, type: 3}
+  m_Name: CinematicEffectsConfig
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.CinematicEffectsConfig
+  normalPunchScale: 1.4
+  critPunchScale: 1.7
+  punchUpDuration: 0.05
+  punchDownDuration: 0.1
+  punchUpCritDuration: 0.07
+  punchDownCritDuration: 0.15
+  normalFlashColor: {r: 1, g: 0, b: 0, a: 1}
+  critFlashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  slowMoScale: 0.05
+  slowMoDuration: 0.08
+  shakeAmplitude: 0.3
+  shakeDuration: 0.2
+  enableZoomOnCrit: 1
+  zoomMul: 1.05
+  zoomUpDuration: 0.05
+  zoomDownDuration: 0.15
+  vfxNormalScale: 0.6
+  vfxCritScale: 1.4
+  floaterPoolSize: 300
+  vfxPoolSize: 100
+  noneProfile:
+    punchMul: 1
+    vfxScaleMul: 1
+    floaterSizeMul: 1
+    shakeAmpMul: 1
+  miniBossProfile:
+    punchMul: 1.1
+    vfxScaleMul: 1.2
+    floaterSizeMul: 1.15
+    shakeAmpMul: 1.2
+  chapterBossProfile:
+    punchMul: 1.25
+    vfxScaleMul: 1.5
+    floaterSizeMul: 1.35
+    shakeAmpMul: 1.5
+  dailyBossProfile:
+    punchMul: 1.3
+    vfxScaleMul: 1.6
+    floaterSizeMul: 1.4
+    shakeAmpMul: 1.6
+  weeklyBossProfile:
+    punchMul: 1.4
+    vfxScaleMul: 1.8
+    floaterSizeMul: 1.5
+    shakeAmpMul: 1.8
+  damageIntensityCap: 5
+  damageIntensityWeight: 0.4
+  swordFlashColor: {r: 1, g: 0, b: 0, a: 1}
+  bowFlashColor: {r: 0.4, g: 0.9, b: 1, a: 1}
+  daggerFlashColor: {r: 1, g: 0.6, b: 0.3, a: 1}
+  magicFlashColor: {r: 0.8, g: 0.4, b: 1, a: 1}
+  hitDebounceTime: 0.05
