@@ -1,99 +1,101 @@
-# 5008 — Enemy Visual Pipeline v2 (적 시각 파이프라인 v2)
+# 5008 — Chapter Enemy Asset Quality v1 (챕터 적 자산 품질 v1)
 
-> **목적**: 적 캐릭터 자산 시각 품질·다양성·성능 동시 개선. 심층 조사 기반 즉시 적용 가능한 3 개선 (MPB hue shift + Off-screen culling + LayerDiffuse 재생성).
-> **연계**: 5007 damage_hit_effect_v2 (Resolver 인프라) / 137-262 EnemyData SO / 262 PNG (V5 sticker tone) / Vampire Survivors 류 cap 300 환경
-> **출처**: 2026-05-04 Unity 적 캐릭터 자산 최신 기법 심층 조사 (18 references) — LayerDiffuse + MaterialPropertyBlock + Sprite Atlas V2 + Off-screen culling
+> **목적**: 챕터에서 출현하는 적 캐릭터의 시각 자산을 **마음에 드는 수준**으로 끌어올리기. LayerDiffuse 도입 + V5 sticker tone 일관성 + 사용자 검토 반복.
+> **범위 축소** (2026-05-04 사용자 결정): 본 PRD 는 **자산 품질** 만 — 성능 (off-screen culling) / 다양성 (MPB hue shift) / 자동화 (LoRA / IPAdapter) 는 별도 후속 사이클 (5008.x / 5009+).
+> **연계**: 5007 cinematic effect / comfyui-image 스킬 / Generated_v2/Enemies 251 PNG / 137-262 EnemyData SO
 
 ## 0. 결정 이력
 
-- 2026-05-04: 사용자 발화 "PRD 5008_enemy_visual_pipeline_v2 작성" → 본 디자인 문서 작성
-- 사용자 보고: 1라운드 적 캐릭터 일부 흰 박스 / 주인공 미표시 → 23 PNG alpha 손상 발견 → 14개 flood-fill 처리 + 9개 ComfyUI 재생성
-- 심층 조사 결과: ① LayerDiffuse 가 근본 해결 ② MPB hue shift = 30 archetype × 5 hue → 150 변형 ③ Off-screen culling 미적용
+- 2026-05-04: 사용자 발화 "PRD 5008 작성" → 첫 디자인 (전체 파이프라인 7 commit)
+- 2026-05-04: 사용자 결정 "chapter 캐릭터 마음에 드는 수준 자산 우선, PRD 범위 한정" → 본 디자인 자산 품질로 좁힘
 
 ## 1. 현재 시스템 분석
 
-### 1.1 적 시각 자산 인프라
+### 1.1 적 자산 분포 (Generated_v2/Enemies)
 
-| 항목 | 현황 | 평가 |
+| 분류 | 위치 | 개수 | 출처 |
+|---|---|---|---|
+| 30 archetype 베이스 | `Enemy_{Meta,Nature,Animal,Civ,Fantasy}_{Small,Medium,Large,MiniA,MiniB,Boss}.png` | 30 | PhaseFContentSeed |
+| Chapter 별 sprite | `Chapters/CH{01~35}_{Small,Medium,Large,MiniA,MiniB,Boss}.png` | 210 | 초기 sprite (chapter 고유) |
+| V1 동화 적 | `V1/Enemy_{Basic,BeanGiant,BigWolf,Bear,...}.png` | 11 | V1 Chapter_01_RedHood 등 |
+| Daily 보스 | `DailyBoss_{00~06}.png` | 7 | F4 endgame |
+| Weekly 보스 | `WeeklyBoss_{00~03}.png` | 4 | F5 endgame |
+| **누적** | | **262** | |
+
+### 1.2 자산 품질 현황 (5008 직전 사용자 보고 + 후처리 결과)
+
+| 분류 | 정상 | 처리 완료 | 손상 (재생성 필요) |
+|---|---:|---:|---:|
+| 30 archetype | 28 | 0 | 2 (Enemy_Nature_Medium, V1/Enemy_StarCloud) |
+| Chapter overrides | 196 | 14 (flood-fill) | **9** (CH14/CH22/CH25/CH30/CH33×2/CH34) |
+| V1 11종 | 11 | 0 | 0 |
+| Daily / Weekly | 11 | 0 | 0 |
+
+> **현재 사용자 우선 관심** = chapter 적 자산 (`Chapters/` 폴더 + 30 archetype) — 1라운드 ~ CH 35 진행 중 출현하는 sprite.
+
+### 1.3 품질 기준 (마음에 드는 수준)
+
+| 기준 | 측정 | 통과 조건 |
 |---|---|---|
-| EnemyData SO | 262 인스턴스 (35 챕터 × 6 + V1 11 + Animal 30 + Daily 7 + Weekly 4) | ✅ 충분 |
-| Generated_v2/Enemies PNG | 251 + V1 11 = 262 | ✅ |
-| EnemyAtlas.spriteatlas | 1개 존재 | ✅ 활용도 낮음 (자동 packing 미설정) |
-| ApplyAppearance (EnemyController:178) | `sr.color = data.tintColor` 적용 | ✅ MPB 의 자연 확장점 |
-| EnemyAnimationManager | 단일 Update 1024 capacity | ✅ §15.6 모범 |
-| Off-screen culling | ❌ 없음 | 화면 밖 적도 sr.enabled=true |
-| Material 인스턴스화 | X (sr.color 만 변경) | ✅ SRP Batcher 호환 |
-
-### 1.2 PIVOT v4 cinematic 통합 (5007 완료)
-
-- HitEffectResolver 가 BossTier × WeaponCategory × intensity 분기
-- CinematicEffectsConfig.asset 에서 25+ 필드 SO 화
-- 본 5008 은 이 인프라 위에 **시각적 다양성 + alpha 정확도 + 성능 cull** 추가
-
-### 1.3 위반·한계
-
-| 항목 | 상태 | 영향 |
-|---|---|---|
-| Alpha 손상 9 PNG (회색 gradient + 흰 캐릭터) | ❌ flood-fill 분리 불가 | 적 1라운드 미표시 — 사용자 보고 |
-| 30 archetype 재사용 | △ tintColor 만 변형 | Hue shift 미사용 — 색상 다양성 ↓ |
-| 화면 밖 적 SpriteRenderer | △ enabled 항상 true | GPU draw call cap 300 환경 일부 낭비 |
-| EnemyAtlas 자동 packing 비활성 | △ asset 1 존재하나 효과 미확인 | draw call 검증 필요 |
-| Idle PNG only (애니메이션 X) | △ PunchRoutine + sr.color 만 | sticker 정적 — Vampire Survivors 류는 2-6 frame 표준 |
+| **Alpha 정확도** | Pillow transparent ratio | 30~70% (이전 0% / 89% 같은 이상치 X) |
+| **V5 sticker tone 일관성** | 시각 — outline + 톤 통일 | 두꺼운 흰 outline + warm color + cartoon shading |
+| **PG-12 톤** | 시각 + prompt | 잔인·피·끔찍 X, 만화풍 OK |
+| **단일 객체** | 시각 | 1 캐릭터, grid pattern X (5006.1 chibi grid 이슈 회피) |
+| **카테고리 일관성** | tint | 같은 카테고리 (Meta/Nature/...) 적은 톤 통일 |
+| **사용자 만족** | review | 사용자 직접 검토 + "OK" 응답 |
 
 ## 2. 옵션 비교
 
-### 2.1 D1 — 본 PRD 범위
+### 2.1 D1 — 우선순위 자산 그룹
 
-| 옵션 | 포함 사항 | commit | 시간 |
-|---|---|---|---|
-| **A (★권장)** | **MPB hue + Off-screen culling + LayerDiffuse 9 PNG 재생성** (심층 조사 즉시 권장 3) | 7 | 4h |
-| B | A + LoRA 훈련 가이드 | 9 | 6h |
-| C | A + IPAdapter idle/run/attack 자동화 | 12 | 9h |
-| D | A + Sprite Atlas 자동 packing 설정 | 8 | 5h |
-
-> 권장 **A** — ROI 최고 + 사용자 즉시 체감. LoRA / IPAdapter / Atlas analyzer 는 5008.1+ 후속.
-
-### 2.2 D2 — Hue shift 구현 방식
-
-| 옵션 | 설명 | 장점 | 단점 |
-|---|---|---|---|
-| **A (★권장)** | **MaterialPropertyBlock + Color.HSVToRGB(hueShift, ...)** | SRP Batcher 호환, GC 0, sticker 톤 보존 | 채도/명도 미변경 |
-| B | Shader Graph 2D HSV shift uniform | 풀 색공간 변환, 채도 조정 가능 | URP 2D shader 추가 작업 |
-| C | Sprite 사전 처리 (Editor 메뉴) | 원본 보존 | atlas 폭증 (262 × 5 = 1310 sprite) |
-
-> 권장 **A** — 현재 `sr.color = data.tintColor` 패턴의 자연 확장. SetPropertyBlock 만 사용.
-
-### 2.3 D3 — Off-screen culling 구현
-
-| 옵션 | 설명 | 장점 | 단점 |
-|---|---|---|---|
-| **A (★권장)** | **단일 manager (EnemyVisibilityCuller) Update + Camera viewport rect** | EnemyAnimationManager 패턴 답습, GC 0 | margin 계산 필요 |
-| B | OnBecameVisible / OnBecameInvisible callback | 자동 callback | 1500+ object 매 프레임 callback 비용 |
-| C | LayerCullDistance | 단순 | 거리 기반만 (viewport 정밀도 X) |
-
-### 2.4 D4 — hueShift 필드 위치
-
-| 옵션 | 설명 | 장점 |
+| 옵션 | 설명 | 우선 sprite |
 |---|---|---|
-| **A (★권장)** | **EnemyData.hueShift float (-1~1, 0=원본)** | 137-262 SO 마이그레이션, Inspector 직접 편집 |
-| B | 별도 EnemyVariationConfig SO | 분리 명확 |
-| C | ChapterData.tintHueShift (chapter 단위) | chapter 별 톤 통일 |
+| A | 손상 9 PNG 만 재생성 | 9 |
+| **B (★권장)** | **30 archetype 베이스만 — 모든 챕터 영향** (PhaseFContentSeed 기반 V2 시스템) | 30 |
+| C | 30 archetype + 35 chapter boss | 65 |
+| D | 30 archetype + 210 chapter overrides + 11 V1 = 251 | 251 |
 
-### 2.5 D5 — LayerDiffuse 통합 위치
+> 권장 **B** — V2 시스템에서 30 archetype 가 모든 챕터에서 재사용되므로 ROI 최고. 사용자 만족 시 B → C → D 점진 확장.
+
+### 2.2 D2 — LayerDiffuse 통합
 
 | 옵션 | 설명 |
 |---|---|
-| **A (★권장)** | **comfyui-image 스킬 (.claude/skills/comfyui-image)** 에 LayerDiffuse 워크플로 추가 |
+| **A (★권장)** | **comfyui-image 스킬에 LayerDiffuse 워크플로 추가** + 사용자가 huchenlei/ComfyUI-layerdiffuse 노드 설치 |
 | B | 별도 스킬 신규 |
 | C | 외부 사용자 작업 (스킬 변경 X) |
 
-### 2.6 D6 — 9 PNG 재생성 시점
+### 2.3 D3 — Sticker tone 일관성 보장
 
 | 옵션 | 설명 |
 |---|---|
-| **A (★권장)** | **본 PRD Sprint 5 에 포함** — Phase 5 commit |
-| B | 5008.1 후속 (LoRA 훈련 후 동시) |
-| C | 사용자 직접 재생성 (PRD 외) |
+| A | 단일 prompt template (현재 V5 base) — 일관 | 변형 부족 |
+| **B (★권장)** | **카테고리별 prompt 변형** (Meta / Nature / Animal / Civ / Fantasy 각 톤 prefix) — 일관 + 카테고리 식별성 ✅ |
+| C | LoRA 훈련 (5008.1+ 후속) | 본 PRD 범위 외 |
+
+### 2.4 D4 — 사용자 검토 사이클
+
+| 옵션 | 설명 |
+|---|---|
+| **A (★권장)** | **카테고리 단위 batch (6 sprite) → 사용자 review → 만족 시 다음 카테고리** | 5 사이클 (5 카테고리) |
+| B | 30 sprite 일괄 → 일괄 review | 1 사이클 (큰 부담) |
+| C | sprite 단위 (1개씩) → review | 30 사이클 (지나치게 자주) |
+
+### 2.5 D5 — 손상 9 PNG 처리
+
+| 옵션 | 설명 |
+|---|---|
+| **A (★권장)** | **30 archetype 재생성 시 함께 다룸** (Enemy_Nature_Medium 1개), 나머지 8 chapter override 는 D1 = D 확장 시 |
+| B | 5008.0 후속 (별도 사이클) |
+| C | 즉시 재생성 (Sprint 1) |
+
+### 2.6 D6 — 자동 alpha 검증
+
+| 옵션 | 설명 |
+|---|---|
+| **A (★권장)** | **Editor 메뉴 `Tools > LittleHero > Audit Enemy Sprite Quality`** — 모든 PNG transparent ratio + 카테고리 검증 + report 생성 |
+| B | NUnit Reflection 만 |
+| C | 수동 검증 (자동화 X) |
 
 ## 3. 권장 설계
 
@@ -101,150 +103,112 @@
 
 | 파일 | 책임 | 라인 |
 |---|---|---|
-| `Scripts/Gameplay/Enemies/EnemyVisibilityCuller.cs` | 단일 Update — Camera viewport 외 적 SpriteRenderer.enabled 자동 토글 | ~70 |
-| `Scripts/Editor/EnemyHueShiftSeed.cs` | Editor 메뉴 — chapter 별 hueShift 자동 분배 (CH 1~5 동일 / CH 6~14 변형 등) | ~50 |
-| `.claude/skills/comfyui-image/assets/workflow_layerdiffuse.json` | LayerDiffuse 워크플로 (transparent native 생성) | (JSON) |
+| `.claude/skills/comfyui-image/assets/workflow_layerdiffuse.json` | SDXL native transparency 워크플로 | (JSON) |
+| `Scripts/Editor/EnemySpriteAuditor.cs` | Tools 메뉴 — alpha + V5 톤 자동 검증 + report | ~80 |
+| `docs/little_hero/enemy_sprite_prompts_v1.md` | 5 카테고리별 prompt template + 30 archetype 매핑 | (md) |
 
-### 3.2 수정 파일 (3개)
+### 3.2 수정 파일
 
 | 파일 | 변경 |
 |---|---|
-| `Scripts/Data/EnemyData.cs` | `hueShift` float 필드 신규 (range -1~1, default 0) |
-| `Scripts/Gameplay/Enemies/EnemyController.cs` | ApplyAppearance 에 MaterialPropertyBlock 적용 + hueShift 반영 |
-| `.claude/skills/comfyui-image/SKILL.md` | LayerDiffuse 워크플로 사용 가이드 추가 |
+| `.claude/skills/comfyui-image/SKILL.md` | LayerDiffuse 워크플로 사용 가이드 + 카테고리 prompt 매핑 |
+| `.claude/skills/comfyui-image/references/comfyui_api.md` | LayerDiffuse 노드 설치·사용 명세 |
 
-### 3.3 데이터 구조
+### 3.3 카테고리별 prompt template (D3=B)
 
-```csharp
-// EnemyData.cs 추가 필드
-[Header("5008 — 색상 변형 (MPB hue shift)")]
-[Range(-1f, 1f)]
-[Tooltip("0 = 원본 색. ±0.05 = 미세 변형, ±0.2 = 큰 변형. 같은 sprite 의 chapter 별 다양성 확보.")]
-public float hueShift = 0f;
+```
+공통 베이스:
+"cute cartoon sticker illustration, V5 dynamic tone, warm cozy lighting,
+soft cartoon shading, chunky thick white outline, isometric playful angle,
+1:1 square composition, single subject centered, fully transparent background,
+isolated subject, single character only, inanimate clothing"
+
+카테고리 prefix:
+- Meta (CH 1~5)     → "village friendly creature, warm beige and brown tones"
+- Nature (CH 6~14)  → "forest nature spirit, green and earth tones, leafy"
+- Animal (CH 15~20) → "cute domestic animal companion, warm orange and white tones"
+- Civ (CH 21~27)    → "urban paper or cardboard creature, soft pink and pastel"
+- Fantasy (CH 28~35)→ "magical mystical being, purple and indigo, sparkles"
 ```
 
-```csharp
-// EnemyController.ApplyAppearance — MPB 패턴
-private static MaterialPropertyBlock _mpb;
-private void ApplyAppearance(EnemyData data) {
-    SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-    if (sr != null) {
-        if (data.icon != null) sr.sprite = data.icon;
+각 카테고리 × 6 archetype (Small/Medium/Large/MiniA/MiniB/Boss) 명시:
 
-        // 5008 — MPB hue shift (SRP Batcher 호환, GC 0)
-        Color final = ResolveTintColor(data);
-        sr.color = final;  // 기존 패턴 (sticker tintColor 호환)
-
-        // 추가: MPB 로 _Color uniform 별도 set 하여 향후 shader hue shift 도 지원
-        if (_mpb == null) _mpb = new MaterialPropertyBlock();
-        sr.GetPropertyBlock(_mpb);
-        _mpb.SetColor("_Color", final);
-        sr.SetPropertyBlock(_mpb);
-    }
-    // ... 기존 scale 코드
-}
-
-private static Color ResolveTintColor(EnemyData data) {
-    if (data.icon == null) return data.tintColor;  // placeholder 시 tintColor
-
-    // hueShift 적용 (HSV 변환)
-    Color baseCol = Color.white;  // sprite 가 있으면 white 베이스
-    if (Mathf.Abs(data.hueShift) > 0.001f) {
-        Color.RGBToHSV(baseCol, out float h, out float s, out float v);
-        h = Mathf.Repeat(h + data.hueShift, 1f);
-        s = Mathf.Max(s, 0.15f);  // 채도 0 회피 (백색 유지)
-        baseCol = Color.HSVToRGB(h, s, v);
-    }
-    return baseCol;
-}
 ```
+Meta-Small:  "small mushroom child"
+Meta-Medium: "village kid with backpack"
+Meta-Large:  "burly village man"
+Meta-MiniA:  "village guardian"
+Meta-MiniB:  "elder village leader"
+Meta-Boss:   "ancient village patriarch"
 
-```csharp
-// EnemyVisibilityCuller.cs (단일 manager)
-public class EnemyVisibilityCuller : MonoBehaviour {
-    private static readonly List<SpriteRenderer> _renderers = new List<SpriteRenderer>(1024);
-    private Camera _cam;
-
-    [SerializeField] private float _marginViewport = 0.1f;  // viewport ±10% 여유
-
-    public static void Register(SpriteRenderer sr) { if (sr != null && !_renderers.Contains(sr)) _renderers.Add(sr); }
-    public static void Unregister(SpriteRenderer sr) { _renderers.Remove(sr); }
-
-    private void Awake() => _cam = Camera.main;
-    private void LateUpdate() {
-        if (_cam == null) return;
-        for (int i = _renderers.Count - 1; i >= 0; i--) {
-            var sr = _renderers[i];
-            if (sr == null) { _renderers.RemoveAt(i); continue; }
-            Vector3 vp = _cam.WorldToViewportPoint(sr.transform.position);
-            bool visible = vp.z > 0
-                && vp.x > -_marginViewport && vp.x < 1f + _marginViewport
-                && vp.y > -_marginViewport && vp.y < 1f + _marginViewport;
-            if (sr.enabled != visible) sr.enabled = visible;
-        }
-    }
-}
+(Nature/Animal/Civ/Fantasy 동일 구조 — enemy_sprite_prompts_v1.md 에 명시)
 ```
 
 ### 3.4 §15 OOP 정합
 
 | 정책 | 검증 |
 |---|---|
-| §15.1 SOLID-S | EnemyController (적용) + Culler (가시성) + HueShiftSeed (시드) 분리 ✅ |
-| §15.4 SO 우선 | hueShift = SerializeField, 모든 magic number SO ✅ |
-| §15.6 100L | 신규 모두 100L 이내 (~70 / ~50 / 워크플로 JSON) ✅ |
-| §15.7 DI | Culler 정적 Register/Unregister + Camera.main cache ✅ |
-| §15.11 안티 패턴 | MaterialPropertyBlock 정적 (no GC), 단일 Update Manager ✅ |
-| §15.12 Validator | (선택) MPB 누락 검사 추가 가능 |
+| §15.4 SO 우선 | prompt 템플릿 = MD 문서 (코드 hardcode X) ✅ |
+| §15.6 100L | EnemySpriteAuditor ~80L ✅ |
+| §15.9 Test | (선택) NUnit AuditorTests 가능 |
+| §15.12 Validator | EnemySpriteAuditor 가 Validator 룰 역할 |
 
 ## 4. Sprint 분해 (개요)
 
-자세한 Sprint × commit × 시간 표는 PRD 참조.
-
 | Sprint | 작업 | 의존성 |
 |---|---|---|
-| 1 | EnemyData.hueShift 필드 + ApplyAppearance MPB 적용 | — |
-| 2 | EnemyHueShiftSeed Editor 메뉴 + 262 SO chapter 별 분배 | 1 |
-| 3 | EnemyVisibilityCuller 단일 manager + EnemyController 등록 | — |
-| 4 | comfyui-image 스킬 LayerDiffuse 워크플로 추가 | — |
-| 5 | 9 손상 PNG LayerDiffuse 재생성 + Unity 임포트 | 4 |
-| 6 | NUnit EnemyVisualPipelineTests 5+ + Validator | 1~5 |
-| 7 | docs (changelog + CLAUDE.md §11/§12/§14) | 모두 |
+| 1 | comfyui-image LayerDiffuse 워크플로 + 카테고리 prompt 가이드 | — |
+| 2 | EnemySpriteAuditor Editor 메뉴 + 현재 262 PNG 품질 report | — |
+| 3 | Meta 6 archetype 재생성 (CH 1~5 영향) → 사용자 review | 1, 2 |
+| 4 | Nature 6 + Animal 6 archetype 재생성 (CH 6~20) → review | 3 PASS |
+| 5 | Civ 6 + Fantasy 6 archetype 재생성 (CH 21~35) → review | 4 PASS |
+| 6 | docs (changelog + CLAUDE.md §11/§12/§14) | 5 PASS |
+
+> **Sprint 3~5 의 review 단계**: 사용자가 "마음에 든다" 응답 후 다음 카테고리 진입. 불만족 시 prompt 조정 + 재생성 (max 3 iteration).
 
 ## 5. 알려진 위험 + 완화
 
-| 위험 | 영향 | 완화 |
+| 위험 | Sprint | 완화 |
 |---|---|---|
-| MPB SetPropertyBlock 가 SRP Batcher 깨뜨릴 우려 | draw call ↑ | Material 인스턴스화 X 만 사용 (조사 결과 batching 호환) |
-| 262 SO hueShift 마이그레이션 누락 | 일부 적 default (0) | Editor 메뉴 chapter 별 자동 분배 + 검증 룰 |
-| Camera.main null (씬 전환 중) | culling 일시 비활성 | _cam null check + 다음 frame 재시도 |
-| LayerDiffuse 노드 설치 사용자 책임 | 9 PNG 재생성 차단 가능 | comfyui-image SKILL.md 가이드 |
-| hueShift ±1 극값 시 톤 깨짐 | Visual quality ↓ | Range -0.3~0.3 권장 (SerializeField Range attribute 그대로) |
-| sticker 톤 일관성 손실 | V5 톤 깨짐 | EnemyHueShiftSeed 가 ±0.1 미세 변형만 default |
+| LayerDiffuse 노드 설치 사용자 책임 | 1 | SKILL.md 가이드 + URL 명시 (huchenlei/ComfyUI-layerdiffuse) |
+| 30 archetype 재생성 시 카테고리 톤 깨짐 | 3~5 | 카테고리별 prompt prefix + 사용자 review 사이클 |
+| 사용자 review 사이클 길어짐 | 3~5 | Sprint 단위 review (한 번에 6 sprite), max 3 iteration cap |
+| chapter 별 sprite (210 PNG) 미처리 | 본 PRD 외 | 30 archetype 만 우선, Chapter 별 sprite 는 D = 5008.1 후속 |
+| 손상 9 PNG 중 30 archetype 외 8 PNG 미처리 | 본 PRD 외 | Enemy_Nature_Medium 1 개만 본 PRD 범위, 나머지 8 = 5008.1 |
+| LayerDiffuse 가 sticker outline 파괴 | 1 | prompt 에 "chunky thick white outline" 강조 + 사용자 review |
+| AI 생성 캐릭터 일관성 부족 | 3~5 | 카테고리별 시드 고정 (Meta=22222, Nature=33333, ...) — 카테고리 통일 |
 
 ## 6. Definition of Done
 
-- [ ] EnemyData.hueShift 필드 신규 + ApplyAppearance MPB 적용 (~30L 변경)
-- [ ] EnemyVisibilityCuller 단일 manager (~70L) + 등록·해제 hook
-- [ ] EnemyHueShiftSeed Editor 메뉴 + 262 SO 자동 분배
-- [ ] comfyui-image 스킬 LayerDiffuse 워크플로 추가 + SKILL.md 가이드
-- [ ] 9 손상 PNG LayerDiffuse 재생성 + Unity 임포트 + 검증
-- [ ] NUnit EnemyVisualPipelineTests 5+ PASS (Reflection + 정적 검증)
-- [ ] ProjectValidator 신규 위반 0
-- [ ] CLAUDE.md §11/§12/§14 갱신 + changelog 등재
-- [ ] Play 시나리오 4 통과 (S1 hue 다양성 / S2 culling / S3 alpha 정확 / S4 cap 300 GC)
+- [ ] comfyui-image LayerDiffuse 워크플로 추가 + SKILL.md 가이드
+- [ ] EnemySpriteAuditor Editor 메뉴 + 262 PNG 품질 report
+- [ ] enemy_sprite_prompts_v1.md — 5 카테고리 × 6 archetype prompt template (30 매핑)
+- [ ] 30 archetype sprite 재생성 (사용자 review PASS)
+- [ ] Unity 자동 임포트 + 256 PNG 정상 표시 (Play Mode)
+- [ ] CLAUDE.md §11/§12/§14 갱신 + changelog
+- [ ] 후속 anchor 명시 (5008.1: chapter overrides 210 / 5008.2: V1 11종 / 5008.3: 보스 11종)
 
-## 7. 변경 이력
+## 7. 본 PRD 범위 외 (후속 사이클 anchor)
 
-- 2026-05-04: 초기 작성 (Phase 1 Generate). 옵션 D1=A / D2=A / D3=A / D4=A / D5=A / D6=A 권장.
+| 후속 PRD | 작업 | 우선순위 |
+|---|---|---|
+| **5008.1** | Chapter 별 210 sprite (`Chapters/CH##_*.png`) 점진 재생성 | 보통 |
+| **5008.2** | V1 11 동화 적 재생성 (Chapter_01~03 RedHood/Beanstalk/Alice) | 낮음 (legacy) |
+| **5008.3** | Daily 7 + Weekly 4 보스 재생성 | 보통 (endgame 시) |
+| 5009 | MPB hue shift 다양성 시스템 (30 → 150 변형) | 본 PRD 와 별도 |
+| 5010 | EnemyVisibilityCuller (off-screen culling) | 성능 영역 |
+| 5011 | V5 sticker LoRA 훈련 (Kohya_ss) | 자동화 영역 |
+| 5012 | LitMotion 도입 (DOTween 5×) | 애니메이션 영역 |
 
-## 8. 출처
+## 8. 변경 이력
 
-- 심층 조사 보고서 (2026-05-04, 18 references)
-- ComfyUI-layerdiffuse (huchenlei, 2024) — SDXL native transparency
-- ComfyUI-RMBG (1038lab, 2025) — 2025 표준 BG removal
-- LitMotion (annulusgames) — DOTween 5× + GC 0 (장기 옵션)
-- NSprites (Antoshidza) — DOTS sprite (장기 옵션)
-- Apatero ComfyUI LoRA Training Guide 2026 (장기 옵션)
-- 5007 damage_hit_effect_v2 (HitEffectResolver 패턴 답습)
-- CLAUDE.md §7 cap 300 + GC <50KB / §15 OOP 정책
+- 2026-05-04: 초기 작성 (전체 파이프라인 7 commit, MPB+culling+LayerDiffuse)
+- 2026-05-04: **사용자 결정 — 범위 축소 (자산 품질 한정)**. 6 commit / 6 카테고리 review 사이클. MPB / culling / LoRA → 5009~5011 후속.
+
+## 9. 출처
+
+- Unity 적 캐릭터 자산 최신 기법 심층 조사 (2026-05-04, 18 references)
+- ComfyUI-layerdiffuse (huchenlei, 2024)
+- 5006.1 ComfyUI batch 결과 (Attic 17 PNG, 4 그룹 색 통일 패턴)
+- 사용자 1차 보고 (1라운드 적 흰 박스) + 14 PNG flood-fill + 9 PNG 재생성 commit log
+- PhaseFContentSeed (5 카테고리 × 6 archetype = 30 base)
