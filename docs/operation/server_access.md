@@ -120,14 +120,14 @@ ssh staging "nvidia-smi --query-gpu=memory.used,memory.free,utilization.gpu --fo
 | 항목 | 값 |
 |---|---|
 | 설치 위치 | `~/ai-tools/ComfyUI/` (서버) |
-| Bind 주소 | `127.0.0.1:8188` (loopback only — 보안 격리) |
+| Bind 주소 | `0.0.0.0:8188` (LAN 노출 — NAT 외부 차단 의존) |
 | Auth | 없음 (LAN/터널 의존) |
 | 베이스 모델 | DreamShaperXL Turbo (`DreamShaperXL_Turbo_SFWdpmppSde_half_pruned.safetensors`) |
 | Custom Nodes | `huchenlei/ComfyUI-layerdiffuse` (5008 — RGBA 적 sprite) |
 
-### 3.2 SSH 터널 (필수)
+### 3.2 SSH 터널 (LAN 외 또는 보안 권장)
 
-ComfyUI 가 loopback 만 bind 하므로 외부 접근 차단. SSH 터널이 유일한 접근 경로:
+ComfyUI 가 `0.0.0.0:8188` 로 bind 되어 LAN 내부에서는 직접 접근 가능 (`http://192.168.75.194:8188`). 다만 보안 강화 + LAN 외부 (Mac dev 환경 등) 에서 SSH 터널 사용 권장:
 
 ```bash
 # Foreground (터미널 1개 점유, Ctrl+C 로 종료)
@@ -181,23 +181,50 @@ python3 .claude/skills/comfyui-image/scripts/generate.py \
   --output ./output/sprite.png
 ```
 
-### 3.4 LayerDiffuse Custom Node 설치 (5008)
+### 3.4 LayerDiffuse Custom Node — **설치 완료** (2026-05-04)
 
-5008 Sprint 1 에서 도입된 `huchenlei/ComfyUI-layerdiffuse` Custom Node:
+5008 Sprint 1 에서 도입된 `huchenlei/ComfyUI-layerdiffuse` Custom Node — 서버에 **설치 완료**.
 
+**설치 정보**:
+
+| 항목 | 값 |
+|---|---|
+| 위치 | `~/ai-tools/ComfyUI/custom_nodes/ComfyUI-layerdiffuse/` |
+| Repo | `https://github.com/huchenlei/ComfyUI-layerdiffuse` |
+| 의존성 추가 | `diffusers 0.38.0` (신규) / `safetensors 0.7.0 → 0.8.0rc0` (업데이트) / `opencv-python` (기존) |
+| 등록 노드 | `LayeredDiffusionApply` / `LayeredDiffusionDecode` / `LayeredDiffusionDecodeRGBA` / `LayeredDiffusionDecodeSplit` + Cond/Joint/Diff 변형 7종 (총 11종) |
+| Import 시간 | ~1.0초 (ComfyUI 부팅 시) |
+
+**5008 워크플로 매핑**:
+- `assets/workflow_layerdiffuse.json` 의 노드 `10` (`LayeredDiffusionApply`) + 노드 `11` (`LayeredDiffusionDecode`) 모두 등록 정상
+
+**검증 명령**:
 ```bash
-# 서버 SSH 후
-ssh staging
-cd ~/ai-tools/ComfyUI/custom_nodes
-git clone https://github.com/huchenlei/ComfyUI-layerdiffuse
-cd ComfyUI-layerdiffuse
-pip install -r requirements.txt   # ComfyUI 의 venv 활성 상태에서
-
-# ComfyUI 재시작 (또는 노드 reload)
-# tmux 사용 시 : tmux send-keys -t comfyui "C-c" Enter && tmux send-keys -t comfyui "python main.py" Enter
+ssh staging "curl -s http://localhost:8188/object_info | python3 -c 'import sys,json; d=json.load(sys.stdin); print(\"LayeredDiffusionApply\" in d, \"LayeredDiffusionDecode\" in d)'"
+# 기대: True True
 ```
 
-미설치 시 `workflow_layerdiffuse.json` 호출은 400 반환 → fallback 워크플로 사용 권장 (정확도 ~80%, dark BG flood-fill 후처리).
+#### 재설치 / 업데이트 (참고)
+
+```bash
+ssh staging
+cd ~/ai-tools/ComfyUI/custom_nodes/ComfyUI-layerdiffuse
+git pull                                          # 업데이트
+cd ~/ai-tools/ComfyUI && source venv/bin/activate
+pip install -r custom_nodes/ComfyUI-layerdiffuse/requirements.txt --upgrade
+
+# ComfyUI 재시작 (tmux 세션 재생성 — 기존 세션은 자동 종료될 수 있음)
+tmux kill-session -t comfyui 2>/dev/null
+tmux new-session -d -s comfyui 'cd ~/ai-tools/ComfyUI && source venv/bin/activate && python main.py --listen 0.0.0.0 --port 8188 2>&1 | tee /tmp/comfyui.log'
+sleep 15
+grep -q "To see the GUI go to" /tmp/comfyui.log && echo "✓ 재시작 완료" || tail -20 /tmp/comfyui.log
+```
+
+> ⚠️ **주의**: tmux session 재생성 시 ComfyUI 가 짧게 다운 (~10~15초). 다른 사용자 작업 중일 가능성 사전 확인 (`tmux capture-pane -t comfyui -p` 로 직전 활동 확인).
+
+#### 미설치 시 (히스토리)
+
+이전 fallback: `workflow_layerdiffuse.json` 호출 → 400 반환 → `workflow_template.json` (DreamShaperXL Turbo + dark BG flood-fill, 정확도 ~80%) 사용. **2026-05-04 설치 완료로 fallback 불필요**.
 
 ### 3.5 ComfyUI tmux 라이프사이클 (필요 시)
 
@@ -209,7 +236,7 @@ tmux ls                        # 'comfyui' 세션 확인
 tmux attach -t comfyui         # 로그 보기 (Ctrl-B D 로 detach)
 tmux kill-session -t comfyui   # 종료
 # 재시작 (Custom Node 변경 시 등)
-tmux new-session -d -s comfyui 'cd ~/ai-tools/ComfyUI && source venv/bin/activate && python main.py --listen 127.0.0.1 --port 8188'
+tmux new-session -d -s comfyui 'cd ~/ai-tools/ComfyUI && source venv/bin/activate && python main.py --listen 0.0.0.0 --port 8188 2>&1 | tee /tmp/comfyui.log'
 ```
 
 ---
@@ -409,7 +436,7 @@ OCR / PWA / BullMQ workers 등은 Little Hero 와 무관 (Clayve 매거진 사�
 | 7867 | HTTP | **ACE-Step (Little Hero BGM)** | ✅ |
 | 8000 | HTTP | vLLM | △ (향후 가능) |
 | 8081~8083 | HTTP/WS | Clayve Artisan | — |
-| **8188** | HTTP | **ComfyUI (Little Hero 이미지)** | ✅ (loopback + SSH 터널) |
+| **8188** | HTTP | **ComfyUI (Little Hero 이미지)** | ✅ (`0.0.0.0` LAN bind + SSH 터널 권장) |
 | 29022 | SSH | External SSH (NAT) | ✅ |
 
 ---
@@ -498,7 +525,7 @@ git commit -m "infra: ComfyUI <node-name> Custom Node 도입 — <목적>"
 
 | 자산 | 보호 방식 |
 |---|---|
-| ComfyUI (8188) | loopback bind + SSH 터널 (외부 노출 X) |
+| ComfyUI (8188) | `0.0.0.0` bind — LAN 내부 직접 접근 + 외부 NAT 차단 (29022 SSH 만 외부 라우팅) |
 | ACE-Step (7867) | LAN bind (`0.0.0.0`) — LAN 신뢰 가정. 외부 접근 X |
 | vLLM (8000) | LAN bind — 동일 |
 | Oracle (1521) | LAN bind + schema 격리 |
@@ -506,7 +533,7 @@ git commit -m "infra: ComfyUI <node-name> Custom Node 도입 — <목적>"
 
 ### 10.2 Anti-pattern
 
-- ComfyUI 를 `0.0.0.0:8188` 로 bind 변경 → 인증 없는 GPU 자원이 LAN 노출. 절대 X
+- ComfyUI 가 현재 `0.0.0.0:8188` bind — LAN 노출 상태 (인증 없음). LAN 신뢰 가정 + 외부 NAT 차단으로 격리. **외부 포트 포워딩 시 즉시 침해 가능**, 절대 추가 X
 - Custom Node 무검증 설치 → 임의 Python 코드 실행. 신뢰 author (huchenlei 등) 만
 - SSH key 패스프레이즈 없음 → key 도난 시 즉시 침해. `ssh-keygen -p` 로 패스프레이즈 추가 권장
 
