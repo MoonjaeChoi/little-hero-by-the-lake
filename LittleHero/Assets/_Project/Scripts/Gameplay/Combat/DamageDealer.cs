@@ -30,7 +30,7 @@ namespace LittleHero
         private static PlayerStats GetStats()
         {
             if (_statsCache != null) return _statsCache;
-            _statsCache = Object.FindFirstObjectByType<PlayerStats>(FindObjectsInactive.Include);
+            _statsCache = Object.FindAnyObjectByType<PlayerStats>(FindObjectsInactive.Include);
             return _statsCache;
         }
 

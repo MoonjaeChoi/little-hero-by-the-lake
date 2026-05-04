@@ -147,7 +147,7 @@ namespace LittleHero
         private void ApplyLevelUpToStats()
         {
             // 씬 안에 PlayerStats 가 있으면 절대 동기화. 없으면 스킵 (Hub/Attic 씬 등).
-            var stats = FindFirstObjectByType<PlayerStats>();
+            var stats = FindAnyObjectByType<PlayerStats>();
             if (stats != null) stats.SetLevel(Level);
         }
 

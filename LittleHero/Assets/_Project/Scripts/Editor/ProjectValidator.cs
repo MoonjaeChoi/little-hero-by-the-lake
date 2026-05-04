@@ -427,7 +427,7 @@ namespace LittleHero.EditorTools
         {
             ValidateRequired<MetaProgression>(issues, "MetaProgression");
             ValidateRequired<AtticController>(issues, "AtticController");
-            var atticCtl = Object.FindFirstObjectByType<AtticController>();
+            var atticCtl = Object.FindAnyObjectByType<AtticController>();
             if (atticCtl == null) return;
 
             var so = new SerializedObject(atticCtl);
@@ -516,13 +516,13 @@ namespace LittleHero.EditorTools
 
         private static void ValidateRequired<T>(List<Issue> issues, string name) where T : Object
         {
-            if (Object.FindFirstObjectByType<T>() == null)
+            if (Object.FindAnyObjectByType<T>() == null)
                 issues.Add(new Issue(Severity.Error, "Scene", $"{name} 컴포넌트 없음"));
         }
 
         private static void ValidateShopPanelWiring(List<Issue> issues)
         {
-            var sp = Object.FindFirstObjectByType<ShopPanel>();
+            var sp = Object.FindAnyObjectByType<ShopPanel>();
             if (sp == null) { issues.Add(new Issue(Severity.Error, "ShopPanel", "씬에 ShopPanel 없음")); return; }
             var so = new SerializedObject(sp);
             CheckRef(issues, "ShopPanel", so, "_shopController");
@@ -536,7 +536,7 @@ namespace LittleHero.EditorTools
 
         private static void ValidateGameOverPanelWiring(List<Issue> issues)
         {
-            var go = Object.FindFirstObjectByType<GameOverPanel>();
+            var go = Object.FindAnyObjectByType<GameOverPanel>();
             if (go == null) { issues.Add(new Issue(Severity.Error, "GameOverPanel", "씬에 GameOverPanel 없음")); return; }
             var so = new SerializedObject(go);
             CheckRef(issues, "GameOverPanel", so, "_panelRoot");
@@ -545,7 +545,7 @@ namespace LittleHero.EditorTools
 
         private static void ValidateChapterClearedPanelWiring(List<Issue> issues)
         {
-            var cc = Object.FindFirstObjectByType<ChapterClearedPanel>();
+            var cc = Object.FindAnyObjectByType<ChapterClearedPanel>();
             if (cc == null) { issues.Add(new Issue(Severity.Error, "ChapterClearedPanel", "씬에 ChapterClearedPanel 없음")); return; }
             var so = new SerializedObject(cc);
             CheckRef(issues, "ChapterClearedPanel", so, "_panelRoot");

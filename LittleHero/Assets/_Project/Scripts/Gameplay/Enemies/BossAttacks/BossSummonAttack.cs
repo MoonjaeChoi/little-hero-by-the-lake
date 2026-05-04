@@ -29,7 +29,7 @@ namespace LittleHero
             _sr = owner.GetComponentInChildren<SpriteRenderer>();
             if (_sr != null) _origColor = _sr.color;
             _cooldown = Random.Range(0f, data.bossAttackCooldown);
-            _spawner = Object.FindFirstObjectByType<EnemySpawner>(FindObjectsInactive.Include);
+            _spawner = Object.FindAnyObjectByType<EnemySpawner>(FindObjectsInactive.Include);
             // 소환 대상: 챕터의 첫 적 (Small)
             var chapter = MetaProgression.Instance?.SelectedChapter;
             if (chapter != null && chapter.enemyPool != null && chapter.enemyPool.Length > 0)

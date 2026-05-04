@@ -22,7 +22,7 @@ namespace LittleHero
 
         private void AutoDiscoverPanels()
         {
-            var canvas = Object.FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
+            var canvas = Object.FindAnyObjectByType<Canvas>(FindObjectsInactive.Include);
             if (canvas == null) { _managedPanels = new GameObject[0]; return; }
 
             var list = new List<GameObject>();

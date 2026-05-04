@@ -29,7 +29,7 @@ namespace LittleHero
             // stats_v2 — Lifesteal (cap 50%)
             if (s != null && s.LifestealRatio > 0)
             {
-                var health = Object.FindFirstObjectByType<PlayerHealth>(FindObjectsInactive.Include);
+                var health = Object.FindAnyObjectByType<PlayerHealth>(FindObjectsInactive.Include);
                 if (health != null) health.Heal(final * Mathf.Min(s.LifestealRatio, 0.5f));
             }
 
@@ -52,7 +52,7 @@ namespace LittleHero
         private static PlayerStats GetStats()
         {
             if (_statsCache != null) return _statsCache;
-            _statsCache = Object.FindFirstObjectByType<PlayerStats>(FindObjectsInactive.Include);
+            _statsCache = Object.FindAnyObjectByType<PlayerStats>(FindObjectsInactive.Include);
             return _statsCache;
         }
 

@@ -18,7 +18,7 @@ namespace LittleHero
             var def = BossEncounterContext.LastMythicDefinition;
             if (def == null) return;
 
-            var overlay = Object.FindFirstObjectByType<MythicEffectOverlay>(FindObjectsInactive.Include);
+            var overlay = Object.FindAnyObjectByType<MythicEffectOverlay>(FindObjectsInactive.Include);
             if (overlay != null)
             {
                 overlay.Play(def);

@@ -28,7 +28,7 @@ namespace LittleHero
         private void HandleClick()
         {
             // 현재 챕터 session 저장 후 다락방 복귀
-            var runner = FindFirstObjectByType<ChapterRunner>(FindObjectsInactive.Include);
+            var runner = FindAnyObjectByType<ChapterRunner>(FindObjectsInactive.Include);
             if (runner != null) runner.SaveSession();
             Time.timeScale = 1f;
             SceneTransitionService.Transition(_atticSceneName);

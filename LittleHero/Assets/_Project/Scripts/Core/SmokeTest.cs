@@ -48,7 +48,7 @@ namespace LittleHero
             string playerPos = player != null ? player.transform.position.ToString("F2") : "<null>";
             bool isDead = ph != null && ph.IsDead;
 
-            WaveManager wm = Object.FindFirstObjectByType<WaveManager>();
+            WaveManager wm = Object.FindAnyObjectByType<WaveManager>();
             int activeEnemies = wm != null ? wm.ActiveEnemyCount : -1;
 
             string camPos = Camera.main != null ? Camera.main.transform.position.ToString("F2") : "<null>";

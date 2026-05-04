@@ -58,7 +58,7 @@ namespace LittleHero
             if (inst == null || tpl == null) return false;
             var data = MetaProgression.Instance?.Data;
             if (data?.equipmentInstances == null) return false;
-            var em = Object.FindFirstObjectByType<EquipmentManager>(FindObjectsInactive.Include);
+            var em = Object.FindAnyObjectByType<EquipmentManager>(FindObjectsInactive.Include);
 
             if (inst.isEquipped)
             {

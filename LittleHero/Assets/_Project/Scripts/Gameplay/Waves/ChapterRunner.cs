@@ -151,8 +151,8 @@ namespace LittleHero
         private System.Collections.IEnumerator WaveRestCoroutine()
         {
             // HP 50% 회복 (휴식 의미 부여)
-            var player = UnityEngine.Object.FindFirstObjectByType<PlayerHealth>(FindObjectsInactive.Include);
-            var stats = UnityEngine.Object.FindFirstObjectByType<PlayerStats>(FindObjectsInactive.Include);
+            var player = UnityEngine.Object.FindAnyObjectByType<PlayerHealth>(FindObjectsInactive.Include);
+            var stats = UnityEngine.Object.FindAnyObjectByType<PlayerStats>(FindObjectsInactive.Include);
             if (player != null && stats != null) player.Heal(stats.MaxHealth * 0.5f);
             yield return new WaitForSeconds(5f);
             StartNextWave();
