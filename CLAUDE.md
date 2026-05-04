@@ -210,6 +210,7 @@ Assets/_Project/
 | **attic_decomposition_v1** | AtticController 책임 분리 6 컴포넌트 (5005, 420L → 111L, §15.1 SRP) | ✅ 2026-05-04 |
 | **attic_entry_ui_redesign_v1** | 다락방 4 그룹 진입 + tint + EndgameMenu 자체 검증 (5006, AtticPanelEntryView + AtticGroupLayoutPresenter) | ✅ 2026-05-04 |
 | **damage_hit_effect_v2** | OnHit 효과 강화 — 5 BossTier 차별화 + 무기 4 색 + 데미지 강도 동적 + Pool 50→300 (5007, CinematicEffectsConfig + HitEffectResolver) | ✅ 2026-05-04 |
+| **chapter_enemy_asset_quality_v1** | 30 archetype + 3 chapter override LayerDiffuse RGBA 재생성 — SDXL base + 768×1024 + sprite_generation_rules + EnemySpriteAuditor (5008, 11 commit) | ✅ 2026-05-04 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
@@ -221,7 +222,7 @@ Assets/_Project/
 - **Data SO 클래스**: EquipmentTemplate / EquipmentInstance / AffixDefinition / SubAffixDefinition / SlotAffixPool / GlobalSubAffixPool / MythicDefinition / GachaPool / EnemyData / ChapterData / CharacterData / MemoryData / BalanceConfig / EndgameModeData / MetaUpgradeData / LimitedShopOffer / **BossLootTable** (5001)
 - **Gameplay**: PlayerStats v2 (3 코어 + 24 파생) / PlayerController / PlayerProgress / PlayerHealth / EnemyController + AI + AnimationManager / WaveManager / ChapterRunner / InfiniteTowerRunner / BossEncounterRunner / EquipmentManager + PatternFactory / 8 IAttackPattern / 7 IBossAttackPattern + **BossPatternFactory** / **IBossPhase + BossPhase1Default + BossPhase2Aggressive + BossPhaseManager (5001 State 패턴)** / DamageSystem + Query + Dealer / EnhancementService + AffixRoller + EffectResolver + MythicMileageService / ItemDropService / CinematicEffects + DamageNumberFloater
 - **UI**: HUDController / WaveTransitionToast / BossHealthBar / GameOverPanel / ChapterClearedPanel / AtticController (111L 본체 — 가챠/한정상점 진입) + **AtticCurrencyView / AtticCharacterSelector / AtticChapterEntry / AtticEndgameMenuView / AtticPanelToggleManager / AtticReturnHandler (5005 6 컴포넌트, §15.1 SRP)** + **AtticGroupLayoutPresenter / AtticPanelEntryView (5006 진입 UI)** / InventoryPanel + InventoryModel + InventorySelectionPanel v2 (페이징 + 썸네일 + 옵션) + InventoryGridCard + InventoryDetailView / EquipmentCardPanel + Row + EnhanceModalPanel / WondrousMapPanel + Node + RecommendedLevelWarningModal / GachaPanel + ResultPanel + StarforceEnhanceModal + SlotStarforcePanel + View / EndgameMenuPanel (5006 D3=C OnEnable 자체 검증) / ConversionForgePanel / MemoryEffectOverlay / CharacterInfoPanel / LimitedShopPanel + ItemView / StarlightShopPanel
-- **Tests/Editor**: 81 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10 + WeaponSystem 13 + BossSystem 10 + BossSceneSeparation 10 (5002+5003) + SceneTransition 5 (5004) + AtticDecomposition 6 (5005) + AtticEntryUI 6 (5006) + **HitEffectV2 8** (5007))
+- **Tests/Editor**: 81 NUnit Test (EnhancementService 6 + DamageDealer 7 + StarforceService 10 + WeaponSystem 13 + BossSystem 10 + BossSceneSeparation 10 (5002+5003) + SceneTransition 5 (5004) + AtticDecomposition 6 (5005) + AtticEntryUI 6 (5006) + **HitEffectV2 8** (5007)). **5008 — Editor 도구만 (NUnit 변동 X)**: EnemySpriteAuditor (Tools/LittleHero/Audit Enemy Sprite Quality, D1=C readable 복원 + D2=C V2 폴백 검증)
 - **씬**: Attic / Chapter / InfiniteTower / BossEncounter
 
 ### SO 인스턴스 (400+)
@@ -236,6 +237,7 @@ Assets/_Project/
 ### 아트 V5 sticker dynamic 톤 (PIVOT 후 통일)
 - 캐릭터 portrait 3 + 적 sprite 262 + 보스 11 + 무기 icon 18 + 장비 icon 16 + 챕터 BG 35 + ground tile 35 + UI Attic 4 + 슬롯 placeholder 12 + 화폐 4
 - 누적 V5 PNG ~401 + Mythic 4 + Memory 4 + Meta 3 = 412
+- **5008 LayerDiffuse RGBA 재생성** — 30 archetype (Meta/Nature/Animal/Civ/Fantasy 각 6) + 3 chapter override (CH09 Medium/MiniB + CH22 Small) = **33 sprite 갱신**. SDXL base 1.0 + 768×1024 portrait + cfg 6 + Danbooru "solo, 1character" 태그. 검증된 baseline 은 `~/.claude/projects/.../memory/sprite_generation_v1.md` 참조.
 
 ## 13. 다음 작업 후보
 
@@ -269,11 +271,11 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
+- 2026-05-04: **5008 chapter_enemy_asset_quality_v1** — 30 archetype + 3 chapter override LayerDiffuse RGBA 재생성 (SDXL base 1.0 + 768×1024 portrait + cfg 6 + Danbooru "solo, 1character" 태그 + 17종 grid keyword negative, D1=C/D2=C/D3=A+B, 11 commit). 사용자 "아주 만족" 승인 baseline 메모리 저장. comfyui-image 스킬에 sprite_generation_rules.md (8 섹션 207L) 정착. 후속 anchor 5008.1~5011 명시
 - 2026-05-04: **5007 damage_hit_effect_v2** — 적 타격 이펙트 강화 (CinematicEffectsConfig SO + HitEffectResolver 정적 + ResolvedHitEffect struct + cap 2.0× + Pool 50→300 prewarm + 12 commit, NUnit 73→81). BossTier 5종 × 4 multiplier + WeaponCategory 4 그룹 색 + damage intensity 동적 + Camera zoom 신규
 - 2026-05-04: **5006 attic_entry_ui_redesign_v1** — 다락방 진입점 4 그룹 (전투/장비/상점/기록) + AtticPanelEntryView + AtticGroupLayoutPresenter + EndgameMenuPanel.OnEnable 자체 검증 (D3=C, 8 commit, NUnit 67→73). 5006.1 후속 PNG 임포트 anchor 명시
 - 2026-05-04: **5005 attic_decomposition_v1** — AtticController 책임 분리 6 컴포넌트 (CurrencyView/CharacterSelector/ChapterEntry/EndgameMenuView/PanelToggleManager/ReturnHandler, 420L → 111L, §15.1 SRP, 8 commit, NUnit 61→67)
 - 2026-05-04: **5004 scene_transition_async_v1** — 모든 씬 전환 LoadSceneAsync + fade-in/out (SceneTransitionService 정적 + FadeOverlay DontDestroyOnLoad, 11 호출처 통합, 7 commit, NUnit 56→61)
-- 2026-05-04: **5003 mini_boss_scene_separation_v1** — 미니보스 wave 15 분리 (옵션 B 재진입 채택, BalanceConfig 토글, 5 commit, NUnit 54→56). PGE 첫 RESERVED 해제 사례
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 
