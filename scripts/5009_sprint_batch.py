@@ -80,16 +80,17 @@ SPRINTS = {
     },
     4: {
         "name": "Civ",
-        "prefix": "urban paper or cardboard creature, soft pink and pastel tones, papercraft texture, gentle origami folds",
+        # 5009.7 — papercraft → mechanical wind-up toy 톤 변경 (사용자 D=A 옵션, 시인성 강화)
+        "prefix": "mechanical wind-up toy creature, vintage brass and metallic pastels, ticking clockwork details, vibrant colorful metal craft",
         "seed_base": 55555,
         "chapters": range(21, 28),
         "archetypes": {
-            "Small":  "cute paper crane, folded wings, simple geometric shapes",
-            "Medium": "cardboard robot toy, blocky charm, bright button eyes",
-            "Large":  "origami giant, large folded paper figure, sturdy posture",
-            "MiniA":  "paper knight, helmet and shield made of folded sheets, valiant",
-            "MiniB":  "cardboard wizard, hat and robe of crafted paper, intricate folds",
-            "Boss":   "pastel mech, gentle giant of crafted blocks, friendly LED eyes",
+            "Small":  "tiny wind-up mouse toy with brass key, copper details, big shiny eyes",
+            "Medium": "clockwork robot, visible gears and rivets, soft metallic teal and copper, cheerful face",
+            "Large":  "grand mechanical butler, vintage brass armor, friendly expression, sturdy stature",
+            "MiniA":  "tin soldier with crank rifle, navy and gold uniform, alert pose",
+            "MiniB":  "wind-up wizard, copper hat with ticking gears, kind eyes, brass robe",
+            "Boss":   "massive steam-punk mech, friendly LED face, brass and teal armor, regal stature",
         },
     },
     5: {
