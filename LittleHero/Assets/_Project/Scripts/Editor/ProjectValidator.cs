@@ -40,7 +40,30 @@ namespace LittleHero.EditorTools
             ValidateBossEncounterContextAccess(issues);  // 5002 T09 — 정적 Context 외부 직접 R/W 검사 (§15.7 DI)
             ValidateSceneManagerDirectAccess(issues);  // 5004 T06 — SceneManager.LoadScene 외부 직접 호출 검사 (§15.7 DI)
             ValidateEnemyVisibilityCheck(issues);  // 5013 T04 — EnemyAnimationManager visibility throttle 호출 검사
+            ValidateEnemyHueVariationHook(issues);  // 5012 T04 — EnemyController.ApplyAppearance 의 HueShift 호출 검사
             Print(issues);
+        }
+
+        // 5012 T04 — EnemyController.cs 가 EnemyHueVariation.HueShift 호출하는지 검사 (회귀 방지).
+        private static void ValidateEnemyHueVariationHook(List<Issue> issues)
+        {
+            var path = Path.Combine(Application.dataPath, "_Project/Scripts/Gameplay/Enemies/EnemyController.cs");
+            if (!File.Exists(path))
+            {
+                issues.Add(new Issue(Severity.Warning, "5012 hue",
+                    "EnemyController.cs 미존재"));
+                return;
+            }
+            var src = File.ReadAllText(path);
+            if (!src.Contains("EnemyHueVariation.HueShift"))
+            {
+                issues.Add(new Issue(Severity.Warning, "5012 hue",
+                    "EnemyController 의 ApplyAppearance 에 EnemyHueVariation.HueShift 호출 누락 — 5008 sprite 시각 다양화 미작동"));
+            }
+            else
+            {
+                Debug.Log("[ProjectValidator] 5012 hue OK — EnemyController.HueShift 호출 정상");
+            }
         }
 
         // 5013 T04 — EnemyAnimationManager.Update 가 EnemyVisibilityCuller.IsVisible 호출하는지 검사 (Rebuttal §3.1).
