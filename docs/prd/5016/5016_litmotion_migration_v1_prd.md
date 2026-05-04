@@ -1,7 +1,7 @@
-# 5015b — LitMotion 마이그레이션 — Sprint PRD
+# 5016 — LitMotion 마이그레이션 — Sprint PRD
 
-> **출처**: `docs/prd/5015b_litmotion_migration_v1_prd.md` (디자인) — 옵션 A (22 파일 일괄)
-> **사전조사**: `docs/prd/5015b_premigration_research.md`
+> **출처**: `docs/prd/5016_litmotion_migration_v1_prd.md` (디자인) — 옵션 A (22 파일 일괄)
+> **사전조사**: `docs/prd/5016_premigration_research.md`
 > **측정 결과**: GCAllocMeasurer 시나리오 C (> 50 KB/s) — 전체 마이그레이션 정당화
 
 ## 1. 전체 개요
@@ -70,7 +70,7 @@ public static class LMotionExtensions
 
 #### Sprint 1 commit
 ```
-5015b Sprint 1 / T01 — LitMotion 패키지 + LMotionExtensions wrapper (1/6)
+5016 Sprint 1 / T01 — LitMotion 패키지 + LMotionExtensions wrapper (1/6)
 
 [변경]
 - Packages/manifest.json — com.annulusgames.lit-motion + Burst 1.6 + Collections 1.5.1 + Mathematics 1.0
@@ -157,7 +157,7 @@ private void DoFlash(Color flashColor, float holdTime, float returnTime) {
 
 #### Sprint 2 commit
 ```
-5015b Sprint 2 / T02 — EnemyController PunchRoutine + FlashRoutine 마이그레이션 (2/6)
+5016 Sprint 2 / T02 — EnemyController PunchRoutine + FlashRoutine 마이그레이션 (2/6)
 
 [변경]
 - EnemyController.PunchRoutine → DoPunch (LSequence.Append × 2)
@@ -239,7 +239,7 @@ public void PlayCameraZoom(float zoomMul, float upDuration, float downDuration) 
 
 #### Sprint 3 commit
 ```
-5015b Sprint 3 / T03 — CinematicEffects HitPause + Shake + Zoom 마이그레이션 (3/6)
+5016 Sprint 3 / T03 — CinematicEffects HitPause + Shake + Zoom 마이그레이션 (3/6)
 
 [변경]
 - HitPauseRoutine → PlayHitPause (LMotion + WithOnComplete timeScale 복원)
@@ -279,7 +279,7 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 
 #### Sprint 4 commit
 ```
-5015b Sprint 4 / T04 — DamageNumberFloater + Boss attacks 5종 마이그레이션 (4/6)
+5016 Sprint 4 / T04 — DamageNumberFloater + Boss attacks 5종 마이그레이션 (4/6)
 
 [변경]
 - DamageNumberFloater Lerp + new Vector3 → LMotion.Create + Bind
@@ -321,7 +321,7 @@ public IEnumerator FadeOut(float duration) → public MotionHandle FadeOut(float
 
 #### Sprint 5 commit
 ```
-5015b Sprint 5 / T05 — UI 영역 (FadeOverlay + WaveTransitionToast + HUDController + MythicEffectOverlay) (5/6)
+5016 Sprint 5 / T05 — UI 영역 (FadeOverlay + WaveTransitionToast + HUDController + MythicEffectOverlay) (5/6)
 
 [변경]
 - FadeOverlay FadeIn/FadeOut Coroutine → LMotion
@@ -356,11 +356,11 @@ private static void ValidateLitMotionMigration(List<Issue> issues) {
         if (content.Contains("using LitMotion")) litMotionImports++;
     }
     if (doTweenViolations > 0)
-        issues.Add(new Issue(Severity.Warning, "5015b LitMotion", $"DOTween 재도입 회귀: {doTweenViolations} files"));
+        issues.Add(new Issue(Severity.Warning, "5016 LitMotion", $"DOTween 재도입 회귀: {doTweenViolations} files"));
     if (litMotionImports == 0)
-        issues.Add(new Issue(Severity.Warning, "5015b LitMotion", "LitMotion import 0 — 마이그레이션 미작동"));
+        issues.Add(new Issue(Severity.Warning, "5016 LitMotion", "LitMotion import 0 — 마이그레이션 미작동"));
     else
-        Debug.Log($"[ProjectValidator] 5015b LitMotion OK — {litMotionImports} files imported");
+        Debug.Log($"[ProjectValidator] 5016 LitMotion OK — {litMotionImports} files imported");
 }
 ```
 
@@ -378,27 +378,27 @@ private static void ValidateLitMotionMigration(List<Issue> issues) {
 #### 6.3 GCAllocMeasurer 재측정 (사용자)
 
 Tools/LittleHero/Measure GC Alloc (60s) 재실행:
-- 시나리오 A (< 30 KB/s) 도달 → 5015b 성공
+- 시나리오 A (< 30 KB/s) 도달 → 5016 성공
 - 시나리오 B (30~50 KB/s) → 추가 fix 사이클
 - 시나리오 C (> 50 KB/s) → 회귀 (불가능, 마이그레이션 후)
 
 #### 6.4 docs
 
-- `docs/little_hero/changelog_v1.md` 5015b 항목
+- `docs/little_hero/changelog_v1.md` 5016 항목
 - CLAUDE.md §10 외부 라이브러리 — LitMotion MIT 행 추가
 - §11/§12/§14 갱신
 
 #### Sprint 6 commit
 ```
-5015b Sprint 6 / T06 — Validator + NUnit + 재측정 + docs (6/6) — 5015b 종결
+5016 Sprint 6 / T06 — Validator + NUnit + 재측정 + docs (6/6) — 5016 종결
 
 [변경]
 - ProjectValidator ValidateLitMotionMigration 룰 — DOTween 회귀 + LitMotion import 검사
 - Tests/Editor/LMotionExtensionsTests.cs 신규 (6 NUnit)
-- changelog_v1.md 5015b 항목
+- changelog_v1.md 5016 항목
 - CLAUDE.md §10 LitMotion MIT 행 추가 + §11 마일스톤 + §12 시스템 현황 + §14 직전 5건 회전
 
-[5015b 누적 6 commit]
+[5016 누적 6 commit]
 - T01 LitMotion 패키지 + LMotionExtensions wrapper
 - T02 EnemyController 핫 패스 (PunchRoutine + FlashRoutine)
 - T03 CinematicEffects 핫 패스 (HitPause + Shake + Zoom)
@@ -466,7 +466,7 @@ Sprint 2~5 = 영역 독립 (병렬 가능). 다만 컴파일 통합 + 회귀 검
 ### S5 — GC 재측정 (Sprint 6 후)
 1. Tools/LittleHero/Measure GC Alloc (60s) 실행
 2. 60초 측정 후 콘솔 결과
-3. **시나리오 A (< 30 KB/s)** 도달 확인 → 5015b 성공
+3. **시나리오 A (< 30 KB/s)** 도달 확인 → 5016 성공
 
 ## 6. 알려진 위험 + 완화
 
@@ -478,7 +478,7 @@ Sprint 2~5 = 영역 독립 (병렬 가능). 다만 컴파일 통합 + 회귀 검
 | Sprint 3 HitPause timeScale 미복귀 | WithOnComplete 콜백 검증 + GameManager.timeScale 모니터링 |
 | Sprint 4 Boss attacks Lerp 시각 차이 | Ease.Linear 일치 + Play Mode 검증 |
 | Sprint 5 Coroutine 호환 (yield return) | LitMotion `ToYieldInteraction()` API 활용 (Sprint 5 일부) |
-| Sprint 6 GC 재측정 시 시나리오 B/C (회귀) | 핫 패스 누락 fix 사이클 (5015b.1 추가 commit) |
+| Sprint 6 GC 재측정 시 시나리오 B/C (회귀) | 핫 패스 누락 fix 사이클 (5016.1 추가 commit) |
 
 ## 7. 변경 이력
 

@@ -1,6 +1,6 @@
-# 5015b 사전조사 — IEnumerator+Lerp → LitMotion 도입 ROI 평가
+# 5016 사전조사 — IEnumerator+Lerp → LitMotion 도입 ROI 평가
 
-> **목적**: 5015 RESERVED 결정 (D2=A) 후 5015b 신규 PRD 작성 전 사전조사 보고서.
+> **목적**: 5015 RESERVED 결정 (D2=A) 후 5016 신규 PRD 작성 전 사전조사 보고서.
 > **일시**: 2026-05-04 · 출처: 코드 grep + 정적 분석 + Web search
 > **결론**: ROI 평가 → Profiler 측정 후 결정 권장. 정적 분석 기준 마이그레이션 가치 **중간 (조건부 진행)**.
 
@@ -244,7 +244,7 @@ PIVOT v4 §7 GC <50KB/s 임계 대비:
 
 ---
 
-## 5. 권장 측정 항목 (Profiler — 5015b 진행 전 사전 작업)
+## 5. 권장 측정 항목 (Profiler — 5016 진행 전 사전 작업)
 
 ### 5.1 측정 환경
 
@@ -256,10 +256,10 @@ PIVOT v4 §7 GC <50KB/s 임계 대비:
 
 | 메트릭 | 목표 | 임계 |
 |---|---|---|
-| **GC Alloc/sec** | < 50KB | > 30KB → 5015b 진행 |
-| **CPU/frame** (Main Thread) | < 16.67ms (60fps) | > 14ms → 5015b 진행 |
-| **GC.Collect spike** | < 5ms | > 3ms → 5015b 진행 |
-| **Coroutine count** (peak) | - | > 100/sec → 5015b 진행 |
+| **GC Alloc/sec** | < 50KB | > 30KB → 5016 진행 |
+| **CPU/frame** (Main Thread) | < 16.67ms (60fps) | > 14ms → 5016 진행 |
+| **GC.Collect spike** | < 5ms | > 3ms → 5016 진행 |
+| **Coroutine count** (peak) | - | > 100/sec → 5016 진행 |
 
 ### 5.3 측정 시나리오
 
@@ -271,21 +271,21 @@ PIVOT v4 §7 GC <50KB/s 임계 대비:
 
 ---
 
-## 6. 5015b 디자인 권장 방향
+## 6. 5016 디자인 권장 방향
 
 ### 6.1 시나리오 분기
 
 #### 시나리오 A: GC 마진 충분 (< 30KB/s)
-- **5015b 보류** (IEnumerator 유지)
+- **5016 보류** (IEnumerator 유지)
 - LitMotion 도입은 향후 추가 부담 시점에 재평가
 
 #### 시나리오 B: GC 마진 약함 (30~50KB/s)
-- **5015b 부분 마이그레이션** — 핫 패스 (EnemyController + DamageNumberFloater + CinematicEffects) 만 LitMotion
+- **5016 부분 마이그레이션** — 핫 패스 (EnemyController + DamageNumberFloater + CinematicEffects) 만 LitMotion
 - 22 파일 → 3 파일 (~1h 작업)
 - IEnumerator wrapper + LitMotion 혼재 허용
 
 #### 시나리오 C: GC 임계 초과 (> 50KB/s)
-- **5015b 전체 마이그레이션** — 22 파일 모두
+- **5016 전체 마이그레이션** — 22 파일 모두
 - Sprint 분해: UI / VFX / Gameplay 영역별
 - ~6.5h 작업 + 회귀 검증
 
@@ -323,22 +323,22 @@ PIVOT v4 §7 GC <50KB/s 임계 대비:
 
 ---
 
-## 8. 결론 + 5015b PRD 진행 권장사항
+## 8. 결론 + 5016 PRD 진행 권장사항
 
 ### 8.1 결론
 
 | 단계 | 권장 |
 |---|---|
 | **즉시 (사용자 액션)** | Profiler 측정 1회 (cap 300 환경 GC 메트릭) — ~10분 |
-| **측정 결과 < 30KB/s** | 5015b **보류** (IEnumerator 유지) |
-| **측정 결과 30~50KB/s** | **5015b 부분 마이그레이션** (3 파일, 시나리오 B) |
-| **측정 결과 > 50KB/s** | **5015b 전체 마이그레이션** (22 파일, 시나리오 C) |
+| **측정 결과 < 30KB/s** | 5016 **보류** (IEnumerator 유지) |
+| **측정 결과 30~50KB/s** | **5016 부분 마이그레이션** (3 파일, 시나리오 B) |
+| **측정 결과 > 50KB/s** | **5016 전체 마이그레이션** (22 파일, 시나리오 C) |
 
-### 8.2 5015b 디자인 단계 진입 조건
+### 8.2 5016 디자인 단계 진입 조건
 
 - Profiler 측정 결과 보고 (사용자 또는 자동)
-- 결과 ≥ 30KB/s 시 → `/prd-pipeline 5015b --from generate`
-- < 30KB/s 시 → 5015b 작성 보류 (RESERVED 또는 archive)
+- 결과 ≥ 30KB/s 시 → `/prd-pipeline 5016 --from generate`
+- < 30KB/s 시 → 5016 작성 보류 (RESERVED 또는 archive)
 
 ### 8.3 즉시 가능한 fix (측정과 무관)
 
@@ -356,4 +356,4 @@ PIVOT v4 §7 GC <50KB/s 임계 대비:
 - [LitMotion Medium Article](https://medium.com/@annulusgames/litmotion-fastest-tween-implementation-with-data-oriented-design-in-unity-07c9aa14d9dd)
 
 ## 10. 변경 이력
-- 2026-05-04: 초기 작성 (사용자 요청 — 5015b 신규 PRD 작성 전 사전조사).
+- 2026-05-04: 초기 작성 (사용자 요청 — 5016 신규 PRD 작성 전 사전조사).
