@@ -17,9 +17,9 @@ namespace LittleHero.EditorTools
     {
         private const string ENEMY_ROOT = "Assets/_Project/Art/Generated_v2/Enemies";
         private const string ENEMY_DATA_DIR = "Assets/_Project/Data/Enemies";
-        // 보고서는 repo 루트의 docs/little_hero/ 에 저장 (LittleHero/ 의 부모).
-        // Application.dataPath = .../LittleHero/Assets → 두 단계 위가 repo root.
-        private const string REPORT_REL = "../docs/little_hero/enemy_sprite_audit_report.md";
+        // 보고서는 repo 루트의 docs/little_hero/ 에 저장.
+        // Application.dataPath = .../LittleHero/Assets → "../../" 가 repo root.
+        private const string REPORT_REL = "../../docs/little_hero/enemy_sprite_audit_report.md";
         private const float DAMAGE_LO = 0.05f;  // 5% 미만 = 손상 (전부 불투명)
         private const float DAMAGE_HI = 0.95f;  // 95% 초과 = 손상 (전부 투명)
         private const float HEALTHY_LO = 0.30f; // 30~70% = 건강 sticker (캐릭터 + 여백)
