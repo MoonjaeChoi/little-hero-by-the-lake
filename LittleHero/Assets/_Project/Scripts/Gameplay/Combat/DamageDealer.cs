@@ -41,23 +41,23 @@ namespace LittleHero
             return dmg * mul;
         }
 
-        /// <summary>다중 타깃 데미지 — 거리 정렬된 list 가정. PIVOT v4 OnHit 자동.</summary>
-        public static void ApplyMulti(List<EnemyController> targets, float baseDamage)
+        /// <summary>다중 타깃 데미지 — 거리 정렬된 list 가정. PIVOT v4 OnHit 자동. 5007 — weaponCategory 전달.</summary>
+        public static void ApplyMulti(List<EnemyController> targets, float baseDamage, WeaponCategory? weaponCategory = null)
         {
             float effective = EnhanceDamage(baseDamage);
             for (int i = 0; i < targets.Count; i++)
             {
                 if (targets[i] == null || targets[i].IsDead) continue;
                 float penalty = i < _multiTargetPenalty.Length ? _multiTargetPenalty[i] : MULTI_PENALTY_FLOOR;
-                DamageSystem.DealDamage(targets[i], effective * penalty);
+                DamageSystem.DealDamage(targets[i], effective * penalty, weaponCategory);
             }
         }
 
-        /// <summary>단일 타깃 — 100% 데미지.</summary>
-        public static void ApplySingle(EnemyController target, float damage)
+        /// <summary>단일 타깃 — 100% 데미지. 5007 — weaponCategory 전달.</summary>
+        public static void ApplySingle(EnemyController target, float damage, WeaponCategory? weaponCategory = null)
         {
             if (target == null || target.IsDead) return;
-            DamageSystem.DealDamage(target, EnhanceDamage(damage));
+            DamageSystem.DealDamage(target, EnhanceDamage(damage), weaponCategory);
         }
 
         /// <summary>다중 타깃 보정 비율 미리보기 (UI / 시뮬용).</summary>

@@ -298,5 +298,20 @@ namespace LittleHero
         // CLAUDE.md §15.1 SOLID-O — Factory 추출 (EquipmentPatternFactory)
         private static IAttackPattern CreatePattern(AttackPatternType type) => EquipmentPatternFactory.Create(type);
         private static System.Type GetPatternType(AttackPatternType type) => EquipmentPatternFactory.GetType(type);
+
+        /// <summary>5007 — 현재 장착된 주 무기 (EquipSlot.Weapon) 의 카테고리. 미장착 시 null.</summary>
+        public WeaponCategory? GetActiveWeaponCategory()
+        {
+            if (MetaProgression.Instance?.Data == null) return null;
+            foreach (var inst in MetaProgression.Instance.Data.equipmentInstances)
+            {
+                if (inst == null || !inst.isEquipped || string.IsNullOrEmpty(inst.templateId)) continue;
+                if (!_templateCache.TryGetValue(inst.templateId, out var tpl) || tpl == null) continue;
+                if (tpl.slot != EquipSlot.Weapon) continue;
+                if (tpl.category == WeaponCategory.None) continue;
+                return tpl.category;
+            }
+            return null;
+        }
     }
 }
