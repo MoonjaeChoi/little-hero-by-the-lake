@@ -182,7 +182,7 @@ Assets/_Project/
 
 | 용도 | 라이브러리 | 라이선스 |
 |---|---|---|
-| 애니메이션 | DOTween | 커스텀 |
+| 애니메이션 | (없음 — IEnumerator + Mathf.Lerp / Color.Lerp 직접 사용) | N/A |
 | 입력 | Unity Input System | Unity |
 | 카메라 | Cinemachine 3.1.6 | Unity |
 | UI | uGUI Legacy Text (TMP X — URP 셰이더 깨짐) | Unity |
