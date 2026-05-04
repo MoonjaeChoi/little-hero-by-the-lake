@@ -151,6 +151,17 @@ When the script fails, **report the error to the user verbatim** rather than ret
 - Multi-image batch (call the script N times instead — single-image keeps each call simple and lets the user inspect intermediate results).
 - Image post-processing (cropping, scaling, alpha cleanup) — chain other tools.
 
+## Sprite Generation Rules (single-character RGBA)
+
+For sprite work — Little Hero 적/캐릭터/아이콘 등 **단일 객체 RGBA** — **always read `references/sprite_generation_rules.md` first**. It documents the verified combination (SDXL base 1.0 + steps 20 + cfg 7.0 + euler/normal + negative prompt with 11 grid-prevention keywords) that fixes silhouette / 4-character grid / RGB 평탄화 문제 (5008 T05.5 fix sycle 검증).
+
+Quick rule of thumb for sprite work:
+- Always pass `--workflow workflow_layerdiffuse.json --steps 20 --cfg 7.0`
+- Use the negative prompt template from `references/sprite_generation_rules.md` §4
+- Use `three-quarter view` instead of `isometric playful angle` (grid-prone)
+- After generation, verify alpha + RGB std + 4-quadrant distribution per §6
+
 ## References
 
 - `references/comfyui_api.md` — ComfyUI REST API endpoints used by the script (read this if the script breaks or needs extension).
+- `references/sprite_generation_rules.md` — **Sprite RGBA 단일 캐릭터 생성 규칙** (5008 T05.5 fix 검증). 적/캐릭터/아이콘 sprite 작업 시 필독.
