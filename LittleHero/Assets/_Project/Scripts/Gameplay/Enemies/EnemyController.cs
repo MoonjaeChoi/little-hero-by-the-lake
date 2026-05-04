@@ -187,6 +187,11 @@ namespace LittleHero
             _flashCo = null;
         }
 
+        // 5012.1 — icon != null 인 5008 sprite multiplicative tint baseline.
+        // Color.white * sprite_pixel = sprite_pixel (효과 0) → HUE_BASE_TINT (saturation 있는 light pink)
+        // * sprite_pixel = 약한 색조 변형. HueShift(HUE_BASE_TINT, offset) 으로 5 단계 다양화.
+        private static readonly Color HUE_BASE_TINT = new Color(1f, 0.92f, 0.92f, 1f);
+
         private void ApplyAppearance(EnemyData data, int variationIndex = 0)
         {
             SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
@@ -194,12 +199,16 @@ namespace LittleHero
             {
                 // Phase G2 — data.icon 이 있으면 sprite 동적 변경 (placeholder 원형 → 실 적 idle)
                 if (data.icon != null) sr.sprite = data.icon;
-                // tint 적용 — 신규 sprite는 흰색 유지(원본 색 보존), placeholder 원형은 tintColor 적용
-                sr.color = data.icon != null ? Color.white : data.tintColor;
-                // 5012 D1=B — SpriteRenderer.color multiplicative hue tint. BossTier!=None 시 미적용.
+                // 5012 D1=B / 5012.1 — variationIndex>0 + Boss=None 시 HUE_BASE_TINT(saturated) 에 hue 적용,
+                //   else icon 있으면 white(원색 유지), 없으면 placeholder tintColor.
                 if (variationIndex > 0 && data.bossTier == BossTier.None)
                 {
-                    sr.color = EnemyHueVariation.HueShift(sr.color, EnemyHueVariation.OFFSETS[variationIndex]);
+                    Color tintForHue = data.icon != null ? HUE_BASE_TINT : data.tintColor;
+                    sr.color = EnemyHueVariation.HueShift(tintForHue, EnemyHueVariation.OFFSETS[variationIndex]);
+                }
+                else
+                {
+                    sr.color = data.icon != null ? Color.white : data.tintColor;
                 }
             }
             // P11 — 768×768 PNG 베이스 0.4 → 0.55. PIVOT v3 — 적 1/10 scale (보스 제외).

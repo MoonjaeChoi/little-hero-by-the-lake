@@ -51,6 +51,18 @@ namespace LittleHero.Tests.Editor
         }
 
         [Test]
+        public void HueShift_LightPink_HalfOffset_ShiftsToCyan()
+        {
+            // 5012.1 — HUE_BASE_TINT (light pink) 가 hue offset 으로 visible shift 하는지 검증.
+            // White 가 saturation=0 이라 HueShift 효과 0 (HueShift_White_NoChange 가 보장),
+            // 반면 light pink 는 saturation > 0 이라 hue 적용 visible.
+            var lightPink = new Color(1f, 0.92f, 0.92f, 1f);
+            var result = EnemyHueVariation.HueShift(lightPink, 0.5f);
+            Assert.Less(result.r, lightPink.r, "red 채널 감소 (cyan 방향)");
+            Assert.Greater(result.b, lightPink.b, "blue 채널 강화");
+        }
+
+        [Test]
         public void OFFSETS_HasFive_NoDuplicate()
         {
             var s = new HashSet<float>();
