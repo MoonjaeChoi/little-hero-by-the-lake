@@ -40,7 +40,8 @@ namespace LittleHero
             _pools[data.id] = pool;
         }
 
-        public EnemyController Spawn(EnemyData data)
+        // 5012 — variationIndex (default 0) hue 변형 전달. BossSummonAttack 등 기존 호출처는 default 0 호환.
+        public EnemyController Spawn(EnemyData data, int variationIndex = 0)
         {
             if (!_pools.ContainsKey(data.id))
                 RegisterEnemy(data);
@@ -54,7 +55,7 @@ namespace LittleHero
             float multi = _activeChapter != null
                 ? _activeChapter.enemyStatMultiplier
                 : (MetaProgression.Instance?.SelectedChapter?.enemyStatMultiplier ?? 1f);
-            enemy.Initialize(data, multi);
+            enemy.Initialize(data, multi, variationIndex);
             return enemy;
         }
 

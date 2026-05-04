@@ -22,6 +22,10 @@ namespace LittleHero
         private Action _onWaveComplete;
         private Coroutine _spawnCoroutine;
 
+        // 5012 — wave 카운터 + spawn order 누적 (7 prime spread → 5 hue 분포)
+        private int _waveCounter = 0;
+        private int _spawnOrder = 0;
+
         public int ActiveEnemyCount => _activeEnemies.Count;
 
         public void Initialize(EnemySpawner spawner)
@@ -61,6 +65,7 @@ namespace LittleHero
             _onWaveComplete = onComplete;
             _activeEnemies.Clear();
             _spawnDone = false;
+            _waveCounter++;  // 5012 — wave 시작마다 +1 (5 hue cycle)
 
             if (_spawnCoroutine != null)
                 StopCoroutine(_spawnCoroutine);
@@ -117,7 +122,9 @@ namespace LittleHero
 
         private void SpawnEnemy(EnemyData data)
         {
-            EnemyController enemy = _spawner.Spawn(data);
+            // 5012 — wave + spawn order 기반 5 hue cycle (7 prime spread). Boss 는 EnemyController 가 강제 무시.
+            int variationIndex = EnemyHueVariation.VariationIndex(_waveCounter, _spawnOrder++);
+            EnemyController enemy = _spawner.Spawn(data, variationIndex);
             if (enemy == null)
             {
                 Debug.LogError($"[WaveManager] SpawnEnemy returned null for '{(data ? data.displayName : "<null>")}' (id='{(data ? data.id : "")}')");
