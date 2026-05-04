@@ -49,7 +49,7 @@ namespace LittleHero
             _cg = gameObject.AddComponent<CanvasGroup>();
         }
 
-        public void Initialize(int damage, DamageType type, Vector3 worldPos)
+        public void Initialize(int damage, DamageType type, Vector3 worldPos, float sizeMul = 1f)
         {
             EnsureSetup();
             _isCrit = type == DamageType.Critical;
@@ -64,12 +64,13 @@ namespace LittleHero
 
             _text.text = FormatDamage(damage, type);
             _text.color = ColorFor(type);
-            _text.fontSize = FontSizeFor(type);
+            // 5007 T07 — sizeMul 적용 (tier 별 floater 크기)
+            _text.fontSize = Mathf.RoundToInt(FontSizeFor(type) * sizeMul);
             _cg.alpha = 1f;
             _shakePhase = Random.Range(0f, Mathf.PI * 2f);
 
-            // Critical 진입 punch — scale 0.5 → 1.0 (베이스 0.05)
-            transform.localScale = Vector3.one * (_isCrit ? 0.025f : 0.05f);
+            // Critical 진입 punch — scale 0.5 → 1.0 (베이스 0.05) × sizeMul
+            transform.localScale = Vector3.one * (_isCrit ? 0.025f : 0.05f) * sizeMul;
         }
 
         private static string FormatDamage(int damage, DamageType type)

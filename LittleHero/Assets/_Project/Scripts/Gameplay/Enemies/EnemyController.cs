@@ -93,35 +93,48 @@ namespace LittleHero
                 1f);
         }
 
-        /// <summary>PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3). 5007 — Resolver 통합 (T07).</summary>
+        /// <summary>PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3). 5007 T07 — Resolver 통합 (적 티어 / 데미지 강도 / 무기 색).</summary>
         public void OnHit(float damage, bool isCrit, WeaponCategory? weaponCategory = null, float avgPlayerDamage = 0f)
         {
             if (_isDead) return;
-            // 글로벌 효과 — 적이 비활성돼도 적용 (floater/audio/vfx/shake)
-            // 3. Hit particle
-            VfxPool.SpawnHitStar(transform.position, isCrit);
-            // 4. Sound
+
+            // 5007 — Resolver 호출 (cfg null 안전, BossTier 5종 + WeaponCategory 4 그룹 + intensity)
+            var cfg = CinematicEffectsConfigLoader.Get();
+            var resolved = HitEffectResolver.Resolve(cfg, _data, damage, isCrit, weaponCategory, avgPlayerDamage);
+
+            // 글로벌 효과 — 적이 비활성돼도 적용
+            VfxPool.SpawnHitStar(transform.position, isCrit, resolved.VfxScale);  // 5007 — tier 별 vfxScale
             AudioManager.Instance?.Play(isCrit ? SfxType.CritHit : SfxType.EnemyHit);
-            // 5. Damage number
             DamageFloaterPool.Spawn(
                 transform.position + Vector3.up * 0.5f,
                 Mathf.RoundToInt(damage),
-                isCrit ? DamageType.Critical : DamageType.Normal);
-            // 6. Critical only — slow-mo + screen shake
-            if (isCrit)
+                isCrit ? DamageType.Critical : DamageType.Normal,
+                resolved.FloaterSizeMul);  // 5007 — tier 별 floater 크기
+
+            // Critical only — hit pause + screen shake (+ camera zoom 신규)
+            if (resolved.EnableHitPause)
             {
-                CinematicEffects.Instance?.PlayHitPause(0.08f);
-                CinematicEffects.Instance?.PlayScreenShake(0.3f);
+                CinematicEffects.Instance?.PlayHitPause(cfg != null ? cfg.slowMoDuration : 0.08f);
+                CinematicEffects.Instance?.PlayScreenShake(resolved.ShakeAmplitude);
             }
-            // 적별 효과 — gameObject active 인 경우만 (1발 처치 시 의미 X, 효과만 노출)
+            if (resolved.EnableZoom && cfg != null)
+            {
+                CinematicEffects.Instance?.PlayCameraZoom(cfg.zoomMul, cfg.zoomUpDuration, cfg.zoomDownDuration);
+            }
+
+            // 적별 효과 — gameObject active 인 경우만
             if (!gameObject.activeInHierarchy) return;
-            // 1. Punch scale
+
+            // Punch scale — Resolver 결과 (tier × intensity × cap 2.0)
+            float punchUp   = isCrit ? (cfg != null ? cfg.punchUpCritDuration   : 0.07f) : (cfg != null ? cfg.punchUpDuration   : 0.05f);
+            float punchDown = isCrit ? (cfg != null ? cfg.punchDownCritDuration : 0.15f) : (cfg != null ? cfg.punchDownDuration : 0.10f);
             if (_punchCo != null) StopCoroutine(_punchCo);
-            _punchCo = PunchRoutine(isCrit ? 1.7f : 1.4f, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
+            _punchCo = PunchRoutine(resolved.PunchScale, punchUp, punchDown);
             StartCoroutine(_punchCo);
-            // 2. Color flash
+
+            // Color flash — Resolver 결과 (무기 카테고리별 색)
             if (_flashCo != null) StopCoroutine(_flashCo);
-            _flashCo = FlashRoutine(isCrit ? Color.yellow : Color.red, isCrit ? 0.07f : 0.05f, isCrit ? 0.15f : 0.10f);
+            _flashCo = FlashRoutine(resolved.FlashColor, punchUp, punchDown);
             StartCoroutine(_flashCo);
         }
 

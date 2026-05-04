@@ -72,5 +72,40 @@ namespace LittleHero
             t.localPosition = origin;
             _shakeCo = null;
         }
+
+        // 5007 T09 — Camera zoom (orthographicSize 변경, subtle 1.05× 권장)
+        private Coroutine _zoomCo;
+
+        /// <summary>5007 — 크리 시 subtle camera zoom (orthographicSize 변경). zoomMul 1.05 권장.</summary>
+        public void PlayCameraZoom(float zoomMul = 1.05f, float upDuration = 0.05f, float downDuration = 0.15f)
+        {
+            if (_zoomCo != null) StopCoroutine(_zoomCo);
+            _zoomCo = StartCoroutine(ZoomRoutine(zoomMul, upDuration, downDuration));
+        }
+
+        private IEnumerator ZoomRoutine(float zoomMul, float upDuration, float downDuration)
+        {
+            var cam = Camera.main;
+            if (cam == null || !cam.orthographic) { _zoomCo = null; yield break; }
+            float origin = cam.orthographicSize;
+            float target = origin / Mathf.Max(zoomMul, 1.001f);  // zoomMul 클수록 size 작아짐 (확대)
+
+            float t = 0f;
+            while (t < upDuration)
+            {
+                t += Time.unscaledDeltaTime;
+                cam.orthographicSize = Mathf.Lerp(origin, target, t / upDuration);
+                yield return null;
+            }
+            t = 0f;
+            while (t < downDuration)
+            {
+                t += Time.unscaledDeltaTime;
+                cam.orthographicSize = Mathf.Lerp(target, origin, t / downDuration);
+                yield return null;
+            }
+            cam.orthographicSize = origin;
+            _zoomCo = null;
+        }
     }
 }

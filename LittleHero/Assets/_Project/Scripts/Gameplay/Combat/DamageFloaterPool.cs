@@ -14,13 +14,13 @@ namespace LittleHero
         private static readonly List<DamageNumberFloater> _pool = new List<DamageNumberFloater>(INITIAL_SIZE);
         private static Transform _root;
 
-        public static void Spawn(Vector3 worldPos, int damage, DamageType type)
+        public static void Spawn(Vector3 worldPos, int damage, DamageType type, float sizeMul = 1f)
         {
             EnsureRoot();
             var floater = Acquire();
             if (floater == null) return;
             floater.gameObject.SetActive(true);
-            floater.Initialize(damage, type, worldPos);
+            floater.Initialize(damage, type, worldPos, sizeMul);  // 5007 T07 — tier 별 floater 크기
         }
 
         public static void Return(DamageNumberFloater floater)
