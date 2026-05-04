@@ -9,7 +9,7 @@
 |---|---|---|---|---|
 | Medium | D1 | EnemySpriteAuditor 구현 방식 | **C** — A + 임시 readableTrue 복원 패턴 | Done |
 | Medium | D2 | 손상 8 chapter override 처리 | **C** — Auditor V2 archetype 폴백 검증 후 결정 | Done |
-| Medium | D3 | skip sprite 후속 정책 | **A+B 결합** — Sprint 6 docs skip list + 5008.1 anchor 우선 | Done |
+| Medium | D3 | skip sprite 후속 정책 | **A+B 결합** — Sprint 6 docs skip list + 5009 anchor 우선 | Done |
 
 ## 2. Detailed Decisions
 
@@ -37,7 +37,7 @@
 - **Decision**: **옵션 C — Auditor (Sprint 2) 가 V2 시스템 archetype 폴백 검증 후 Sprint 5.5 추가 여부 결정**
 - **Mode**: ai-assisted (Claude 권장 + 사용자 일괄 채택)
 - **Rationale**:
-  - 데이터 기반 결정 — fallback 정상 시 8 PNG 미처리 정당화 (5008.1 anchor)
+  - 데이터 기반 결정 — fallback 정상 시 8 PNG 미처리 정당화 (5009 anchor)
   - fallback 깨짐 시 Sprint 5.5 강제 추가로 회귀 방지
   - 옵션 A (anchor 만) 의 회귀 리스크 + 옵션 B (즉시 흡수) 의 PRD 범위 확장 양극단 회피
   - Auditor 가 어차피 작성되므로 검증 추가 비용 < 사용자 회귀 비용
@@ -55,20 +55,20 @@
 
 ### 2.3 D3 — Sprint 3~5 max 3 iter 후 skip sprite 후속 정책
 
-- **Decision**: **옵션 A+B 결합 — Sprint 6 docs 에 skip list 명시 + 5008.1 anchor 에 우선 처리 표시**
+- **Decision**: **옵션 A+B 결합 — Sprint 6 docs 에 skip list 명시 + 5009 anchor 에 우선 처리 표시**
 - **Mode**: ai-assisted (Claude 권장 + 사용자 일괄 채택)
 - **Rationale**:
   - 사용자 부담 0 (skip 0 강제 옵션 C 의 무한 review 회피)
-  - 추적성 확보 (옵션 A 단일 의 5008.1 자동 우선 X 손실 보완)
-  - Sprint 6 docs 1줄 + 5008.1 anchor 1줄 추가 비용 최소
+  - 추적성 확보 (옵션 A 단일 의 5009 자동 우선 X 손실 보완)
+  - Sprint 6 docs 1줄 + 5009 anchor 1줄 추가 비용 최소
 - **PRD Impact**:
-  - §2 Sprint 3 프로세스 4 — "skip 시 Sprint 6 docs skip list 추가 + 5008.1 anchor 우선 표시" 명시
+  - §2 Sprint 3 프로세스 4 — "skip 시 Sprint 6 docs skip list 추가 + 5009 anchor 우선 표시" 명시
   - §2 Sprint 6 작업 — "skip list docs 작성" 추가
-  - §5 Definition of Done — "skip list docs (있으면) + 5008.1 anchor 우선 표시" 추가
-  - §7 본 PRD 범위 외 — 5008.1 anchor 에 "skip list 우선 처리" 1줄 추가
+  - §5 Definition of Done — "skip list docs (있으면) + 5009 anchor 우선 표시" 추가
+  - §7 본 PRD 범위 외 — 5009 anchor 에 "skip list 우선 처리" 1줄 추가
 - **Trade-off**:
   - 옵션 C (skip 0 강제) 의 30 archetype 완성 보장 손실 — 사용자 review 사이클 무한 반복 위험이 더 큼
-  - 옵션 A 단일 의 5008.1 우선순위 자동 반영 X 손실 — B 결합으로 보완
+  - 옵션 A 단일 의 5009 우선순위 자동 반영 X 손실 — B 결합으로 보완
 
 ---
 
@@ -88,7 +88,7 @@
 - **§2.1 Sprint 2 파일 명세** — EnemySpriteAuditor.cs 구현 방식 명시 (D1=C: AssetImporter.SetReadable + try/finally + GetPixels32 + 복원)
 - **§2.1 Sprint 2 산출물** — V2 archetype 폴백 검증 추가 (D2=C)
 - **§1 Sprint 표** — Sprint 5.5 (조건부) 활성화 조건 구체화 (D2=C: Auditor 검증 결과)
-- **§2 Sprint 3 프로세스** — skip 시 Sprint 6 docs + 5008.1 anchor 정책 명시 (D3=A+B)
+- **§2 Sprint 3 프로세스** — skip 시 Sprint 6 docs + 5009 anchor 정책 명시 (D3=A+B)
 - **§2 Sprint 6 작업** — skip list docs 추가 (D3=A+B)
 
 ### 검증 기준 갱신

@@ -200,7 +200,7 @@ Assert.NotNull(m);
 - 임포트 설정 변동 0 (D1=C 복원 검증) — 임의 1 PNG의 isReadable 변경 X
 
 **후속**:
-- fallback OK → T05.5 미실행 (5008.1 anchor)
+- fallback OK → T05.5 미실행 (5009 anchor)
 - fallback 깨짐 → 사용자 결정 후 T05.5 활성화
 
 ---
@@ -237,8 +237,8 @@ Assert.NotNull(m);
 (decisions.md §2 의 Trade-off 인용)
 
 - **D1=C 결정** → AssetImporter.SetReadable + try/finally 복원 패턴. PNG byte 직접 파싱 (B) 의 메모리 효율 손실은 audit 1회 실행이라 무시 가능.
-- **D2=C 결정** → Auditor V2 폴백 검증 후 결정. fallback OK 시 8 PNG 미처리 정당화 (5008.1 anchor 만). 깨짐 시 T05.5 강제 활성화로 회귀 방지.
-- **D3=A+B 결정** → skip list docs + 5008.1 anchor. C (skip 0 강제) 의 30 archetype 완성 보장 손실 < 사용자 review 무한 반복 위험.
+- **D2=C 결정** → Auditor V2 폴백 검증 후 결정. fallback OK 시 8 PNG 미처리 정당화 (5009 anchor 만). 깨짐 시 T05.5 강제 활성화로 회귀 방지.
+- **D3=A+B 결정** → skip list docs + 5009 anchor. C (skip 0 강제) 의 30 archetype 완성 보장 손실 < 사용자 review 무한 반복 위험.
 - **Rebuttal accepted**: SpriteAtlas 재빌드 명시 + Sprint 1 fallback 한계 명시 — 사용자 빌드 누락 + 기대치 정렬.
 
 ## 10. 변경 이력

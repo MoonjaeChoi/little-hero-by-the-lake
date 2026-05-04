@@ -13,7 +13,7 @@
 
 **추가 항목**:
 ```markdown
-- 2026-05-XX: **5008 chapter_enemy_asset_quality_v1** — 30 archetype LayerDiffuse 재생성 (Meta 6 + Nature 6 + Animal 6 + Civ 6 + Fantasy 6) + EnemySpriteAuditor (D1=C 복원 패턴 + D2=C V2 폴백 검증) + SpriteAtlas 재빌드 + skip list (D3=A+B). N commit. 후속 anchor — 5008.1 chapter overrides 210 (skip list 우선) / 5008.2 V1 11종 / 5008.3 보스 11종 / 5009 MPB hue shift / 5010 culling / 5011 LoRA.
+- 2026-05-XX: **5008 chapter_enemy_asset_quality_v1** — 30 archetype LayerDiffuse 재생성 (Meta 6 + Nature 6 + Animal 6 + Civ 6 + Fantasy 6) + EnemySpriteAuditor (D1=C 복원 패턴 + D2=C V2 폴백 검증) + SpriteAtlas 재빌드 + skip list (D3=A+B). N commit. 후속 anchor — 5009 chapter overrides 210 (skip list 우선) / 5010 V1 11종 / 5011 보스 11종 / 5012 MPB hue shift / 5013 culling / 5014 LoRA.
 ```
 
 ### 1.2 CLAUDE.md §11 마일스톤
@@ -37,7 +37,7 @@ EnemySpriteAuditor (5008, Tools/LittleHero/Audit Enemy Sprite Quality, D1=C 복�
 
 **추가 항목** (가장 위):
 ```markdown
-- 2026-05-XX: **5008 chapter_enemy_asset_quality_v1** — 30 archetype LayerDiffuse 재생성 + EnemySpriteAuditor + skip list (D3=A+B). N commit. 후속 anchor 5008.1+/5009+ 명시.
+- 2026-05-XX: **5008 chapter_enemy_asset_quality_v1** — 30 archetype LayerDiffuse 재생성 + EnemySpriteAuditor + skip list (D3=A+B). N commit. 후속 anchor 5009+/5009+ 명시.
 ```
 
 **기존 5건 중 가장 오래된 1건 제거** (직전 5건 maintain).
@@ -60,20 +60,20 @@ EnemySpriteAuditor (5008, Tools/LittleHero/Audit Enemy Sprite Quality, D1=C 복�
 **조건**: T03/T04/T05 에서 skip 발생 시.
 
 **작업**:
-- `docs/little_hero/changelog_v1.md` 5008 항목에 skip list 명시 (예: `skip: Enemy_Civ_Boss (시드 55555 iter 3 후 톤 불일치 — 5008.1 우선 처리 enroll)`)
-- 5008.1 anchor (CLAUDE.md §13 또는 후속 PRD) 에 "skip list 우선 처리" 1줄 추가
+- `docs/little_hero/changelog_v1.md` 5008 항목에 skip list 명시 (예: `skip: Enemy_Civ_Boss (시드 55555 iter 3 후 톤 불일치 — 5009 우선 처리 enroll)`)
+- 5009 anchor (CLAUDE.md §13 또는 후속 PRD) 에 "skip list 우선 처리" 1줄 추가
 
 **조건 미충족 시**: skip list 작성 X (자동 skip)
 
 ### 1.7 후속 anchor 명시
 
 `docs/little_hero/changelog_v1.md` 또는 5008 디자인 문서 §7 에 후속 anchor 명시:
-- **5008.1**: chapter overrides 210 PNG (+ skip list 우선 처리 — D3=A+B)
-- **5008.2**: V1 11종 동화 적 (Chapter_01~03)
-- **5008.3**: Daily 7 + Weekly 4 보스
-- **5009**: MPB hue shift 다양성
-- **5010**: EnemyVisibilityCuller (off-screen culling)
-- **5011**: V5 sticker LoRA 훈련
+- **5009**: chapter overrides 210 PNG (+ skip list 우선 처리 — D3=A+B)
+- **5010**: V1 11종 동화 적 (Chapter_01~03)
+- **5011**: Daily 7 + Weekly 4 보스
+- **5012**: MPB hue shift 다양성
+- **5013**: EnemyVisibilityCuller (off-screen culling)
+- **5014**: V5 sticker LoRA 훈련
 
 ## 2. 검증 기준
 
@@ -88,8 +88,8 @@ EnemySpriteAuditor (5008, Tools/LittleHero/Audit Enemy Sprite Quality, D1=C 복�
 - 빌드 (Unity → Build) 시 atlas 누락 0
 
 ### 2.3 후속 anchor
-- 5008.1+, 5009+ 모두 명시
-- skip list (있으면) 5008.1 anchor 에 우선 처리 표시
+- 5009+, 5009+ 모두 명시
+- skip list (있으면) 5009 anchor 에 우선 처리 표시
 
 ### 2.4 ProjectValidator
 - `Tools/LittleHero/Validate Project` 실행 → errors=0, warnings 변동 ±0
@@ -102,7 +102,7 @@ EnemySpriteAuditor (5008, Tools/LittleHero/Audit Enemy Sprite Quality, D1=C 복�
 [변경]
 - docs/little_hero/changelog_v1.md — 5008 항목 + skip list (D3=A+B)
 - CLAUDE.md §11/§12/§14 갱신
-- 후속 anchor 명시 (5008.1: chapter overrides 210 + skip list 우선 / 5008.2 / 5008.3 / 5009 / 5010 / 5011)
+- 후속 anchor 명시 (5009: chapter overrides 210 + skip list 우선 / 5010 / 5011 / 5009 / 5010 / 5011)
 - SpriteAtlas 재빌드 가이드 (사용자 빌드 시 누락 방지, Rebuttal accepted)
 
 [검증]
@@ -126,4 +126,4 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 - **CLAUDE.md §14 5건 maintain 누락** → 명시적으로 직전 5건 직접 확인 필요
 - **SpriteAtlas 재빌드 누락** → Unity 자동 재빌드 의존 시 누락 가능. 메뉴 강제 실행 권장
 - **skip list 누락** → T03/T04/T05 review 시 skip 결정한 sprite list 보존 필수 (commit 메시지 또는 별도 메모)
-- **후속 anchor 명시 누락** → 5008.1+ / 5009+ 일괄 명시
+- **후속 anchor 명시 누락** → 5009+ / 5009+ 일괄 명시

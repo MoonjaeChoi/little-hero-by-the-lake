@@ -32,7 +32,7 @@
    - **불만족** → prompt 조정 + 재생성 (iteration 2)
    - **iter 2 불만족** → 재시도 (iteration 3)
    - **iter 3 불만족** → 사용자 결정 (다른 시드 / 다른 prompt / **skip**)
-   - **skip 시 (D3=A+B)**: T06 docs skip list 추가 + 5008.1 anchor 우선 처리 표시
+   - **skip 시 (D3=A+B)**: T06 docs skip list 추가 + 5009 anchor 우선 처리 표시
 
 ### 1.2 SpriteAtlas 영향
 
@@ -83,5 +83,5 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 
 - **카테고리 톤 불만족** → 시드 22222 고정 + Meta prompt prefix 표준
 - **6 sprite 일괄 review 부담** → batch 단위 명확화, 1회 review
-- **iter 3 후 skip** → D3=A+B 정책 적용, T06 docs + 5008.1 anchor 자동 enroll
+- **iter 3 후 skip** → D3=A+B 정책 적용, T06 docs + 5009 anchor 자동 enroll
 - **review 시간 길어짐** → iter cap 3, 사용자 빠른 결정 권장

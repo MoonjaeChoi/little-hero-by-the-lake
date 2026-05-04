@@ -33,12 +33,12 @@
 
 ### D2. 손상 8 chapter override 처리 우선순위
 
-- **Original Criticism**: 5008 PRD 가 D5=A 로 30 archetype 1개 (Enemy_Nature_Medium) 만 본 PRD. 나머지 8 chapter override (CH14/CH22/CH25/CH30/CH33×2/CH34) 는 5008.1 anchor 만 명시. 5008 PASS 후 사용자 "1라운드 적 흰 박스" 회귀 리스크.
-- **Current Position**: PRD 그대로 진행 시 5008.1 anchor 만, V2 시스템 archetype 폴백 작동 여부에 따라 5008 만 PASS 해도 회귀 가능.
+- **Original Criticism**: 5008 PRD 가 D5=A 로 30 archetype 1개 (Enemy_Nature_Medium) 만 본 PRD. 나머지 8 chapter override (CH14/CH22/CH25/CH30/CH33×2/CH34) 는 5009 anchor 만 명시. 5008 PASS 후 사용자 "1라운드 적 흰 박스" 회귀 리스크.
+- **Current Position**: PRD 그대로 진행 시 5009 anchor 만, V2 시스템 archetype 폴백 작동 여부에 따라 5008 만 PASS 해도 회귀 가능.
 - **Discussion Points**:
-  - **옵션 A. anchor 만 (현재 PRD)**: 5008 종료 후 5008.1 즉시 진행
+  - **옵션 A. anchor 만 (현재 PRD)**: 5008 종료 후 5009 즉시 진행
     - 장점: 5008 범위 명확, ROI 우선
-    - 단점: 사용자 회귀 시 5008.1 강제 진입 (사용자 부담)
+    - 단점: 사용자 회귀 시 5009 강제 진입 (사용자 부담)
   - **옵션 B. Sprint 5.5 추가 — 손상 8 chapter override 즉시 흡수**: 5008 범위 내 1 commit 추가 (30분)
     - 장점: 5008 PASS = 회귀 0 보장
     - 단점: PRD 범위 확장 (6 → 7 commit), 5008 시간 ↑
@@ -60,18 +60,18 @@
 - **Discussion Points**:
   - **옵션 A. 기존 sprite 유지 + skip list docs 명시**: Sprint 6 docs 에 skip list 명시
     - 장점: 단순, 사용자 부담 0
-    - 단점: 추적 docs 만, 5008.1 우선순위 자동 반영 X
-  - **옵션 B. 5008.1 후속 자동 enroll**: skip list 자동으로 5008.1 anchor 의 우선 처리 항목으로 표시
-    - 장점: 추적성 + 5008.1 진입 시 자동 우선
-    - 단점: 5008.1 PRD 작성 시점에 anchor 갱신 필요
+    - 단점: 추적 docs 만, 5009 우선순위 자동 반영 X
+  - **옵션 B. 5009 후속 자동 enroll**: skip list 자동으로 5009 anchor 의 우선 처리 항목으로 표시
+    - 장점: 추적성 + 5009 진입 시 자동 우선
+    - 단점: 5009 PRD 작성 시점에 anchor 갱신 필요
   - **옵션 C. skip 0 강제**: 사용자 review 무한 반복 (max 3 iter cap 제거)
     - 장점: 5008 PASS = 30 archetype 모두 완성
     - 단점: 사용자 부담 ↑, Sprint 시간 폭증 위험
-  - **옵션 A+B 결합**: Sprint 6 docs 에 skip list 명시 + 5008.1 anchor 에 우선 처리 표시
-- **Proposed Resolution Path**: **옵션 A+B 결합 권장** — 사용자 부담 없이 추적성 확보 + 5008.1 자동 우선. Sprint 6 docs commit 1줄 + 5008.1 anchor 1줄 추가.
+  - **옵션 A+B 결합**: Sprint 6 docs 에 skip list 명시 + 5009 anchor 에 우선 처리 표시
+- **Proposed Resolution Path**: **옵션 A+B 결합 권장** — 사용자 부담 없이 추적성 확보 + 5009 자동 우선. Sprint 6 docs commit 1줄 + 5009 anchor 1줄 추가.
 - **PRD Impact**:
   - Sprint 6 commit 메시지 + Definition of Done 에 "skip list docs" 항목 추가
-  - §7 본 PRD 범위 외 — 5008.1 anchor 에 "skip list 우선 처리" 1줄 추가
+  - §7 본 PRD 범위 외 — 5009 anchor 에 "skip list 우선 처리" 1줄 추가
 
 ---
 

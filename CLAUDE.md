@@ -271,7 +271,7 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
-- 2026-05-04: **5008 chapter_enemy_asset_quality_v1** — 30 archetype + 3 chapter override LayerDiffuse RGBA 재생성 (SDXL base 1.0 + 768×1024 portrait + cfg 6 + Danbooru "solo, 1character" 태그 + 17종 grid keyword negative, D1=C/D2=C/D3=A+B, 11 commit). 사용자 "아주 만족" 승인 baseline 메모리 저장. comfyui-image 스킬에 sprite_generation_rules.md (8 섹션 207L) 정착. 후속 anchor 5008.1~5011 명시
+- 2026-05-04: **5008 chapter_enemy_asset_quality_v1** — 30 archetype + 3 chapter override LayerDiffuse RGBA 재생성 (SDXL base 1.0 + 768×1024 portrait + cfg 6 + Danbooru "solo, 1character" 태그 + 17종 grid keyword negative, D1=C/D2=C/D3=A+B, 11 commit). 사용자 "아주 만족" 승인 baseline 메모리 저장. comfyui-image 스킬에 sprite_generation_rules.md (8 섹션 207L) 정착. 후속 anchor 5009~5011 명시
 - 2026-05-04: **5007 damage_hit_effect_v2** — 적 타격 이펙트 강화 (CinematicEffectsConfig SO + HitEffectResolver 정적 + ResolvedHitEffect struct + cap 2.0× + Pool 50→300 prewarm + 12 commit, NUnit 73→81). BossTier 5종 × 4 multiplier + WeaponCategory 4 그룹 색 + damage intensity 동적 + Camera zoom 신규
 - 2026-05-04: **5006 attic_entry_ui_redesign_v1** — 다락방 진입점 4 그룹 (전투/장비/상점/기록) + AtticPanelEntryView + AtticGroupLayoutPresenter + EndgameMenuPanel.OnEnable 자체 검증 (D3=C, 8 commit, NUnit 67→73). 5006.1 후속 PNG 임포트 anchor 명시
 - 2026-05-04: **5005 attic_decomposition_v1** — AtticController 책임 분리 6 컴포넌트 (CurrencyView/CharacterSelector/ChapterEntry/EndgameMenuView/PanelToggleManager/ReturnHandler, 420L → 111L, §15.1 SRP, 8 commit, NUnit 61→67)

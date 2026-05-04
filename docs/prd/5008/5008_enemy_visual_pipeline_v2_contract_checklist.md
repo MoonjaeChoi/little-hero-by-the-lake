@@ -101,18 +101,18 @@
 
 ### Sprint 별 사용자 review 결과 기록
 
-- [ ] T03 Meta 6 sprite — 응답: ☐ OK / ☐ 재시도 (iter 2/3) / ☐ skip (5008.1 enroll)
+- [ ] T03 Meta 6 sprite — 응답: ☐ OK / ☐ 재시도 (iter 2/3) / ☐ skip (5009 enroll)
 - [ ] T04 Nature 6 + Animal 6 — 응답: ☐ OK / ☐ 재시도 / ☐ skip
 - [ ] T05 Civ 6 + Fantasy 6 — 응답: ☐ OK / ☐ 재시도 / ☐ skip
 - [ ] (조건부) T05.5 chapter override 8 — 응답: ☐ OK / ☐ 재시도 / ☐ skip
 
 ### Skip List (있으면 T06 docs 자동 enroll)
 
-- skip 발생 시 list 보존 + 5008.1 anchor 우선 처리 표시
+- skip 발생 시 list 보존 + 5009 anchor 우선 처리 표시
 
 ## 합격 판정
 
 - 자동 검증 모두 ✅ (C1~C5) + 수동 시나리오 S1, S3, S6 PASS → **최소 합격**
 - 자동 검증 모두 ✅ + 수동 시나리오 S1~S6 모두 PASS + 사용자 review 모두 "OK" 또는 skip 명시 → **완전 합격**
 - 자동 검증 1개라도 ❌ → **FAIL** (Phase 5 수정)
-- 사용자 review iter 3 후 다수 skip 발생 시 → 부분 합격 (5008.1 우선 처리 anchor 활성화)
+- 사용자 review iter 3 후 다수 skip 발생 시 → 부분 합격 (5009 우선 처리 anchor 활성화)

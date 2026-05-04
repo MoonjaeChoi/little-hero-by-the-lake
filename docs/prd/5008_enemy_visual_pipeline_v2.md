@@ -71,7 +71,7 @@
 |---|---|
 | A | 단일 prompt template (현재 V5 base) — 일관 | 변형 부족 |
 | **B (★권장)** | **카테고리별 prompt 변형** (Meta / Nature / Animal / Civ / Fantasy 각 톤 prefix) — 일관 + 카테고리 식별성 ✅ |
-| C | LoRA 훈련 (5008.1+ 후속) | 본 PRD 범위 외 |
+| C | LoRA 훈련 (5009+ 후속) | 본 PRD 범위 외 |
 
 ### 2.4 D4 — 사용자 검토 사이클
 
@@ -173,8 +173,8 @@ Meta-Boss:   "ancient village patriarch"
 | LayerDiffuse 노드 설치 사용자 책임 | 1 | SKILL.md 가이드 + URL 명시 (huchenlei/ComfyUI-layerdiffuse) |
 | 30 archetype 재생성 시 카테고리 톤 깨짐 | 3~5 | 카테고리별 prompt prefix + 사용자 review 사이클 |
 | 사용자 review 사이클 길어짐 | 3~5 | Sprint 단위 review (한 번에 6 sprite), max 3 iteration cap |
-| chapter 별 sprite (210 PNG) 미처리 | 본 PRD 외 | 30 archetype 만 우선, Chapter 별 sprite 는 D = 5008.1 후속 |
-| 손상 9 PNG 중 30 archetype 외 8 PNG 미처리 | 본 PRD 외 | Enemy_Nature_Medium 1 개만 본 PRD 범위, 나머지 8 = 5008.1 |
+| chapter 별 sprite (210 PNG) 미처리 | 본 PRD 외 | 30 archetype 만 우선, Chapter 별 sprite 는 D = 5009 후속 |
+| 손상 9 PNG 중 30 archetype 외 8 PNG 미처리 | 본 PRD 외 | Enemy_Nature_Medium 1 개만 본 PRD 범위, 나머지 8 = 5009 |
 | LayerDiffuse 가 sticker outline 파괴 | 1 | prompt 에 "chunky thick white outline" 강조 + 사용자 review |
 | AI 생성 캐릭터 일관성 부족 | 3~5 | 카테고리별 시드 고정 (Meta=22222, Nature=33333, ...) — 카테고리 통일 |
 
@@ -186,24 +186,24 @@ Meta-Boss:   "ancient village patriarch"
 - [ ] 30 archetype sprite 재생성 (사용자 review PASS)
 - [ ] Unity 자동 임포트 + 256 PNG 정상 표시 (Play Mode)
 - [ ] CLAUDE.md §11/§12/§14 갱신 + changelog
-- [ ] 후속 anchor 명시 (5008.1: chapter overrides 210 / 5008.2: V1 11종 / 5008.3: 보스 11종)
+- [ ] 후속 anchor 명시 (5009: chapter overrides 210 / 5010: V1 11종 / 5011: 보스 11종)
 
 ## 7. 본 PRD 범위 외 (후속 사이클 anchor)
 
 | 후속 PRD | 작업 | 우선순위 |
 |---|---|---|
-| **5008.1** | Chapter 별 210 sprite (`Chapters/CH##_*.png`) 점진 재생성 | 보통 |
-| **5008.2** | V1 11 동화 적 재생성 (Chapter_01~03 RedHood/Beanstalk/Alice) | 낮음 (legacy) |
-| **5008.3** | Daily 7 + Weekly 4 보스 재생성 | 보통 (endgame 시) |
-| 5009 | MPB hue shift 다양성 시스템 (30 → 150 변형) | 본 PRD 와 별도 |
-| 5010 | EnemyVisibilityCuller (off-screen culling) | 성능 영역 |
-| 5011 | V5 sticker LoRA 훈련 (Kohya_ss) | 자동화 영역 |
-| 5012 | LitMotion 도입 (DOTween 5×) | 애니메이션 영역 |
+| **5009** | Chapter 별 210 sprite (`Chapters/CH##_*.png`) 점진 재생성 | 보통 |
+| **5010** | V1 11 동화 적 재생성 (Chapter_01~03 RedHood/Beanstalk/Alice) | 낮음 (legacy) |
+| **5011** | Daily 7 + Weekly 4 보스 재생성 | 보통 (endgame 시) |
+| 5012 | MPB hue shift 다양성 시스템 (30 → 150 변형) | 본 PRD 와 별도 |
+| 5013 | EnemyVisibilityCuller (off-screen culling) | 성능 영역 |
+| 5014 | V5 sticker LoRA 훈련 (Kohya_ss) | 자동화 영역 |
+| 5015 | LitMotion 도입 (DOTween 5×) | 애니메이션 영역 |
 
 ## 8. 변경 이력
 
 - 2026-05-04: 초기 작성 (전체 파이프라인 7 commit, MPB+culling+LayerDiffuse)
-- 2026-05-04: **사용자 결정 — 범위 축소 (자산 품질 한정)**. 6 commit / 6 카테고리 review 사이클. MPB / culling / LoRA → 5009~5011 후속.
+- 2026-05-04: **사용자 결정 — 범위 축소 (자산 품질 한정)**. 6 commit / 6 카테고리 review 사이클. MPB / culling / LoRA → 5012~5014 후속.
 
 ## 9. 출처
 

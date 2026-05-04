@@ -5,11 +5,11 @@
 > 결정 3건 반영 (D1=C / D2=C / D3=A+B). 다음 단계: /prd-breakdown
 
 > **출처**: `docs/prd/5008_enemy_visual_pipeline_v2.md` (디자인, 범위 축소 판) — 옵션 D1=B / D2=A / D3=B / D4=A / D5=A / D6=A
-> **범위**: 30 archetype 베이스 sprite 재생성 + LayerDiffuse 워크플로 + 사용자 review 사이클. **MPB / culling / LoRA / Chapter 별 210 sprite 등은 5008.1+ / 5009+ 별도 사이클**.
+> **범위**: 30 archetype 베이스 sprite 재생성 + LayerDiffuse 워크플로 + 사용자 review 사이클. **MPB / culling / LoRA / Chapter 별 210 sprite 등은 5009+ / 5009+ 별도 사이클**.
 > **Mediator 결정 반영**:
 > - D1=C: EnemySpriteAuditor — AssetImporter.SetReadable + try/finally + GetPixels32 + 복원 패턴
 > - D2=C: Auditor 가 V2 archetype 폴백 검증 후 Sprint 5.5 활성화 여부 결정
-> - D3=A+B: skip sprite — Sprint 6 docs skip list + 5008.1 anchor 우선 표시
+> - D3=A+B: skip sprite — Sprint 6 docs skip list + 5009 anchor 우선 표시
 > - Rebuttal Accepted: SpriteAtlas 재빌드 명시 (Sprint 6) + Sprint 1 fallback 한계 명시
 
 ## 1. 전체 개요
@@ -140,7 +140,7 @@ public static void AuditAll() {
 - §15.6 100L / §15.12 Validator 룰 역할
 
 [D2 분기]
-- fallback OK 시: Sprint 5.5 미활성화, 5008.1 anchor 만
+- fallback OK 시: Sprint 5.5 미활성화, 5009 anchor 만
 - fallback 깨짐 시: Sprint 5.5 활성화
 
 Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
@@ -162,7 +162,7 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
    - 만족 → Sprint 4 진입
    - 불만족 → prompt 조정 + 재생성 (iteration 2/3)
    - max 3 iteration 내 PASS 못 하면 사용자 결정 (다른 시드 / 다른 prompt / **skip**)
-   - **(D3=A+B Mediator 결정)** skip 시: Sprint 6 docs skip list 추가 + 5008.1 anchor 우선 처리 표시
+   - **(D3=A+B Mediator 결정)** skip 시: Sprint 6 docs skip list 추가 + 5009 anchor 우선 처리 표시
 
 **검증 기준**:
 - 6 PNG 모두 alpha transparent 30~70%
@@ -247,7 +247,7 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 ### Sprint 5.5 — (조건부 D2=C) 손상 8 chapter override 흡수 (0~1 commit)
 
 **활성화 조건 (D2=C)**: Sprint 2 Auditor V2 archetype 폴백 검증 결과 = **깨짐**
-**비활성화 조건**: fallback 정상 → 5008.1 anchor 만
+**비활성화 조건**: fallback 정상 → 5009 anchor 만
 
 **대상**: 손상 8 chapter override (CH14/CH22/CH25/CH30/CH33×2/CH34)
 
@@ -280,7 +280,7 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 - `CLAUDE.md §12` — UI 시스템 갱신 (LayerDiffuse + Auditor)
 - `CLAUDE.md §14` — 최근 5건 회전
 - **SpriteAtlas 재빌드 단계 명시 (Rebuttal accepted)**: EnemyAtlas SpriteAtlas SRP Batcher 재빌드 (Unity 자동 또는 메뉴 `Window > 2D > Sprite Atlas`)
-- **skip list docs (D3=A+B)**: Sprint 3~5 에서 skip 발생 시 docs 에 list 명시 + 5008.1 anchor 에 "skip list 우선 처리" 1줄 추가
+- **skip list docs (D3=A+B)**: Sprint 3~5 에서 skip 발생 시 docs 에 list 명시 + 5009 anchor 에 "skip list 우선 처리" 1줄 추가
 
 #### Sprint 6 commit
 
@@ -290,7 +290,7 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 [변경]
 - docs/little_hero/changelog_v1.md — 5008 항목
 - CLAUDE.md §11/§12/§14 갱신
-- 후속 anchor 명시 (5008.1: chapter overrides 210 + skip list 우선 처리 / 5008.2: V1 / 5008.3: 보스 / 5009: MPB / 5010: culling / 5011: LoRA)
+- 후속 anchor 명시 (5009: chapter overrides 210 + skip list 우선 처리 / 5010: V1 / 5011: 보스 / 5012: MPB / 5013: culling / 5014: LoRA)
 - SpriteAtlas 재빌드 가이드 (사용자 빌드 시 누락 방지)
 - skip list docs (D3=A+B 채택, 있으면)
 
@@ -363,7 +363,7 @@ Sprint 2 (Auditor + V2 폴백 검증 D2=C) ┘                                  
 - [ ] SpriteAtlas 재빌드 + Atlas 무결성 검증 (Rebuttal accepted)
 - [ ] CLAUDE.md §11/§12/§14 + changelog
 - [ ] Play 시나리오 S1~S6 통과
-- [ ] 후속 anchor 5008.1+ (skip list 포함, D3=A+B), 5009+ 명시
+- [ ] 후속 anchor 5009+ (skip list 포함, D3=A+B), 5009+ 명시
 - [ ] (조건부 D2=C) Sprint 5.5 활성화 시 손상 8 chapter override 처리
 
 ## 6. 알려진 위험 + 완화
@@ -374,9 +374,9 @@ Sprint 2 (Auditor + V2 폴백 검증 D2=C) ┘                                  
 | 카테고리 톤 불만족 → max 3 iteration | 3~5 | 시드 고정 + prompt prefix 표준 + skip 정책 D3=A+B |
 | 사용자 review 시간 길어짐 | 3~5 | 카테고리별 batch 6 sprite 한 번 review |
 | 손상 9 PNG 중 30 archetype 외 8 PNG | 2 → 5.5 | **D2=C 채택**: Auditor V2 폴백 검증 → 깨짐 시 Sprint 5.5 활성화 |
-| skip sprite 후속 추적 부재 | 6 | **D3=A+B 채택**: Sprint 6 docs skip list + 5008.1 anchor 우선 |
+| skip sprite 후속 추적 부재 | 6 | **D3=A+B 채택**: Sprint 6 docs skip list + 5009 anchor 우선 |
 | SpriteAtlas 재빌드 누락 | 6 | Sprint 6 commit + Definition of Done 명시 |
-| Chapter 별 sprite (210 PNG) 미처리 | 본 PRD 외 | V2 시스템 = 30 archetype 만 사용. 별도 사이클 (5008.1) |
+| Chapter 별 sprite (210 PNG) 미처리 | 본 PRD 외 | V2 시스템 = 30 archetype 만 사용. 별도 사이클 (5009) |
 | Auditor 임포트 설정 영구 변경 | 2 | **D1=C 채택**: try/finally 복원 패턴 강제 |
 | 사용자 만족도 측정 | 3~5 | "OK" / "재시도" / "skip" 응답 명시 |
 

@@ -1,7 +1,7 @@
 # 5008 — Chapter Enemy Asset Quality v1 — Sprint PRD
 
 > **출처**: `docs/prd/5008_enemy_visual_pipeline_v2.md` (디자인, 범위 축소 판) — 옵션 D1=B / D2=A / D3=B / D4=A / D5=A / D6=A
-> **범위**: 30 archetype 베이스 sprite 재생성 + LayerDiffuse 워크플로 + 사용자 review 사이클. **MPB / culling / LoRA / Chapter 별 210 sprite 등은 5008.1+ / 5009+ 별도 사이클**.
+> **범위**: 30 archetype 베이스 sprite 재생성 + LayerDiffuse 워크플로 + 사용자 review 사이클. **MPB / culling / LoRA / Chapter 별 210 sprite 등은 5009+ / 5009+ 별도 사이클**.
 
 ## 1. 전체 개요
 
@@ -204,7 +204,7 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 [변경]
 - docs/little_hero/changelog_v1.md — 5008 항목
 - CLAUDE.md §11/§12/§14 갱신
-- 후속 anchor 명시 (5008.1: chapter overrides 210 / 5008.2: V1 / 5008.3: 보스 / 5009: MPB / 5010: culling / 5011: LoRA)
+- 후속 anchor 명시 (5009: chapter overrides 210 / 5010: V1 / 5011: 보스 / 5012: MPB / 5013: culling / 5014: LoRA)
 
 [검증]
 - Phase 5 종결 (6/6 commit)
@@ -258,7 +258,7 @@ Sprint 2 (Auditor) ┘
 - [ ] 30 archetype 재생성 + 사용자 review 모두 PASS
 - [ ] CLAUDE.md §11/§12/§14 + changelog
 - [ ] Play 시나리오 S1~S4 통과
-- [ ] 후속 anchor 5008.1+, 5009+ 명시
+- [ ] 후속 anchor 5009+, 5009+ 명시
 
 ## 6. 알려진 위험 + 완화
 
@@ -267,7 +267,7 @@ Sprint 2 (Auditor) ┘
 | LayerDiffuse 노드 설치 (사용자 책임) | 1 | SKILL.md URL 명시 + fallback workflow |
 | 카테고리 톤 불만족 → max 3 iteration | 3~5 | 시드 고정 + prompt prefix 표준 |
 | 사용자 review 시간 길어짐 | 3~5 | 카테고리별 batch 6 sprite 한 번 review |
-| 손상 9 PNG 중 30 archetype 외 8 PNG | 본 PRD 외 | 5008.1 후속 (Chapter 별 210 PNG 포함) |
+| 손상 9 PNG 중 30 archetype 외 8 PNG | 본 PRD 외 | 5009 후속 (Chapter 별 210 PNG 포함) |
 | Chapter 별 sprite (210 PNG) 미처리 | 본 PRD 외 | V2 시스템 = 30 archetype 만 사용 (PhaseFContentSeed 결과). 210 chapter override = 레거시. 별도 사이클 |
 | 사용자 만족도 측정 | 3~5 | "OK" / "재시도" / "skip" 응답 명시 |
 

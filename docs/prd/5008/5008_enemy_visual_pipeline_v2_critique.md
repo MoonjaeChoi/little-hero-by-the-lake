@@ -56,16 +56,16 @@
 
 ### 🟡 D2. 손상 9 PNG 중 chapter override 8개 처리 우선순위
 
-**현재 PRD**: D5=A 로 30 archetype 1개 (Enemy_Nature_Medium) 만 본 PRD. 나머지 8 chapter override (CH14/CH22/CH25/CH30/CH33×2/CH34) 는 5008.1 후속 anchor 만 명시.
+**현재 PRD**: D5=A 로 30 archetype 1개 (Enemy_Nature_Medium) 만 본 PRD. 나머지 8 chapter override (CH14/CH22/CH25/CH30/CH33×2/CH34) 는 5009 후속 anchor 만 명시.
 
 **문제**: 사용자 직전 보고 ("1라운드 적 흰 박스") 의 직접 원인은 chapter override sprite 인 것이 일부 (PhaseFContentSeed V2 시스템에서 archetype 폴백 작동 시 archetype 사용). 5008 PRD 가 PASS 되어도 손상 8 chapter override 가 남아있으면 사용자 회귀 리스크.
 
 **옵션**:
-- A. 본 PRD 진행 후 즉시 5008.1 진행 (현재 설계 — anchor 만)
+- A. 본 PRD 진행 후 즉시 5009 진행 (현재 설계 — anchor 만)
 - **B. Sprint 5.5 추가 — 손상 8 chapter override 즉시 재생성** (5008 범위 내 흡수, 1 commit, 30분)
 - C. EnemySpriteAuditor 가 V2 시스템에서 archetype 폴백 가능 여부 검증 → fallback OK 면 8 PNG 무시 / 아니면 Sprint 5.5 강제
 
-**Claude 권장**: **C (검증 후 결정)** — Auditor (Sprint 2) 가 V2 시스템 archetype 폴백 검증 추가. fallback 정상 시 8 PNG 미처리 정당화 (5008.1 anchor). 깨짐 시 Sprint 5.5 강제 추가.
+**Claude 권장**: **C (검증 후 결정)** — Auditor (Sprint 2) 가 V2 시스템 archetype 폴백 검증 추가. fallback 정상 시 8 PNG 미처리 정당화 (5009 anchor). 깨짐 시 Sprint 5.5 강제 추가.
 
 **사용자 결정 필요**: A (anchor 만) / B (즉시 흡수) / C (검증 후 결정)
 
@@ -79,12 +79,12 @@
 
 **옵션**:
 - A. 기존 sprite 유지 (재생성 X) — Sprint 6 docs 에 skip list 명시
-- **B. 5008.1 후속 자동 enroll** — skip list 자동으로 5008.1 anchor 에 우선 처리 항목으로
+- **B. 5009 후속 자동 enroll** — skip list 자동으로 5009 anchor 에 우선 처리 항목으로
 - C. 5008 자체 종료 차단 — skip 0 까지 반복 (사용자 부담 ↑)
 
-**Claude 권장**: **A + B 결합** — Sprint 6 docs 에 skip list 명시 + 5008.1 anchor 에 우선 처리 표시. 사용자 부담 없이 추적성 확보.
+**Claude 권장**: **A + B 결합** — Sprint 6 docs 에 skip list 명시 + 5009 anchor 에 우선 처리 표시. 사용자 부담 없이 추적성 확보.
 
-**사용자 결정 필요**: A (skip 무시) / B (5008.1 우선 enroll) / C (skip 0 강제)
+**사용자 결정 필요**: A (skip 무시) / B (5009 우선 enroll) / C (skip 0 강제)
 
 ## 5. CLAUDE.md §15 정책 위반 점검
 
@@ -109,7 +109,7 @@
 
 - **D1**: Auditor 구현 방식 선택 (A/B/C) → Sprint 2 commit 메시지 + 코드 명세 갱신
 - **D2**: 손상 8 chapter override 처리 (A/B/C) → Sprint 5.5 추가 여부 결정
-- **D3**: skip sprite 후속 정책 (A/B/C) → Sprint 6 docs 추가 또는 5008.1 anchor 우선표시
+- **D3**: skip sprite 후속 정책 (A/B/C) → Sprint 6 docs 추가 또는 5009 anchor 우선표시
 
 ## 7. 추가 관찰 (정보)
 

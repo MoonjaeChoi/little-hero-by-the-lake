@@ -66,7 +66,7 @@ T02 (Auditor + V2 폴백 검증) ┘                                            
 ## 7. PRD v2 차이점 (v1 → v2)
 
 - **Sprint 5.5 추가** (D2=C 조건부) — Auditor 결과에 따라
-- **Sprint 6 확장** (D3=A+B) — skip list docs + 5008.1 anchor 우선
+- **Sprint 6 확장** (D3=A+B) — skip list docs + 5009 anchor 우선
 - **Sprint 6 추가** (Rebuttal accepted) — SpriteAtlas 재빌드
 - **Sprint 1 SKILL.md 가이드 강화** (Rebuttal accepted) — fallback 한계 명시
 - **Sprint 2 구현 방식 명시** (D1=C) — try/finally 복원 패턴

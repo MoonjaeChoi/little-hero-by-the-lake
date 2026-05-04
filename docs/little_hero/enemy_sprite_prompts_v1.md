@@ -140,7 +140,7 @@ Sprint 4 (Nature/Animal), Sprint 5 (Civ/Fantasy) 동일 패턴, 카테고리별 
 - **OK** → 다음 카테고리 진입 (또는 commit)
 - **재시도** → prompt 미세 조정 + 시드 동일 또는 변경 → 재생성 (max 3 iteration)
 - **iter 3 후 PASS X** → 사용자 결정 (다른 시드 / prompt 대폭 수정 / **skip**)
-- **skip 시 (D3=A+B)**: T06 docs skip list 추가 + 5008.1 anchor 우선 처리 표시
+- **skip 시 (D3=A+B)**: T06 docs skip list 추가 + 5009 anchor 우선 처리 표시
 
 ## 7. 변경 이력
 

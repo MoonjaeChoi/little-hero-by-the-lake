@@ -147,7 +147,7 @@ namespace LittleHero.Editor {
 - §15.6 100L / §15.12 Validator 룰 역할
 
 [D2 분기 input]
-- fallback OK 시: T05.5 미활성화, 5008.1 anchor 만
+- fallback OK 시: T05.5 미활성화, 5009 anchor 만
 - fallback 깨짐 시: T05.5 활성화 (사용자 결정)
 
 Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>

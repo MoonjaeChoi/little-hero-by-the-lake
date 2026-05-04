@@ -8,7 +8,7 @@
 ## 1. 활성화 조건
 
 **활성화**: T02 EnemySpriteAuditor 의 `ValidateV2ArchetypeFallback()` 결과 = **fallback 깨짐**
-**비활성화**: fallback OK → 본 태스크 skip, 5008.1 anchor 만 (5008 종료)
+**비활성화**: fallback OK → 본 태스크 skip, 5009 anchor 만 (5008 종료)
 
 > **사용자 결정 input**: T02 commit 후 enemy_sprite_audit_report.md 의 "V2 archetype fallback" 섹션 확인.
 > - **OK**: T05.5 미실행
@@ -67,7 +67,7 @@
 
 [활성화 조건 (D2=C)]
 - T02 V2 archetype 폴백 검증 = 깨짐 → 본 commit 활성화
-- fallback OK 시 → skip (5008.1 anchor 만)
+- fallback OK 시 → skip (5009 anchor 만)
 
 Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 ```

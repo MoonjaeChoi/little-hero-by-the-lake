@@ -11,8 +11,8 @@
 | PG-12 톤 | (위반 없음) | — | — | — | ✅ |
 | 성능 | SpriteAtlas 재구성 영향 명시 부족 | Low | **Accepted** | Sprint 6 docs 에 SpriteAtlas 재빌드 단계 명시 | ✅ |
 | Auditor 구현 | GetPixels32 vs PNG byte 파싱 vs A+복원 모호 | Medium | **Discuss** | discussion_topics D1 | △ |
-| 손상 8 chapter override | 5008.1 anchor vs 즉시 흡수 vs 검증 후 결정 | Medium | **Discuss** | discussion_topics D2 | △ |
-| skip sprite 후속 정책 | A 무시 / B 5008.1 enroll / C 강제 0 | Medium | **Discuss** | discussion_topics D3 | △ |
+| 손상 8 chapter override | 5009 anchor vs 즉시 흡수 vs 검증 후 결정 | Medium | **Discuss** | discussion_topics D2 | △ |
+| skip sprite 후속 정책 | A 무시 / B 5009 enroll / C 강제 0 | Medium | **Discuss** | discussion_topics D3 | △ |
 | Sprint 1 fallback 명시도 | DreamShaperXL Turbo native alpha 한계 명시 | Low | **Accepted** | Sprint 1 commit message + SKILL.md 가이드에 한계 명시 | ✅ |
 
 ## 2. 품질 메트릭
@@ -68,7 +68,7 @@
 
 - **Status**: **Discuss** → discussion_topics D2
 - **이유**: V2 시스템 archetype 폴백 작동 여부에 따라 Sprint 5.5 추가 여부 결정 — 사용자 우선순위 결정.
-- **Current Position**: PRD 그대로 진행 시 5008.1 anchor 만, 사용자가 "1라운드 적 흰 박스" 회귀 시 5008.1 즉시 진입 필요.
+- **Current Position**: PRD 그대로 진행 시 5009 anchor 만, 사용자가 "1라운드 적 흰 박스" 회귀 시 5009 즉시 진입 필요.
 - **Resolution Path**: mediator 단계에서 A (anchor 만) / B (Sprint 5.5 흡수) / C (검증 후 결정) 선택. Claude 권장: C (Auditor 검증 후 결정).
 
 ---
@@ -81,7 +81,7 @@
 - **Status**: **Discuss** → discussion_topics D3
 - **이유**: skip 정책은 사용자 부담과 추적성의 trade-off — 사용자 결정.
 - **Current Position**: PRD 그대로 진행 시 skip 처리 sprite 가 5008 종료 후 추적 안 됨.
-- **Resolution Path**: mediator 단계에서 A (skip 무시) / B (5008.1 우선 enroll) / C (skip 0 강제) 선택. Claude 권장: A+B 결합 (Sprint 6 docs skip list 명시 + 5008.1 anchor 우선 표시).
+- **Resolution Path**: mediator 단계에서 A (skip 무시) / B (5009 우선 enroll) / C (skip 0 강제) 선택. Claude 권장: A+B 결합 (Sprint 6 docs skip list 명시 + 5009 anchor 우선 표시).
 
 ---
 
@@ -99,7 +99,7 @@
 
 - D1 Auditor 구현 방식 (Sprint 2 영향)
 - D2 손상 8 chapter override 처리 (Sprint 5.5 추가 여부)
-- D3 skip sprite 후속 정책 (Sprint 6 docs + 5008.1 anchor)
+- D3 skip sprite 후속 정책 (Sprint 6 docs + 5009 anchor)
 
 ## 5. 변경 이력
 
