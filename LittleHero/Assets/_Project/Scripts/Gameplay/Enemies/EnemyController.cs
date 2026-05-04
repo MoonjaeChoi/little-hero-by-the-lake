@@ -48,7 +48,8 @@ namespace LittleHero
         }
 
         // A4 — chapter_curve §9.1: HP/공격력에 챕터 곱셈 적용. multiplier=1f면 영향 없음.
-        public void Initialize(EnemyData data, float statMultiplier = 1f)
+        // 5012 — variationIndex (default 0) hue 변형. BossTier!=None 시 무시.
+        public void Initialize(EnemyData data, float statMultiplier = 1f, int variationIndex = 0)
         {
             _data = data;
             float m = Mathf.Max(0.01f, statMultiplier);
@@ -60,11 +61,12 @@ namespace LittleHero
             _attackDamage  = data.damage    * m * v3AtkMul;
             _currentHealth = _maxHealth;
             _isDead = false;
-            ApplyAppearance(data);
+            ApplyAppearance(data, variationIndex);
             _sr = GetComponentInChildren<SpriteRenderer>();
             _rb = GetComponent<Rigidbody2D>();
             _baseScaleX = transform.localScale.x;
             _baseScaleY = transform.localScale.y;
+            // 5012 D3=B — _baseColor hue 결과로 캐시 (flash 후 hue 색상 유지)
             _baseColor = _sr != null ? _sr.color : Color.white;
             _punchScale = 1f;
             // 적별 다른 위상으로 전체 sway 가 동기화되지 않게 무작위 시작점
@@ -185,7 +187,7 @@ namespace LittleHero
             _flashCo = null;
         }
 
-        private void ApplyAppearance(EnemyData data)
+        private void ApplyAppearance(EnemyData data, int variationIndex = 0)
         {
             SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
             if (sr != null)
@@ -194,6 +196,11 @@ namespace LittleHero
                 if (data.icon != null) sr.sprite = data.icon;
                 // tint 적용 — 신규 sprite는 흰색 유지(원본 색 보존), placeholder 원형은 tintColor 적용
                 sr.color = data.icon != null ? Color.white : data.tintColor;
+                // 5012 D1=B — SpriteRenderer.color multiplicative hue tint. BossTier!=None 시 미적용.
+                if (variationIndex > 0 && data.bossTier == BossTier.None)
+                {
+                    sr.color = EnemyHueVariation.HueShift(sr.color, EnemyHueVariation.OFFSETS[variationIndex]);
+                }
             }
             // P11 — 768×768 PNG 베이스 0.4 → 0.55. PIVOT v3 — 적 1/10 scale (보스 제외).
             float baseScale = data.scaleMultiplier > 0f ? data.scaleMultiplier : 1f;
