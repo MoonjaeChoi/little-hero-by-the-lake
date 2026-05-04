@@ -1,13 +1,13 @@
 {
-  "_comment": "LayerDiffuse SDXL workflow — huchenlei/ComfyUI-layerdiffuse Custom Node 기반 RGBA native transparent 출력. DreamShaperXL Turbo + Layered Diffusion Apply (model patch) + Layered Diffusion Decode (RGBA 디코더). Turbo 권장: steps=8 / cfg=2.0 / sampler dpmpp_sde / scheduler karras. 노드 class_type 명은 huchenlei/ComfyUI-layerdiffuse 의 v1.0+ 기준. 다른 버전 사용 시 ComfyUI Settings → Save (API Format) 으로 export 한 JSON 으로 본 파일 교체. 표준 노드 id 유지 (positive=6, negative=7, sampler=3, latent=5, model_apply=10, decode=11). LayerDiffuse 노드 미설치 시 fallback (workflow_template.json) 사용 — 한계: DreamShaperXL Turbo는 native alpha 출력 X, dark BG + flood-fill 후처리 정확도 ~80%.",
+  "_comment": "LayerDiffuse SDXL workflow — huchenlei/ComfyUI-layerdiffuse + SDXL base 1.0. RGBA native transparent 출력. DreamShaperXL Turbo 와 호환 X (distillation 으로 LayerDiffuse 의 vae_transparent_decoder 가 RGB 디테일 복원 못 함, silhouette 만 출력) — 본 워크플로는 stabilityai/stable-diffusion-xl-base-1.0.safetensors 의 standard 모델 사용. KSampler: steps=20 / cfg=8.0 / sampler euler / scheduler normal (LayerDiffuse 검증된 조합). LayeredDiffusionApply config=\"SDXL, Conv Injection\". LayeredDiffusionDecodeRGBA sd_version=\"SDXL\" + sub_batch_size=16. 표준 SDXL 노드 id 유지 (positive=6, negative=7, sampler=3, latent=5, model_apply=10, decode=11).",
   "3": {
     "class_type": "KSampler",
     "inputs": {
       "seed": 22222,
-      "steps": 8,
-      "cfg": 2.0,
-      "sampler_name": "dpmpp_sde",
-      "scheduler": "karras",
+      "steps": 20,
+      "cfg": 8.0,
+      "sampler_name": "euler",
+      "scheduler": "normal",
       "denoise": 1.0,
       "model": ["10", 0],
       "positive": ["6", 0],
@@ -18,7 +18,7 @@
   "4": {
     "class_type": "CheckpointLoaderSimple",
     "inputs": {
-      "ckpt_name": "DreamShaperXL_Turbo_SFWdpmppSde_half_pruned.safetensors"
+      "ckpt_name": "sd_xl_base_1.0.safetensors"
     }
   },
   "5": {
