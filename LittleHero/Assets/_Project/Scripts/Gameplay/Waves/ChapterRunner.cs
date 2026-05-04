@@ -154,7 +154,8 @@ namespace LittleHero
             var player = UnityEngine.Object.FindAnyObjectByType<PlayerHealth>(FindObjectsInactive.Include);
             var stats = UnityEngine.Object.FindAnyObjectByType<PlayerStats>(FindObjectsInactive.Include);
             if (player != null && stats != null) player.Heal(stats.MaxHealth * 0.5f);
-            yield return new WaitForSeconds(5f);
+            // 사용자 baseline (2026-05-05) — Realtime 사용 (timeScale 영향 X). HitPause 누적 시 wave 진행 막힘 회피.
+            yield return new WaitForSecondsRealtime(5f);
             StartNextWave();
         }
 
