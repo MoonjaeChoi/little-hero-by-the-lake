@@ -39,7 +39,30 @@ namespace LittleHero.EditorTools
             ValidateBossSystem(issues);   // 5001 boss_system_v2 신규 (T09)
             ValidateBossEncounterContextAccess(issues);  // 5002 T09 — 정적 Context 외부 직접 R/W 검사 (§15.7 DI)
             ValidateSceneManagerDirectAccess(issues);  // 5004 T06 — SceneManager.LoadScene 외부 직접 호출 검사 (§15.7 DI)
+            ValidateEnemyVisibilityCheck(issues);  // 5013 T04 — EnemyAnimationManager visibility throttle 호출 검사
             Print(issues);
+        }
+
+        // 5013 T04 — EnemyAnimationManager.Update 가 EnemyVisibilityCuller.IsVisible 호출하는지 검사 (Rebuttal §3.1).
+        private static void ValidateEnemyVisibilityCheck(List<Issue> issues)
+        {
+            var path = Path.Combine(Application.dataPath, "_Project/Scripts/Gameplay/Enemies/EnemyAnimationManager.cs");
+            if (!File.Exists(path))
+            {
+                issues.Add(new Issue(Severity.Warning, "5013 visibility",
+                    "EnemyAnimationManager.cs 미존재"));
+                return;
+            }
+            var src = File.ReadAllText(path);
+            if (!src.Contains("EnemyVisibilityCuller.IsVisible"))
+            {
+                issues.Add(new Issue(Severity.Warning, "5013 visibility",
+                    "EnemyAnimationManager 의 Update 에 EnemyVisibilityCuller.IsVisible 호출 누락 — off-screen culling 미작동"));
+            }
+            else
+            {
+                Debug.Log("[ProjectValidator] 5013 visibility OK — EnemyAnimationManager.IsVisible 호출 정상");
+            }
         }
 
         // 5004 T06 — SceneManager.LoadScene 외부 직접 호출 검사 (§15.7 DI).
