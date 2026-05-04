@@ -7,7 +7,7 @@
 ## 0. 결정 이력
 
 - 2026-05-04: 5015 RESERVED 결정 (D1=A) — PRD 전제 무효 (DOTween 사용 0건)
-- 2026-05-04: 5016 사전조사 보고서 — `docs/prd/5016_premigration_research.md` (코드 인벤토리 + GC 정적 분석 + LitMotion 외부 정보)
+- 2026-05-04: 5016 사전조사 보고서 — `docs/prd/5015b_premigration_research.md` (코드 인벤토리 + GC 정적 분석 + LitMotion 외부 정보)
 - 2026-05-05: 사용자 baseline 변경 — AttackSpeed × 5 영구 + 공격 간격 × 0.7 (BalanceConfig.attackIntervalMul=0.7) → ~7.14× hit 빈도 (정상 게임플레이)
 - 2026-05-05: GCAllocMeasurer 60s 측정 → **시나리오 C (> 50 KB/s) 확정** → 5016 전체 마이그레이션 진행
 
@@ -243,4 +243,4 @@ yield return LMotion.Create(0f, 1f, 0.5f).Bind(...).ToYieldInteraction();
 - [LitMotion Installation](https://annulusgames.github.io/LitMotion/articles/en/installation.html)
 - [LitMotion Design Philosophy](https://annulusgames.github.io/LitMotion/articles/en/design-philosophy.html)
 - [TweenPerformance Benchmark](https://github.com/AnnulusGames/TweenPerformance)
-- [5016 사전조사 보고서](./5016_premigration_research.md)
+- [5016 사전조사 보고서](./5015b_premigration_research.md)
