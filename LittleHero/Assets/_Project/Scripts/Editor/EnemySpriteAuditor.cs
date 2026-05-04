@@ -17,7 +17,9 @@ namespace LittleHero.EditorTools
     {
         private const string ENEMY_ROOT = "Assets/_Project/Art/Generated_v2/Enemies";
         private const string ENEMY_DATA_DIR = "Assets/_Project/Data/Enemies";
-        private const string REPORT_PATH = "docs/little_hero/enemy_sprite_audit_report.md";
+        // 보고서는 repo 루트의 docs/little_hero/ 에 저장 (LittleHero/ 의 부모).
+        // Application.dataPath = .../LittleHero/Assets → 두 단계 위가 repo root.
+        private const string REPORT_REL = "../docs/little_hero/enemy_sprite_audit_report.md";
         private const float DAMAGE_LO = 0.05f;  // 5% 미만 = 손상 (전부 불투명)
         private const float DAMAGE_HI = 0.95f;  // 95% 초과 = 손상 (전부 투명)
         private const float HEALTHY_LO = 0.30f; // 30~70% = 건강 sticker (캐릭터 + 여백)
@@ -33,7 +35,7 @@ namespace LittleHero.EditorTools
             var fallbackOk = ValidateV2Fallback(damaged);
             WriteReport(entries, damaged, fallbackOk);
 
-            Debug.Log($"[EnemySpriteAuditor] PNG={entries.Count} damaged={damaged.Count} v2_fallback={(fallbackOk ? "OK" : "BROKEN")} → {REPORT_PATH}");
+            Debug.Log($"[EnemySpriteAuditor] PNG={entries.Count} damaged={damaged.Count} v2_fallback={(fallbackOk ? "OK" : "BROKEN")} → {Path.GetFullPath(Path.Combine(Application.dataPath, REPORT_REL))}");
         }
 
         private static Entry AuditOne(string path)
@@ -160,7 +162,10 @@ namespace LittleHero.EditorTools
                 sb.AppendLine("- **fallback BROKEN** — 손상 sprite 가 EnemyData.icon 으로 참조됨.");
                 sb.AppendLine("- 결정: Sprint 5.5 활성화 권장. 손상 chapter override 즉시 재생성 필요.");
             }
-            File.WriteAllText(REPORT_PATH, sb.ToString());
+            var reportPath = Path.GetFullPath(Path.Combine(Application.dataPath, REPORT_REL));
+            var reportDir = Path.GetDirectoryName(reportPath);
+            if (!string.IsNullOrEmpty(reportDir)) Directory.CreateDirectory(reportDir);
+            File.WriteAllText(reportPath, sb.ToString());
             AssetDatabase.Refresh();
         }
 
