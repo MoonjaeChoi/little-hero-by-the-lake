@@ -93,8 +93,8 @@ namespace LittleHero
                 1f);
         }
 
-        /// <summary>PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3).</summary>
-        public void OnHit(float damage, bool isCrit)
+        /// <summary>PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3). 5007 — Resolver 통합 (T07).</summary>
+        public void OnHit(float damage, bool isCrit, WeaponCategory? weaponCategory = null, float avgPlayerDamage = 0f)
         {
             if (_isDead) return;
             // 글로벌 효과 — 적이 비활성돼도 적용 (floater/audio/vfx/shake)

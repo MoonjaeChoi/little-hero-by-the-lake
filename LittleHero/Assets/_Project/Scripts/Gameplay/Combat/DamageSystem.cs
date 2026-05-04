@@ -11,7 +11,7 @@ namespace LittleHero
     {
         private static PlayerStats _statsCache;
 
-        public static void DealDamage(EnemyController enemy, float damage)
+        public static void DealDamage(EnemyController enemy, float damage, WeaponCategory? weaponCategory = null)
         {
             if (enemy == null || enemy.IsDead) return;
             bool isCrit = RollCrit();
@@ -33,8 +33,12 @@ namespace LittleHero
                 if (health != null) health.Heal(final * Mathf.Min(s.LifestealRatio, 0.5f));
             }
 
+            // 5007 D2=B — avgDamage DamageSystem 에서 1회 query → OnHit 인자 전달
+            // (EnemyController 의 PlayerStats 의존성 0)
+            float avgPlayerDamage = s != null ? s.AttackDamage : 0f;
+
             // PIVOT v4 — OnHit 먼저 (적 1발 처치 시 SetActive(false) 후 coroutine 실패 방지).
-            enemy.OnHit(final, isCrit);
+            enemy.OnHit(final, isCrit, weaponCategory, avgPlayerDamage);
             enemy.TakeDamage(final);
         }
 
