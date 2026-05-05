@@ -1,4 +1,5 @@
 using System;
+using LitMotion;
 using UnityEngine;
 
 namespace LittleHero
@@ -21,10 +22,11 @@ namespace LittleHero
         private float _baseScaleY;
 
         // PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3)
+        // 5016 T02 — IEnumerator + Lerp → LitMotion MotionHandle (state machine alloc 0)
         private float _punchScale = 1f;
         private Color _baseColor = Color.white;
-        private System.Collections.IEnumerator _punchCo;
-        private System.Collections.IEnumerator _flashCo;
+        private MotionHandle _punchHandle;
+        private MotionHandle _flashHandle;
 
         // 보스 공격 패턴 (boss_attack_v1.md) — 5001 T07: IBossPhase State 패턴으로 대체
         // _bossAttack 제거. CurrentPhase 가 내부에서 BossPatternFactory 로 IBossAttackPattern 생성.
@@ -140,51 +142,38 @@ namespace LittleHero
             // Punch scale — Resolver 결과 (tier × intensity × cap 2.0)
             float punchUp   = isCrit ? (cfg != null ? cfg.punchUpCritDuration   : 0.07f) : (cfg != null ? cfg.punchUpDuration   : 0.05f);
             float punchDown = isCrit ? (cfg != null ? cfg.punchDownCritDuration : 0.15f) : (cfg != null ? cfg.punchDownDuration : 0.10f);
-            if (_punchCo != null) StopCoroutine(_punchCo);
-            _punchCo = PunchRoutine(resolved.PunchScale, punchUp, punchDown);
-            StartCoroutine(_punchCo);
+            DoPunch(resolved.PunchScale, punchUp, punchDown);
 
             // Color flash — Resolver 결과 (무기 카테고리별 색)
-            if (_flashCo != null) StopCoroutine(_flashCo);
-            _flashCo = FlashRoutine(resolved.FlashColor, punchUp, punchDown);
-            StartCoroutine(_flashCo);
+            DoFlash(resolved.FlashColor, punchUp, punchDown);
         }
 
-        private System.Collections.IEnumerator PunchRoutine(float targetScale, float expandTime, float returnTime)
+        // 5016 T02 — LitMotion 마이그레이션. Coroutine state machine alloc 0.
+        // LSequence.Append × 2 — 1f → targetScale → 1f. WithScheduler(UpdateIgnoreTimeScale) 으로 HitPause/paused 환경에서도 동작.
+        private void DoPunch(float targetScale, float expandTime, float returnTime)
         {
-            float t = 0f;
-            while (t < expandTime)
-            {
-                t += Time.unscaledDeltaTime;
-                _punchScale = Mathf.Lerp(1f, targetScale, t / expandTime);
-                yield return null;
-            }
-            t = 0f;
-            while (t < returnTime)
-            {
-                t += Time.unscaledDeltaTime;
-                _punchScale = Mathf.Lerp(targetScale, 1f, t / returnTime);
-                yield return null;
-            }
-            _punchScale = 1f;
-            _punchCo = null;
+            if (_punchHandle.IsActive()) _punchHandle.Cancel();
+            _punchHandle = LSequence.Create()
+                .Append(LMotion.Create(1f, targetScale, expandTime).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(this, (s, t) => t._punchScale = s))
+                .Append(LMotion.Create(targetScale, 1f, returnTime).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(this, (s, t) => t._punchScale = s))
+                .Run();
         }
 
-        private System.Collections.IEnumerator FlashRoutine(Color flashColor, float holdTime, float returnTime)
+        // 5016 T02 — LitMotion 마이그레이션. WithDelay 로 hold 후 Lerp.
+        // 5012 D3=B 정합 — _baseColor 복귀 (hue 색상 유지).
+        private void DoFlash(Color flashColor, float holdTime, float returnTime)
         {
-            if (_sr == null) yield break;
+            if (_sr == null) return;
+            if (_flashHandle.IsActive()) _flashHandle.Cancel();
             _sr.color = flashColor;
-            yield return new WaitForSecondsRealtime(holdTime);
-            float t = 0f;
-            while (t < returnTime)
-            {
-                t += Time.unscaledDeltaTime;
-                float k = t / returnTime;
-                _sr.color = Color.Lerp(flashColor, _baseColor, k);
-                yield return null;
-            }
-            _sr.color = _baseColor;
-            _flashCo = null;
+            Color baseColor = _baseColor;
+            _flashHandle = LMotion.Create(0f, 1f, returnTime)
+                .WithDelay(holdTime)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .Bind(this, (k, t) =>
+                {
+                    if (t._sr != null) t._sr.color = Color.Lerp(flashColor, baseColor, k);
+                });
         }
 
         // 5012.1 — icon != null 인 5008 sprite multiplicative tint baseline.
