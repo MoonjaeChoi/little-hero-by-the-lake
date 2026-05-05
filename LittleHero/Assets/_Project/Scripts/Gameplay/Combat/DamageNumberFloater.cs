@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Text;
 using LitMotion;
 using UnityEngine;
 using UnityEngine.UI;
@@ -127,17 +129,31 @@ namespace LittleHero
 
         private void OnDisable() => CancelAll();
 
+        // 5017 T01 — FormatDamage cache (Dictionary + StringBuilder).
+        // 동일 damage+type 반복 시 cache hit → string alloc 0. cap 1024 메모리 ~30 KB 영구 (D1=A).
+        private const int FORMAT_CACHE_CAP = 1024;
+        private static readonly StringBuilder _formatBuffer = new StringBuilder(16);
+        private static readonly Dictionary<(int, DamageType), string> _formatCache = new Dictionary<(int, DamageType), string>(FORMAT_CACHE_CAP);
+
+        public static int FormatCacheCount => _formatCache.Count;  // NUnit 검증
+
         private static string FormatDamage(int damage, DamageType type)
         {
-            string prefix = type == DamageType.Heal ? "+" : "";
-            string body;
+            var key = (damage, type);
+            if (_formatCache.TryGetValue(key, out string cached)) return cached;
+
+            var sb = _formatBuffer;
+            sb.Length = 0;
+            if (type == DamageType.Heal) sb.Append('+');
             int abs = Mathf.Abs(damage);
-            if (abs >= 1_000_000) body = (damage / 1_000_000f).ToString("F1") + "M";
-            else if (abs >= 10_000) body = (damage / 1000) + "K";
-            else if (abs >= 1_000) body = (damage / 1000f).ToString("F1") + "K";
-            else body = damage.ToString();
-            if (type == DamageType.Critical) return body + "!";
-            return prefix + body;
+            if (abs >= 1_000_000) sb.Append((damage / 1_000_000f).ToString("F1")).Append('M');
+            else if (abs >= 10_000) sb.Append(damage / 1000).Append('K');
+            else if (abs >= 1_000) sb.Append((damage / 1000f).ToString("F1")).Append('K');
+            else sb.Append(damage);
+            if (type == DamageType.Critical) sb.Append('!');
+            string result = sb.ToString();
+            if (_formatCache.Count < FORMAT_CACHE_CAP) _formatCache[key] = result;
+            return result;
         }
 
         private static Color ColorFor(DamageType type)

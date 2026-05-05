@@ -394,7 +394,7 @@ namespace LittleHero
             if (_bgmCache.TryGetValue(name, out var cached)) return cached;
             var clip = Resources.Load<AudioClip>("BGM/" + name);
             if (clip != null) _bgmCache[name] = clip;
-            else Debug.LogWarning($"AudioManager: BGM not found Resources/BGM/{name}");
+            else Debug.LogWarning("AudioManager: BGM not found Resources/BGM/" + name);  // 5017 T01 — string concat (interpolation alloc 회피)
             return clip;
         }
 
