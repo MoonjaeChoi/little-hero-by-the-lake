@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Char_HeroWarrior
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.CharacterData
   id: hero_warrior
-  displayName: "\uC6A9\uAC10\uD55C \uC18C\uB144"
+  displayName: "\uC804\uC0AC \uC2DC\uC6B0"
   className: "\uC804\uC0AC"
   description: 
   portrait: {fileID: 21300000, guid: f6bedfb7ffbaf4ecdacb710ea3562ef3, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Char_HeroMage
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.CharacterData
   id: hero_mage
-  displayName: "\uC870\uC6A9\uD55C \uCE5C\uAD6C"
+  displayName: "\uB9C8\uBC95\uC0AC \uC5F0\uC6B0"
   className: "\uB9C8\uBC95\uC0AC"
   description: 
   portrait: {fileID: 21300000, guid: 2c53e76751ee447c192630f0c9028063, type: 3}
