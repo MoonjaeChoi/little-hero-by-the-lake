@@ -12,7 +12,7 @@
 | Fantasy | 6 | 3 | 0 |
 | Meta | 6 | 4 | 0 |
 | Nature | 6 | 3 | 0 |
-| ChapterOverride | 210 | 119 | 0 |
+| ChapterOverride | 210 | 137 | 0 |
 | V1 | 11 | 9 | 0 |
 
 ## Damaged PNG List
