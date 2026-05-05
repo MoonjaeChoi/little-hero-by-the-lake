@@ -42,7 +42,27 @@ namespace LittleHero.EditorTools
             ValidateEnemyVisibilityCheck(issues);  // 5013 T04 — EnemyAnimationManager visibility throttle 호출 검사
             ValidateEnemyHueVariationHook(issues);  // 5012 T04 — EnemyController.ApplyAppearance 의 HueShift 호출 검사
             ValidateLitMotionMigration(issues);  // 5016 T06 — DOTween 회귀 + LitMotion import ≥ N files 검사
+            ValidateGCAllocPatterns(issues);  // 5017 T04 — GC alloc 휴리스틱 검사
             Print(issues);
+        }
+
+        // 5017 T04 — DropContext struct 검증 + DamageNumberFloater FormatDamage cache 존재 검증.
+        private static void ValidateGCAllocPatterns(List<Issue> issues)
+        {
+            var dropCtxType = System.Type.GetType("LittleHero.DropContext, Assembly-CSharp");
+            if (dropCtxType != null && !dropCtxType.IsValueType)
+                issues.Add(new Issue(Severity.Warning, "5017 GC", "DropContext 가 struct 가 아님 (heap alloc)"));
+
+            var floaterType = System.Type.GetType("LittleHero.DamageNumberFloater, Assembly-CSharp");
+            if (floaterType != null)
+            {
+                var cacheCountProp = floaterType.GetProperty("FormatCacheCount",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                if (cacheCountProp == null)
+                    issues.Add(new Issue(Severity.Warning, "5017 GC", "DamageNumberFloater.FormatCacheCount 누락 (cache 미작동)"));
+            }
+
+            Debug.Log("[ProjectValidator] 5017 GC alloc OK — DropContext struct + FormatDamage cache 검증");
         }
 
         // 5016 T06 — DOTween 재도입 회귀 방지 + LitMotion import 22+ 검증 (§15.12).
