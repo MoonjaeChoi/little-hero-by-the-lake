@@ -7,11 +7,13 @@ namespace LittleHero
 
     /// <summary>
     /// 드랍 결정에 필요한 컨텍스트 (item_drop_v1 §4 / §5.3).
+    /// 5017 T02 — class → struct (heap alloc 폐기, by-value 전달).
+    /// 호출 시 명시 초기화 필수 (struct default 의 DropSource.Enemy=0 / chapterNumber=0 trap).
     /// </summary>
-    public class DropContext
+    public struct DropContext
     {
-        public DropSource source = DropSource.Enemy;
-        public int chapterNumber = 1;
+        public DropSource source;
+        public int chapterNumber;
         public EnemyData enemy;          // optional, 원인 적
         public EquipSlot? forcedSlot;    // Shop / 보스 티어 매핑 시
         public Rarity? forcedRarity;     // Shop 직구매 시
@@ -70,7 +72,7 @@ namespace LittleHero
                 Debug.LogWarning("[ItemDropService] Initialize 미호출 — 드랍 무시");
                 return null;
             }
-            if (ctx == null) return null;
+            // 5017 T02 — DropContext struct 변환 후 null 검사 폐기 (struct 는 항상 valid)
             rng = rng ?? _defaultRng;
 
             if (!RollDropChance(ctx, rng)) return null;
