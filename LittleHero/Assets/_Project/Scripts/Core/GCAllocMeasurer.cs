@@ -37,12 +37,50 @@ namespace LittleHero
                 Debug.LogError("[GCAllocMeasurer] Play Mode 진입 후 실행 필요. (Attic → CH 1 wave 5 권장)");
                 return;
             }
+            SpawnAndMeasure();
+        }
+#endif
+
+        // 5017 X — Player 자동 trigger. Chapter 씬 진입 시 자동 측정 (Profiler attach 의존성 X).
+        // Player.log 에 KB/s 결과 출력 — Editor 외부 측정 가능.
+#if !UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void AutoStartInPlayer()
+        {
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnSceneChanged;
+            Debug.Log("[GCAllocMeasurer] Player 자동 측정 활성 — Chapter 씬 진입 시 5초 후 측정 시작 (60s)");
+        }
+
+        private static void OnSceneChanged(UnityEngine.SceneManagement.Scene oldScene, UnityEngine.SceneManagement.Scene newScene)
+        {
+            if (newScene.name != "Chapter") return;
+            // 한 번만 측정 — 중복 방지
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged -= OnSceneChanged;
+            SpawnAndMeasureDelayed(5f);
+        }
+
+        private static void SpawnAndMeasureDelayed(float delay)
+        {
+            var go = new GameObject("[GCAllocMeasurer-Auto]");
+            DontDestroyOnLoad(go);
+            var measurer = go.AddComponent<GCAllocMeasurer>();
+            measurer.StartCoroutine(measurer.MeasureDelayed(delay));
+        }
+
+        private IEnumerator MeasureDelayed(float delay)
+        {
+            yield return new WaitForSecondsRealtime(delay);
+            yield return Measure();
+        }
+#endif
+
+        private static void SpawnAndMeasure()
+        {
             var go = new GameObject("[GCAllocMeasurer]");
             DontDestroyOnLoad(go);
             var measurer = go.AddComponent<GCAllocMeasurer>();
             measurer.StartCoroutine(measurer.Measure());
         }
-#endif
 
         private IEnumerator Measure()
         {
