@@ -41,11 +41,11 @@ namespace LittleHero.EditorTools
         // 등급별 부수 조각 (Common~Mythic)
         static readonly int[] SHARDS_BY_RARITY = { 1, 2, 5, 15, 50, 200 };
         static readonly int[] SUMMON_LEVEL_THRESHOLDS = { 0, 100, 300, 700, 1500, 3000, 5500, 9500, 16000, 27000 };
-        // 마법의돌 단계별 비용 (⭐0→⭐25, 25 길이) — StarforceService._shardCost 와 정합
+        // 마법의돌 단계별 비용 (⭐0→⭐20, 20 길이) — StarforceService._shardCost 와 정합
+        // 사용자 결정 2026-05-05 — ★0~20 cap (stats_v2.5 무한 강화 폐기)
         static readonly int[] STARFORCE_COST = {
             100, 150, 220, 320, 400, 500, 700, 1000, 1300, 1600,
-            2000, 2700, 3700, 5000, 6500, 8000, 10500, 14000, 18500, 24000,
-            30000, 42000, 56000, 75000, 100000
+            2000, 2700, 3700, 5000, 6500, 8000, 10500, 14000, 18500, 24000
         };
         const int STARLIGHT_DAILY_LOGIN = 5;
         const int STARLIGHT_MEMORY = 10;
@@ -557,8 +557,8 @@ namespace LittleHero.EditorTools
             sb.AppendLine($"| **합계** | **{totalMonth1}** |");
             sb.AppendLine();
 
-            // 단계별 누적 비용 (1 슬롯 ⭐0→⭐N)
-            sb.AppendLine("**단일 슬롯 ⭐0→⭐N 누적 비용**");
+            // 단계별 누적 비용 (1 슬롯 ⭐0→⭐N) — 결정론 기준 (실패 시 추가 시도 비용 X)
+            sb.AppendLine("**단일 슬롯 ⭐0→⭐N 누적 비용 (결정론, 실패 시도 X)**");
             sb.AppendLine();
             sb.AppendLine("| ⭐ | 단계 비용 | 누적 |");
             sb.AppendLine("|---|---|---|");
@@ -566,21 +566,32 @@ namespace LittleHero.EditorTools
             for (int i = 0; i < STARFORCE_COST.Length; i++)
             {
                 cum += STARFORCE_COST[i];
-                if (i == 0 || i == 4 || i == 9 || i == 14 || i == 19 || i == 24)
+                if (i == 0 || i == 4 || i == 9 || i == 14 || i == 19)
                     sb.AppendLine($"| ⭐{i + 1} | {STARFORCE_COST[i]:N0} | {cum:N0} |");
             }
             sb.AppendLine();
-            sb.AppendLine($"**1슬롯 ⭐15 (안전권 한계)**: 누적 약 30,000 조각 → 비과금 1개월 수입 {totalMonth1} 으로 도달 가능 ✅");
-            sb.AppendLine($"**1슬롯 ⭐25 (P2W 영역)**: 누적 약 {cum:N0} 조각 → 비과금 1개월의 {(float)cum / totalMonth1:F0}배 = 캐시 가챠 의존");
+
+            // 실패 시도 보정 (1/p) — ★15→20 곡선 평균 시도 횟수 반영 (사용자 결정 2026-05-05)
+            // ★0→14 ~24회 / ★14→15 3.33 / ★15→16 4 / ★16→17 5 / ★17→18 6.67 / ★18→19 10 / ★19→20 20
+            float[] expectedTries = { 1.05f, 1.11f, 1.18f, 1.18f, 1.25f, 1.33f, 1.43f, 1.54f, 1.67f, 1.82f,
+                                      2.00f, 2.22f, 2.50f, 2.86f, 3.33f, 4.00f, 5.00f, 6.67f, 10.00f, 20.00f };
+            float expectedCostFull = 0f;
+            for (int i = 0; i < STARFORCE_COST.Length; i++) expectedCostFull += STARFORCE_COST[i] * expectedTries[i];
+            float expectedCostSafe15 = 0f;
+            for (int i = 0; i < 15; i++) expectedCostSafe15 += STARFORCE_COST[i] * expectedTries[i];
+
+            sb.AppendLine($"**1슬롯 ⭐15 (안전권)**: 결정론 {6500 + 0:N0}~{cum:N0} 조각, 평균 시도 {expectedCostSafe15:N0} → 1개월 수입 {totalMonth1} 으로 도달 가능 ✅");
+            sb.AppendLine($"**1슬롯 ⭐20 (cap, MAX)**: 결정론 {cum:N0} 조각, 평균 시도 {expectedCostFull:N0} → 1개월의 {expectedCostFull / totalMonth1:F1}배");
+            sb.AppendLine($"  - ★0→★20 누적 평균 시도 ~73회 (★15→20 6 단계 50회 — 사용자 결정 곡선 25/20/15/10/5%)");
             sb.AppendLine();
             sb.AppendLine("---");
             sb.AppendLine();
         }
 
-        // ── §13. ⭐25 풀빌드 도달 추정 (PIVOT) ────────────────────────────
+        // ── §13. ⭐20 풀빌드 도달 추정 (사용자 결정 ★0~20 cap) ────────────
         static void SimulateFullBuildEstimate(StringBuilder sb)
         {
-            sb.AppendLine("## 13. ⭐25 풀빌드 도달 추정 (PIVOT — gacha_v1 §3.5)");
+            sb.AppendLine("## 13. ⭐20 풀빌드 도달 추정 (사용자 결정 2026-05-05 — ★0~20 cap)");
             sb.AppendLine();
 
             int singleSlotCost = 0;
@@ -599,8 +610,8 @@ namespace LittleHero.EditorTools
             int daysSingle = singleSlotCost / dailyTotal;
             int daysFull = fullBuildCost / dailyTotal;
 
-            sb.AppendLine($"**1슬롯 ⭐0→⭐25 비용**: {singleSlotCost:N0} 조각");
-            sb.AppendLine($"**12 슬롯 풀빌드 비용**: {fullBuildCost:N0} 조각");
+            sb.AppendLine($"**1슬롯 ⭐0→⭐20 비용 (결정론)**: {singleSlotCost:N0} 조각");
+            sb.AppendLine($"**12 슬롯 풀빌드 비용 (결정론)**: {fullBuildCost:N0} 조각");
             sb.AppendLine();
             sb.AppendLine("**비과금 평균 일일 수입 (정기 출처만)**");
             sb.AppendLine();
@@ -615,10 +626,10 @@ namespace LittleHero.EditorTools
             sb.AppendLine();
             sb.AppendLine("| 빌드 | 일수 | 환산 |");
             sb.AppendLine("|---|---|---|");
-            sb.AppendLine($"| 1슬롯 ⭐25 | {daysSingle:N0} | 약 {daysSingle / 365:N0}년 |");
-            sb.AppendLine($"| 12슬롯 풀 | {daysFull:N0} | 약 {daysFull / 365:N0}년 |");
+            sb.AppendLine($"| 1슬롯 ⭐20 (cap) | {daysSingle:N0} | 약 {daysSingle / 365:N0}년 |");
+            sb.AppendLine($"| 12슬롯 풀 (★20 cap) | {daysFull:N0} | 약 {daysFull / 365:N0}년 |");
             sb.AppendLine();
-            sb.AppendLine("> ⭐25 풀빌드는 **메이플 키우기 패턴 — P2W 영역**. 비과금 안전권은 ⭐15 (모든 슬롯 12×30,000 ≈ 360,000 조각 = 약 8,500일/29년 추정 — 여전히 장기). **현실적 비과금 목표 = ⭐10 풀빌드** (12×9,500 ≈ 114,000 조각 ≈ 2,700일/7.4년).");
+            sb.AppendLine("> ⭐20 풀빌드는 **메이플 키우기 cap 정책 — 비과금 도달 가능**. 곡선 변경 후 (PC 본판 ★25 → ★20) 비과금 친화도 ↑. **현실적 비과금 목표 = ⭐15 풀빌드** (안전권, 12×30,000 ≈ 360,000 조각 = 약 8,500일/29년 — 일일 보스 + 가챠 부수 + 한정 상점 모두 활용 시 ⭐15 유지 가능).");
             sb.AppendLine();
             sb.AppendLine("**캐시 가속**: 별빛 ⋆ 5500 패키지 = ~60 단판 → Lv 5+ 도달 시 평균 부수 8~12 → 600~720 조각/패키지 (= 비과금 17~20일분).");
             sb.AppendLine();
@@ -655,7 +666,6 @@ namespace LittleHero.EditorTools
             sb.AppendLine();
 
             int spentStarlight = 100 + 500 + 1000;  // free_chapter_5/15/25 모두 결제 가정
-            int reservedFor25 = 0;  // 25챕터 도달 못하면 0
             int gachaShardsLv1 = 30 * 1;  // 30 단판 평균 부수 (Lv1)
             int totalShardsAfter = 1890 + 150 + 600 + 400 + gachaShardsLv1   // 기본 1개월 (§12)
                                   + 1000 + 5000 + 15000;                       // 핫딜 보상
