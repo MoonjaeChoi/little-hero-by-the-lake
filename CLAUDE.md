@@ -110,7 +110,7 @@ Assets/_Project/
   - 잘못된 직업 무기 — EquipmentManager.EquipInstance 거부 + UI 회색
   - 가챠 결과 — 본인 직업만 (PickFromRarityPool 자동 필터)
 - **장비 강화** — +N 무한 (stats_v2.5 cap 폐기). +0~+15 결정론 / +16~+25 RNG / +25+ P_FLOOR 30% 동결, 비용 1.5^N
-- **슬롯 ⭐ 마법의돌** — ⭐0~⭐25 곡선 + ⭐25+ 무한 (+5%/단계), 비용 1.4^N
+- **슬롯 ⭐ 마법의돌** — ⭐0~⭐20 cap. 메이플 본판 답습 + 파괴 폐기. ★15→16 25% / ★16→17 20% / ★17→18 15% / ★18→19 10% / ★19→20 5%. ★20 = MAX (+200% baseStats)
 - **Affix** — 주옵션 3 + 부옵션 3 라인 (EffectResolver + ApplyResolvedBonus 통합)
 - **신화** — 4 종 (마일리지 200, 추억 4종 발견 후 발현)
 

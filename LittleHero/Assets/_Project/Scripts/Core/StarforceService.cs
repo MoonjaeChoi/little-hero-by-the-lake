@@ -10,22 +10,23 @@ namespace LittleHero
     /// 안전 강화 — 하강·파괴 X. 실패 시 비용만 차감, 단계 그대로 (재도전).
     ///
     /// 효과: 장비 baseStats × (1 + GetBaseMultiplier(slot)).
-    /// 강화 단계 0~25 → 베이스 +0% ~ +200%.
+    /// 강화 단계 0~20 → 베이스 +0% ~ +200%.
+    ///
+    /// 곡선 (사용자 결정 2026-05-05) — 메이플 본판 답습 + 파괴 폐기 + ★20 cap:
+    ///   ★0→1 95% / ... / ★14→15 30% / ★15→16 25% / ★16→17 20% / ★17→18 15% / ★18→19 10% / ★19→20 5%.
+    ///   ★0→★20 누적 평균 시도 ~73회 (PC 본판 ~283회 대비 -74%).
+    ///   ★20 = MAX (cap, IsMaxLevel = true).
     /// </summary>
     public static class StarforceService
     {
-        // stats_v2.5 — 무한 강화 (사용자 결정 2026-05-03). +25+ 는 곡선 외삽.
-        public const int MAX_LEVEL = int.MaxValue;
-        public const int CURVE_LAST = 25;          // 정의된 곡선 마지막 단계
-        public const float MUL_GROWTH_OVER = 0.05f;  // ⭐25+ 단계마다 +5% baseMul (200% → 205% → ...)
-        public const float COST_GROWTH_OVER = 1.4f;  // ⭐25+ 비용 1.4^N 증가
-        public const float RATE_FLOOR = 0.30f;       // ⭐25+ 성공률 30% 동결
+        // 사용자 결정 2026-05-05 — ★0~20 cap (stats_v2.5 무한 강화 폐기).
+        public const int MAX_LEVEL = 20;
+        public const int CURVE_LAST = 20;          // 정의된 곡선 마지막 단계 (= MAX_LEVEL)
 
-        // gacha_v1.md §3.2 데이터포인트 + 보간으로 채운 25 길이 곡선.
         // 인덱스 N = ⭐N → ⭐N+1 강화 (성공 시 ⭐N+1 도달).
 
         // base 곱셈 % (단계 N 도달 시 적용 — 누적 효과)
-        // 데이터포인트: ⭐0=0% / ⭐5=30% / ⭐10=60% / ⭐15=100% / ⭐20=160% / ⭐25=200%
+        // 데이터포인트: ⭐0=0% / ⭐5=30% / ⭐10=60% / ⭐15=100% / ⭐20=200% (cap)
         private static readonly float[] _baseMulPercent = {
             /* ⭐0  */ 0f,
             /* ⭐1  */ 5f,
@@ -43,20 +44,15 @@ namespace LittleHero
             /* ⭐13 */ 84f,
             /* ⭐14 */ 92f,
             /* ⭐15 */ 100f,
-            /* ⭐16 */ 112f,
-            /* ⭐17 */ 124f,
-            /* ⭐18 */ 136f,
-            /* ⭐19 */ 148f,
-            /* ⭐20 */ 160f,
-            /* ⭐21 */ 168f,
-            /* ⭐22 */ 176f,
-            /* ⭐23 */ 184f,
-            /* ⭐24 */ 192f,
-            /* ⭐25 */ 200f,
+            /* ⭐16 */ 120f,
+            /* ⭐17 */ 140f,
+            /* ⭐18 */ 160f,
+            /* ⭐19 */ 180f,
+            /* ⭐20 */ 200f,  // cap
         };
 
-        // 단계별 비용 (마법의돌 조각). 인덱스 N = ⭐N → ⭐N+1 비용. 길이 25 (⭐24→⭐25 까지).
-        // 데이터포인트: ⭐0→1=100 / ⭐5→6=500 / ⭐10→11=2000 / ⭐15→16=8000 / ⭐20→21=30000 / ⭐24→25=100000
+        // 단계별 비용 (마법의돌 조각). 인덱스 N = ⭐N → ⭐N+1 비용. 길이 20 (⭐19→⭐20 까지).
+        // 데이터포인트: ⭐0→1=100 / ⭐5→6=500 / ⭐10→11=2000 / ⭐15→16=8000 / ⭐19→20=24000
         private static readonly int[] _shardCost = {
             /* ⭐0→1   */    100,
             /* ⭐1→2   */    150,
@@ -78,22 +74,34 @@ namespace LittleHero
             /* ⭐17→18 */  14000,
             /* ⭐18→19 */  18500,
             /* ⭐19→20 */  24000,
-            /* ⭐20→21 */  30000,
-            /* ⭐21→22 */  42000,
-            /* ⭐22→23 */  56000,
-            /* ⭐23→24 */  75000,
-            /* ⭐24→25 */ 100000,
         };
 
         // 단계별 성공 확률 (0~1). 인덱스 N = ⭐N → ⭐N+1.
-        // ⭐0~10 = 100% / ⭐11~15 = 95% / ⭐16~20 = 75% / ⭐21~24 = 50% / ⭐25 = 30%
+        // 사용자 결정 2026-05-05 — 메이플 본판 답습 (★0~14) + 사용자 정의 (★15~20):
+        //   ★0~14 본판: 95/90/85/85/80/75/70/65/60/55/50/45/40/35/30
+        //   ★14→15 = 30% / ★15→16 = 25% / ★16→17 = 20% / ★17→18 = 15% / ★18→19 = 10% / ★19→20 = 5%
+        //   ★20 = cap (다음 시도 X). 누적 평균 시도 ~73회.
         private static readonly float[] _successRate = {
-            /* ⭐0→1   */ 1.00f, 1.00f, 1.00f, 1.00f, 1.00f,
-            /* ⭐5→6   */ 1.00f, 1.00f, 1.00f, 1.00f, 1.00f,
-            /* ⭐10→11 */ 0.95f, 0.95f, 0.95f, 0.95f, 0.95f,
-            /* ⭐15→16 */ 0.75f, 0.75f, 0.75f, 0.75f, 0.75f,
-            /* ⭐20→21 */ 0.50f, 0.50f, 0.50f, 0.50f,
-            /* ⭐24→25 */ 0.30f,
+            /* ⭐0→1   */ 0.95f,
+            /* ⭐1→2   */ 0.90f,
+            /* ⭐2→3   */ 0.85f,
+            /* ⭐3→4   */ 0.85f,
+            /* ⭐4→5   */ 0.80f,
+            /* ⭐5→6   */ 0.75f,
+            /* ⭐6→7   */ 0.70f,
+            /* ⭐7→8   */ 0.65f,
+            /* ⭐8→9   */ 0.60f,
+            /* ⭐9→10  */ 0.55f,
+            /* ⭐10→11 */ 0.50f,
+            /* ⭐11→12 */ 0.45f,
+            /* ⭐12→13 */ 0.40f,
+            /* ⭐13→14 */ 0.35f,
+            /* ⭐14→15 */ 0.30f,
+            /* ⭐15→16 */ 0.25f,
+            /* ⭐16→17 */ 0.20f,
+            /* ⭐17→18 */ 0.15f,
+            /* ⭐18→19 */ 0.10f,
+            /* ⭐19→20 */ 0.05f,
         };
 
         private static readonly System.Random _defaultRng = new System.Random();
@@ -116,9 +124,8 @@ namespace LittleHero
         public static float GetBaseMultiplierForLevel(int level)
         {
             if (level < 0) return 0f;
-            if (level <= CURVE_LAST) return _baseMulPercent[level] / 100f;
-            // stats_v2.5 — 무한 ⭐25+ 매 단계 +5%
-            return (_baseMulPercent[CURVE_LAST] + (level - CURVE_LAST) * MUL_GROWTH_OVER * 100f) / 100f;
+            if (level >= MAX_LEVEL) return _baseMulPercent[MAX_LEVEL] / 100f;
+            return _baseMulPercent[level] / 100f;
         }
 
         /// <summary>현재 단계에서 다음 강화 시도 비용.</summary>
@@ -127,23 +134,21 @@ namespace LittleHero
         public static int GetCostForLevel(int currentLevel)
         {
             if (currentLevel < 0) return 0;
-            if (currentLevel < _shardCost.Length) return _shardCost[currentLevel];
-            // stats_v2.5 — 무한 (last × 1.4^over)
-            int over = currentLevel - _shardCost.Length + 1;
-            return Mathf.RoundToInt(_shardCost[_shardCost.Length - 1] * Mathf.Pow(COST_GROWTH_OVER, over));
+            if (currentLevel >= MAX_LEVEL) return 0;  // ★20 cap — 비용 X (강화 불가)
+            return _shardCost[currentLevel];
         }
 
-        /// <summary>현재 단계에서 다음 강화 시도 성공 확률 (0~1).</summary>
+        /// <summary>현재 단계에서 다음 강화 시도 성공 확률 (0~1). ★20 cap 시 0f.</summary>
         public static float GetSuccessRate(EquipSlot slot) => GetSuccessRateForLevel(GetLevel(slot));
 
         public static float GetSuccessRateForLevel(int currentLevel)
         {
             if (currentLevel < 0) return 0f;
-            if (currentLevel < _successRate.Length) return _successRate[currentLevel];
-            return RATE_FLOOR;  // ⭐25+ 무한 동결
+            if (currentLevel >= MAX_LEVEL) return 0f;  // ★20 cap — 다음 시도 X
+            return _successRate[currentLevel];
         }
 
-        public static bool IsMaxLevel(EquipSlot slot) => false;  // 무한 (cap 없음)
+        public static bool IsMaxLevel(EquipSlot slot) => GetLevel(slot) >= MAX_LEVEL;
 
         // ===== 강화 =====
 
@@ -181,7 +186,17 @@ namespace LittleHero
 
             int idx = (int)slot;
             int currentLevel = Mathf.Max(0, data.slotStarforceLevels[idx]);
-            // stats_v2.5 — 무한 강화 (cap X), AtMaxLevel 폐기
+            // ★20 cap — 더 이상 강화 X (AtMaxLevel 반환)
+            if (currentLevel >= MAX_LEVEL)
+            {
+                return new StarforceResult
+                {
+                    outcome = StarforceOutcome.AtMaxLevel,
+                    slot = slot,
+                    previousLevel = currentLevel,
+                    newLevel = currentLevel,
+                };
+            }
             int cost = GetCostForLevel(currentLevel);
             if (data.starforceShards < cost)
             {
