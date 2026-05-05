@@ -41,7 +41,43 @@ namespace LittleHero.EditorTools
             ValidateSceneManagerDirectAccess(issues);  // 5004 T06 — SceneManager.LoadScene 외부 직접 호출 검사 (§15.7 DI)
             ValidateEnemyVisibilityCheck(issues);  // 5013 T04 — EnemyAnimationManager visibility throttle 호출 검사
             ValidateEnemyHueVariationHook(issues);  // 5012 T04 — EnemyController.ApplyAppearance 의 HueShift 호출 검사
+            ValidateLitMotionMigration(issues);  // 5016 T06 — DOTween 회귀 + LitMotion import ≥ N files 검사
             Print(issues);
+        }
+
+        // 5016 T06 — DOTween 재도입 회귀 방지 + LitMotion import 22+ 검증 (§15.12).
+        private static void ValidateLitMotionMigration(List<Issue> issues)
+        {
+            string scriptDir = Path.Combine(Application.dataPath, "_Project/Scripts");
+            int doTweenViolations = 0;
+            int litMotionImports = 0;
+            if (!Directory.Exists(scriptDir))
+            {
+                issues.Add(new Issue(Severity.Warning, "5016 LitMotion", "Scripts dir 미존재"));
+                return;
+            }
+            foreach (var file in Directory.GetFiles(scriptDir, "*.cs", SearchOption.AllDirectories))
+            {
+                // Validator 자체는 검사 룰 코드라 검사 대상 제외 (self-detection 회피).
+                if (file.EndsWith("ProjectValidator.cs")) continue;
+                string content = File.ReadAllText(file);
+                if (content.Contains("using DG.Tweening")) doTweenViolations++;
+                if (content.Contains("using LitMotion")) litMotionImports++;
+            }
+            if (doTweenViolations > 0)
+            {
+                issues.Add(new Issue(Severity.Warning, "5016 LitMotion",
+                    $"DOTween 재도입 회귀 검출: {doTweenViolations} files (5016 마이그레이션 후 0 이어야 함)"));
+            }
+            if (litMotionImports < 12)
+            {
+                issues.Add(new Issue(Severity.Warning, "5016 LitMotion",
+                    $"LitMotion import {litMotionImports} files — 5016 마이그레이션 누락 의심 (기대 ≥ 12)"));
+            }
+            else
+            {
+                Debug.Log($"[ProjectValidator] 5016 LitMotion OK — DOTween {doTweenViolations} / LitMotion import {litMotionImports} files");
+            }
         }
 
         // 5012 T04 — EnemyController.cs 가 EnemyHueVariation.HueShift 호출하는지 검사 (회귀 방지).
