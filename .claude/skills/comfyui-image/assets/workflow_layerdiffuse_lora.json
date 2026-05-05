@@ -1,0 +1,129 @@
+{
+  "_comment": "LayerDiffuse SDXL workflow \u2014 huchenlei/ComfyUI-layerdiffuse + SDXL base 1.0. RGBA native transparent \ucd9c\ub825. DreamShaperXL Turbo \uc640 \ud638\ud658 X (distillation \uc73c\ub85c LayerDiffuse \uc758 vae_transparent_decoder \uac00 RGB \ub514\ud14c\uc77c \ubcf5\uc6d0 \ubabb \ud568, silhouette \ub9cc \ucd9c\ub825) \u2014 \ubcf8 \uc6cc\ud06c\ud50c\ub85c\ub294 stabilityai/stable-diffusion-xl-base-1.0.safetensors \uc758 standard \ubaa8\ub378 \uc0ac\uc6a9. KSampler: steps=20 / cfg=8.0 / sampler euler / scheduler normal (LayerDiffuse \uac80\uc99d\ub41c \uc870\ud569). LayeredDiffusionApply config=\"SDXL, Conv Injection\". LayeredDiffusionDecodeRGBA sd_version=\"SDXL\" + sub_batch_size=16. \ud45c\uc900 SDXL \ub178\ub4dc id \uc720\uc9c0 (positive=6, negative=7, sampler=3, latent=5, model_apply=10, decode=11).",
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 22222,
+      "steps": 20,
+      "cfg": 8.0,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1.0,
+      "model": [
+        "10",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    }
+  },
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "sd_xl_base_1.0.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "PLACEHOLDER POSITIVE PROMPT",
+      "clip": [
+        "12",
+        1
+      ]
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "PLACEHOLDER NEGATIVE PROMPT",
+      "clip": [
+        "12",
+        1
+      ]
+    }
+  },
+  "10": {
+    "class_type": "LayeredDiffusionApply",
+    "inputs": {
+      "model": [
+        "12",
+        0
+      ],
+      "config": "SDXL, Conv Injection",
+      "weight": 1.0
+    }
+  },
+  "11": {
+    "class_type": "LayeredDiffusionDecodeRGBA",
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "images": [
+        "8",
+        0
+      ],
+      "sd_version": "SDXL",
+      "sub_batch_size": 16
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "ComfyUI_LayerDiffuse",
+      "images": [
+        "11",
+        0
+      ]
+    }
+  },
+  "12": {
+    "class_type": "LoraLoader",
+    "inputs": {
+      "model": [
+        "4",
+        0
+      ],
+      "clip": [
+        "4",
+        1
+      ],
+      "lora_name": "v5_sticker_v1.safetensors",
+      "strength_model": 0.7,
+      "strength_clip": 0.7
+    }
+  }
+}
