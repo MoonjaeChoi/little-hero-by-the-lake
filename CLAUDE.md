@@ -216,6 +216,7 @@ Assets/_Project/
 | **chapter_overrides_v1** | 210 chapter override PNG 5008 baseline 재생성 (5009, 5 카테고리 batch — Meta/Nature/Animal/Civ/Fantasy, 6 commit, GUID 보존 재wiring 0) | ✅ 2026-05-04 |
 | **endgame_boss_sprites_v1** | Daily 7 + Weekly 4 = 11 endgame 보스 sprite 재생성 (5011, D2=A+ V5 sticker 강화 + 인형 실사판 회피, 3 commit, GUID 보존) | ✅ 2026-05-05 |
 | **v1_fairytale_enemies_v1** | V1 동화 적 11 sprite 5008 baseline 재생성 (5010, 사이즈 통일 512→768×1024, fairy tale storybook prompt, 2 commit, GUID 보존) | ✅ 2026-05-05 |
+| **v5_sticker_lora_v1** | V5 sticker LoRA 학습 — sd-scripts + RTX 5070 sm_120 + multi-subset 470 sample/epoch (5014, 6 commit, prompt 단순화 23+→5~10 token, 5008 baseline production 우선) | ✅ 2026-05-05 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
@@ -276,11 +277,11 @@ Assets/_Project/
 > 신규 항목은 changelog_v1.md 에 추가.
 
 ### 최근 핵심 결정 (직전 5건)
+- 2026-05-05: **5014 v5_sticker_lora_v1** — V5 sticker LoRA 학습 + ComfyUI 통합 (D1=B 진행 / D2=A 학습 데이터 459 풀 / D3=B SSH automation, 6 commit). 서버 RTX 5070 sm_120 + Python 3.12 + torch 2.8.0+cu128. Multi-subset 470 sample/epoch (Chapters 210 num_repeats=1 + V1 11×5 + Bosses 11×5 + base 30×5). 3 학습 비교 (1500/2000/3000 step) — 모두 healthy 5/10 동등 (학습 풍부 시 2000 충분). LoRA 결론: Boss/Medium 형태 적합 (4/5), Small 형태 frame 약함. 5008 baseline production 우선 — LoRA 는 prompt 단순화 (23+→5~10 token) 선택 가속 도구. lora_training_guide.md 신규 (재학습 체크리스트 포함)
 - 2026-05-05: **5010 v1_fairytale_enemies_v1** — V1 동화 적 11 sprite 5008 baseline 재생성 (D1=A 명단 정정 / D2=B 사이즈 512→768×1024 통일 / D3=A prompt 강조, 2 commit). PRD §1.1 명단 정정 (RedHood/GoldenGoose/Cheshire 실제 X → CloudGiant/Firefly/Pumpkin 정합). 시드 namespace 11001~11011 (V1 전용). ComfyUI 11/11 성공, healthy 8/11. GUID 보존
 - 2026-05-05: **5011 endgame_boss_sprites_v1** — Daily 7 + Weekly 4 = 11 보스 sprite 재생성 (D2=A+ prompt 강화 / D3=A GUID 보존, 3 commit). 사용자 시각 review "인형 실사판" 톤 발견 → V5 sticker 강조 + 인형/3D/realistic negative 강화. ComfyUI 11/11 성공, healthy 6/11 (5건 transparent 80%+ 캐릭터 작음 — 사용자 시각 review 후 retry 결정). Bosses/ 폴더 (PRD 원안 Enemies/ 위치 정정).
 - 2026-05-04: **5009 chapter_overrides_v1** — 210 chapter override PNG 5008 baseline 재생성 (RESERVED 해제, 6 commit). 사용자 5012 Play Mode 검수 "예전 적 그대로" 보고 → C 옵션 즉시 재진입 + chapter override 자체 갱신. 5 카테고리 batch: Meta CH 1~5 30 PNG (22222+) / Nature CH 6~14 54 (33333+) / Animal CH 15~20 36 (44444+) / Civ CH 21~27 42 (55555+) / Fantasy CH 28~35 48 (77777+). 시드 공식 base+(CH-1)*6+archetype offset. ComfyUI 210/210 성공. PNG 만 갱신 + .meta GUID 보존 → SO 재wiring 불필요. 5012.1 결합 효과 — saturated sprite 픽셀에 multiplicative hue tint visible 가능
 - 2026-05-04: **5012 mpb_hue_shift_v1 + 5012.1 패치** — Enemy sprite 5단계 hue 변형 (D1=B SpriteRenderer.color tint / D2=A const / D3=B \_baseColor 갱신, 5 commit + 1 패치, NUnit 87→94). EnemyHueVariation 정적 헬퍼 + EnemyController.ApplyAppearance hook + WaveManager 7 prime spread. **5012.1 핵심 fix**: 사용자 검수 — icon!=null 인 5008 sprite 의 sr.color=Color.white 라 HueShift(white, x)=white 효과 0 발견. HUE_BASE_TINT(1, 0.92, 0.92) saturated baseline 도입 → multiplicative tint 가 sprite 픽셀에 visible 효과. 30 archetype × 5 hue offset = 150 variation 발생. Boss 원색 유지 + flash 후 hue 색상 유지
-- 2026-05-04: **5013 enemy_visibility_culler_v1** — Off-screen 적 cull (D1=A 0.1s throttle / D2=A 1.5x margin, 5 commit, NUnit 81→87). EnemyVisibilityCuller 정적 헬퍼 + EnemyAnimationManager visibility throttle 통합 (Manager 단일 Update 패턴 활용, EnemyController.Update 미존재) + ProjectValidator 룰 + SceneManager.sceneLoaded 자동 InvalidateCache hook. PIVOT v4 §7 cap 300 60fps 마진 강화
 
 자세한 이력은 → [docs/little_hero/changelog_v1.md](docs/little_hero/changelog_v1.md)
 

@@ -194,6 +194,74 @@ def generate_with_retry(prompt, negative, seed, output, max_retry=3):
 
 ---
 
-## 8. 변경 이력
+## 9. LoRA 모드 (5014 — V5 sticker LoRA, 선택)
+
+5014 사이클에서 학습된 V5 sticker LoRA 사용 시 prompt 단순화 가능. **선택 사용 — 5008 baseline 이 production 우선**.
+
+### 9.1 모델 + 워크플로
+
+| 항목 | 값 |
+|---|---|
+| LoRA 파일 | `~/ai-tools/ComfyUI/models/loras/v5_sticker_v1.safetensors` (218MB) |
+| 학습 데이터 | 262 PNG (V2 archetype 30 + chapter override 210 + V1 11 + Boss 11) |
+| 학습 step | 3000 (~50분 RTX 5070) |
+| 권장 weight | **0.7** (model + clip 동일, over-fit 방지) |
+| 워크플로 | `assets/workflow_layerdiffuse_lora.json` |
+| 백업 | `~/lora_training/v5_sticker/output/v5_sticker_v3_3000step.safetensors` |
+
+### 9.2 Prompt 단순화 (LoRA 모드)
+
+기존 5008 baseline (23+ 토큰) → LoRA 모드 (5~10 토큰) 로 가능:
+
+```
+# 5008 baseline (full prompt)
+"cute cartoon sticker illustration, V5 dynamic tone, warm cozy lighting, soft cartoon shading,
+chunky thick white outline, three-quarter view, single character centered in frame,
+fully transparent background, isolated subject, solo, 1character, alone,
+{카테고리 prefix}, {archetype form}"
+
+# LoRA 모드 단순 prompt
+"{카테고리 + archetype 핵심}, {색상 키워드}"
+# 예: "tiny mushroom child, warm beige tones"
+```
+
+### 9.3 LoRA 효과 한계 (5014 검증)
+
+| 형태 | 효과 |
+|---|---|
+| **Boss / Medium** | ✅ healthy 4/5 (학습 데이터의 큰 캐릭터 형태 답습) |
+| **Small (tiny / kitten / fairy 등)** | ⚠️ frame 작음 (학습 sample 자체가 small frame) |
+| Fantasy lavender | △ 학습 데이터 풍부했음에도 약함 |
+
+→ LoRA 는 **선택 가속 도구** (Boss 형태에 적합), production 자산은 **5008 baseline 우선**.
+
+### 9.4 LoRA 사용 호출 패턴
+
+```bash
+python3 .claude/skills/comfyui-image/scripts/generate.py \
+  --workflow .claude/skills/comfyui-image/assets/workflow_layerdiffuse_lora.json \
+  --prompt "{단순 prompt}" \
+  --negative "{NEG 표준}" \
+  --seed {시드} \
+  --width 768 --height 1024 --steps 25 --cfg 6.0 \
+  --output {경로}
+```
+
+### 9.5 Small 형태 frame 강화 (LoRA + prompt 추가)
+
+Small 형태 사용 시 frame 작음 회피:
+
+```
+"{Small archetype}, large character filling frame, prominently centered"
+```
+
+### 9.6 LoRA weight 조정
+
+- **0.7** (default) — V5 톤 + 5008 baseline 균형
+- **0.85** — V5 톤 강조 (5014 검증 결과 0.7 와 동등)
+- **1.0** — over-fit 위험 (학습 데이터 답습 ↑↑)
+
+## 10. 변경 이력
 
 - 2026-05-04: v1 초기 작성. 5008 T05.5 fix 사이클 (CH09_Medium / CH09_MiniB 성공 + CH22_Small 실패 → 분석 → 재생성) 의 검증된 조합 정착.
+- 2026-05-05: v2 (5014) — LoRA 모드 가이드 §9 추가. v5_sticker_v1.safetensors (3000 step, 218MB) 학습 후 prompt 단순화 옵션. **5008 baseline 이 production 우선** — LoRA 는 선택 가속.
