@@ -43,7 +43,25 @@ namespace LittleHero.EditorTools
             ValidateEnemyHueVariationHook(issues);  // 5012 T04 — EnemyController.ApplyAppearance 의 HueShift 호출 검사
             ValidateLitMotionMigration(issues);  // 5016 T06 — DOTween 회귀 + LitMotion import ≥ N files 검사
             ValidateGCAllocPatterns(issues);  // 5017 T04 — GC alloc 휴리스틱 검사
+            ValidateStarterHeroPortraits(issues);  // 5020 T06 — 시작 주인공 3종 portrait wiring 검사
             Print(issues);
+        }
+
+        // 5020 T06 — 시작 주인공 3종 (warrior/archer/mage) SO portrait 필드 wiring 검사.
+        private static void ValidateStarterHeroPortraits(List<Issue> issues)
+        {
+            string[] paths =
+            {
+                "Assets/_Project/Data/Characters/Char_HeroWarrior.asset",
+                "Assets/_Project/Data/Characters/Char_HeroArcher.asset",
+                "Assets/_Project/Data/Characters/Char_HeroMage.asset",
+            };
+            foreach (var path in paths)
+            {
+                var data = AssetDatabase.LoadAssetAtPath<CharacterData>(path);
+                if (data == null) issues.Add(new Issue(Severity.Error, "5020 StarterHero", $"{path}: 로드 실패"));
+                else if (data.portrait == null) issues.Add(new Issue(Severity.Error, "5020 StarterHero", $"{path}: portrait 미wiring"));
+            }
         }
 
         // 5017 T04 — DropContext struct 검증 + DamageNumberFloater FormatDamage cache 존재 검증.
