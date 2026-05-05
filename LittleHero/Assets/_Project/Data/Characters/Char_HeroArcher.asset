@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bdf600ead9e4495fbb04c697dad0bd2, type: 3}
-  m_Name: Char_BraveGirl
+  m_Name: Char_HeroArcher
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.CharacterData
-  id: brave_girl
+  id: hero_archer
   displayName: "\uC529\uC529\uD55C \uC18C\uB140"
   className: "\uAD81\uC218"
   description: 

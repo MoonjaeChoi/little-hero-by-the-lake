@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bdf600ead9e4495fbb04c697dad0bd2, type: 3}
-  m_Name: Char_QuietFriend
+  m_Name: Char_HeroMage
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.CharacterData
-  id: quiet_friend
+  id: hero_mage
   displayName: "\uC870\uC6A9\uD55C \uCE5C\uAD6C"
   className: "\uB9C8\uBC95\uC0AC"
   description: 
