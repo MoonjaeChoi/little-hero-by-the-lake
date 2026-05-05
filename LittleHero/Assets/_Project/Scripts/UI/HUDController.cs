@@ -1,4 +1,4 @@
-using System.Collections;
+using LitMotion;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +25,8 @@ namespace LittleHero
         [SerializeField] private float _levelUpHighlightSeconds = 0.8f;
 
         private PlayerStats _playerStats;
-        private Coroutine _levelUpFx;
+        // 5016 T05 — Coroutine → MotionHandle (state machine alloc 0)
+        private MotionHandle _levelUpFx;
 
         private void OnEnable()
         {
@@ -103,18 +104,15 @@ namespace LittleHero
         private void HandleLevelUp(int newLevel)
         {
             if (_levelText != null) _levelText.text = $"Lv {newLevel}";
-            if (_levelUpFx != null) StopCoroutine(_levelUpFx);
+            if (_levelUpFx.IsActive()) _levelUpFx.Cancel();
             if (gameObject.activeInHierarchy && _xpFill != null)
-                _levelUpFx = StartCoroutine(LevelUpFx());
-        }
-
-        private IEnumerator LevelUpFx()
-        {
-            if (_xpFill == null) yield break;
-            _xpFill.color = _xpLevelUpColor;
-            yield return new WaitForSeconds(_levelUpHighlightSeconds);
-            _xpFill.color = _xpNormalColor;
-            _levelUpFx = null;
+            {
+                _xpFill.color = _xpLevelUpColor;
+                // LMotion 으로 highlight 유지 후 normal 색 복귀
+                _levelUpFx = LMotion.Create(0f, 1f, _levelUpHighlightSeconds)
+                    .WithOnComplete(() => { if (_xpFill != null) _xpFill.color = _xpNormalColor; })
+                    .RunWithoutBinding();
+            }
         }
     }
 }

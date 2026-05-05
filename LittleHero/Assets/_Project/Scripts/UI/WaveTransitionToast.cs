@@ -1,4 +1,4 @@
-using System.Collections;
+using LitMotion;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,9 +8,11 @@ namespace LittleHero
     /// PIVOT v2 fix — 웨이브 전환 시각 피드백.
     /// 상점 페이즈 폐기 후 5초 휴식 동안 "Wave N 완료! 다음 5초..." 토스트 + 카운트다운.
     /// OnWaveCleared 이벤트 구독 → 5초 표시 후 자동 비활성.
+    /// 5016 T05 — IEnumerator + while-loop → LMotion (state machine alloc 0).
+    /// WithScheduler(UpdateIgnoreTimeScale) — 사용자 baseline 정합 (HitPause/timeScale 영향 X).
     ///
     /// 사용자 baseline (2026-05-05) — 가독성 강화:
-    ///   - Time.unscaledDeltaTime 사용 (HitPause 누적 시 timeScale 영향 회피)
+    ///   - LMotion UpdateIgnoreTimeScale (HitPause 누적 시 timeScale 영향 회피)
     ///   - 큰 카운트다운 텍스트 (5/4/3/2/1)
     ///   - Progress dots ●●○○○ 시각화
     ///   - (선택) progress bar SerializeField — Inspector wiring 시 동작
@@ -18,12 +20,14 @@ namespace LittleHero
     public class WaveTransitionToast : MonoBehaviour
     {
         [SerializeField] private Text _messageText;
-        [SerializeField] private Text _countdownText;  // 신규 — 큰 카운트다운 (5/4/3/2/1)
-        [SerializeField] private Image _progressBar;   // 신규 — fill amount 0→1 (선택 wiring)
+        [SerializeField] private Text _countdownText;
+        [SerializeField] private Image _progressBar;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private float _restSeconds = 5f;
 
-        private Coroutine _activeRoutine;
+        private MotionHandle _countdownHandle;
+        private int _activeClearedWave;
+        private int _activeTotalWaves;
 
         private void Awake()
         {
@@ -51,41 +55,41 @@ namespace LittleHero
             int total = MetaProgression.Instance?.SelectedChapter?.totalWaves ?? 20;
             if (clearedWave >= total) return;
 
-            if (_activeRoutine != null) StopCoroutine(_activeRoutine);
-            _activeRoutine = StartCoroutine(ShowCountdown(clearedWave, total));
+            if (_countdownHandle.IsActive()) _countdownHandle.Cancel();
+            _activeClearedWave = clearedWave;
+            _activeTotalWaves = total;
+            SetVisible(true);
+
+            // remaining 5 → 0, UpdateIgnoreTimeScale (사용자 baseline 정합)
+            _countdownHandle = LMotion.Create(_restSeconds, 0f, _restSeconds)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithOnComplete(() =>
+                {
+                    SetVisible(false);
+                })
+                .Bind(this, (remaining, self) => self.UpdateCountdownUI(remaining));
         }
 
-        private IEnumerator ShowCountdown(int clearedWave, int totalWaves)
+        private void UpdateCountdownUI(float remaining)
         {
-            SetVisible(true);
-            float remaining = _restSeconds;
-            int nextWave = clearedWave + 1;
-            while (remaining > 0f)
+            int seconds = Mathf.CeilToInt(remaining);
+            int nextWave = _activeClearedWave + 1;
+            if (_messageText != null)
             {
-                int seconds = Mathf.CeilToInt(remaining);
-                if (_messageText != null)
-                {
-                    // 사용자 baseline — progress dots 시각화 (●●○○○ 같은 형태)
-                    int filled = Mathf.Clamp(_restSeconds > 0f
-                        ? Mathf.CeilToInt((1f - remaining / _restSeconds) * _restSeconds)
-                        : 0, 0, Mathf.RoundToInt(_restSeconds));
-                    string dots = BuildProgressDots(filled, Mathf.RoundToInt(_restSeconds));
-                    _messageText.text = $"<size=36>웨이브 {clearedWave} / {totalWaves} 완료!</size>\n{dots}\n<size=28>다음: 웨이브 {nextWave}</size>";
-                }
-                if (_countdownText != null)
-                {
-                    _countdownText.text = seconds.ToString();
-                }
-                if (_progressBar != null)
-                {
-                    _progressBar.fillAmount = 1f - (remaining / _restSeconds);
-                }
-                yield return null;
-                // 사용자 baseline — unscaledDeltaTime (timeScale 영향 X)
-                remaining -= Time.unscaledDeltaTime;
+                int filled = Mathf.Clamp(_restSeconds > 0f
+                    ? Mathf.CeilToInt((1f - remaining / _restSeconds) * _restSeconds)
+                    : 0, 0, Mathf.RoundToInt(_restSeconds));
+                string dots = BuildProgressDots(filled, Mathf.RoundToInt(_restSeconds));
+                _messageText.text = $"<size=36>웨이브 {_activeClearedWave} / {_activeTotalWaves} 완료!</size>\n{dots}\n<size=28>다음: 웨이브 {nextWave}</size>";
             }
-            SetVisible(false);
-            _activeRoutine = null;
+            if (_countdownText != null)
+            {
+                _countdownText.text = seconds.ToString();
+            }
+            if (_progressBar != null)
+            {
+                _progressBar.fillAmount = 1f - (remaining / _restSeconds);
+            }
         }
 
         // 5 dots ●●●○○ 형태 — filled 만큼 ● 나머지 ○
@@ -102,7 +106,7 @@ namespace LittleHero
 
         private void Hide()
         {
-            if (_activeRoutine != null) { StopCoroutine(_activeRoutine); _activeRoutine = null; }
+            if (_countdownHandle.IsActive()) _countdownHandle.Cancel();
             SetVisible(false);
         }
 
