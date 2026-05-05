@@ -100,7 +100,8 @@ namespace LittleHero
             if (!File.Exists(SavePath))
                 return new SaveData();
             string json = File.ReadAllText(SavePath);
-            return JsonUtility.FromJson<SaveData>(json);
+            var data = JsonUtility.FromJson<SaveData>(json);
+            return SaveDataMigration.Apply(data);
         }
 
         public static void Delete()
