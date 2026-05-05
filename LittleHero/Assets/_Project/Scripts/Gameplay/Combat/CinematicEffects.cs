@@ -1,4 +1,4 @@
-using System.Collections;
+using LitMotion;
 using UnityEngine;
 
 namespace LittleHero
@@ -7,13 +7,16 @@ namespace LittleHero
     /// 크리티컬 시 hit pause + screen shake 글로벌 매니저 (cinematic_combat_v1.md §5).
     /// Cinemachine 의존 회피 — Camera.transform 직접 흔들기.
     /// RuntimeInitializeOnLoadMethod 자동 부트스트랩 (AudioManager 패턴 답습).
+    /// 5016 T03 — IEnumerator + Lerp → LitMotion (state machine alloc 0 + LMotion.Shake new Vector3 alloc 폐기)
     /// </summary>
     public class CinematicEffects : MonoBehaviour
     {
         public static CinematicEffects Instance { get; private set; }
 
-        private Coroutine _hitPauseCo;
-        private Coroutine _shakeCo;
+        // 5016 T03 — Coroutine → MotionHandle (state machine alloc 0)
+        private MotionHandle _hitPauseHandle;
+        private MotionHandle _shakeHandle;
+        private MotionHandle _zoomHandle;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
@@ -33,79 +36,46 @@ namespace LittleHero
         /// <summary>Hit pause — Time.timeScale 0.05 → 1.0, 실시간 duration 초.</summary>
         public void PlayHitPause(float duration = 0.08f)
         {
-            if (_hitPauseCo != null) StopCoroutine(_hitPauseCo);
-            _hitPauseCo = StartCoroutine(HitPauseRoutine(duration));
-        }
-
-        private IEnumerator HitPauseRoutine(float duration)
-        {
-            float prevScale = Time.timeScale;
+            if (_hitPauseHandle.IsActive()) _hitPauseHandle.Cancel();
+            float prevScale = Time.timeScale > 0.06f ? Time.timeScale : 1f;
             Time.timeScale = 0.05f;
-            yield return new WaitForSecondsRealtime(duration);
-            Time.timeScale = prevScale > 0.06f ? prevScale : 1f;
-            _hitPauseCo = null;
+            // Use LMotion as a timer with WithOnComplete to restore timeScale.
+            _hitPauseHandle = LMotion.Create(0f, 1f, duration)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithOnComplete(() => Time.timeScale = prevScale)
+                .WithOnCancel(() => Time.timeScale = prevScale)
+                .RunWithoutBinding();
         }
 
         /// <summary>Screen shake — Camera.main.transform 흔들기. amplitude 0.1~0.5 권장.</summary>
         public void PlayScreenShake(float amplitude = 0.3f, float duration = 0.2f)
         {
-            if (_shakeCo != null) StopCoroutine(_shakeCo);
-            _shakeCo = StartCoroutine(ShakeRoutine(amplitude, duration));
-        }
-
-        private IEnumerator ShakeRoutine(float amplitude, float duration)
-        {
             var cam = Camera.main;
-            if (cam == null) { _shakeCo = null; yield break; }
+            if (cam == null) return;
             var t = cam.transform;
             Vector3 origin = t.localPosition;
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                float k = 1f - (elapsed / duration);
-                float ox = (Random.value - 0.5f) * 2f * amplitude * k;
-                float oy = (Random.value - 0.5f) * 2f * amplitude * k;
-                t.localPosition = origin + new Vector3(ox, oy, 0f);
-                yield return null;
-            }
-            t.localPosition = origin;
-            _shakeCo = null;
+            if (_shakeHandle.IsActive()) _shakeHandle.Cancel();
+            // LMotion.Shake.Create 의 strength = Vector3 (각 축 amplitude). 0 alloc.
+            _shakeHandle = LMotion.Shake.Create(Vector3.zero, new Vector3(amplitude, amplitude, 0f), duration)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithOnComplete(() => t.localPosition = origin)
+                .WithOnCancel(() => t.localPosition = origin)
+                .Bind(t, (offset, target) => target.localPosition = origin + offset);
         }
-
-        // 5007 T09 — Camera zoom (orthographicSize 변경, subtle 1.05× 권장)
-        private Coroutine _zoomCo;
 
         /// <summary>5007 — 크리 시 subtle camera zoom (orthographicSize 변경). zoomMul 1.05 권장.</summary>
         public void PlayCameraZoom(float zoomMul = 1.05f, float upDuration = 0.05f, float downDuration = 0.15f)
         {
-            if (_zoomCo != null) StopCoroutine(_zoomCo);
-            _zoomCo = StartCoroutine(ZoomRoutine(zoomMul, upDuration, downDuration));
-        }
-
-        private IEnumerator ZoomRoutine(float zoomMul, float upDuration, float downDuration)
-        {
             var cam = Camera.main;
-            if (cam == null || !cam.orthographic) { _zoomCo = null; yield break; }
+            if (cam == null || !cam.orthographic) return;
             float origin = cam.orthographicSize;
-            float target = origin / Mathf.Max(zoomMul, 1.001f);  // zoomMul 클수록 size 작아짐 (확대)
+            float target = origin / Mathf.Max(zoomMul, 1.001f);
 
-            float t = 0f;
-            while (t < upDuration)
-            {
-                t += Time.unscaledDeltaTime;
-                cam.orthographicSize = Mathf.Lerp(origin, target, t / upDuration);
-                yield return null;
-            }
-            t = 0f;
-            while (t < downDuration)
-            {
-                t += Time.unscaledDeltaTime;
-                cam.orthographicSize = Mathf.Lerp(target, origin, t / downDuration);
-                yield return null;
-            }
-            cam.orthographicSize = origin;
-            _zoomCo = null;
+            if (_zoomHandle.IsActive()) _zoomHandle.Cancel();
+            _zoomHandle = LSequence.Create()
+                .Append(LMotion.Create(origin, target, upDuration).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(cam, (s, c) => c.orthographicSize = s))
+                .Append(LMotion.Create(target, origin, downDuration).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(cam, (s, c) => c.orthographicSize = s))
+                .Run();
         }
     }
 }
