@@ -1,3 +1,4 @@
+using LitMotion;
 using UnityEngine;
 
 namespace LittleHero

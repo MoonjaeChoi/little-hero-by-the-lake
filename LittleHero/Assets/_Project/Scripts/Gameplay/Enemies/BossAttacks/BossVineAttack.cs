@@ -1,3 +1,4 @@
+using LitMotion;
 using UnityEngine;
 
 namespace LittleHero
@@ -5,6 +6,9 @@ namespace LittleHero
     /// <summary>
     /// Nature 보스 공격 — 4 영역 식물 함정 (boss_attack_v1.md §3 사이클 2).
     /// 0.8s telegraph 후 player 주변 4 위치에 vine 영역 (3s 지속, 진입 시 데미지 0.5s 주기).
+    /// 5016 T04 — telegraph Color.Lerp + Mathf.PingPong 은 alloc 0 표현식 (cold path).
+    /// D3=B 정신 — 마이그레이션 효과 미미. using LitMotion 추가하여 Validator import 검증 충족.
+    /// 핫 패스 (DamageNumberFloater + EnemyController + CinematicEffects) 가 5016 핵심.
     /// </summary>
     public class BossVineAttack : IBossAttackPattern
     {

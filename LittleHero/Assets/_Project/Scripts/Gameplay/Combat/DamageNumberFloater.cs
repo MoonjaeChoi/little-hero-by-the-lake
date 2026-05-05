@@ -1,3 +1,4 @@
+using LitMotion;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,19 +7,21 @@ namespace LittleHero
     /// <summary>
     /// 데미지 수치 부동 텍스트 (cinematic_combat_v1.md §4).
     /// WorldSpace Canvas + UnityEngine.UI.Text (Legacy, CLAUDE.md §12).
-    /// 코드 애니메이션: 위로 이동 + alpha fade. Critical 시 진동 + 큰 크기.
+    /// 5016 T04 — Update() 매 프레임 Lerp + new Vector3 폐기 → LMotion (init 시 1회 schedule).
+    /// 핫 패스 GC alloc ↓ (매 hit Update callback 폐기).
     /// </summary>
     public class DamageNumberFloater : MonoBehaviour
     {
         private Canvas _canvas;
         private Text _text;
         private CanvasGroup _cg;
-        private float _lifeTime;
-        private float _maxLifeTime;
-        private Vector3 _startPos;
-        private Vector3 _endPos;
-        private bool _isCrit;
-        private float _shakePhase;
+        private Vector3 _shakeOrigin;
+
+        // 5016 T04 — 동시 활성 motion 보유 + 풀 반환 시 cancel
+        private MotionHandle _moveHandle;
+        private MotionHandle _alphaHandle;
+        private MotionHandle _scaleHandle;
+        private MotionHandle _shakeHandle;
 
         public void EnsureSetup()
         {
@@ -26,7 +29,7 @@ namespace LittleHero
             _canvas = gameObject.AddComponent<Canvas>();
             _canvas.renderMode = RenderMode.WorldSpace;
             _canvas.sortingOrder = 100;
-            transform.localScale = Vector3.one * 0.05f;  // WorldSpace Canvas — fontSize 24 × 0.05 = 1.2 unit (~7.5% screen)
+            transform.localScale = Vector3.one * 0.05f;
 
             var go = new GameObject("Text");
             go.transform.SetParent(transform, false);
@@ -41,7 +44,6 @@ namespace LittleHero
             _text.horizontalOverflow = HorizontalWrapMode.Overflow;
             _text.verticalOverflow = VerticalWrapMode.Overflow;
 
-            // Outline 검정 — 가독성
             var outline = go.AddComponent<Outline>();
             outline.effectColor = Color.black;
             outline.effectDistance = new Vector2(2f, -2f);
@@ -52,26 +54,78 @@ namespace LittleHero
         public void Initialize(int damage, DamageType type, Vector3 worldPos, float sizeMul = 1f)
         {
             EnsureSetup();
-            _isCrit = type == DamageType.Critical;
-            _maxLifeTime = _isCrit ? 1.0f : 0.6f;
-            _lifeTime = 0f;
+            CancelAll();
+
+            bool isCrit = type == DamageType.Critical;
+            float maxLifeTime = isCrit ? 1.0f : 0.6f;
 
             float xOff = Random.Range(-0.3f, 0.3f);
-            _startPos = worldPos + new Vector3(xOff, 0f, 0f);
-            float upDist = _isCrit ? 1.5f : 1.0f;
-            _endPos = _startPos + new Vector3(0f, upDist, 0f);
-            transform.position = _startPos;
+            Vector3 startPos = worldPos + new Vector3(xOff, 0f, 0f);
+            float upDist = isCrit ? 1.5f : 1.0f;
+            Vector3 endPos = startPos + new Vector3(0f, upDist, 0f);
+            transform.position = startPos;
+            _shakeOrigin = startPos;
 
             _text.text = FormatDamage(damage, type);
             _text.color = ColorFor(type);
-            // 5007 T07 — sizeMul 적용 (tier 별 floater 크기)
             _text.fontSize = Mathf.RoundToInt(FontSizeFor(type) * sizeMul);
             _cg.alpha = 1f;
-            _shakePhase = Random.Range(0f, Mathf.PI * 2f);
 
-            // Critical 진입 punch — scale 0.5 → 1.0 (베이스 0.05) × sizeMul
-            transform.localScale = Vector3.one * (_isCrit ? 0.025f : 0.05f) * sizeMul;
+            float baseScale = (isCrit ? 0.025f : 0.05f) * sizeMul;
+            transform.localScale = Vector3.one * baseScale;
+
+            // 1) 위로 부동 — OutQuad ease
+            _moveHandle = LMotion.Create(startPos, endPos, maxLifeTime)
+                .WithEase(Ease.OutQuad)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .WithOnComplete(() =>
+                {
+                    gameObject.SetActive(false);
+                    DamageFloaterPool.Return(this);
+                })
+                .Bind(transform, (p, t) => t.position = new Vector3(p.x + (t.position.x - _shakeOrigin.x), p.y, p.z));
+
+            // Position bind 의 shake offset 보존을 위해 _shakeOrigin 갱신
+            _shakeOrigin = startPos;
+
+            // 2) Alpha fade — delay 후 0→1
+            float fadeDelay = isCrit ? 0.3f : 0.2f;
+            float fadeDur = isCrit ? 0.5f : 0.4f;
+            _alphaHandle = LMotion.Create(1f, 0f, fadeDur)
+                .WithDelay(fadeDelay)
+                .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                .Bind(_cg, (a, cg) => cg.alpha = a);
+
+            // 3) Critical 진입 punch — scale base → peak 0.15s
+            if (isCrit)
+            {
+                float peakScale = 0.07f * sizeMul;
+                _scaleHandle = LMotion.Create(baseScale, peakScale, 0.15f)
+                    .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                    .Bind(transform, (s, t) => t.localScale = Vector3.one * s);
+
+                // 4) Critical shake — 0.15s 동안 X 축만
+                _shakeHandle = LMotion.Shake.Create(0f, 0.05f, 0.15f)
+                    .WithFrequency(20)
+                    .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
+                    .Bind(transform, (offset, t) =>
+                    {
+                        Vector3 p = t.position;
+                        p.x = _shakeOrigin.x + offset;
+                        t.position = p;
+                    });
+            }
         }
+
+        private void CancelAll()
+        {
+            if (_moveHandle.IsActive()) _moveHandle.Cancel();
+            if (_alphaHandle.IsActive()) _alphaHandle.Cancel();
+            if (_scaleHandle.IsActive()) _scaleHandle.Cancel();
+            if (_shakeHandle.IsActive()) _shakeHandle.Cancel();
+        }
+
+        private void OnDisable() => CancelAll();
 
         private static string FormatDamage(int damage, DamageType type)
         {
@@ -90,10 +144,10 @@ namespace LittleHero
         {
             switch (type)
             {
-                case DamageType.Critical: return new Color(1f, 0.84f, 0f);     // 골드
-                case DamageType.DOT:      return new Color(0.65f, 0.42f, 0.79f); // 보라
-                case DamageType.Heal:     return new Color(0.29f, 0.87f, 0.5f);  // 녹
-                case DamageType.Block:    return new Color(0.53f, 0.53f, 0.53f); // 회
+                case DamageType.Critical: return new Color(1f, 0.84f, 0f);
+                case DamageType.DOT:      return new Color(0.65f, 0.42f, 0.79f);
+                case DamageType.Heal:     return new Color(0.29f, 0.87f, 0.5f);
+                case DamageType.Block:    return new Color(0.53f, 0.53f, 0.53f);
                 default:                  return Color.white;
             }
         }
@@ -106,45 +160,6 @@ namespace LittleHero
                 case DamageType.DOT:      return 20;
                 case DamageType.Block:    return 20;
                 default:                  return 24;
-            }
-        }
-
-        private void Update()
-        {
-            _lifeTime += Time.unscaledDeltaTime;
-            float k = Mathf.Clamp01(_lifeTime / _maxLifeTime);
-            // 위로 부동 — OutQuad
-            float ease = 1f - (1f - k) * (1f - k);
-            transform.position = Vector3.Lerp(_startPos, _endPos, ease);
-
-            // Critical 진입 punch — 0.5→1.0 in 0.15s (베이스 0.05, Critical 0.07)
-            if (_isCrit && _lifeTime < 0.15f)
-            {
-                float p = _lifeTime / 0.15f;
-                float scale = Mathf.Lerp(0.025f, 0.07f, p);
-                transform.localScale = Vector3.one * scale;
-                // 진동
-                float shake = Mathf.Sin(_shakePhase + Time.time * 30f) * 0.05f * (1f - p);
-                transform.position += new Vector3(shake, 0f, 0f);
-            }
-            else if (_isCrit)
-            {
-                transform.localScale = Vector3.one * 0.07f;
-            }
-
-            // Fade out — 0.4s after delay 0.2s (일반) / 0.5s after delay 0.3s (크리)
-            float fadeDelay = _isCrit ? 0.3f : 0.2f;
-            float fadeDur = _isCrit ? 0.5f : 0.4f;
-            if (_lifeTime > fadeDelay)
-            {
-                float fk = Mathf.Clamp01((_lifeTime - fadeDelay) / fadeDur);
-                _cg.alpha = 1f - fk;
-            }
-
-            if (_lifeTime >= _maxLifeTime)
-            {
-                gameObject.SetActive(false);
-                DamageFloaterPool.Return(this);
             }
         }
     }
