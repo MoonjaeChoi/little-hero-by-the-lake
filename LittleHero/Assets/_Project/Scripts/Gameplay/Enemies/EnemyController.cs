@@ -28,6 +28,11 @@ namespace LittleHero
         private MotionHandle _punchHandle;
         private MotionHandle _flashHandle;
 
+        // 5017 T03 — wobble 변동 임계 0.005f (D3=B). native interop 절감.
+        private const float WOBBLE_DELTA_THRESHOLD = 0.005f;
+        private float _lastAppliedWobble = float.MinValue;
+        private float _lastAppliedPunch = float.MinValue;
+
         // 보스 공격 패턴 (boss_attack_v1.md) — 5001 T07: IBossPhase State 패턴으로 대체
         // _bossAttack 제거. CurrentPhase 가 내부에서 BossPatternFactory 로 IBossAttackPattern 생성.
         public IBossPhase CurrentPhase { get; private set; }
@@ -100,11 +105,18 @@ namespace LittleHero
 
             // 2) 가벼운 scale wobble (호흡 효과) — Rigidbody Y 안 건드림
             // PIVOT v4 — _punchScale 곱셈 (피격 시 scale 1.4×~1.7×)
+            // 5017 T03 — 변동 임계 0.005f (D3=B). 변동 미미 시 setter 생략 — native interop 절감.
             float wobble = Mathf.Sin(time * 4f + _swayPhase) * 0.04f;
-            transform.localScale = new Vector3(
-                _baseScaleX * _punchScale,
-                _baseScaleY * (1f + wobble) * _punchScale,
-                1f);
+            if (Mathf.Abs(wobble - _lastAppliedWobble) > WOBBLE_DELTA_THRESHOLD ||
+                Mathf.Abs(_punchScale - _lastAppliedPunch) > WOBBLE_DELTA_THRESHOLD)
+            {
+                _lastAppliedWobble = wobble;
+                _lastAppliedPunch = _punchScale;
+                transform.localScale = new Vector3(
+                    _baseScaleX * _punchScale,
+                    _baseScaleY * (1f + wobble) * _punchScale,
+                    1f);
+            }
         }
 
         /// <summary>PIVOT v4 — Premium 피격 (cinematic_combat_v1.md §3). 5007 T07 — Resolver 통합 (적 티어 / 데미지 강도 / 무기 색).</summary>
