@@ -5,7 +5,7 @@ namespace LittleHero
     public enum SlotType { Head, Top, Hand, Foot, Acc1, Acc2, Bag }
     // PIVOT 2026-05-02: 6 등급 (메이플 키우기 정합). Uncommon = Magic 으로 재명명.
     public enum Rarity { Common, Magic, Rare, Epic, Legendary, Mythic }
-    public enum AttackPatternType { None, Projectile, Aura, Orbit, Rain, Trail, Pulse, Summon, Slash }
+    public enum AttackPatternType { None, Projectile, Aura, Orbit, Rain, Trail, Pulse, Summon, Slash, Beam, Chain, Vortex, Meteor }
 
     [System.Serializable]
     public class StatModifiers
@@ -56,6 +56,10 @@ namespace LittleHero
         public float spreadAngle;
         [Tooltip("Orbit 회귀 — true 면 부메랑 (탕탕특공대)")]
         public bool isBoomerang;
+
+        [Header("5029 Element (선택)")]
+        [Tooltip("마법사 element — Fire/Ice/Lightning/Arcane. None = 무속성 (전사/궁수)")]
+        public MagicElement element;
     }
 
     [CreateAssetMenu(menuName = "LittleHero/Equipment")]

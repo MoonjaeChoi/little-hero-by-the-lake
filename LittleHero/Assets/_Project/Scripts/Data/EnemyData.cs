@@ -52,5 +52,9 @@ namespace LittleHero
 
         [Tooltip("보스 처치 보상 테이블 — Tier 별 4 인스턴스 중 하나 wiring (T06)")]
         public BossLootTable lootTable;
+
+        [Header("5029 Element 저항 (선택)")]
+        [Tooltip("element 저항 곱셈 [Fire/Ice/Lightning/Arcane]. 1.0=중립 / 1.5=약점 / 0.7=저항. 길이 != 4 시 default 사용")]
+        public float[] elementResistance = { 1f, 1f, 1f, 1f };
     }
 }
