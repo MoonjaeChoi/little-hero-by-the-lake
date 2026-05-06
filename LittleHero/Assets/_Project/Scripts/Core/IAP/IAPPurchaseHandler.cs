@@ -28,9 +28,15 @@ namespace LittleHero
                 return;
             }
 
-            // E5 — Receipt 검증 (5031 D1=A: Sprint 2 시점 v5 호환 검증)
-            // v5 PendingOrder.Info 의 receipt 접근 미확정 — Sprint 2 또는 5031.1
-            // 임시: 검증 생략, ApplyGrant 직접 진행
+            // E5 — Receipt 검증 (5031 D1=A 검증 결과 — v5 호환 확인)
+            // v5 PendingOrder.Info.Receipt (string) — CrossPlatformValidator 호환
+            string receipt = order?.Info?.Receipt;
+            if (!string.IsNullOrEmpty(receipt))
+            {
+                bool validated = ReceiptValidator.Validate(receipt);
+                if (!validated) Debug.LogWarning($"[IAPPurchaseHandler] receipt validation FAILED — {productId} (grant 진행)");
+            }
+
             IAPProductCatalog.ApplyGrant(productId);
             LimitedShopService.ConfirmIAPPurchase(productId);
             OnPurchaseSucceeded?.Invoke(productId);
