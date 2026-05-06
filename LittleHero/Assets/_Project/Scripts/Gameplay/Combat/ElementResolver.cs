@@ -36,6 +36,9 @@ namespace LittleHero
             if (target == null || target.IsDead) return;
             if (element == MagicElement.None) return;
 
+            // 5033 — Hovl prefab 시각 효과 (5029 placeholder StarBurst 대체)
+            ElementVfxBank.Spawn(element, target.transform.position);
+
             switch (element)
             {
                 case MagicElement.Fire:
