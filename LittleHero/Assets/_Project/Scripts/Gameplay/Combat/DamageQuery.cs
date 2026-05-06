@@ -5,8 +5,8 @@ namespace LittleHero
 {
     /// <summary>
     /// PIVOT v4 — 충돌 폐기 + Auto-Target 정적 헬퍼 (damage_system_v2.md §5.1).
-    /// Physics2D.OverlapCircleNonAlloc + LayerMask "Enemy" 기반.
-    /// 0 GC (사전 buffer 64) + 매 프레임 호출 안전.
+    /// 5032 — Physics2D.OverlapCircle (v6) + ContactFilter2D 정적 (NonAlloc 대체).
+    /// 0 GC (사전 buffer 64 + filter 재사용) + 매 프레임 호출 안전.
     /// </summary>
     public static class DamageQuery
     {
@@ -14,6 +14,8 @@ namespace LittleHero
         private static readonly Collider2D[] _buffer = new Collider2D[BUFFER_SIZE];
         private static readonly List<EnemyController> _scratch = new List<EnemyController>(BUFFER_SIZE);
         private static int _enemyLayerMask = -1;
+        private static ContactFilter2D _filter;
+        private static bool _filterInit;
 
         private static int EnemyMask
         {
@@ -24,11 +26,21 @@ namespace LittleHero
             }
         }
 
+        private static void EnsureFilter()
+        {
+            if (_filterInit) return;
+            _filter = new ContactFilter2D();
+            _filter.SetLayerMask(EnemyMask);
+            _filter.useTriggers = true;  // 기존 OverlapCircleNonAlloc 답습
+            _filterInit = true;
+        }
+
         /// <summary>원형 영역 내 모든 적 검색 (outResult 에 채움). 반환 = 검색된 수.</summary>
         public static int FindEnemiesInCircle(Vector2 center, float radius, List<EnemyController> outResult)
         {
+            EnsureFilter();
             outResult.Clear();
-            int count = Physics2D.OverlapCircleNonAlloc(center, radius, _buffer, EnemyMask);
+            int count = Physics2D.OverlapCircle(center, radius, _filter, _buffer);
             for (int i = 0; i < count; i++)
             {
                 var col = _buffer[i];

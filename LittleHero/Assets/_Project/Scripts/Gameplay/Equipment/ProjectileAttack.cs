@@ -12,7 +12,7 @@ namespace LittleHero
         private float _timer;
 
         // Physics2D 오버랩 버퍼 — 매 호출마다 new 하지 않도록 재사용
-        private readonly Collider2D[] _overlapBuffer = new Collider2D[64];
+        // 5032 — _overlapBuffer 폐기 (DamageQuery.FindNearest 위임, GC 0 통합)
 
         public void Initialize(AttackPatternConfig config, Transform owner, PlayerStats stats)
         {
@@ -77,25 +77,8 @@ namespace LittleHero
             _pool?.Return(proj);
         }
 
+        // 5032 — DamageQuery.FindNearest 위임 (v6 OverlapCircle + ContactFilter2D 정적 + EnemyMask)
         private EnemyController FindNearestEnemy()
-        {
-            int count = Physics2D.OverlapCircleNonAlloc(_owner.position, _config.range, _overlapBuffer);
-            EnemyController nearest = null;
-            float minDist = float.MaxValue;
-
-            for (int i = 0; i < count; i++)
-            {
-                EnemyController e = _overlapBuffer[i].GetComponent<EnemyController>();
-                if (e == null || e.IsDead) continue;
-
-                float dist = Vector2.Distance(_owner.position, e.transform.position);
-                if (dist < minDist)
-                {
-                    minDist = dist;
-                    nearest = e;
-                }
-            }
-            return nearest;
-        }
+            => DamageQuery.FindNearest(_owner.position, _config.range);
     }
 }
