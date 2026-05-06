@@ -13,13 +13,7 @@ namespace LittleHero.EditorTools
         private const string AtticScenePath   = "Assets/_Project/Scenes/Attic.unity";
         private const string DefaultPoolPath  = "Assets/_Project/Data/Shop/ShopPool_Default.asset";
 
-        private enum Severity { Error, Warning }
-
-        private struct Issue
-        {
-            public Severity Sev; public string Category; public string Msg;
-            public Issue(Severity s, string c, string m) { Sev = s; Category = c; Msg = m; }
-        }
+        // 5022 T01 — Issue / Severity 는 ProjectValidator/Issue.cs 로 분리
 
         [MenuItem("Tools/LittleHero/Validate Project")]
         public static void Run()
