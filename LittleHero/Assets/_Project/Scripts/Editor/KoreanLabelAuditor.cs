@@ -23,6 +23,8 @@ namespace LittleHero.EditorTools
             new Regex(@"^(hero_|enemy_|boss_|chapter_|affix_|equip_)"), // ID format
             new Regex(@"^[\★✦◇⋆]+$"),                                  // 화폐 단위
             new Regex(@"^\d+(\.\d+)?[%xX]?$"),                          // 숫자
+            new Regex(@"\+N\b"),                                        // "+N" placeholder (예 "민첩 +N")
+            new Regex(@"\+?/s\b"),                                      // "+/s" 시간 단위 (예 "회복 +/s")
         };
 
         private const string ReportRel = "../../docs/little_hero/korean_label_audit_report.md";
