@@ -254,12 +254,14 @@ Assets/_Project/
 
 > **자세한 backlog 는 → [docs/little_hero/backlog_v1.md](docs/little_hero/backlog_v1.md)** (5021~5028 번호 부여, scope·예상시간·의존성)
 
-### 우선순위 Top 5 (2026-05-06 갱신, 5020 종결 후)
-1. 🔴 **5021 starter_hero_chapter_flow** — 5005 R3+R4 회귀 fix → 5020 C6 시나리오 2b 완성. 1~2h. **5020 직접 cascade**
-2. 🟠 **5022 oop_validator_split** — ProjectValidator 650L → 책임 분리 (룰 자기위반 해소). 2~3h
-3. 🟠 **5023 oop_metaprogression_split** — MetaProgression 330L 분리 + init 책임 정합 (5020 한계 해소). 1~2h. 5021 의존
-4. 🔴 **5026 ios_build_testflight** — G4 Apple Developer + Xcode archive + TestFlight + 5018 App Size 실측. 4~8h. **출시 차단**
-5. 🟡 **5024/5025** — Editor Test 확장 / 한국어 검수 (병렬 가능)
+### 우선순위 (2026-05-06 — 출시 보류, 개발/개선 집중)
+1. 🔴 **5021 starter_hero_chapter_flow** — 5005 R3+R4 회귀 fix → 5020 C6 시나리오 2b 완성. 2h15m. **5020 직접 cascade**. PRD 작성 완료
+2. 🟠 **5022 oop_validator_split** — ProjectValidator 650L → 책임 분리 (룰 자기위반 해소). 2h30m. PRD 완료
+3. 🟠 **5023 oop_metaprogression_split** — MetaProgression 331L 분리 + init 책임 정합 (5020 한계 해소). 2h15m. 5021 의존. PRD 완료
+4. 🟡 **5024 editor_test_expansion** — NUnit 117 → 144 (DamageQuery/EquipmentManager/Player/ItemDrop). 5h30m. PRD 완료
+5. 🟡 **5025 ui_korean_polish** — G3 한국어 검수 + Legacy Text 폰트 spot fix. 2h30m. PRD 완료
+
+**합계**: 14h45m / 17 commit / 5 시스템. 출시 (5026 ios_build_testflight) 는 위 5 시스템 안정성 확인 후 재계획.
 
 ### 빠른 시작 명령
 - `리틀히어로 구현 계속` → 자동 선정
