@@ -13,9 +13,10 @@
 
 ## 1. 현재 시스템 분석
 
-### 1.1 마법사 무기 8개 (weapon_v2 정합)
+### 1.1 마법사 무기 8개 + 신규 1개 (weapon_v2 정합)
 
-| 무기 | 카테고리 | 추정 element |
+**기존 8개**:
+| 무기 | 카테고리 | element |
 |---|---|---|
 | weapon_firebottle | Tome | **Fire** (불병) |
 | weapon_meteor_rod | Wand | **Fire** (운석) |
@@ -26,7 +27,18 @@
 | weapon_spirit_pet | Tome | **Arcane** (정령 펫) |
 | weapon_time_spirit | Tome | **Arcane** (시간 정령) |
 
-**분포**: Fire 2 / Ice 2 / Lightning **1** / Arcane 3 — Lightning 부족 (5029.1 후속 보정 또는 그대로 진행 — D 결정 필요).
+**신규 1개 (사용자 결정 — 옵션 B)**:
+| 무기 | 카테고리 | element | 신규 |
+|---|---|---|---|
+| **weapon_thunder_wand** | **Wand** | **Lightning** (천둥 완드) | ★ |
+
+**최종 분포**: Fire 2 / Ice 2 / Lightning **2** / Arcane 3 = **9 무기** (균등에 근접)
+
+**카테고리 균형**: Tome 6 + Wand **2** + Staff 1 (Wand 추가로 Tome 편중 일부 완화)
+
+**영향**:
+- EquipmentTemplate SO 24 → **25**
+- GachaPool 등급 풀 1개 추가 (Rare 또는 Epic 등급 권장, 가챠 분포 균형 검토 필요)
 
 ### 1.2 기존 8 IAttackPattern
 
@@ -147,7 +159,8 @@ public static int DealDamage(EnemyController enemy, float damage, ..., MagicElem
 
 | 위험 | 완화 |
 |---|---|
-| Lightning 무기 1개 (분포 불균등) | 5029.1 후속 보정 또는 PRD 진행 시 추가 무기 SO 생성 |
+| ~~Lightning 무기 1개 (분포 불균등)~~ | ✅ 옵션 B 채택 — weapon_thunder_wand 신규 1개 추가 (Sprint 4 통합), 분포 2/2/2/3 |
+| 신규 SO 가챠 풀 영향 | Sprint 4 GachaPool 등급 풀 마이그레이션 명시 |
 | 기존 8 pattern 회귀 (element 매개변수 추가) | default MagicElement.None 호환 — 전사/궁수 영향 0 |
 | EnemyData 262 SO 마이그레이션 | default `{1,1,1,1}` 자동 + Editor 일괄 |
 | EquipmentManager.SyncEquippedInstances 영향 | element 매개변수 명시 전달 (5028 PatternActivator 답습) |

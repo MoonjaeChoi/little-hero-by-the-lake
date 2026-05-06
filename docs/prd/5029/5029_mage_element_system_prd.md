@@ -13,10 +13,10 @@
 | 2 | ElementResolver + DamageDealer 통합 + OnHit | 1 | 50분 |
 | 3a | Beam + Chain pattern (신규 2/4) | 1 | 40분 |
 | 3b | Vortex + Meteor pattern (신규 2/4) + Factory 확장 | 1 | 40분 |
-| 4 | 마법사 무기 8 element 매핑 + ElementVfxBank | 1 | 50분 |
+| 4 | 마법사 무기 9 매핑 + 신규 Lightning 무기 + ElementVfxBank | 1 | 60분 |
 | 5 | UI — Inventory + GachaResult element 아이콘 | 1 | 40분 |
 | 6 | NUnit + Validator + changelog + CLAUDE.md | 1 | 30분 |
-| **합계** | | **7** | **~4h 55m** |
+| **합계** | | **7** | **~5h 5m** |
 
 ---
 
@@ -183,45 +183,70 @@ Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 
 ---
 
-## 5. Sprint 4 — 마법사 무기 8 → element 매핑 (1 commit, 50분)
+## 5. Sprint 4 — 마법사 무기 매핑 + 신규 Lightning 무기 (1 commit, 60분)
 
-### 5.1 신규 파일
+### 5.1 신규 무기 SO (사용자 결정 — 옵션 B)
 
-**`Scripts/Editor/MageWeaponElementMigrator.cs`** (~50L)
+**`Data/Templates/Weapons/weapon_thunder_wand.asset`** (신규)
+- requiredClass: Mage (2)
+- category: Wand (9)
+- element: Lightning
+- attackPattern: Chain (Lightning 정합)
+- rarity: Rare (가챠 분포 균형)
+- displayName: "천둥 완드"
+- baseStats: 마법사 평균 레퍼런스 (weapon_meteor_rod 답습)
+
+**GachaPool 등급 풀 추가** — Rare 풀에 weapon_thunder_wand 등록.
+
+### 5.2 신규 파일
+
+**`Scripts/Editor/MageWeaponElementMigrator.cs`** (~55L)
 - `Tools/LittleHero/Migrate Mage Weapon Elements` 메뉴
-- 매핑:
+- 매핑 (9 무기):
   - Fire: weapon_firebottle, weapon_meteor_rod
   - Ice: weapon_frost_rune, mage_glacier_rune
-  - Lightning: weapon_annihilation_rain
+  - Lightning: weapon_annihilation_rain, **weapon_thunder_wand** (신규)
   - Arcane: weapon_rune_staff, weapon_spirit_pet, weapon_time_spirit
+
+**`Scripts/Editor/ThunderWandSeed.cs`** (~40L) — 신규 SO 생성 + GachaPool wiring
 
 **`Scripts/Core/ElementVfxBank.cs`** (~45L)
 - 4 element VFX prefab (Resources/VFX/Element/Fire 등)
 - VfxPool 등록 + Spawn(MagicElement, position)
 
-### 5.2 VFX prefab 4 (placeholder 자체 합성, 무료 에셋 후속)
+### 5.3 VFX prefab 4 (placeholder 자체 합성, 무료 에셋 후속)
 
 **임시**: 5007 HitEffectResolver 답습 + element 색조 (Fire 빨강 / Ice 파랑 / Lightning 노랑 / Arcane 보라).
 
+### 5.4 PNG icon (placeholder)
+
+`weapon_thunder_wand.png` — 5029.2 후속 (5008 baseline LayerDiffuse RGBA 또는 placeholder 임시).
+
 #### Sprint 4 commit
 ```
-5029 Sprint 4 — 마법사 무기 8 element + ElementVfxBank (5/7)
+5029 Sprint 4 — 마법사 무기 9 element + 신규 Lightning + ElementVfxBank (5/7)
 
 [변경]
-  + Editor/MageWeaponElementMigrator.cs (~50L)
-    - 8 무기 element 일괄 매핑
+  + Data/Templates/Weapons/weapon_thunder_wand.asset (신규 SO, Lightning, Wand, Rare)
+  + Editor/ThunderWandSeed.cs (~40L) — 신규 SO 생성 + GachaPool wiring
+  + Editor/MageWeaponElementMigrator.cs (~55L)
+    - 9 무기 element 일괄 매핑
   + Core/ElementVfxBank.cs (~45L)
     - 4 element VFX prefab + VfxPool 등록
   + Resources/VFX/Element/{Fire,Ice,Lightning,Arcane} prefab placeholder
 
-[데이터]
+[데이터 — 9 무기]
   - Fire: weapon_firebottle, weapon_meteor_rod
   - Ice: weapon_frost_rune, mage_glacier_rune
-  - Lightning: weapon_annihilation_rain
+  - Lightning: weapon_annihilation_rain, weapon_thunder_wand (신규)
   - Arcane: weapon_rune_staff, weapon_spirit_pet, weapon_time_spirit
 
-[Trade-off]
-  Lightning 1개 부족 — 5029.1 후속 무기 추가 또는 그대로
+[가챠]
+  - GachaPool Rare 풀 +1 (weapon_thunder_wand)
+  - EquipmentTemplate SO 24 → 25
+
+[후속]
+  weapon_thunder_wand PNG icon 5029.2 (5008 baseline)
 
 Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
 ```
@@ -322,7 +347,8 @@ Sprint 6 (NUnit + docs)
 - [ ] 262 EnemyData 마이그레이션 완료
 - [ ] ElementResolver 4 효과 (Fire DOT / Ice 둔화 / Lightning 사슬 / Arcane 무시)
 - [ ] 신규 4 pattern (Beam/Chain/Vortex/Meteor) + Factory 13개 정합
-- [ ] 마법사 무기 8 element 매핑 (Fire 2 / Ice 2 / Lightning 1 / Arcane 3)
+- [ ] 마법사 무기 9 element 매핑 (Fire 2 / Ice 2 / Lightning **2** / Arcane 3) — 옵션 B 신규 weapon_thunder_wand 포함
+- [ ] EquipmentTemplate SO 24 → 25 (가챠 풀 +1 Rare)
 - [ ] ElementVfxBank + 4 prefab 등록
 - [ ] InventoryPanel + GachaResultPanel element 아이콘
 - [ ] NUnit 158 → 164 회귀 0
@@ -334,8 +360,9 @@ Sprint 6 (NUnit + docs)
 ### 시나리오 1 — Element 마이그레이션
 `Tools/LittleHero/Migrate Element System` → 262 EnemyData 갱신 + DisplayDialog 보고
 
-### 시나리오 2 — 마법사 무기 매핑
-`Tools/LittleHero/Migrate Mage Weapon Elements` → 8 무기 element 부여 + 분포 보고 (Fire 2 / Ice 2 / Lightning 1 / Arcane 3)
+### 시나리오 2 — 마법사 무기 매핑 (9개)
+`Tools/LittleHero/Seed Thunder Wand` → 신규 weapon_thunder_wand SO 생성
+`Tools/LittleHero/Migrate Mage Weapon Elements` → 9 무기 element 부여 + 분포 보고 (Fire 2 / Ice 2 / Lightning **2** / Arcane 3)
 
 ### 시나리오 3 — Play 마법사 전투
 - 마법사 캐릭터 선택 → CH1 진입
@@ -354,7 +381,9 @@ Validate Project → warnings 변동 ≤ 0 + 마법사 무기 element 분포 보
 | 위험 | 완화 |
 |---|---|
 | 기존 8 pattern 회귀 (element 매개변수) | default MagicElement.None — 전사/궁수 호환 |
-| Lightning 무기 1개 (불균등) | 5029.1 후속 보정 또는 운영 결정 |
+| ~~Lightning 무기 1개 (불균등)~~ | ✅ 옵션 B 채택 — weapon_thunder_wand 신규 1개 추가 (분포 2/2/2/3) |
+| 신규 무기 PNG icon 미존재 | placeholder 임시 + 5029.2 PNG 생성 후속 |
+| 가챠 풀 분포 변경 (Rare +1) | Rare 풀 균형 재검증 (가챠 시뮬 권장) |
 | EnemyData 262 마이그레이션 데이터 손상 | Editor 메뉴 + DisplayDialog 사전 확인 |
 | EquipmentManager.SyncEquippedInstances | 5028 PatternActivator 답습, element 매개변수 명시 전달 |
 | InventoryPanel UI wiring 회귀 | element=None 시 아이콘 숨김 (호환) |
