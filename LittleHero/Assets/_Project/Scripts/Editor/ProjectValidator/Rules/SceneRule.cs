@@ -96,7 +96,7 @@ namespace LittleHero.EditorTools.Rules
         {
             var cmType = System.Type.GetType("Unity.Cinemachine.CinemachineCamera, Unity.Cinemachine");
             if (cmType == null) return;
-            Object[] cms = Object.FindObjectsByType(cmType, FindObjectsSortMode.None);
+            Object[] cms = Object.FindObjectsByType(cmType, FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             if (cms.Length == 0) { issues.Add(new Issue(Severity.Warning, "Cinemachine", "CinemachineCamera 없음")); return; }
 
             foreach (var cm in cms)

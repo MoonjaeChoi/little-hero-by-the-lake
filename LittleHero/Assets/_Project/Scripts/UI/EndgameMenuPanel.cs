@@ -32,7 +32,7 @@ namespace LittleHero
         [SerializeField] private Button _closeButton;
 
         [Header("씬 이름")]
-        [SerializeField] private string _bossEncounterSceneName = "BossEncounter";
+        // 5032 — _bossEncounterSceneName 제거 (5005 잔존, 미사용)
         [SerializeField] private string _infiniteTowerSceneName = "InfiniteTower";
 
         [Header("F5 신화 보장 — 주간 보스 처치 시 사용")]
