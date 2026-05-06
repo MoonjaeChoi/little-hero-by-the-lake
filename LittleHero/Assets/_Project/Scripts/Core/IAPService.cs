@@ -1,3 +1,7 @@
+// 5028 cascade — IAP v5 마이그레이션 5031 후속 (옵션 A suppress).
+// CS0618: IStoreController / IExtensionProvider / InitializationFailureReason 등 v4 API obsolete.
+// v4 API 정상 작동 (Unity IAP 5.0.0 backward 호환), 5031 PRD 에서 v5 IStoreService 마이그레이션.
+#pragma warning disable CS0618
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -140,3 +144,4 @@ namespace LittleHero
         }
     }
 }
+#pragma warning restore CS0618
