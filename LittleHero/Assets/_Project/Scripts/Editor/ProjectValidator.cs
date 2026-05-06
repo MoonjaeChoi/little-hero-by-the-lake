@@ -530,43 +530,36 @@ namespace LittleHero.EditorTools
         {
             ValidateRequired<MetaProgression>(issues, "MetaProgression");
             ValidateRequired<AtticController>(issues, "AtticController");
-            var atticCtl = Object.FindAnyObjectByType<AtticController>();
-            if (atticCtl == null) return;
 
-            var so = new SerializedObject(atticCtl);
-            CheckRef(issues, "Attic", so, "_starFragmentsText");
-            CheckRef(issues, "Attic", so, "_selectedCharacterText");
-            CheckRef(issues, "Attic", so, "_defaultCharacter");
+            // 5005 attic_decomposition_v1 분리 후 — AtticController 잔여 책임만 검사 (gacha/limited shop/starforce 진입 버튼).
+            // 옛 _chapterButtons / _characterButtons / _starFragmentsText / _selectedCharacterText / _defaultCharacter 는
+            // AtticCharacterSelector / AtticChapterEntry / AtticCurrencyView / AtticEndgameMenuView 로 이동됨.
+            // 5021 R3 D1=B 결정: 챕터 진입은 WondrousMapPanel 단일 path, AtticChapterEntry 비활성화.
 
-            var arr = so.FindProperty("_chapterButtons");
-            if (arr == null || !arr.isArray) issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 배열 미존재"));
+            var selector = Object.FindAnyObjectByType<AtticCharacterSelector>();
+            if (selector == null) issues.Add(new Issue(Severity.Error, "Attic", "AtticCharacterSelector 미존재 (5005 분리)"));
             else
             {
-                if (arr.arraySize == 0) issues.Add(new Issue(Severity.Error, "Attic", "_chapterButtons 비어있음"));
-                for (int i = 0; i < arr.arraySize; i++)
+                var ssel = new SerializedObject(selector);
+                var sarr = ssel.FindProperty("_buttons");
+                if (sarr == null || !sarr.isArray) issues.Add(new Issue(Severity.Error, "Attic", "AtticCharacterSelector._buttons 배열 미존재"));
+                else if (sarr.arraySize == 0) issues.Add(new Issue(Severity.Error, "Attic", "AtticCharacterSelector._buttons 비어있음 (5020.2 회귀)"));
+                else
                 {
-                    var elem = arr.GetArrayElementAtIndex(i);
-                    var ch = elem.FindPropertyRelative("chapter");
-                    var bt = elem.FindPropertyRelative("button");
-                    if (ch == null || ch.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].chapter 미연결"));
-                    if (bt == null || bt.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"chapterButtons[{i}].button 미연결"));
+                    for (int i = 0; i < sarr.arraySize; i++)
+                    {
+                        var elem = sarr.GetArrayElementAtIndex(i);
+                        var ch = elem.FindPropertyRelative("character");
+                        var bt = elem.FindPropertyRelative("button");
+                        if (ch == null || ch.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"AtticCharacterSelector._buttons[{i}].character 미연결"));
+                        if (bt == null || bt.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"AtticCharacterSelector._buttons[{i}].button 미연결"));
+                    }
                 }
             }
 
-            var carr = so.FindProperty("_characterButtons");
-            if (carr == null || !carr.isArray) issues.Add(new Issue(Severity.Error, "Attic", "_characterButtons 배열 미존재"));
-            else
-            {
-                if (carr.arraySize == 0) issues.Add(new Issue(Severity.Error, "Attic", "_characterButtons 비어있음"));
-                for (int i = 0; i < carr.arraySize; i++)
-                {
-                    var elem = carr.GetArrayElementAtIndex(i);
-                    var ch = elem.FindPropertyRelative("character");
-                    var bt = elem.FindPropertyRelative("button");
-                    if (ch == null || ch.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"characterButtons[{i}].character 미연결"));
-                    if (bt == null || bt.objectReferenceValue == null) issues.Add(new Issue(Severity.Error, "Attic", $"characterButtons[{i}].button 미연결"));
-                }
-            }
+            // WondrousMapPanel 가 production 챕터 진입 path (5021 D1=B)
+            var mapPanel = Object.FindAnyObjectByType<WondrousMapPanel>();
+            if (mapPanel == null) issues.Add(new Issue(Severity.Warning, "Attic", "WondrousMapPanel 미존재 (production 챕터 진입 path)"));
         }
 
         private static void ValidateMainCamera(List<Issue> issues)
