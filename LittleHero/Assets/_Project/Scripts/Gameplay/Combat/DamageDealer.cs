@@ -50,25 +50,31 @@ namespace LittleHero
             return dmg * mul;
         }
 
-        /// <summary>다중 타깃 데미지 — 거리 정렬된 list 가정. PIVOT v4 OnHit 자동. 5007 — weaponCategory cache 자동 사용 (인자 default null = cache 사용).</summary>
-        public static void ApplyMulti(List<EnemyController> targets, float baseDamage, WeaponCategory? weaponCategory = null)
+        /// <summary>다중 타깃 데미지 — 거리 정렬된 list 가정. 5029 — element 매개변수 default None (전사/궁수 호환).</summary>
+        public static void ApplyMulti(List<EnemyController> targets, float baseDamage, WeaponCategory? weaponCategory = null, MagicElement element = MagicElement.None)
         {
-            var wc = weaponCategory ?? _activeWeaponCategory;  // 5007 — IAttackPattern 미명시 시 cache 자동 사용
+            var wc = weaponCategory ?? _activeWeaponCategory;
             float effective = EnhanceDamage(baseDamage);
             for (int i = 0; i < targets.Count; i++)
             {
                 if (targets[i] == null || targets[i].IsDead) continue;
                 float penalty = i < _multiTargetPenalty.Length ? _multiTargetPenalty[i] : MULTI_PENALTY_FLOOR;
-                DamageSystem.DealDamage(targets[i], effective * penalty, wc);
+                float elemMul = ElementResolver.ResolveMultiplier(targets[i], element);
+                float finalDmg = effective * penalty * elemMul;
+                DamageSystem.DealDamage(targets[i], finalDmg, wc);
+                ElementResolver.ApplyElementEffect(targets[i], element, finalDmg);
             }
         }
 
-        /// <summary>단일 타깃 — 100% 데미지. 5007 — weaponCategory cache 자동 사용.</summary>
-        public static void ApplySingle(EnemyController target, float damage, WeaponCategory? weaponCategory = null)
+        /// <summary>단일 타깃 — 100% 데미지. 5029 — element 매개변수.</summary>
+        public static void ApplySingle(EnemyController target, float damage, WeaponCategory? weaponCategory = null, MagicElement element = MagicElement.None)
         {
             if (target == null || target.IsDead) return;
             var wc = weaponCategory ?? _activeWeaponCategory;
-            DamageSystem.DealDamage(target, EnhanceDamage(damage), wc);
+            float elemMul = ElementResolver.ResolveMultiplier(target, element);
+            float finalDmg = EnhanceDamage(damage) * elemMul;
+            DamageSystem.DealDamage(target, finalDmg, wc);
+            ElementResolver.ApplyElementEffect(target, element, finalDmg);
         }
 
         /// <summary>다중 타깃 보정 비율 미리보기 (UI / 시뮬용).</summary>
