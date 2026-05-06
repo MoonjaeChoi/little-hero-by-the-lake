@@ -20,6 +20,11 @@ namespace LittleHero
                 AttackPatternType.Pulse      => new PulseAttack(),
                 AttackPatternType.Summon     => new SummonAttack(),
                 AttackPatternType.Slash      => new SlashAttack(),
+                // 5029 신규 4 pattern (마법사 element-aware)
+                AttackPatternType.Beam       => new BeamAttack(),
+                AttackPatternType.Chain      => new ChainAttack(),
+                AttackPatternType.Vortex     => new VortexAttack(),
+                AttackPatternType.Meteor     => new MeteorAttack(),
                 _ => null,
             };
         }
@@ -36,6 +41,10 @@ namespace LittleHero
                 AttackPatternType.Pulse      => typeof(PulseAttack),
                 AttackPatternType.Summon     => typeof(SummonAttack),
                 AttackPatternType.Slash      => typeof(SlashAttack),
+                AttackPatternType.Beam       => typeof(BeamAttack),
+                AttackPatternType.Chain      => typeof(ChainAttack),
+                AttackPatternType.Vortex     => typeof(VortexAttack),
+                AttackPatternType.Meteor     => typeof(MeteorAttack),
                 _ => null,
             };
         }
