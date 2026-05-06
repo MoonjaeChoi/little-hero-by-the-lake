@@ -14,7 +14,7 @@ namespace LittleHero
         {
             if (amount <= 0 || Data == null) return;
             Data.starFragments += amount;
-            MetaProgression.OnStarFragmentsChanged?.Invoke(Data.starFragments);
+            MetaProgression.RaiseStarFragmentsChanged(Data.starFragments);
             SaveSystem.Save(Data);
         }
 
@@ -22,7 +22,7 @@ namespace LittleHero
         {
             if (amount <= 0 || Data == null || Data.starFragments < amount) return false;
             Data.starFragments -= amount;
-            MetaProgression.OnStarFragmentsChanged?.Invoke(Data.starFragments);
+            MetaProgression.RaiseStarFragmentsChanged(Data.starFragments);
             SaveSystem.Save(Data);
             return true;
         }

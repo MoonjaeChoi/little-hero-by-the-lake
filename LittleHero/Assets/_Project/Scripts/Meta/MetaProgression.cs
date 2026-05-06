@@ -35,6 +35,13 @@ namespace LittleHero
 
         public static event Action<int> OnStarFragmentsChanged;
 
+        // 5023 T04 — 정적 event 외부 발행 불가 (CS0070) 회피 — Raise 헬퍼 (서비스 클래스가 호출)
+        public static void RaiseCharacterChanged(CharacterData c) => OnCharacterChanged?.Invoke(c);
+        public static void RaiseCharacterClassChanged(CharacterClass c) => OnCharacterClassChanged?.Invoke(c);
+        public static void RaiseUpgradeChanged(MetaUpgradeData u) => OnUpgradeChanged?.Invoke(u);
+        public static void RaiseEnemyDefeated(EnemyData e) => OnEnemyDefeated?.Invoke(e);
+        public static void RaiseStarFragmentsChanged(int v) => OnStarFragmentsChanged?.Invoke(v);
+
         private void Awake()
         {
             // 5023 — Awake slim. Loader + Bootstrapper 분리.
@@ -51,7 +58,7 @@ namespace LittleHero
             GameEvents.OnChapterCleared    += HandleChapterCleared;
             GameEvents.OnMemoryDiscovered  += HandleMemoryDiscovered;
             GameEvents.OnEnemyKilled       += HandleEnemyKilled;
-            GameEvents.OnPlayerDied        += FlushDrops;
+            GameEvents.OnPlayerDied        += MetaProgressionEquipment.FlushDrops;
         }
 
         private void OnDisable()
@@ -59,7 +66,7 @@ namespace LittleHero
             GameEvents.OnChapterCleared    -= HandleChapterCleared;
             GameEvents.OnMemoryDiscovered  -= HandleMemoryDiscovered;
             GameEvents.OnEnemyKilled       -= HandleEnemyKilled;
-            GameEvents.OnPlayerDied        -= FlushDrops;
+            GameEvents.OnPlayerDied        -= MetaProgressionEquipment.FlushDrops;
         }
 
         // 5023 T03 — _pendingDrops + QueueDrop + FlushDrops 는 MetaProgressionEquipment 로 이동

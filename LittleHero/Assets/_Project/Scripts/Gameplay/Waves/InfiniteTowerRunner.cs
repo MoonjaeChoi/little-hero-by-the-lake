@@ -9,7 +9,7 @@ namespace LittleHero
     /// ChapterRunner 와 동일한 구조이지만 totalWaves 무제한 + 깊이↑마다 적 스탯 곱셈 누적.
     /// 사망 시 도달 깊이를 EndgameResetService.RecordInfiniteDepth 로 영구 저장.
     ///
-    /// 사용: Chapter.unity 씬의 ChapterRunner 대신 본 컴포넌트 부착, MetaProgression.SelectedChapter 무시.
+    /// 사용: Chapter.unity 씬의 ChapterRunner 대신 본 컴포넌트 부착, MetaProgressionChapter.SelectedChapter 무시.
     /// 적 풀은 인스펙터에서 모든 카테고리 archetype 합집합 또는 fantasy 풀 권장.
     /// </summary>
     [RequireComponent(typeof(WaveManager))]

@@ -26,11 +26,11 @@ namespace LittleHero
                 MetaProgression.Instance.Data.selectedCharacterId = character != null ? character.id : null;
                 SaveSystem.Save(MetaProgression.Instance.Data);
             }
-            MetaProgression.OnCharacterChanged?.Invoke(character);
+            MetaProgression.RaiseCharacterChanged(character);
             if (character != null) LimitedShopService.HandleCharacterFirstSelect(character.id);
 
             // 직업 enum 변경 시만 발행 (같은 직업 내 캐릭터 교체 시 X)
-            if (prevClass != newClass) MetaProgression.OnCharacterClassChanged?.Invoke(newClass);
+            if (prevClass != newClass) MetaProgression.RaiseCharacterClassChanged(newClass);
         }
 
         public static CharacterClass ResolveCharacterClass(CharacterData ch)
