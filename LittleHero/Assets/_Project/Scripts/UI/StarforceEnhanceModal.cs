@@ -81,11 +81,11 @@ namespace LittleHero
             {
                 _resultText.text = result.outcome switch
                 {
-                    StarforceService.StarforceOutcome.Success           => $"✦ 성공! ⭐ {result.previousLevel} → ⭐ {result.newLevel}",
-                    StarforceService.StarforceOutcome.Failure           => $"실패… 단계 그대로 ⭐ {result.previousLevel} (재도전 가능)",
-                    StarforceService.StarforceOutcome.AtMaxLevel        => "이미 최대 단계입니다",
-                    StarforceService.StarforceOutcome.InsufficientShards => $"조각 부족 — 필요: ◈ {result.shardCost}",
-                    StarforceService.StarforceOutcome.InvalidSaveData   => "저장 데이터 오류",
+                    StarforceOutcome.Success           => $"✦ 성공! ⭐ {result.previousLevel} → ⭐ {result.newLevel}",
+                    StarforceOutcome.Failure           => $"실패… 단계 그대로 ⭐ {result.previousLevel} (재도전 가능)",
+                    StarforceOutcome.AtMaxLevel        => "이미 최대 단계입니다",
+                    StarforceOutcome.InsufficientShards => $"조각 부족 — 필요: ◈ {result.shardCost}",
+                    StarforceOutcome.InvalidSaveData   => "저장 데이터 오류",
                     _ => "",
                 };
             }
