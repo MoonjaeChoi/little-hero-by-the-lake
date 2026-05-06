@@ -1,5 +1,6 @@
 using LittleHero;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace LittleHero.Tests.Editor
 {
