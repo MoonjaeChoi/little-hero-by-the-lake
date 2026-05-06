@@ -39694,7 +39694,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AtticCharacterSelector
   _selectedCharacterText: {fileID: 0}
-  _buttons: []
+  _buttons:
+  - character: {fileID: 11400000, guid: 9b5cbef40766e4eb891d5d6ba9ead3fa, type: 2}
+    button: {fileID: 400287319}
+    highlight: {fileID: 0}
+  - character: {fileID: 11400000, guid: eb19874a8f9594e4e90ca400e33ffaaf, type: 2}
+    button: {fileID: 28990596}
+    highlight: {fileID: 0}
+  - character: {fileID: 11400000, guid: c3422e805d1b649a482511786e46e0e9, type: 2}
+    button: {fileID: 1880573227}
+    highlight: {fileID: 0}
   _defaultCharacter: {fileID: 0}
 --- !u!114 &1218918688
 MonoBehaviour:
