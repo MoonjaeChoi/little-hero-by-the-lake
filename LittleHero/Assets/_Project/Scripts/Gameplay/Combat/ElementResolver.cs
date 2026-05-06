@@ -33,11 +33,14 @@ namespace LittleHero
         /// <summary>element effect 적용 — DamageDealer 가 호출. baseDamage 는 EnhanceDamage 후 값.</summary>
         public static void ApplyElementEffect(EnemyController target, MagicElement element, float baseDamage)
         {
-            if (target == null || target.IsDead) return;
+            if (target == null) return;
             if (element == MagicElement.None) return;
 
-            // 5033 — Hovl prefab 시각 효과 (5029 placeholder StarBurst 대체)
+            // 5033 — Hovl prefab 시각 효과 (적 처치 직후에도 발동, IsDead 와 무관)
             ElementVfxBank.Spawn(element, target.transform.position);
+
+            // 후속 effect (DOT/둔화/chain) 는 살아있는 적만 — 5033.0 fix
+            if (target.IsDead) return;
 
             switch (element)
             {

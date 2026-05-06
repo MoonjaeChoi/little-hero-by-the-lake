@@ -33,4 +33,5 @@ MonoBehaviour:
     projectileSpeed: 12
     count: 2
     projectilePrefab: {fileID: 1569577686688905727, guid: 43024a8452cfa41b6a15b38abf4e56ad, type: 3}
-  setId: 
+    element: 1
+  setId:

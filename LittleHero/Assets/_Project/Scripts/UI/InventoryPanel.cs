@@ -21,19 +21,28 @@ namespace LittleHero
         [SerializeField] private EquipmentTemplate[] _templateLookup;
         [SerializeField] private Button _closeButton;
 
+        private void Awake()
+        {
+            // 5033.0 — Awake 1회 등록 (OnEnable 미트리거 시나리오 회피, panel default active 시 listener 누락 방지)
+            if (_closeButton != null) _closeButton.onClick.AddListener(Close);
+        }
+
         private void OnEnable()
         {
-            if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             BindSlots();
             Refresh();
         }
 
         private void OnDisable()
         {
-            if (_closeButton != null) _closeButton.onClick.RemoveAllListeners();
             if (_slots != null)
                 foreach (var s in _slots)
                     if (s != null) s.OnClicked -= HandleSlotClicked;
+        }
+
+        private void OnDestroy()
+        {
+            if (_closeButton != null) _closeButton.onClick.RemoveAllListeners();
         }
 
         private void BindSlots()

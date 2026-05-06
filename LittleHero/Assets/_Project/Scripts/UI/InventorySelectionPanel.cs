@@ -43,17 +43,36 @@ namespace LittleHero
         private EquipmentInstance _selected;
         private EquipmentTemplate _selectedTpl;
 
-        private void OnEnable()
+        private void Awake()
         {
+            // 5033.0 — Awake 1회 등록 (OnEnable 미트리거 시나리오 회피).
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             if (_prevButton != null) _prevButton.onClick.AddListener(() => GoPage(-1));
             if (_nextButton != null) _nextButton.onClick.AddListener(() => GoPage(+1));
             if (_equipButton != null) _equipButton.onClick.AddListener(ToggleEquip);
             if (_detailButton != null) _detailButton.onClick.AddListener(OpenCardPanel);
             BindCards();
+
+            // 5033.0 — 자체 Canvas + sortingOrder 우선화 (부모 InventoryPanel 의 X 보다 raycast 우선).
+            var canvas = GetComponent<Canvas>();
+            if (canvas == null) canvas = gameObject.AddComponent<Canvas>();
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = 100;
+            if (GetComponent<UnityEngine.UI.GraphicRaycaster>() == null)
+                gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+
+            // 5033.0 — 비-Selectable Graphic 의 raycastTarget=false 자동 적용
+            // (Detail/Text/Image 가 click 가로채는 결함 회피. Play Mode 마다 보장)
+            foreach (var g in GetComponentsInChildren<UnityEngine.UI.Graphic>(true))
+            {
+                if (!g.raycastTarget) continue;
+                if (g.GetComponent<UnityEngine.UI.Selectable>() != null) continue;
+                if (g.GetComponentInParent<UnityEngine.UI.Selectable>() != null) continue;
+                g.raycastTarget = false;
+            }
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             if (_closeButton != null) _closeButton.onClick.RemoveAllListeners();
             if (_prevButton != null) _prevButton.onClick.RemoveAllListeners();

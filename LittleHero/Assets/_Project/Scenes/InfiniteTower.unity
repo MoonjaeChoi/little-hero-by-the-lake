@@ -3402,6 +3402,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.WaveTransitionToast
   _messageText: {fileID: 1059674944}
+  _countdownText: {fileID: 0}
+  _progressBar: {fileID: 0}
   _canvasGroup: {fileID: 1394066717}
   _restSeconds: 5
 --- !u!225 &1394066717
@@ -4079,6 +4081,7 @@ GameObject:
   - component: {fileID: 1721370762}
   - component: {fileID: 1721370761}
   - component: {fileID: 1721370760}
+  - component: {fileID: 1721370763}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -4147,6 +4150,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1721370763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721370759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be0b9198fe1a241a6a7b19deab841671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnsureInputActions
 --- !u!1 &1744457315
 GameObject:
   m_ObjectHideFlags: 0

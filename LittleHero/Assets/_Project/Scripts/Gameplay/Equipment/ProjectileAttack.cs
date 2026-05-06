@@ -35,7 +35,6 @@ namespace LittleHero
 
             _poolRoot = new GameObject("ProjectilePool_Projectile").transform;
             _pool = new ObjectPool<Projectile>(prefabComp, _poolRoot, 20);
-            Debug.Log("[ProjectileAttack] 초기화 성공. 풀 생성 완료.");
         }
 
         public void Tick(float deltaTime)

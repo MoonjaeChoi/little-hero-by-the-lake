@@ -17,6 +17,7 @@ namespace LittleHero
         private float _maxRange;
         private Vector2 _startPosition;
         private Rigidbody2D _rb;
+        private SpriteRenderer _sr;
         private Action<Projectile> _onReturn;
         private MagicElement _element;
         private bool _hit;
@@ -24,6 +25,7 @@ namespace LittleHero
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _sr = GetComponent<SpriteRenderer>();
             if (_rb != null)
             {
                 _rb.gravityScale = 0f;
@@ -41,6 +43,8 @@ namespace LittleHero
             _element = element;
             _hit = false;
             if (_rb != null) _rb.linearVelocity = direction.normalized * _speed;
+            // 5033 — element 가 있으면 projectile sprite 숨김 (Hovl prefab 이 시각 담당, 전사/궁수 element=None 영향 X)
+            if (_sr != null) _sr.enabled = (_element == MagicElement.None);
         }
 
         private void Update()

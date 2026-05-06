@@ -56,7 +56,6 @@ namespace LittleHero
             var prefab = GetPrefab(element);
             if (prefab == null)
             {
-                // T01 단계: prefab 미생성 시 기존 placeholder 폴백
                 VfxPool.SpawnStarBurst(position);
                 return;
             }

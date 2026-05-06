@@ -72,9 +72,10 @@ namespace LittleHero
             float target = origin / Mathf.Max(zoomMul, 1.001f);
 
             if (_zoomHandle.IsActive()) _zoomHandle.Cancel();
+            // 5033.0 — Camera destroyed (씬 전환 시) 가드 추가. LitMotion 콜백 도중 MissingReferenceException 회피.
             _zoomHandle = LSequence.Create()
-                .Append(LMotion.Create(origin, target, upDuration).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(cam, (s, c) => c.orthographicSize = s))
-                .Append(LMotion.Create(target, origin, downDuration).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(cam, (s, c) => c.orthographicSize = s))
+                .Append(LMotion.Create(origin, target, upDuration).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(cam, (s, c) => { if (c != null) c.orthographicSize = s; }))
+                .Append(LMotion.Create(target, origin, downDuration).WithScheduler(MotionScheduler.UpdateIgnoreTimeScale).Bind(cam, (s, c) => { if (c != null) c.orthographicSize = s; }))
                 .Run();
         }
     }

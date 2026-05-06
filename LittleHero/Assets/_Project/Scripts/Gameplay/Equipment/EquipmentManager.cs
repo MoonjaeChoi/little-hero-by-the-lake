@@ -39,7 +39,11 @@ namespace LittleHero
                 MetaProgression.OnCharacterClassChanged -= HandleClassChanged;
         }
 
-        private void Update() => _activator.Tick(Time.deltaTime);
+        private void Update()
+        {
+            if (_activator == null) return;
+            _activator.Tick(Time.deltaTime);
+        }
 
         private void HandleClassChanged(CharacterClass newClass) => _syncer.HandleClassChanged(newClass);
         private void HandleChapterCleared(ChapterData _) => ClearAllPatterns();
