@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: affix_xp_gain
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.AffixDefinition
   id: affix_xp_gain
-  displayName: "xp \uD68D\uB4DD +%"
+  displayName: "\uACBD\uD5D8\uCE58 \uD68D\uB4DD +%"
   target: 18
   op: 1
   minByRarity:

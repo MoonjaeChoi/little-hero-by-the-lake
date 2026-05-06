@@ -3606,7 +3606,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Lv 1
+  m_Text: "\uB808\uBCA8 1"
 --- !u!222 &1505130672
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4429,7 +4429,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Boss Name
+  m_Text: "\uBCF4\uC2A4 \uC774\uB984"
 --- !u!222 &1752178328
 CanvasRenderer:
   m_ObjectHideFlags: 0
