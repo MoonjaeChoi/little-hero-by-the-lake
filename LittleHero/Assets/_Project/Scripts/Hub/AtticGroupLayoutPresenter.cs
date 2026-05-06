@@ -34,8 +34,10 @@ namespace LittleHero
             {
                 var rect = child.GetComponent<RectTransform>();
                 if (rect == null) continue;
-                if (rect.sizeDelta.x < _minTouchSize || rect.sizeDelta.y < _minTouchSize)
-                    Debug.LogWarning($"[AtticGroupLayout] {child.name} 터치 타겟 {rect.sizeDelta} < {_minTouchSize}pt (CLAUDE.md §2)");
+                // 5005 cascade — rect.rect.size 가 실제 렌더 크기 (anchored 모드에서 sizeDelta 는 차이만)
+                Vector2 actualSize = rect.rect.size;
+                if (actualSize.x < _minTouchSize || actualSize.y < _minTouchSize)
+                    Debug.LogWarning($"[AtticGroupLayout] {child.name} 터치 타겟 {actualSize} < {_minTouchSize}pt (CLAUDE.md §2)");
             }
         }
     }

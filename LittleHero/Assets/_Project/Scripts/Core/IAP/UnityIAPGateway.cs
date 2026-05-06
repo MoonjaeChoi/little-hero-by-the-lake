@@ -27,6 +27,9 @@ namespace LittleHero
             _store.OnPurchasePending += HandlePending;
             _store.OnPurchaseFailed  += HandleFailed;
             _store.OnProductsFetched += HandleProductsFetched;
+            // v5 권장 콜백 (5031.1)
+            _store.OnStoreDisconnected += desc => Debug.LogError($"[UnityIAPGateway] disconnected — {desc?.Reason}");
+            _store.OnProductsFetchFailed += desc => Debug.LogError($"[UnityIAPGateway] FetchProducts FAILED");
 
             try
             {
