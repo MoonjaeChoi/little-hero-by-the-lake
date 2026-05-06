@@ -1,19 +1,16 @@
 using System;
 using UnityEngine;
-using UnityEngine.Purchasing;
 
 namespace LittleHero
 {
     /// <summary>
     /// 5031 facade — Unity IAP v5 (com.unity.purchasing 5.0.0).
-    /// 5028 cascade 후속 — IAP v4 → v5 마이그레이션 + facade 보존.
-    ///
-    /// 비동기 3단계: Connect → FetchProducts → 이벤트 라우팅.
-    /// 위임: IAPProductCatalog (ID + ApplyGrant) + IAPPurchaseHandler (Pending/Failed).
+    /// IIAPGateway 위임 (D2=B Mock 친화).
+    /// 위임: IAPProductCatalog (ID + ApplyGrant) + Gateway (StoreController wrapper).
     /// </summary>
     public class IAPService
     {
-        // ===== Product IDs (호출처 호환 — IAPService.ID_* 보존) =====
+        // ===== Product IDs (호출처 호환 보존) =====
         public const string ID_STARLIGHT_100   = IAPProductCatalog.ID_STARLIGHT_100;
         public const string ID_STARLIGHT_500   = IAPProductCatalog.ID_STARLIGHT_500;
         public const string ID_STARLIGHT_1100  = IAPProductCatalog.ID_STARLIGHT_1100;
@@ -23,62 +20,65 @@ namespace LittleHero
 
         public static IAPService Instance { get; private set; }
 
-        public bool IsInitialized => _store != null && _productsFetched;
+        public bool IsInitialized => _gateway != null && _gateway.IsReady;
         public event Action OnReady;
         public event Action<string, string> OnPurchaseFailedEvent;
         public event Action<string> OnPurchaseSucceededEvent;
 
-        private StoreController _store;
-        private IAPPurchaseHandler _handler;
-        private bool _productsFetched;
+        private IIAPGateway _gateway;
 
+        /// <summary>Production entry — UnityIAPGateway 주입.</summary>
         public static void Bootstrap()
         {
             if (Instance != null) return;
             Instance = new IAPService();
-            Instance.Initialize();
+            Instance.Initialize(new UnityIAPGateway());
         }
 
-        private async void Initialize()
+        /// <summary>Test entry — Mock 주입 가능 (D2=B).</summary>
+        public static void BootstrapForTest(IIAPGateway gateway)
         {
-            _store = UnityIAPServices.StoreController();
-            _handler = new IAPPurchaseHandler(_store);
-            _handler.OnPurchaseSucceeded += id => OnPurchaseSucceededEvent?.Invoke(id);
-            _handler.OnPurchaseFailed    += (id, reason) => OnPurchaseFailedEvent?.Invoke(id, reason);
-
-            _store.OnPurchasePending += _handler.HandlePending;
-            _store.OnPurchaseFailed  += _handler.HandleFailed;
-            _store.OnProductsFetched += HandleProductsFetched;
-
-            try
-            {
-                await _store.Connect();
-                _store.FetchProducts(IAPProductCatalog.GetProductDefinitions());
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[IAPService] Connect/FetchProducts FAILED — {e.Message}");
-            }
+            Instance = new IAPService();
+            Instance.Initialize(gateway);
         }
 
-        private void HandleProductsFetched(System.Collections.Generic.List<Product> products)
+        private async void Initialize(IIAPGateway gateway)
         {
-            _productsFetched = true;
-            OnReady?.Invoke();
-            Debug.Log($"[IAPService] FetchProducts OK — {products?.Count ?? 0} products");
+            _gateway = gateway;
+            _gateway.OnReady += HandleReady;
+            _gateway.OnPurchaseSucceeded += HandleSucceeded;
+            _gateway.OnPurchaseFailed    += HandleFailed;
+            await _gateway.InitializeAsync(IAPProductCatalog.GetProductDefinitions());
+        }
+
+        private void HandleReady() => OnReady?.Invoke();
+
+        private void HandleSucceeded(string productId, string receipt)
+        {
+            // E5 — Receipt 검증 (5031 D1=A v5 호환)
+            if (!string.IsNullOrEmpty(receipt))
+            {
+                bool validated = ReceiptValidator.Validate(receipt);
+                if (!validated) Debug.LogWarning($"[IAPService] receipt validation FAILED — {productId} (grant 진행)");
+            }
+            IAPProductCatalog.ApplyGrant(productId);
+            LimitedShopService.ConfirmIAPPurchase(productId);
+            OnPurchaseSucceededEvent?.Invoke(productId);
+        }
+
+        private void HandleFailed(string productId, string reason)
+        {
+            Debug.LogError($"[IAPService] purchase FAILED — {productId} ({reason})");
+            OnPurchaseFailedEvent?.Invoke(productId, reason);
         }
 
         public void InitiatePurchase(string productId)
         {
-            if (_store == null) { Debug.LogError("[IAPService] not initialized"); return; }
-            _store.PurchaseProduct(productId);
+            if (_gateway == null) { Debug.LogError("[IAPService] not initialized"); return; }
+            _gateway.PurchaseProduct(productId);
         }
 
         public string GetLocalizedPrice(string productId)
-        {
-            if (_store == null) return string.Empty;
-            var p = _store.GetProductById(productId);
-            return p?.metadata?.localizedPriceString ?? string.Empty;
-        }
+            => _gateway != null ? _gateway.GetLocalizedPrice(productId) : string.Empty;
     }
 }
