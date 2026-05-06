@@ -252,17 +252,14 @@ Assets/_Project/
 
 ## 13. 다음 작업 후보
 
-### 우선순위 (최근 갱신)
-1. 🟢 **OOP §15 적용 확장** — 100줄+ 클래스 분리 (CurveSimulator/GachaService/AudioManager/AtticController/MetaProgression 등 10개)
-2. 🟢 **DI 점진** — 신규 클래스 Initialize 명시 주입 (§15 정책)
-3. 🟢 **Editor Test 확장** — DamageQuery / EquipmentManager / Player 등
-4. 🟡 **G3 한국어 검수** — UI 어휘 정합 (남은 영역)
-5. 🟢 **G4 iOS 빌드 + TestFlight** — Apple Developer 인증 + 베타 배포
-6. 🟢 **F1~F3 적 디자인 패스** — 30 archetype → 챕터별 고유 (디자인 작업)
-7. ✅ **F4/F5 보스 씬 분리** — 5002 boss_scene_separation_v1 완료 (2026-05-04, 옵션 C)
-8. ✅ **5003 미니보스 씬 분리** — 옵션 B 채택 (wave 15만 분리, BalanceConfig 토글) 완료 (2026-05-04, 5 commit)
-9. ✅ **5004 LoadSceneAsync + fade-in 통합** — SceneTransitionService + FadeOverlay (11 호출처 일괄, 7 commit) 완료 (2026-05-04)
-10. 🟢 **AtticController 책임 분리** — 415L → 200L 권장 (§15.6).
+> **자세한 backlog 는 → [docs/little_hero/backlog_v1.md](docs/little_hero/backlog_v1.md)** (5021~5028 번호 부여, scope·예상시간·의존성)
+
+### 우선순위 Top 5 (2026-05-06 갱신, 5020 종결 후)
+1. 🔴 **5021 starter_hero_chapter_flow** — 5005 R3+R4 회귀 fix → 5020 C6 시나리오 2b 완성. 1~2h. **5020 직접 cascade**
+2. 🟠 **5022 oop_validator_split** — ProjectValidator 650L → 책임 분리 (룰 자기위반 해소). 2~3h
+3. 🟠 **5023 oop_metaprogression_split** — MetaProgression 330L 분리 + init 책임 정합 (5020 한계 해소). 1~2h. 5021 의존
+4. 🔴 **5026 ios_build_testflight** — G4 Apple Developer + Xcode archive + TestFlight + 5018 App Size 실측. 4~8h. **출시 차단**
+5. 🟡 **5024/5025** — Editor Test 확장 / 한국어 검수 (병렬 가능)
 
 ### 빠른 시작 명령
 - `리틀히어로 구현 계속` → 자동 선정
