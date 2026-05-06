@@ -46,6 +46,7 @@ MonoBehaviour:
     maxTargets: 0
     spreadAngle: 0
     isBoomerang: 0
+    element: 4
   requiredClass: 2
   category: 8
   maxEnhanceLevel: 25

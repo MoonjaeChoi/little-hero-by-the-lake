@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: weapon_thunder_wand
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EquipmentTemplate
   id: weapon_thunder_wand
-  displayName: "천둥 완드"
-  description:
+  displayName: "\uCC9C\uB465 \uC644\uB4DC"
+  description: 
   icon: {fileID: 21300000, guid: b6b17f8a7c2424b6999495554bd01732, type: 3}
   slot: 5
   rarity: 2
