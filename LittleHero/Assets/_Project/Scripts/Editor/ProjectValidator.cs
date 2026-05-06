@@ -44,7 +44,36 @@ namespace LittleHero.EditorTools
             ValidateLitMotionMigration(issues);  // 5016 T06 — DOTween 회귀 + LitMotion import ≥ N files 검사
             ValidateGCAllocPatterns(issues);  // 5017 T04 — GC alloc 휴리스틱 검사
             ValidateStarterHeroPortraits(issues);  // 5020 T06 — 시작 주인공 3종 portrait wiring 검사
+            ValidateCharacterPool(issues);  // 5021 T02 — CharacterPool 인스턴스 + 3 character 매핑 검사
             Print(issues);
+        }
+
+        // 5021 T02 — CharacterPool 인스턴스 + 3 character (hero_warrior/hero_archer/hero_mage) 매핑 검사.
+        private static void ValidateCharacterPool(List<Issue> issues)
+        {
+            string[] guids = AssetDatabase.FindAssets("t:LittleHero.CharacterPool");
+            if (guids.Length == 0)
+            {
+                issues.Add(new Issue(Severity.Warning, "5021 CharacterPool", "CharacterPool 인스턴스 0건 — Tools/LittleHero/Setup CharacterPool Default 실행"));
+                return;
+            }
+            string[] expected = { "hero_warrior", "hero_archer", "hero_mage" };
+            foreach (var g in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(g);
+                var pool = AssetDatabase.LoadAssetAtPath<CharacterPool>(path);
+                if (pool == null) continue;
+                if (pool.characters == null || pool.characters.Length != 3)
+                {
+                    issues.Add(new Issue(Severity.Error, "5021 CharacterPool", $"{path}: characters 길이={(pool.characters?.Length ?? 0)} 기대 3"));
+                    continue;
+                }
+                var ids = new HashSet<string>();
+                foreach (var c in pool.characters)
+                    if (c != null) ids.Add(c.id);
+                foreach (var id in expected)
+                    if (!ids.Contains(id)) issues.Add(new Issue(Severity.Error, "5021 CharacterPool", $"{path}: id '{id}' 누락"));
+            }
         }
 
         // 5020 T06 — 시작 주인공 3종 (warrior/archer/mage) SO portrait 필드 wiring 검사.
