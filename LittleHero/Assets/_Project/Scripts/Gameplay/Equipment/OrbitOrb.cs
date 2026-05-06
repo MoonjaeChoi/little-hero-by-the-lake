@@ -14,10 +14,12 @@ namespace LittleHero
 
         private float _damage;
         private float _timer;
+        private MagicElement _element;
 
-        public void Configure(float damage)
+        public void Configure(float damage, MagicElement element = MagicElement.None)
         {
             _damage = damage;
+            _element = element;
             _timer = 0f;
         }
 
@@ -27,7 +29,7 @@ namespace LittleHero
             if (_timer < HIT_INTERVAL) return;
             _timer = 0f;
             var enemy = DamageQuery.FindNearest(transform.position, HIT_RADIUS);
-            if (enemy != null) DamageDealer.ApplySingle(enemy, _damage);
+            if (enemy != null) DamageDealer.ApplySingle(enemy, _damage, null, _element);
         }
     }
 }

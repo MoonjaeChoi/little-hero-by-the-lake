@@ -18,6 +18,7 @@ namespace LittleHero
         private Vector2 _startPosition;
         private Rigidbody2D _rb;
         private Action<Projectile> _onReturn;
+        private MagicElement _element;
         private bool _hit;
 
         private void Awake()
@@ -30,13 +31,14 @@ namespace LittleHero
             }
         }
 
-        public void Launch(Vector2 direction, float damage, float speed, float range, Action<Projectile> onReturn)
+        public void Launch(Vector2 direction, float damage, float speed, float range, Action<Projectile> onReturn, MagicElement element = MagicElement.None)
         {
             _damage = damage;
             _speed = speed;
             _maxRange = range;
             _startPosition = transform.position;
             _onReturn = onReturn;
+            _element = element;
             _hit = false;
             if (_rb != null) _rb.linearVelocity = direction.normalized * _speed;
         }
@@ -48,7 +50,7 @@ namespace LittleHero
             var enemy = DamageQuery.FindNearest(transform.position, HIT_RADIUS);
             if (enemy != null)
             {
-                DamageDealer.ApplySingle(enemy, _damage);
+                DamageDealer.ApplySingle(enemy, _damage, null, _element);
                 _hit = true;
                 ReturnToPool();
                 return;

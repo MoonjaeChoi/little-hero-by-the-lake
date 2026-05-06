@@ -55,7 +55,7 @@ namespace LittleHero
                 Vector3 spawn = _owner.position + new Vector3(offset.x, DropHeight, 0f);
                 Projectile proj = _pool.Get();
                 proj.transform.position = spawn;
-                proj.Launch(Vector2.down, _config.damage, speed, DropHeight + 1f, ReturnProjectile);
+                proj.Launch(Vector2.down, _config.damage, speed, DropHeight + 1f, ReturnProjectile, _config.element);
             }
         }
 

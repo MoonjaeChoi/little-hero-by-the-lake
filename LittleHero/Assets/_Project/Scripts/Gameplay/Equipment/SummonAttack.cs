@@ -91,7 +91,7 @@ namespace LittleHero
             Vector2 dir = ((Vector2)target.transform.position - (Vector2)origin).normalized;
             Projectile proj = _projectilePool.Get();
             proj.transform.position = origin;
-            proj.Launch(dir, _config.damage, _config.projectileSpeed, _config.range, ReturnProjectile);
+            proj.Launch(dir, _config.damage, _config.projectileSpeed, _config.range, ReturnProjectile, _config.element);
         }
 
         private void ReturnProjectile(Projectile p) { _projectilePool?.Return(p); }

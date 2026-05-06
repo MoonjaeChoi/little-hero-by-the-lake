@@ -63,7 +63,7 @@ namespace LittleHero
                 return sa.CompareTo(sb);
             });
             if (_filtered.Count > maxTargets) _filtered.RemoveRange(maxTargets, _filtered.Count - maxTargets);
-            DamageDealer.ApplyMulti(_filtered, _config.damage);
+            DamageDealer.ApplyMulti(_filtered, _config.damage, null, _config.element);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace LittleHero
             DamageQuery.FindEnemiesInCircle(_owner.position, _config.range, _targets);
             for (int i = 0; i < _targets.Count; i++)
             {
-                DamageDealer.ApplySingle(_targets[i], _config.damage);
+                DamageDealer.ApplySingle(_targets[i], _config.damage, null, _config.element);
             }
         }
     }

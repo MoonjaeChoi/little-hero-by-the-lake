@@ -50,7 +50,7 @@ namespace LittleHero
 
             // Damage v2 — Pulse 광역 폭발, 거리 정렬 + 다중 타깃 보정 (메이플 풍)
             DamageQuery.FindNearestN(_owner.position, r, 32, _targets);
-            DamageDealer.ApplyMulti(_targets, _config.damage);
+            DamageDealer.ApplyMulti(_targets, _config.damage, null, _config.element);
 
             if (_visualPool != null)
             {

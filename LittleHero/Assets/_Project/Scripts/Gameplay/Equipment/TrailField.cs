@@ -14,16 +14,18 @@ namespace LittleHero
         private float _hitInterval;
         private float _radius;
         private float _elapsed;
+        private MagicElement _element;
         private System.Action<TrailField> _onExpire;
         private static readonly List<EnemyController> _scratch = new List<EnemyController>(64);
 
-        public void Activate(float damage, float lifetime, float hitInterval, float radius, System.Action<TrailField> onExpire)
+        public void Activate(float damage, float lifetime, float hitInterval, float radius, System.Action<TrailField> onExpire, MagicElement element = MagicElement.None)
         {
             _damage = damage;
             _lifetime = lifetime;
             _hitInterval = hitInterval;
             _radius = radius;
             _elapsed = 0f;
+            _element = element;
             _onExpire = onExpire;
         }
 
@@ -37,7 +39,7 @@ namespace LittleHero
             if (currTick > prevTick)
             {
                 DamageQuery.FindEnemiesInCircle(transform.position, _radius, _scratch);
-                DamageDealer.ApplyMulti(_scratch, _damage);
+                DamageDealer.ApplyMulti(_scratch, _damage, null, _element);
             }
             if (_elapsed >= _lifetime)
             {

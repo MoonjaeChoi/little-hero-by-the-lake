@@ -68,7 +68,7 @@ namespace LittleHero
             {
                 Projectile proj = _pool.Get();
                 proj.transform.position = _owner.position;
-                proj.Launch(dir, _config.damage, _config.projectileSpeed, _config.range, ReturnProjectile);
+                proj.Launch(dir, _config.damage, _config.projectileSpeed, _config.range, ReturnProjectile, _config.element);
             }
         }
 

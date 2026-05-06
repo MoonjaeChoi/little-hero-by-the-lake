@@ -37,7 +37,7 @@ namespace LittleHero
                     rb.bodyType = RigidbodyType2D.Kinematic;
                 }
                 OrbitOrb orb = go.GetComponent<OrbitOrb>() ?? go.AddComponent<OrbitOrb>();
-                orb.Configure(_config.damage);
+                orb.Configure(_config.damage, _config.element);
 
                 _orbs.Add(go.transform);
             }
