@@ -11,6 +11,7 @@ namespace LittleHero
         [SerializeField] private MemoryPool _memoryPool;
         [SerializeField] private MetaUpgradePool _upgradePool;
         [SerializeField] private EnemyPool _enemyPool;
+        [SerializeField] private CharacterPool _characterPool;  // 5021 T03
 
         public SaveData Data { get; private set; }
         public int StarFragments => Data?.starFragments ?? 0;
@@ -40,6 +41,7 @@ namespace LittleHero
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Data = SaveSystem.Load();
+            ResolveSelectedCharacterFromSave();  // 5021 T03 — Chapter 직접 진입 시 portrait 자동 적용
             // E3 — 별빛 무료 출처 자동 부트스트랩 (일일 로그인 + 이벤트 구독)
             StarlightGrantService.Bootstrap();
             // E1+E2 — IAP 백그라운드 초기화 (Editor·Services 미설정 시 에러 로그만, 게임플레이는 영향 X)
@@ -48,6 +50,18 @@ namespace LittleHero
             // PIVOT v2 — ItemDropService 부트스트랩 (game_pivot_v2.md §10).
             try { BootstrapItemDropService(); }
             catch (System.Exception e) { Debug.LogWarning($"[MetaProgression] ItemDrop bootstrap skip: {e.Message}"); }
+        }
+
+        // 5021 T03 — selectedCharacterId 를 SelectedCharacter SO 로 resolve. Awake 단계 1회 호출.
+        // 5023 cascade 분리 예정 (MetaProgressionLoader 흡수).
+        private void ResolveSelectedCharacterFromSave()
+        {
+            if (_characterPool == null)
+            {
+                Debug.LogWarning("[MetaProgression] _characterPool 미wiring — Inspector 확인");
+                return;
+            }
+            SelectedCharacter = _characterPool.FindById(Data?.selectedCharacterId);
         }
 
         private void BootstrapItemDropService()
