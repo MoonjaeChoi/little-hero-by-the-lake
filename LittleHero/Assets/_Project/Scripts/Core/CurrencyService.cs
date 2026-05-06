@@ -40,13 +40,13 @@ namespace LittleHero
         // === Spend ===
 
         public static bool SpendStarFragment(int amount)
-            => MetaProgression.Instance != null && MetaProgression.Instance.SpendStarFragments(amount);
+            => MetaProgression.Instance != null && MetaProgressionCurrency.SpendStarFragments(amount);
 
         public static bool SpendMagicCrystal(int amount)
-            => MetaProgression.Instance != null && MetaProgression.Instance.SpendMagicCrystals(amount);
+            => MetaProgression.Instance != null && MetaProgressionCurrency.SpendMagicCrystals(amount);
 
         public static bool SpendStarlight(int amount)
-            => MetaProgression.Instance != null && MetaProgression.Instance.SpendStarlight(amount);
+            => MetaProgression.Instance != null && MetaProgressionCurrency.SpendStarlight(amount);
 
         // === Query ===
 

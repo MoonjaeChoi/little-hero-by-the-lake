@@ -62,31 +62,7 @@ namespace LittleHero
             GameEvents.OnPlayerDied        -= FlushDrops;
         }
 
-        // PIVOT v3 Phase 2 — drop batching (game_pivot_v2.md GC critical 해결)
-        // 적 사망 시 SaveData.equipmentInstances 직접 append + Save 호출 폐기 →
-        // _pendingDrops List 에 메모리만 append, Chapter 클리어/사망 시점 1회 일괄 Save.
-        private readonly System.Collections.Generic.List<EquipmentInstance> _pendingDrops
-            = new System.Collections.Generic.List<EquipmentInstance>(512);
-
-        public void QueueDrop(EquipmentInstance instance)
-        {
-            if (instance == null) return;
-            _pendingDrops.Add(instance);
-        }
-
-        public void FlushDrops()
-        {
-            if (_pendingDrops.Count == 0) return;
-            var existing = Data.equipmentInstances ?? new EquipmentInstance[0];
-            var arr = new EquipmentInstance[existing.Length + _pendingDrops.Count];
-            for (int i = 0; i < existing.Length; i++) arr[i] = existing[i];
-            for (int i = 0; i < _pendingDrops.Count; i++) arr[existing.Length + i] = _pendingDrops[i];
-            Data.equipmentInstances = arr;
-            int count = _pendingDrops.Count;
-            _pendingDrops.Clear();
-            SaveSystem.Save(Data);
-            Debug.Log($"[MetaProgression] FlushDrops: {count} 장비 일괄 저장");
-        }
+        // 5023 T03 — _pendingDrops + QueueDrop + FlushDrops 는 MetaProgressionEquipment 로 이동
 
         private void HandleEnemyKilled(EnemyData data)
         {
@@ -135,62 +111,11 @@ namespace LittleHero
         private void HandleChapterCleared(ChapterData chapter)
         {
             if (chapter == null) return;
-            FlushDrops();  // PIVOT v3 — 챕터 클리어 시점 1회 Save (drop batching)
-            AddStarFragments(chapter.starFragmentReward);
+            MetaProgressionEquipment.FlushDrops();  // PIVOT v3 — 챕터 클리어 시점 1회 Save
+            MetaProgressionCurrency.AddStarFragments(chapter.starFragmentReward);
         }
 
-        public void AddStarFragments(int amount)
-        {
-            if (amount <= 0) return;
-            Data.starFragments += amount;
-            OnStarFragmentsChanged?.Invoke(Data.starFragments);
-            SaveSystem.Save(Data);
-        }
-
-        public bool SpendStarFragments(int amount)
-        {
-            if (amount <= 0 || Data.starFragments < amount) return false;
-            Data.starFragments -= amount;
-            OnStarFragmentsChanged?.Invoke(Data.starFragments);
-            SaveSystem.Save(Data);
-            return true;
-        }
-
-        // ✦ A5 — 마법 결정 ◇
-        public void AddMagicCrystals(int amount)
-        {
-            if (amount <= 0) return;
-            Data.magicCrystals += amount;
-            GameEvents.RaiseMagicCrystalChanged(Data.magicCrystals);
-            SaveSystem.Save(Data);
-        }
-
-        public bool SpendMagicCrystals(int amount)
-        {
-            if (amount <= 0 || Data.magicCrystals < amount) return false;
-            Data.magicCrystals -= amount;
-            GameEvents.RaiseMagicCrystalChanged(Data.magicCrystals);
-            SaveSystem.Save(Data);
-            return true;
-        }
-
-        // ✦ A5 — 별빛 ⋆
-        public void AddStarlight(int amount)
-        {
-            if (amount <= 0) return;
-            Data.starlight += amount;
-            GameEvents.RaiseStarlightChanged(Data.starlight);
-            SaveSystem.Save(Data);
-        }
-
-        public bool SpendStarlight(int amount)
-        {
-            if (amount <= 0 || Data.starlight < amount) return false;
-            Data.starlight -= amount;
-            GameEvents.RaiseStarlightChanged(Data.starlight);
-            SaveSystem.Save(Data);
-            return true;
-        }
+        // 5023 T03 — Currency 메서드 (AddStarFragments / SpendXxx / AddMagicCrystals / AddStarlight 등) 는 MetaProgressionCurrency 로 이동
 
         // 5023 T02 — SelectCharacter / ResolveCharacterClass 는 MetaProgressionCharacter 로 이동
 
@@ -222,7 +147,7 @@ namespace LittleHero
         {
             if (!CanUpgrade(u)) return false;
             int cost = GetUpgradeCost(u);
-            if (!SpendStarFragments(cost)) return false;
+            if (!MetaProgressionCurrency.SpendStarFragments(cost)) return false;
             SetUpgradeLevel(u.id, GetUpgradeLevel(u.id) + 1);
             OnUpgradeChanged?.Invoke(u);
             return true;
