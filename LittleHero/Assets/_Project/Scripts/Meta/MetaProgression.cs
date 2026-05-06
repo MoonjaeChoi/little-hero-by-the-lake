@@ -37,70 +37,13 @@ namespace LittleHero
 
         private void Awake()
         {
+            // 5023 — Awake slim. Loader + Bootstrapper 분리.
             if (Instance != null) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Data = SaveSystem.Load();
-            ResolveSelectedCharacterFromSave();  // 5021 T03 — Chapter 직접 진입 시 portrait 자동 적용
-            // E3 — 별빛 무료 출처 자동 부트스트랩 (일일 로그인 + 이벤트 구독)
-            StarlightGrantService.Bootstrap();
-            // E1+E2 — IAP 백그라운드 초기화 (Editor·Services 미설정 시 에러 로그만, 게임플레이는 영향 X)
-            try { IAPService.Bootstrap(); }
-            catch (System.Exception e) { Debug.LogWarning($"[MetaProgression] IAP bootstrap skip: {e.Message}"); }
-            // PIVOT v2 — ItemDropService 부트스트랩 (game_pivot_v2.md §10).
-            try { BootstrapItemDropService(); }
-            catch (System.Exception e) { Debug.LogWarning($"[MetaProgression] ItemDrop bootstrap skip: {e.Message}"); }
-        }
-
-        // 5021 T03 — selectedCharacterId 를 SelectedCharacter SO 로 resolve. Awake 단계 1회 호출.
-        // 5023 cascade 분리 예정 (MetaProgressionLoader 흡수).
-        private void ResolveSelectedCharacterFromSave()
-        {
-            if (_characterPool == null)
-            {
-                Debug.LogWarning("[MetaProgression] _characterPool 미wiring — Inspector 확인");
-                return;
-            }
-            SelectedCharacter = _characterPool.FindById(Data?.selectedCharacterId);
-        }
-
-        private void BootstrapItemDropService()
-        {
-            if (ItemDropService.IsInitialized) return;
-#if UNITY_EDITOR
-            // Editor 모드 — AssetDatabase 자동 검색.
-            // 빌드용 Inspector SerializeField 폴백은 후속 (드랍 풀 SO 인덱스 신규).
-            var allGuids = UnityEditor.AssetDatabase.FindAssets("t:EquipmentTemplate", new[] { "Assets/_Project/Data/Templates" });
-            var templates = new System.Collections.Generic.List<EquipmentTemplate>();
-            var allTemplates = new System.Collections.Generic.List<EquipmentTemplate>();  // 옵션 Z — 가챠 무기 포함 전체
-            foreach (var g in allGuids)
-            {
-                var p = UnityEditor.AssetDatabase.GUIDToAssetPath(g);
-                var t = UnityEditor.AssetDatabase.LoadAssetAtPath<EquipmentTemplate>(p);
-                if (t == null) continue;
-                allTemplates.Add(t);
-                if (p.Contains("/Weapons/")) continue;  // 가챠 한정 풀 제외 (드랍에서 빠짐)
-                templates.Add(t);
-            }
-            // 옵션 Z 사이클 1 — EquipmentManager 가 가챠 무기 포함 전체 lookup 가능
-            EquipmentManager.RegisterTemplates(allTemplates);
-            var slotPoolGuids = UnityEditor.AssetDatabase.FindAssets("t:SlotAffixPool", new[] { "Assets/_Project/Data/SlotPools" });
-            var slotPools = new System.Collections.Generic.List<SlotAffixPool>();
-            foreach (var g in slotPoolGuids)
-                slotPools.Add(UnityEditor.AssetDatabase.LoadAssetAtPath<SlotAffixPool>(UnityEditor.AssetDatabase.GUIDToAssetPath(g)));
-            var globalPool = UnityEditor.AssetDatabase.LoadAssetAtPath<GlobalSubAffixPool>("Assets/_Project/Data/GlobalPools/GlobalSubAffixPool_Default.asset");
-            var balance = UnityEditor.AssetDatabase.LoadAssetAtPath<BalanceConfig>("Assets/_Project/Data/BalanceConfig.asset");
-
-            if (templates.Count == 0 || slotPools.Count == 0 || globalPool == null)
-            {
-                Debug.LogWarning("[MetaProgression] ItemDrop assets 부족 — 부트스트랩 스킵");
-                return;
-            }
-            ItemDropService.Initialize(slotPools.ToArray(), globalPool, templates.ToArray(), balance);
-            Debug.Log($"[MetaProgression] ItemDrop bootstrap: templates={templates.Count} slotPools={slotPools.Count}");
-#else
-            Debug.LogWarning("[MetaProgression] ItemDrop bootstrap — 빌드 모드: Inspector SerializeField 후속 필요");
-#endif
+            Data = MetaProgressionLoader.Load();
+            SelectedCharacter = MetaProgressionLoader.ResolveSelectedCharacterFromSave(_characterPool, Data);
+            MetaProgressionBootstrapper.Run();
         }
 
         private void OnEnable()
