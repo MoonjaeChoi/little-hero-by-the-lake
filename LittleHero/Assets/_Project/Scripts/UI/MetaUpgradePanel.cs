@@ -21,8 +21,8 @@ namespace LittleHero
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             if (MetaProgression.Instance != null)
             {
-                MetaProgression.Instance.OnStarFragmentsChanged += HandleStarChanged;
-                MetaProgression.Instance.OnUpgradeChanged       += HandleUpgradeChanged;
+                MetaProgression.OnStarFragmentsChanged += HandleStarChanged;
+                MetaProgression.OnUpgradeChanged       += HandleUpgradeChanged;
             }
         }
 
@@ -32,8 +32,8 @@ namespace LittleHero
             if (_closeButton != null) _closeButton.onClick.RemoveListener(Close);
             if (MetaProgression.Instance != null)
             {
-                MetaProgression.Instance.OnStarFragmentsChanged -= HandleStarChanged;
-                MetaProgression.Instance.OnUpgradeChanged       -= HandleUpgradeChanged;
+                MetaProgression.OnStarFragmentsChanged -= HandleStarChanged;
+                MetaProgression.OnUpgradeChanged       -= HandleUpgradeChanged;
             }
         }
 

@@ -49,7 +49,7 @@ namespace LittleHero
         private void HandleStart(ChapterData chapter)
         {
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.SelectedChapter = chapter;
+                MetaProgressionChapter.SelectedChapter = chapter;
             SceneTransitionService.Transition(_chapterSceneName);  // 5004 fade transition
         }
 

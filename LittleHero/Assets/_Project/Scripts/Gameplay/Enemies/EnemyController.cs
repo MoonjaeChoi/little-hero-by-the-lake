@@ -269,8 +269,8 @@ namespace LittleHero
                 source = _data.isBoss ? DropSource.Boss
                        : _data.isMiniB ? DropSource.MiniBoss
                        : DropSource.Enemy,
-                chapterNumber = MetaProgression.Instance != null && MetaProgression.Instance.SelectedChapter != null
-                    ? Mathf.Max(1, MetaProgression.Instance.SelectedChapter.chapterNumber)
+                chapterNumber = MetaProgression.Instance != null && MetaProgressionChapter.SelectedChapter != null
+                    ? Mathf.Max(1, MetaProgressionChapter.SelectedChapter.chapterNumber)
                     : 1,
                 enemy = _data,
             };

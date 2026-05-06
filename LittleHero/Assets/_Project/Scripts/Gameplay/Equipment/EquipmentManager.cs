@@ -37,7 +37,7 @@ namespace LittleHero
             GameEvents.OnChapterCleared += HandleChapterCleared;
             // weapon_v2 후속 — 직업 변경 시 무기 자동 unequip
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnCharacterClassChanged += HandleClassChanged;
+                MetaProgression.OnCharacterClassChanged += HandleClassChanged;
         }
 
         private void OnDisable()
@@ -45,7 +45,7 @@ namespace LittleHero
             GameEvents.OnPlayerDied     -= ClearAllPatterns;
             GameEvents.OnChapterCleared -= HandleChapterCleared;
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnCharacterClassChanged -= HandleClassChanged;
+                MetaProgression.OnCharacterClassChanged -= HandleClassChanged;
         }
 
         // weapon_v2 후속 — 직업 변경 시 잘못된 직업 무기 자동 해제

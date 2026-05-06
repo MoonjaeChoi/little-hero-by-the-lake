@@ -40,9 +40,9 @@ namespace LittleHero
         {
             if (_pool == null) return;
             if (MetaProgression.Instance == null || MetaProgression.Instance.MemoryPool == null) return;
-            if (MetaProgression.Instance.SelectedChapter == null) return;
+            if (MetaProgressionChapter.SelectedChapter == null) return;
 
-            string chapterId = MetaProgression.Instance.SelectedChapter.id;
+            string chapterId = MetaProgressionChapter.SelectedChapter.id;
             var memories = MetaProgression.Instance.MemoryPool.memories;
             if (memories == null) return;
 

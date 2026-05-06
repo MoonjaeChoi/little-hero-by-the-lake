@@ -133,7 +133,7 @@ namespace LittleHero
         {
             if (_pendingChapter == null) return;
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.SelectedChapter = _pendingChapter;
+                MetaProgressionChapter.SelectedChapter = _pendingChapter;
             CloseConfirm();
             SceneTransitionService.Transition(_chapterSceneName);
         }

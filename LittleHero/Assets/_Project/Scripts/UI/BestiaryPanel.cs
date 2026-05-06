@@ -20,7 +20,7 @@ namespace LittleHero
             if (_openButton  != null) _openButton.onClick.AddListener(Open);
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnEnemyDefeated += HandleDefeated;
+                MetaProgression.OnEnemyDefeated += HandleDefeated;
         }
 
         private void OnDisable()
@@ -28,7 +28,7 @@ namespace LittleHero
             if (_openButton  != null) _openButton.onClick.RemoveListener(Open);
             if (_closeButton != null) _closeButton.onClick.RemoveListener(Close);
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnEnemyDefeated -= HandleDefeated;
+                MetaProgression.OnEnemyDefeated -= HandleDefeated;
         }
 
         private void Start()

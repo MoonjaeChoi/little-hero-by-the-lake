@@ -25,7 +25,7 @@ namespace LittleHero
         private void OnEnable()
         {
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnCharacterChanged += UpdateSelectedCharacter;
+                MetaProgression.OnCharacterChanged += UpdateSelectedCharacter;
 
             if (_buttons != null)
             {
@@ -42,7 +42,7 @@ namespace LittleHero
         private void OnDisable()
         {
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnCharacterChanged -= UpdateSelectedCharacter;
+                MetaProgression.OnCharacterChanged -= UpdateSelectedCharacter;
             if (_buttons != null)
                 foreach (var entry in _buttons)
                     if (entry?.button != null) entry.button.onClick.RemoveAllListeners();
@@ -51,7 +51,7 @@ namespace LittleHero
         private void Start()
         {
             if (MetaProgression.Instance == null) return;
-            var saved = MetaProgression.Instance.SelectedCharacter;
+            var saved = MetaProgressionCharacter.SelectedCharacter;
             if (saved == null)
             {
                 string id = MetaProgression.Instance.Data?.selectedCharacterId;
@@ -61,7 +61,7 @@ namespace LittleHero
                     ShowFirstStartCharacterPrompt();
                     return;
                 }
-                MetaProgression.Instance.SelectCharacter(saved);
+                MetaProgressionCharacter.SelectCharacter(saved);
             }
             UpdateSelectedCharacter(saved);
         }
@@ -84,7 +84,7 @@ namespace LittleHero
         private void HandleSelectCharacter(CharacterData character)
         {
             if (MetaProgression.Instance == null || character == null) return;
-            MetaProgression.Instance.SelectCharacter(character);
+            MetaProgressionCharacter.SelectCharacter(character);
         }
 
         private void UpdateSelectedCharacter(CharacterData character)

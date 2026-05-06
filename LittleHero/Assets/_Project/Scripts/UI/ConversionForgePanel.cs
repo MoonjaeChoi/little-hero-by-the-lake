@@ -39,7 +39,7 @@ namespace LittleHero
             GameEvents.OnStarDustChanged       += _ => Refresh();
             GameEvents.OnMagicCrystalChanged   += _ => Refresh();
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnStarFragmentsChanged += _ => Refresh();
+                MetaProgression.OnStarFragmentsChanged += _ => Refresh();
 
             Refresh();
         }

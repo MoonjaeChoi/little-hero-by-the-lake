@@ -17,8 +17,7 @@ namespace LittleHero
         public int StarFragments => Data?.starFragments ?? 0;
         public int MagicCrystals => Data?.magicCrystals ?? 0;   // ◇ A5
         public int Starlight     => Data?.starlight ?? 0;       // ⋆ A5
-        public ChapterData SelectedChapter { get; set; }
-        public CharacterData SelectedCharacter { get; private set; }
+        // 5023 T02 — SelectedChapter / SelectedCharacter 는 MetaProgressionChapter / Character 로 이동
         public MemoryPool MemoryPool => _memoryPool;
         public MetaUpgradePool UpgradePool => _upgradePool;
         public EnemyPool EnemyPool => _enemyPool;
@@ -27,13 +26,14 @@ namespace LittleHero
         public int EnemyDefeatedCount => Data?.defeatedEnemyIds?.Length ?? 0;
         public int EnemyTotalCount => _enemyPool?.enemies?.Length ?? 0;
 
-        public event System.Action<CharacterData> OnCharacterChanged;
+        // 5023 T02 D3=B — 정적 events (구독자 호환성: instance 만 제거)
+        public static event System.Action<CharacterData> OnCharacterChanged;
         // weapon_v2 후속 — 직업 변경 시 무기 자동 unequip 트리거
-        public event System.Action<CharacterClass> OnCharacterClassChanged;
-        public event System.Action<MetaUpgradeData> OnUpgradeChanged;
-        public event System.Action<EnemyData> OnEnemyDefeated;
+        public static event System.Action<CharacterClass> OnCharacterClassChanged;
+        public static event System.Action<MetaUpgradeData> OnUpgradeChanged;
+        public static event System.Action<EnemyData> OnEnemyDefeated;
 
-        public event Action<int> OnStarFragmentsChanged;
+        public static event Action<int> OnStarFragmentsChanged;
 
         private void Awake()
         {
@@ -42,7 +42,7 @@ namespace LittleHero
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Data = MetaProgressionLoader.Load();
-            SelectedCharacter = MetaProgressionLoader.ResolveSelectedCharacterFromSave(_characterPool, Data);
+            MetaProgressionCharacter.InitFromSave(MetaProgressionLoader.ResolveSelectedCharacterFromSave(_characterPool, Data));
             MetaProgressionBootstrapper.Run();
         }
 
@@ -192,33 +192,7 @@ namespace LittleHero
             return true;
         }
 
-        public void SelectCharacter(CharacterData character)
-        {
-            // weapon_v2 — 직업 변경 감지 (이전 → 신규)
-            var prevClass = ResolveCharacterClass(SelectedCharacter);
-            var newClass = ResolveCharacterClass(character);
-
-            SelectedCharacter = character;
-            Data.selectedCharacterId = character != null ? character.id : null;
-            SaveSystem.Save(Data);
-            OnCharacterChanged?.Invoke(character);
-            if (character != null) LimitedShopService.HandleCharacterFirstSelect(character.id);  // 핫딜 트리거
-
-            // 직업 enum 변경 시만 발행 (같은 직업 내 캐릭터 교체 시 X)
-            if (prevClass != newClass) OnCharacterClassChanged?.Invoke(newClass);
-        }
-
-        private static CharacterClass ResolveCharacterClass(CharacterData ch)
-        {
-            if (ch == null || string.IsNullOrEmpty(ch.className)) return CharacterClass.Warrior;
-            switch (ch.className)
-            {
-                case "전사": return CharacterClass.Warrior;
-                case "궁수": return CharacterClass.Archer;
-                case "마법사": return CharacterClass.Mage;
-                default: return CharacterClass.Warrior;
-            }
-        }
+        // 5023 T02 — SelectCharacter / ResolveCharacterClass 는 MetaProgressionCharacter 로 이동
 
         public int GetUpgradeLevel(string id)
         {

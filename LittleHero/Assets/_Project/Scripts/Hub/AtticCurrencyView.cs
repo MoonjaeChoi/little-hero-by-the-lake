@@ -17,7 +17,7 @@ namespace LittleHero
         private void OnEnable()
         {
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnStarFragmentsChanged += UpdateStarFragments;
+                MetaProgression.OnStarFragmentsChanged += UpdateStarFragments;
             GameEvents.OnMagicCrystalChanged += UpdateMagicCrystals;
             GameEvents.OnStarlightChanged += UpdateStarlight;
             GameEvents.OnStarforceShardsChanged += UpdateStarforceShards;
@@ -26,7 +26,7 @@ namespace LittleHero
         private void OnDisable()
         {
             if (MetaProgression.Instance != null)
-                MetaProgression.Instance.OnStarFragmentsChanged -= UpdateStarFragments;
+                MetaProgression.OnStarFragmentsChanged -= UpdateStarFragments;
             GameEvents.OnMagicCrystalChanged -= UpdateMagicCrystals;
             GameEvents.OnStarlightChanged -= UpdateStarlight;
             GameEvents.OnStarforceShardsChanged -= UpdateStarforceShards;

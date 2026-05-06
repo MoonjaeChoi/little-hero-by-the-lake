@@ -19,8 +19,8 @@ namespace LittleHero
         private void Start()
         {
             // Attic에서 선택된 챕터가 있으면 그것을 우선 사용
-            if (MetaProgression.Instance != null && MetaProgression.Instance.SelectedChapter != null)
-                _chapterData = MetaProgression.Instance.SelectedChapter;
+            if (MetaProgression.Instance != null && MetaProgressionChapter.SelectedChapter != null)
+                _chapterData = MetaProgressionChapter.SelectedChapter;
 
             GameEvents.OnShopClosed += OnShopClosed;
             GameEvents.OnPlayerDied += HandlePlayerDied;
