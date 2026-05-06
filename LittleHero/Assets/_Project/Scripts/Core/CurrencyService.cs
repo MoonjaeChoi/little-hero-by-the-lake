@@ -22,19 +22,19 @@ namespace LittleHero
         public static void GrantStarFragment(int amount)
         {
             if (amount <= 0) return;
-            MetaProgression.Instance?.AddStarFragments(amount);
+            MetaProgressionCurrency.AddStarFragments(amount);
         }
 
         public static void GrantMagicCrystal(int amount)
         {
             if (amount <= 0) return;
-            MetaProgression.Instance?.AddMagicCrystals(amount);
+            MetaProgressionCurrency.AddMagicCrystals(amount);
         }
 
         public static void GrantStarlight(int amount)
         {
             if (amount <= 0) return;
-            MetaProgression.Instance?.AddStarlight(amount);
+            MetaProgressionCurrency.AddStarlight(amount);
         }
 
         // === Spend ===

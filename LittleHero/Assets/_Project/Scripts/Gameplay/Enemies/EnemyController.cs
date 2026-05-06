@@ -278,7 +278,7 @@ namespace LittleHero
             if (instance == null) return;
             // PIVOT v3 Phase 2 — drop batching (GC critical). 매 드랍 SaveData append+Save 폐기.
             // MetaProgression._pendingDrops 에 메모리만 append, ChapterCleared/PlayerDied 시 일괄 Save.
-            MetaProgression.Instance?.QueueDrop(instance);
+            MetaProgressionEquipment.QueueDrop(instance);
         }
     }
 }

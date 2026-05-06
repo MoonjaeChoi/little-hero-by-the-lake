@@ -128,7 +128,7 @@ namespace LittleHero
         {
             // 처치 시점에 챕터 도감 100% 도달 여부 확인.
             // 챕터별 적 풀은 ChapterRunner 의 _chapterData 또는 SelectedChapter 에서 가져옴.
-            var chapter = MetaProgression.Instance?.SelectedChapter;
+            var chapter = MetaProgressionChapter.SelectedChapter;
             if (chapter == null || chapter.chapterNumber <= 0 || chapter.chapterNumber > 35) return;
             if (IsChapterBestiary100(chapter))
                 TryGrantBestiaryFull(chapter.chapterNumber);

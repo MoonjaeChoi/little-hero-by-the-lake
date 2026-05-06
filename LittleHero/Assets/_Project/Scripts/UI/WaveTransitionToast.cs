@@ -52,7 +52,7 @@ namespace LittleHero
         private void HandleWaveCleared(int clearedWave)
         {
             // 챕터 마지막 웨이브 = ChapterCleared 이벤트로 별도 처리. 여기는 다음 웨이브 진행 시만.
-            int total = MetaProgression.Instance?.SelectedChapter?.totalWaves ?? 20;
+            int total = MetaProgressionChapter.SelectedChapter?.totalWaves ?? 20;
             if (clearedWave >= total) return;
 
             if (_countdownHandle.IsActive()) _countdownHandle.Cancel();

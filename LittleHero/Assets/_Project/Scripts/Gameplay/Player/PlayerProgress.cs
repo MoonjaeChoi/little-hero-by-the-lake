@@ -86,7 +86,7 @@ namespace LittleHero
         }
 
         private int CurrentChapterNumber()
-            => MetaProgression.Instance?.SelectedChapter?.chapterNumber ?? 0;
+            => MetaProgressionChapter.SelectedChapter?.chapterNumber ?? 0;
 
         // character_progression §5.1 — 시뮬 §5.1 50% 컷 (저챕터 XP 과잉 보정 2026-05-01).
         // 일반 적 = 1, 미니보스 = 10, 보스 = 40

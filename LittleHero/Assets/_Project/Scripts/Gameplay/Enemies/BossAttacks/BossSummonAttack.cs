@@ -32,7 +32,7 @@ namespace LittleHero
             _cooldown = Random.Range(0f, data.bossAttackCooldown);
             _spawner = Object.FindAnyObjectByType<EnemySpawner>(FindObjectsInactive.Include);
             // 소환 대상: 챕터의 첫 적 (Small)
-            var chapter = MetaProgression.Instance?.SelectedChapter;
+            var chapter = MetaProgressionChapter.SelectedChapter;
             if (chapter != null && chapter.enemyPool != null && chapter.enemyPool.Length > 0)
                 _summonTarget = chapter.enemyPool[0];
         }

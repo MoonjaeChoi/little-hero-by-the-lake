@@ -68,7 +68,7 @@ namespace LittleHero
 
         private void Refresh()
         {
-            var character = MetaProgression.Instance?.SelectedCharacter;
+            var character = MetaProgressionCharacter.SelectedCharacter;
             if (_characterNameText != null)
                 _characterNameText.text = character != null ? character.displayName : "-";
             if (_characterIcon != null && character != null)

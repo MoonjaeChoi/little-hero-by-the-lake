@@ -54,7 +54,7 @@ namespace LittleHero
             //     ActiveChapter 우선, 없으면 SelectedChapter, 둘 다 없으면 1f.
             float multi = _activeChapter != null
                 ? _activeChapter.enemyStatMultiplier
-                : (MetaProgression.Instance?.SelectedChapter?.enemyStatMultiplier ?? 1f);
+                : (MetaProgressionChapter.SelectedChapter?.enemyStatMultiplier ?? 1f);
             enemy.Initialize(data, multi, variationIndex);
             return enemy;
         }

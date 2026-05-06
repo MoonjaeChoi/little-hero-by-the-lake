@@ -263,7 +263,7 @@ namespace LittleHero
         // weapon_v2 — CharacterData.className 한국어 → CharacterClass enum
         public static CharacterClass ResolvePlayerClass()
         {
-            var ch = MetaProgression.Instance?.SelectedCharacter;
+            var ch = MetaProgressionCharacter.SelectedCharacter;
             if (ch == null || string.IsNullOrEmpty(ch.className)) return CharacterClass.Warrior;
             switch (ch.className)
             {
