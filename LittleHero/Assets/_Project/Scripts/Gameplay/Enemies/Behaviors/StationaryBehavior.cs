@@ -42,9 +42,16 @@ namespace LittleHero
         {
             Vector2 dir = ((Vector2)_target.position - (Vector2)_owner.transform.position).normalized;
             var go = Object.Instantiate(_data.projectilePrefab, _owner.transform.position, Quaternion.identity);
-            var rb = go.GetComponent<Rigidbody2D>();
-            if (rb != null) rb.linearVelocity = dir * 4f;  // 발사체 속도 4u/s
-            Object.Destroy(go, 3f);  // 3s 후 자동 정리 (5033 답습)
+            // 5037.1 — EnemyProjectile.Launch 위임 (player 데미지 + lifetime 통합)
+            var ep = go.GetComponent<EnemyProjectile>();
+            if (ep != null) ep.Launch(dir, _data.damage);
+            else
+            {
+                // legacy fallback (5035) — Rigidbody2D 직접 + 3s destroy
+                var rb = go.GetComponent<Rigidbody2D>();
+                if (rb != null) rb.linearVelocity = dir * 4f;
+                Object.Destroy(go, 3f);
+            }
         }
     }
 }

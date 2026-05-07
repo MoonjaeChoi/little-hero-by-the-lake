@@ -46,9 +46,15 @@ namespace LittleHero
             _fireTimer = 0f;
 
             var go = Object.Instantiate(_data.projectilePrefab, _owner.transform.position, Quaternion.identity);
-            var prb = go.GetComponent<Rigidbody2D>();
-            if (prb != null) prb.linearVelocity = dir * 4f;
-            Object.Destroy(go, 3f);
+            // 5037.1 — EnemyProjectile.Launch 위임
+            var ep = go.GetComponent<EnemyProjectile>();
+            if (ep != null) ep.Launch(dir, _data.damage);
+            else
+            {
+                var prb = go.GetComponent<Rigidbody2D>();
+                if (prb != null) prb.linearVelocity = dir * 4f;
+                Object.Destroy(go, 3f);
+            }
         }
     }
 }

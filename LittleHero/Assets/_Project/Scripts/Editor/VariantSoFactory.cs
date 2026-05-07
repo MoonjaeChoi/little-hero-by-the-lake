@@ -65,6 +65,49 @@ namespace LittleHero.EditorTools
                 AssetDatabase.CreateFolder("Assets/_Project/Data/Enemies", "Variants");
             }
         }
+
+        // 5037.1 — Stationary/Ranged 의 projectilePrefab wiring + Resources/Prefabs/Enemy 폴더에 EnemyProjectile.prefab 생성.
+        private const string PROJ_PATH = "Assets/_Project/Resources/Prefabs/Enemy/EnemyProjectile.prefab";
+
+        public static void EnsureProjectilePrefabs()
+        {
+            EnsureProjectileFolder();
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PROJ_PATH);
+            if (prefab == null) prefab = CreateProjectilePrefab();
+            // 2 Variant SO 의 projectilePrefab wiring
+            WireProjectile("Variant_Stationary_Sentry", prefab);
+            WireProjectile("Variant_Ranged_Archer", prefab);
+        }
+
+        private static void EnsureProjectileFolder()
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/_Project/Resources"))
+                AssetDatabase.CreateFolder("Assets/_Project", "Resources");
+            if (!AssetDatabase.IsValidFolder("Assets/_Project/Resources/Prefabs"))
+                AssetDatabase.CreateFolder("Assets/_Project/Resources", "Prefabs");
+            if (!AssetDatabase.IsValidFolder("Assets/_Project/Resources/Prefabs/Enemy"))
+                AssetDatabase.CreateFolder("Assets/_Project/Resources/Prefabs", "Enemy");
+        }
+
+        private static GameObject CreateProjectilePrefab()
+        {
+            var go = new GameObject("EnemyProjectile");
+            go.AddComponent<SpriteRenderer>();
+            var rb = go.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0f; rb.freezeRotation = true;
+            go.AddComponent<EnemyProjectile>();
+            var prefab = PrefabUtility.SaveAsPrefabAsset(go, PROJ_PATH);
+            Object.DestroyImmediate(go);
+            return prefab;
+        }
+
+        private static void WireProjectile(string variantId, GameObject prefab)
+        {
+            var so = AssetDatabase.LoadAssetAtPath<EnemyData>($"{VARIANTS_PATH}/{variantId}.asset");
+            if (so == null) return;
+            so.projectilePrefab = prefab;
+            EditorUtility.SetDirty(so);
+        }
     }
 }
 #endif
