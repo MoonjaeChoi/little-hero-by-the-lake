@@ -52,8 +52,8 @@ namespace LittleHero
                 _telegraphTimer += deltaTime;
                 if (_telegraphTimer >= _data.bomberTelegraphSeconds)
                 {
-                    // 자폭 — Die 호출 → ExplodeReaction
-                    _owner.TakeDamage(_owner.MaxHealth + 1, isCrit: false);
+                    // 자폭 — TakeDamage 로 Die 트리거 → ExplodeReaction
+                    _owner.TakeDamage(_owner.MaxHealth + 1f);
                 }
             }
         }
