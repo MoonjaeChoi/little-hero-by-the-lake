@@ -134,5 +134,34 @@ namespace LittleHero.Tests.Editor
             Assert.IsNotNull(rule);
             Assert.GreaterOrEqual(rule.entries.Length, 68, "5037.3 cascade 후 entries < 68 (CH3~35 완전 적용)");
         }
+
+        // 5037.4 — Hardcore CH36~50 cascade 검증 (Endgame reuse)
+        [Test]
+        public void Chapter40_Hardcore_Has_Bomber_Ranged_Charger()
+        {
+            var ch = LoadChapter(40);
+            Assert.IsNotNull(ch, "chapterNumber=40 (Hardcore CH25) ChapterData 부재");
+            Assert.IsTrue(MiniBossContains(ch, "Variant_Bomber_Mine"), "CH40 miniBossPool Bomber 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Ranged_Archer"), "CH40 enemyPool Ranged 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Charger_Bull"), "CH40 enemyPool Charger 부재");
+        }
+
+        [Test]
+        public void Chapter50_Hardcore_Has_Bomber_Ranged_Charger()
+        {
+            var ch = LoadChapter(50);
+            Assert.IsNotNull(ch, "chapterNumber=50 (Hardcore CH35) ChapterData 부재");
+            Assert.IsTrue(MiniBossContains(ch, "Variant_Bomber_Mine"), "CH50 miniBossPool Bomber 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Ranged_Archer"), "CH50 enemyPool Ranged 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Charger_Bull"), "CH50 enemyPool Charger 부재");
+        }
+
+        [Test]
+        public void RuleSO_Has_107_Entries_After_Hardcore_Cascade()
+        {
+            var rule = LoadRule();
+            Assert.IsNotNull(rule);
+            Assert.GreaterOrEqual(rule.entries.Length, 107, "5037.4 cascade 후 entries < 107 (CH3~50 완전 적용)");
+        }
     }
 }
