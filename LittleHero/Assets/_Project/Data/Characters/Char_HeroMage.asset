@@ -28,3 +28,4 @@ MonoBehaviour:
   agilityMultiplier: 0.5
   wisdomMultiplier: 2
   starFragmentCost: 0
+  starterWeaponTemplateId: weapon_rune_staff

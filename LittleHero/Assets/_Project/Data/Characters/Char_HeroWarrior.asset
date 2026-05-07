@@ -28,3 +28,4 @@ MonoBehaviour:
   agilityMultiplier: 0.5
   wisdomMultiplier: 0.5
   starFragmentCost: 0
+  starterWeaponTemplateId: warrior_iron_sword

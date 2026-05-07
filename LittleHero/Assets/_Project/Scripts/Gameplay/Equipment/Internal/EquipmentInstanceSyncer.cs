@@ -21,7 +21,11 @@ namespace LittleHero
         {
             EquipmentTemplateRegistry.EnsureCache();
             var data = MetaProgression.Instance?.Data;
-            if (data == null || data.equipmentInstances == null) return;
+            if (data == null) return;
+            if (data.equipmentInstances == null) data.equipmentInstances = new EquipmentInstance[0];
+
+            // 5033.0f — TestEquip 폐기 후속: starter weapon 자동 생성 (CharacterData.starterWeaponTemplateId 기반)
+            EnsureStarterWeapon(data);
 
             var playerClass = EquipmentClassResolver.ResolvePlayerClass();
             var equippedList = new List<EquipmentInstance>();
@@ -108,6 +112,40 @@ namespace LittleHero
                 return tpl.category;
             }
             return null;
+        }
+
+        // 5033.0f — Starter weapon 자동 생성 (Weapon 슬롯 빈 SaveData 시 1회)
+        private void EnsureStarterWeapon(SaveData data)
+        {
+            // 이미 Weapon 슬롯에 isEquipped=true 인 instance 있으면 skip
+            foreach (var inst in data.equipmentInstances)
+            {
+                if (inst == null || !inst.isEquipped || string.IsNullOrEmpty(inst.templateId)) continue;
+                if (!EquipmentTemplateRegistry.TryGet(inst.templateId, out var tpl) || tpl == null) continue;
+                if (tpl.slot == EquipSlot.Weapon) return;
+            }
+
+            var character = MetaProgressionCharacter.SelectedCharacter;
+            if (character == null || string.IsNullOrEmpty(character.starterWeaponTemplateId)) return;
+
+            if (!EquipmentTemplateRegistry.TryGet(character.starterWeaponTemplateId, out var starterTpl) || starterTpl == null)
+            {
+                Debug.LogWarning($"[EquipmentInstanceSyncer] starter template '{character.starterWeaponTemplateId}' 미등록");
+                return;
+            }
+
+            var starter = new EquipmentInstance
+            {
+                instanceId = "starter_" + character.starterWeaponTemplateId + "_" + System.Guid.NewGuid().ToString("N").Substring(0, 8),
+                templateId = character.starterWeaponTemplateId,
+                enhanceLevel = 0,
+                isEquipped = true,
+            };
+
+            var list = new List<EquipmentInstance>(data.equipmentInstances) { starter };
+            data.equipmentInstances = list.ToArray();
+            SaveSystem.Save(data);
+            Debug.Log($"[EquipmentInstanceSyncer] starter weapon 자동 생성: {starter.templateId} (instanceId={starter.instanceId})");
         }
 
         public void HandleClassChanged(CharacterClass newClass)

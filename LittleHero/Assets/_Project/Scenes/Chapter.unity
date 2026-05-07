@@ -2288,7 +2288,6 @@ GameObject:
   - component: {fileID: 905479908}
   - component: {fileID: 905479913}
   - component: {fileID: 905479915}
-  - component: {fileID: 905479914}
   - component: {fileID: 905479917}
   - component: {fileID: 905479916}
   m_Layer: 0
@@ -2435,19 +2434,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &905479914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905479907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57e7fa6a141994ea484d81bf8aa2daa5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.TestEquip
-  _startEquipment: {fileID: 11400000, guid: 7cc2e0ef2cff04b04bf1b66e5bdcf7f6, type: 2}
 --- !u!114 &905479915
 MonoBehaviour:
   m_ObjectHideFlags: 0

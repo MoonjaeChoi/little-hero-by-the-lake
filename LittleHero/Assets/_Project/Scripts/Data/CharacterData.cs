@@ -30,5 +30,9 @@ namespace LittleHero
 
         [Header("언락 조건")]
         public int starFragmentCost;
+
+        [Header("5033.0f — Starter Weapon (TestEquip 폐기)")]
+        [Tooltip("첫 진입 시 자동 활성 weapon EquipmentTemplate id (예 weapon_rune_staff). 비어있으면 starter 미생성.")]
+        public string starterWeaponTemplateId;
     }
 }

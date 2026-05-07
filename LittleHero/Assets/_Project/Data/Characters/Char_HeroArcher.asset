@@ -28,3 +28,4 @@ MonoBehaviour:
   agilityMultiplier: 2
   wisdomMultiplier: 0.5
   starFragmentCost: 0
+  starterWeaponTemplateId: weapon_fan_bow
