@@ -29,13 +29,21 @@ namespace LittleHero
         {
             if (_enhanceButton != null) _enhanceButton.onClick.AddListener(HandleEnhance);
             if (_closeButton   != null) _closeButton.onClick.AddListener(Close);
+            // 5033.3 — Shards/SlotLevel 외부 변경 시 자동 Refresh (메뉴 충전 / 가챠 결과 / 다른 슬롯 강화)
+            GameEvents.OnStarforceShardsChanged += HandleShardsChanged;
+            GameEvents.OnSlotStarforceChanged   += HandleSlotChanged;
         }
 
         private void OnDisable()
         {
             if (_enhanceButton != null) _enhanceButton.onClick.RemoveAllListeners();
             if (_closeButton   != null) _closeButton.onClick.RemoveAllListeners();
+            GameEvents.OnStarforceShardsChanged -= HandleShardsChanged;
+            GameEvents.OnSlotStarforceChanged   -= HandleSlotChanged;
         }
+
+        private void HandleShardsChanged(int amount) => Refresh();
+        private void HandleSlotChanged(int slotIdx, int newLevel) => Refresh();
 
         public void Show(EquipSlot slot)
         {
@@ -68,6 +76,8 @@ namespace LittleHero
             if (_enhanceButton != null)
             {
                 bool canEnhance = !maxed && StarforceService.Shards >= cost;
+                // 5033.3 진단 로그 (검증 후 제거)
+                Debug.Log($"[StarforceEnhanceModal.Refresh] slot={_slot} lv={lv} cost={cost} Shards={StarforceService.Shards} maxed={maxed} canEnhance={canEnhance}");
                 _enhanceButton.interactable = canEnhance;
             }
         }
