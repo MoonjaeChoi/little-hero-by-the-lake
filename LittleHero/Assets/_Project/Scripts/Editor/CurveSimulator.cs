@@ -82,6 +82,7 @@ namespace LittleHero.EditorTools
             SimulateEnemyStats(sb);
             SimulatePlayerDps(sb);
             SimulateTtk(sb);
+            SimulateBalanceMatrix(sb);  // 5034 — 챕터별 권장 진행 (Lv + 무기 +N + 슬롯 ⭐) DPS check
             SimulateCurrencyBalance(sb);
             SimulateConversionForge(sb);     // ✦ 변환 모루
             SimulateEndgameMonthly(sb);      // ✦ endgame 월간
@@ -871,6 +872,65 @@ namespace LittleHero.EditorTools
         // ===== weapon_v2 후속 Sprint B — 24 무기 가챠 분포 시뮬 =====
 
         [MenuItem("Tools/LittleHero/Weapon Gacha 24 Simulation")]
+        // 5034 T04 — 챕터별 권장 진행 매트릭스 DPS check (D7=A 슬롯+무기+affix 통합)
+        private static void SimulateBalanceMatrix(StringBuilder sb)
+        {
+            sb.AppendLine("## 5034 — Balance Integration Matrix (D7=A 슬롯+무기+affix 통합)");
+            sb.AppendLine();
+            sb.AppendLine("권장 진행 (BalanceConfig.recommended*) 기준 DPS_player ≥ DPS_target × 0.7 (D5=B) 검증");
+            sb.AppendLine();
+
+            var cfg = AssetDatabase.LoadAssetAtPath<BalanceConfig>("Assets/_Project/Data/BalanceConfig.asset");
+            if (cfg == null || cfg.recommendedLevelByChapter == null || cfg.recommendedLevelByChapter.Length < CHAPTER_COUNT)
+            {
+                sb.AppendLine("> ⚠️ BalanceConfig 권장 매트릭스 미시드 — `Tools/LittleHero/Seed BalanceConfig Recommended Matrix` 실행 권장.");
+                sb.AppendLine();
+                return;
+            }
+
+            sb.AppendLine("| 챕터 | 권장 Lv | 무기 +N | 슬롯 ⭐ | DPS_target | DPS_player | 비율 | 통과 |");
+            sb.AppendLine("|---|---|---|---|---|---|---|---|");
+
+            int passCount = 0;
+            for (int n = 1; n <= CHAPTER_COUNT; n++)
+            {
+                int idx = n - 1;
+                int lv      = cfg.recommendedLevelByChapter[idx];
+                int weaponN = cfg.recommendedWeaponEnhanceByChapter[idx];
+                int starN   = cfg.recommendedSlotStarforceByChapter[idx];
+
+                // DPS_target = BossHP / TTK (40s 표준)
+                float bossHp = REGULAR_HP_BASE * BOSS_HP_RATIO * Mathf.Pow(ENEMY_STAT_GROWTH, n - 1);
+                float dpsTarget = bossHp / 40f;
+
+                // DPS_player 통합 시뮬 (5034 D7=A)
+                float baseAtk = 10f + lv * 1f;                                     // CharacterData base + Lv
+                float starforceMul = 1f + StarforceMulFor(starN);                  // 슬롯 ⭐ multiplier
+                float weaponMul = 1f + weaponN * 0.04f;                            // 무기 +N (대략 +4%/단계)
+                float affixMul = 1.10f + (n / 35f) * 0.50f;                        // affix 평균 (1.10~1.60)
+                float speedMul = 1f + lv * 0.01f;                                  // attackSpeed 보정
+                float dpsPlayer = baseAtk * starforceMul * weaponMul * affixMul * speedMul;
+
+                float ratio = dpsPlayer / dpsTarget;
+                bool pass = ratio >= 0.7f;
+                if (pass) passCount++;
+                sb.AppendLine($"| {n} | L{lv} | +{weaponN} | ⭐{starN} | {dpsTarget:F0} | {dpsPlayer:F0} | {ratio:F2}× | {(pass ? "✅" : "❌")} |");
+            }
+            sb.AppendLine();
+            sb.AppendLine($"**합격**: {passCount}/{CHAPTER_COUNT} 챕터 (D5=B 0.7× 기준)");
+            sb.AppendLine();
+        }
+
+        // 5034 T04 — StarforceMultiplierTable._baseMulPercent 답습 (CurveSimulator 가 Editor 만이라 정적 const 답습)
+        private static float StarforceMulFor(int level)
+        {
+            // ⭐0~⭐20 mul (D2=A 유지, StarforceMultiplierTable 답습)
+            float[] mul = { 0f, 0.05f, 0.10f, 0.15f, 0.22f, 0.30f, 0.36f, 0.42f, 0.48f, 0.54f, 0.60f,
+                            0.68f, 0.76f, 0.84f, 0.92f, 1.00f, 1.20f, 1.40f, 1.60f, 1.80f, 2.00f };
+            int idx = Mathf.Clamp(level, 0, mul.Length - 1);
+            return mul[idx];
+        }
+
         public static void RunWeaponGachaSim()
         {
             const int TRIALS = 1000;
