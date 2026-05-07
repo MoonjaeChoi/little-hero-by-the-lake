@@ -76,5 +76,34 @@ namespace LittleHero.Tests.Editor
             Assert.IsNotNull(so);
             Assert.IsNotNull(so.projectilePrefab, "Stationary projectilePrefab 미wiring (5037.1 cascade)");
         }
+
+        // 5037.2 — CH16~25 cascade 검증
+        [Test]
+        public void Chapter18_Has_Stationary_Ranged_Charger()
+        {
+            var ch = LoadChapter(18);
+            Assert.IsNotNull(ch);
+            Assert.IsTrue(MiniBossContains(ch, "Variant_Stationary_Sentry"), "CH18 miniBossPool Stationary 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Ranged_Archer"), "CH18 enemyPool Ranged 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Charger_Bull"), "CH18 enemyPool Charger 부재");
+        }
+
+        [Test]
+        public void Chapter25_Has_Bomber_Ranged_Charger()
+        {
+            var ch = LoadChapter(25);
+            Assert.IsNotNull(ch);
+            Assert.IsTrue(MiniBossContains(ch, "Variant_Bomber_Mine"), "CH25 miniBossPool Bomber 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Ranged_Archer"), "CH25 enemyPool Ranged 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Charger_Bull"), "CH25 enemyPool Charger 부재");
+        }
+
+        [Test]
+        public void RuleSO_Has_42_Entries_After_Cascade()
+        {
+            var rule = LoadRule();
+            Assert.IsNotNull(rule);
+            Assert.GreaterOrEqual(rule.entries.Length, 42, "5037.2 cascade 후 entries < 42");
+        }
     }
 }
