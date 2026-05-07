@@ -42,14 +42,21 @@ namespace LittleHero
         [SerializeField] private Color _legendaryColor = new Color(1f, 0.7f, 0.3f);
         [SerializeField] private Color _mythicColor    = new Color(1f, 0.3f, 0.6f);
 
-        private void OnEnable()
+        private void Awake()
         {
+            // 5033.0j — Awake 1회 등록 (panel default active 시 OnEnable 미트리거 회피)
             if (_closeButton != null) _closeButton.onClick.AddListener(Close);
-            // 출시 전 fix #4 패턴 — 활성화 시 가장 마지막에 그려져 입력·시각 우선권 확보.
-            transform.SetAsLastSibling();
         }
 
-        private void OnDisable()
+        private void OnEnable()
+        {
+            // 출시 전 fix #4 패턴 — 활성화 시 가장 마지막에 그려져 입력·시각 우선권 확보.
+            transform.SetAsLastSibling();
+            // 5033.0j — CloseButton 을 panel 자식 sibling 마지막으로 (10연차 텍스트가 X 가리는 결함 회피)
+            if (_closeButton != null) _closeButton.transform.SetAsLastSibling();
+        }
+
+        private void OnDestroy()
         {
             if (_closeButton != null) _closeButton.onClick.RemoveAllListeners();
         }
