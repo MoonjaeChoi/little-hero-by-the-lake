@@ -40,6 +40,19 @@ namespace LittleHero.EditorTools
             Debug.Log($"[ChapterVariantSeeder] Rule SO + CH6~25 wiring 완료. entries={rule.entries.Length}");
         }
 
+        /// <summary>5037.3 — Rule SO 끝값 35 (CH3~35 매트릭스 — 35 챕터 완전 적용).</summary>
+        [MenuItem("Tools/LittleHero/Seed Chapter Variants — Rule SO + CH6~35 (전체)")]
+        public static void SeedRuleAndWire6To35()
+        {
+            VariantSoFactory.EnsureAllVariants();
+            VariantSoFactory.EnsureProjectilePrefabs();
+            var rule = EnsureRuleSo(35);
+            ApplyRule(rule);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"[ChapterVariantSeeder] Rule SO + CH6~35 (전체) wiring 완료. entries={rule.entries.Length}");
+        }
+
         private static ChapterVariantRule EnsureRuleSo(int endChapter = 15)
         {
             if (!AssetDatabase.IsValidFolder("Assets/_Project/Data/Rules"))
