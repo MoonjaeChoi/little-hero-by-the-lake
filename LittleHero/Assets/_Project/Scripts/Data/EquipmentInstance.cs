@@ -21,8 +21,27 @@ namespace LittleHero
         public string mythicId;          // null/공백 = 미발현 (equipment §3.7)
 
         public bool isLocked;            // 장착 보호 (실수로 분해 방지)
-        public bool isEquipped;          // 현재 장착 중
+        public bool isEquipped;          // [Deprecated 5033.2] equippedByClassInt 로 대체. 마이그레이션 후 폐기.
+        public int equippedByClassInt = -1;  // 5033.2 — -1=미장착, 0=Warrior, 1=Archer, 2=Mage
         public InstanceHistory history = new InstanceHistory();
+
+        /// <summary>5033.2 — equippedByClassInt 의 nullable enum 헬퍼. null = 미장착.</summary>
+        public CharacterClass? EquippedByClass
+        {
+            get => equippedByClassInt < 0 ? (CharacterClass?)null : (CharacterClass)equippedByClassInt;
+            set => equippedByClassInt = value.HasValue ? (int)value.Value : -1;
+        }
+
+        /// <summary>5033.2 — 현재 SelectedCharacter 의 직업으로 장착 중인지. SelectedCharacter null 시 isEquipped 폴백 (마이그레이션 전 SaveData 호환).</summary>
+        public bool IsEquippedByCurrentClass()
+        {
+            var c = MetaProgressionCharacter.SelectedCharacter;
+            if (c == null) return isEquipped;  // 마이그레이션 전 폴백
+            CharacterClass cls = c.className == "전사" ? CharacterClass.Warrior
+                               : c.className == "궁수" ? CharacterClass.Archer
+                               : CharacterClass.Mage;
+            return EquippedByClass == cls;
+        }
     }
 
     [Serializable]

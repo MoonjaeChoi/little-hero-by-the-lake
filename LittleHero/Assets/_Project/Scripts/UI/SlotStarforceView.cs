@@ -59,7 +59,7 @@ namespace LittleHero
                 for (int i = 0; i < data.equipmentInstances.Length; i++)
                 {
                     var inst = data.equipmentInstances[i];
-                    if (inst == null || !inst.isEquipped) continue;
+                    if (inst == null || !inst.IsEquippedByCurrentClass()) continue;
                     var tpl = FindTemplate(inst.templateId);
                     if (tpl != null && tpl.slot == _slot && tpl.icon != null)
                     {

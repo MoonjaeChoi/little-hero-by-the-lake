@@ -60,12 +60,13 @@ namespace LittleHero
         {
             var data = MetaProgression.Instance?.Data;
             EquipmentInstance[] instances = data?.equipmentInstances ?? new EquipmentInstance[0];
-            // 슬롯 → 장착된 인스턴스 매핑 (isEquipped=true 인 첫 인스턴스)
+            // 5033.2 — 슬롯 → 현재 직업으로 장착된 인스턴스 매핑 (equippedByClass 기반)
+            var playerClass = EquipmentClassResolver.ResolvePlayerClass();
             var equipped = new Dictionary<EquipSlot, EquipmentInstance>();
             for (int i = 0; i < instances.Length; i++)
             {
                 var inst = instances[i];
-                if (inst == null || !inst.isEquipped) continue;
+                if (inst == null || inst.EquippedByClass != playerClass) continue;
                 var template = FindTemplate(inst.templateId);
                 if (template == null) continue;
                 equipped[template.slot] = inst;
@@ -102,7 +103,7 @@ namespace LittleHero
             for (int i = 0; i < data.equipmentInstances.Length; i++)
             {
                 var inst = data.equipmentInstances[i];
-                if (inst == null || !inst.isEquipped) continue;
+                if (inst == null || !inst.IsEquippedByCurrentClass()) continue;
                 var tpl = FindTemplate(inst.templateId);
                 if (tpl != null && tpl.slot == slot)
                 {

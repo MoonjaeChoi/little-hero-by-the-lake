@@ -43,7 +43,7 @@ namespace LittleHero
             }
             matches.Sort((a, b) =>
             {
-                int e = (b.instance.isEquipped ? 1 : 0) - (a.instance.isEquipped ? 1 : 0);
+                int e = (b.instance.IsEquippedByCurrentClass() ? 1 : 0) - (a.instance.IsEquippedByCurrentClass() ? 1 : 0);
                 if (e != 0) return e;
                 int r = ((int)b.template.rarity).CompareTo((int)a.template.rarity);
                 if (r != 0) return r;
@@ -52,32 +52,34 @@ namespace LittleHero
             return matches;
         }
 
-        /// <summary>장착 토글. 같은 슬롯 다른 isEquipped=true 자동 해제. SaveSystem.Save + EquipmentManager 갱신.</summary>
+        /// <summary>5033.2 — 직업별 장착 토글. equippedByClass == 현재 직업 인 같은 슬롯 다른 instance 자동 해제.</summary>
         public bool ToggleEquip(EquipmentInstance inst, EquipmentTemplate tpl)
         {
             if (inst == null || tpl == null) return false;
             var data = MetaProgression.Instance?.Data;
             if (data?.equipmentInstances == null) return false;
             var em = Object.FindAnyObjectByType<EquipmentManager>(FindObjectsInactive.Include);
+            var playerClass = EquipmentClassResolver.ResolvePlayerClass();
 
-            if (inst.isEquipped)
+            // 직업 mismatch — 장착 거부 (UI 가드)
+            if (tpl.category != WeaponCategory.None && tpl.requiredClass != playerClass) return false;
+
+            if (inst.EquippedByClass == playerClass)
             {
-                inst.isEquipped = false;
+                // 이미 현재 직업으로 장착 중 → unequip
                 if (em != null) em.UnequipInstance(inst);
             }
             else
             {
-                // 같은 슬롯의 다른 isEquipped=true 인스턴스 해제
+                // 같은 슬롯의 현재 직업 장착 다른 instance 해제
                 for (int i = 0; i < data.equipmentInstances.Length; i++)
                 {
                     var other = data.equipmentInstances[i];
-                    if (other == null || other == inst || !other.isEquipped) continue;
+                    if (other == null || other == inst || other.EquippedByClass != playerClass) continue;
                     var ot = FindTemplate(other.templateId);
                     if (ot == null || ot.slot != tpl.slot) continue;
-                    other.isEquipped = false;
                     if (em != null) em.UnequipInstance(other);
                 }
-                inst.isEquipped = true;
                 if (em != null) em.EquipInstance(inst);
             }
             SaveSystem.Save(data);

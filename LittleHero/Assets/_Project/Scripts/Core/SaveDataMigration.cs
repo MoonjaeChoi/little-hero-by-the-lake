@@ -30,6 +30,33 @@ namespace LittleHero
                     data.unlockedCharacterIds[i] = MigrateCharacterId(data.unlockedCharacterIds[i]);
             }
 
+            // 5033.2 — equipmentInstances.isEquipped → equippedByClass 자동 변환
+            // 마이그레이션 정책: isEquipped=true + equippedByClassInt=-1 → 현재 SelectedCharacter 의 class 로 추정
+            if (data.equipmentInstances != null && data.equipmentInstances.Length > 0)
+            {
+                int migrated = 0;
+                CharacterClass? selectedClass = null;
+                if (!string.IsNullOrEmpty(data.selectedCharacterId))
+                {
+                    if (data.selectedCharacterId.Contains("warrior")) selectedClass = CharacterClass.Warrior;
+                    else if (data.selectedCharacterId.Contains("archer"))  selectedClass = CharacterClass.Archer;
+                    else if (data.selectedCharacterId.Contains("mage"))    selectedClass = CharacterClass.Mage;
+                }
+                foreach (var inst in data.equipmentInstances)
+                {
+                    if (inst == null) continue;
+                    if (inst.equippedByClassInt >= 0) continue;  // 이미 마이그레이션됨
+                    if (!inst.isEquipped) continue;              // 미장착 → 변환 X
+                    if (selectedClass.HasValue)
+                    {
+                        inst.equippedByClassInt = (int)selectedClass.Value;
+                        migrated++;
+                    }
+                }
+                if (migrated > 0)
+                    UnityEngine.Debug.Log($"[SaveDataMigration] 5033.2 — {migrated} EquipmentInstance.isEquipped → equippedByClass={selectedClass} 변환");
+            }
+
             return data;
         }
     }

@@ -84,7 +84,7 @@ namespace LittleHero
             for (int i = 0; i < data.equipmentInstances.Length; i++)
             {
                 var inst = data.equipmentInstances[i];
-                if (inst != null && inst.isEquipped && inst.mythicId == mythicId) return true;
+                if (inst != null && inst.IsEquippedByCurrentClass() && inst.mythicId == mythicId) return true;
             }
             return false;
         }

@@ -139,7 +139,7 @@ namespace LittleHero
                 {
                     _cards[i].gameObject.SetActive(true);
                     var m = _matches[idx];
-                    _cards[i].Bind(m.instance, m.template, m.instance.isEquipped);
+                    _cards[i].Bind(m.instance, m.template, m.instance.IsEquippedByCurrentClass());
                     _cards[i].SetSelected(m.instance == _selected);
                 }
                 else _cards[i].gameObject.SetActive(false);
@@ -190,7 +190,7 @@ namespace LittleHero
             {
                 _equipButton.interactable = hasSelection;
                 if (_equipButtonText != null)
-                    _equipButtonText.text = hasSelection && _selected.isEquipped ? "해제" : "장착";
+                    _equipButtonText.text = hasSelection && _selected.IsEquippedByCurrentClass() ? "해제" : "장착";
             }
             if (_unequipButton != null)
                 _unequipButton.gameObject.SetActive(false);  // 단일 토글 버튼만 사용

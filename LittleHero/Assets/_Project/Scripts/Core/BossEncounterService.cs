@@ -176,7 +176,7 @@ namespace LittleHero
 
             var candidates = new List<EquipmentInstance>();
             foreach (var inst in data.equipmentInstances)
-                if (inst != null && inst.isEquipped && string.IsNullOrEmpty(inst.mythicId))
+                if (inst != null && inst.IsEquippedByCurrentClass() && string.IsNullOrEmpty(inst.mythicId))
                     candidates.Add(inst);
             if (candidates.Count == 0) return null;
 
