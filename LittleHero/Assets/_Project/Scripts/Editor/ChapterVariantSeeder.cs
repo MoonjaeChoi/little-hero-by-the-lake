@@ -27,20 +27,20 @@ namespace LittleHero.EditorTools
             Debug.Log($"[ChapterVariantSeeder] 6 Variant SO 갱신 + {wired}/3 챕터 wiring 완료 (CH3/4/5).");
         }
 
-        /// <summary>5037.1 — Rule SO 도입 + CH6~15 일괄 wiring.</summary>
-        [MenuItem("Tools/LittleHero/Seed Chapter Variants — Rule SO + CH6~15")]
-        public static void SeedRuleAndWire6To15()
+        /// <summary>5037.1 / 5037.2 — Rule SO 도입 + CH3~25 일괄 wiring.</summary>
+        [MenuItem("Tools/LittleHero/Seed Chapter Variants — Rule SO + CH6~25")]
+        public static void SeedRuleAndWire6To25()
         {
             VariantSoFactory.EnsureAllVariants();
             VariantSoFactory.EnsureProjectilePrefabs();
-            var rule = EnsureRuleSo();
+            var rule = EnsureRuleSo(25);  // 5037.2 — 끝값 25 (CH3~25 매트릭스)
             ApplyRule(rule);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"[ChapterVariantSeeder] Rule SO + CH6~15 wiring 완료. entries={rule.entries.Length}");
+            Debug.Log($"[ChapterVariantSeeder] Rule SO + CH6~25 wiring 완료. entries={rule.entries.Length}");
         }
 
-        private static ChapterVariantRule EnsureRuleSo()
+        private static ChapterVariantRule EnsureRuleSo(int endChapter = 15)
         {
             if (!AssetDatabase.IsValidFolder("Assets/_Project/Data/Rules"))
                 AssetDatabase.CreateFolder("Assets/_Project/Data", "Rules");
@@ -50,9 +50,9 @@ namespace LittleHero.EditorTools
                 rule = ScriptableObject.CreateInstance<ChapterVariantRule>();
                 AssetDatabase.CreateAsset(rule, RULE_PATH);
             }
-            // 5037.1 — CH3~15 룰 매트릭스 (5037 시범 + cascade 확장)
+            // 5037.1 / 5037.2 — CH3~endChapter 룰 매트릭스 (5037 시범 + cascade 확장)
             var entries = new System.Collections.Generic.List<ChapterVariantRule.Entry>();
-            for (int n = 3; n <= 15; n++)
+            for (int n = 3; n <= endChapter; n++)
             {
                 int mod = n % 5;
                 if (mod == 3) entries.Add(Make(n, "Variant_Stationary_Sentry", ChapterVariantRule.Slot.MiniBossPool));
