@@ -31,4 +31,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ab440f526a0e54a0fa709cdf2edee72c, type: 2}
   - {fileID: 11400000, guid: be223802b52f24923b87bdc70e1f9761, type: 2}
   bossEnemy: {fileID: 11400000, guid: d54ee3b13212e425d92bc84dc36bb030, type: 2}
+  waves:
+  - {fileID: 11400000, guid: 753ebbcc86a864a15ae689d7d372c1b2, type: 2}
+  - {fileID: 11400000, guid: bdb324eb1d9f041a5a58a60784e6c4ad, type: 2}
+  - {fileID: 11400000, guid: fb2db0c11c3d74bc09f21947ab5b6404, type: 2}
+  - {fileID: 11400000, guid: c851336a0388d42cfb0737663dcac501, type: 2}
+  - {fileID: 11400000, guid: b0520f050dacb48a498598dd0334e490, type: 2}
+  - {fileID: 11400000, guid: 6951da8fb03e64e38b6413d2abe8eddd, type: 2}
+  - {fileID: 11400000, guid: 240b3ae48ac764ce38d9831a05131758, type: 2}
+  - {fileID: 11400000, guid: 0521d6860512941fcb524d88bb1e0c92, type: 2}
+  - {fileID: 11400000, guid: 42a350fed92cb467cae7bed6fa0ef9ee, type: 2}
+  - {fileID: 11400000, guid: 73a31ce4f09cb4cffa9d627300570b6a, type: 2}
+  - {fileID: 11400000, guid: 6d4f1a53ed84b4db2ae83274f02d7865, type: 2}
+  - {fileID: 11400000, guid: 398ccfdd90dc54c0ebb070fcbdb9c4d1, type: 2}
+  - {fileID: 11400000, guid: 98ef44d7fcd284680bab75bb4057d009, type: 2}
+  - {fileID: 11400000, guid: 19774a2446ae54df7b25215d87a9b6b0, type: 2}
+  - {fileID: 11400000, guid: 35f9d44ca73434f43957c6bfbc7d270a, type: 2}
+  - {fileID: 11400000, guid: c431a0d1efc6f405cb9e03194bec5976, type: 2}
+  - {fileID: 11400000, guid: 52bb2be5feea5431d8dad329ecfdf9b7, type: 2}
+  - {fileID: 11400000, guid: 61adae9b7d72e4b50ac0959fd011eea0, type: 2}
+  - {fileID: 11400000, guid: 9bd19ea7a42124b42800a2f1b3e82a59, type: 2}
+  - {fileID: 0}
   starFragmentReward: 108
