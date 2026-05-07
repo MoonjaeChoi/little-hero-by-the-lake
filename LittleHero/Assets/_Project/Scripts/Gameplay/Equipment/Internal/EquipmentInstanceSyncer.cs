@@ -78,6 +78,9 @@ namespace LittleHero
             if (activated > 0) Debug.Log($"[EquipmentInstanceSyncer] 가챠 무기 {activated}종 활성화 + EffectResolver 통합");
 
             DamageDealer.SetActiveWeaponCategory(GetActiveWeaponCategory(data));
+
+            // 5034 T03.5 — 직업별 특수 스탯 시너지 (D4=B). 누적 가드 (ClassBonusApplier 내부).
+            ClassBonusApplier.Apply(_stats, playerClass);
         }
 
         public void EquipInstance(EquipmentInstance inst)
