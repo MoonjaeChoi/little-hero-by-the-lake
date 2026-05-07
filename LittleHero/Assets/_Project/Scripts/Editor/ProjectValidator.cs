@@ -23,6 +23,7 @@ namespace LittleHero.EditorTools
             Rules.MemoryMetaRule.Validate(issues);
             // 5 복잡 Rule (Sprint 2)
             Rules.EnemyRule.Validate(issues);              // EnemyPool + 5012 Hue + 5013 Visibility
+            Rules.EnemyVariantConsistencyRule.Validate(issues); // 5037 Variant SO 일관성
             Rules.SceneRule.Validate(issues);              // ActiveScene + Camera + Cinemachine + Panel + 5004 SceneManager
             Rules.OOPPolicyRule.Validate(issues);          // §15.6 200줄 룰
             Rules.WeaponBossRule.Validate(issues);         // weapon_v2 + 5001 Boss + 5002 Context
