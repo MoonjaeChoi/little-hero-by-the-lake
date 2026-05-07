@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_22
   displayName: "\uC0AC\uD0D5 \uACF5\uC7A5"
   description: "\uCC55\uD130 22 \u2014 \uC0AC\uD0D5 \uACF5\uC7A5"
-  coverArt: {fileID: 21300000, guid: 2146bfdb2e40e44beabbe6749f17bc67, type: 3}
+  coverArt: {fileID: -1183681620893836794, guid: 5319407548cfa4613bcad9d8e6ac0ab7, type: 3}
   chapterNumber: 22
   enemyStatMultiplier: 7.4002533
   totalWaves: 20

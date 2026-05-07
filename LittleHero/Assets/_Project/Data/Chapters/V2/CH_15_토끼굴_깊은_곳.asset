@@ -15,7 +15,7 @@ MonoBehaviour:
   id: CH_15
   displayName: "\uD1A0\uB07C\uAD74 \uAE4A\uC740 \uACF3"
   description: "\uCC55\uD130 15 \u2014 \uD1A0\uB07C\uAD74 \uAE4A\uC740 \uACF3"
-  coverArt: {fileID: 21300000, guid: 2889cfb5ba9e04902bb44e97346ae1af, type: 3}
+  coverArt: {fileID: -1183681620893836794, guid: a6faa03a97e4b42bf879c1e3fd3924a8, type: 3}
   chapterNumber: 15
   enemyStatMultiplier: 3.7974994
   totalWaves: 20
