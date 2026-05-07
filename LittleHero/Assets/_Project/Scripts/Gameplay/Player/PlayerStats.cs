@@ -65,6 +65,20 @@ namespace LittleHero
         public float MagicDamage { get; private set; }           // v2 신규 — 지팡이·룬 무기
         public float MagicDamageMul { get; private set; }        // v2 신규
 
+        // ===== 5034 — 직업별 특수 스탯 (D4=B 메이플 정합, D8=B Add/Remove 메서드) =====
+        private float _bossDamageBonus;   // 전사: 보스 데미지 +%
+        private float _critChanceBonus;   // 궁수: 크리 확률 +%
+        private float _aoeBonus;          // 마법사: 광역 데미지 +%
+        public float BossDamageBonus => _bossDamageBonus;
+        public float CritChanceBonus => _critChanceBonus;
+        public float AoeBonus => _aoeBonus;
+        public void AddBossDamageBonus(float v) => _bossDamageBonus += v;
+        public void RemoveBossDamageBonus(float v) => _bossDamageBonus -= v;
+        public void AddCritChanceBonus(float v) => _critChanceBonus += v;
+        public void RemoveCritChanceBonus(float v) => _critChanceBonus -= v;
+        public void AddAoeBonus(float v) => _aoeBonus += v;
+        public void RemoveAoeBonus(float v) => _aoeBonus -= v;
+
         // stats_v2.5 — L100 cap 복원 (사용자 결정 2026-05-03). 장비 강화는 무한.
         public const int LEVEL_CAP = 100;
         public int Level { get; private set; } = 1;
