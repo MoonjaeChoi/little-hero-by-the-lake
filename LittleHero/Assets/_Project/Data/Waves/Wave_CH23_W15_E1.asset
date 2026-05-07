@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyComposition
   enemyData: {fileID: 11400000, guid: dadeec54cbec54ba68917edf54a004d2, type: 2}
   count: 23
-  pattern: 0
-  interval: 0.5
+  pattern: 1
+  interval: 0
   startDelay: 0

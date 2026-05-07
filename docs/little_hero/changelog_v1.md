@@ -273,3 +273,6 @@
 
 
 - 2026-05-08: **5038.2 + 5038.3 — 50 챕터 wave 단위 일괄 시드 (4 commit, 1862 신규 SO)**. 5038.1 답습 — Seeder 끝값 확장 + Hardcore 추가. **변경**: WaveCompositionSeeder.cs 리팩토링 (SeedRange + SeedOneChapter 헬퍼) + 신규 메뉴 3종 ("CH2~35 일괄" / "CH1~35 전체" / "Hardcore CH36~50"). **자동 생성**: Data/Waves/ 1862 신규 SO (5038.2: CH2~35 1292 + 5038.3: CH36~50 570). **누적**: 5038.1 38 + 5038.2 1292 + 5038.3 570 = **1900 Wave SO** (50 챕터 × 19 wave × 2). **챕터 wiring**: V2/CH_02 ~ V2/CH_50 (49 챕터) waves[20] 자동 적용. **사용자 검증**: CH2~35 일괄 wired=34, Hardcore CH36~50 wired=15 (Console 정합). **5037 호환**: waves null fallback 가드 보존 (모든 챕터 시드 후 미사용). **5038 시리즈 종결**: 7 commit (인프라 3 + cascade 4), 50 챕터 완전 wave 단위 정확 제어 가능.
+
+
+- 2026-05-08: **5038.4 — Seeder Elite=Burst pattern 차별화 (2 commit, 데이터만)**. EnemyComposition.pattern Elite wave (5/10/15) 시 SpawnPattern.Burst + interval=0, Standard 는 Continuous + interval=0.5 보존. **변경**: WaveCompositionSeeder.cs EnsureWaveComp + EnsureEnemyComp 매개변수 확장. **runtime 영향 0**: BuildFromComposition 는 pattern 무시 (count 합산만), WaveManager 도 변경 X. **데이터 표현력 ↑**: 향후 BuildFromComposition pattern 활용 시 baseline. **사용자 검증**: CH1~35 + Hardcore CH36~50 재실행 — 모든 EnemyComposition pattern 갱신. **5038 시리즈 누적**: 10 commit, 50 챕터 wave 단위 + pattern 차별화.
