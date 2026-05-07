@@ -86,9 +86,13 @@ namespace LittleHero
             }
         }
 
+        // 5036 — 개발 단계 디버그 플래그. true 시 모든 챕터 진입 가능 + 권장 레벨 경고 비활성.
+        public static bool DevUnlockAllChapters = false;
+
         // chapter N 해방 = chapter N-1 첫 클리어. CH1 은 항상 해방.
         private static bool IsChapterUnlocked(int chapterNum, long firstMask)
         {
+            if (DevUnlockAllChapters) return true;  // 5036 — 개발 모드
             if (chapterNum <= 1) return true;
             int prevBit = chapterNum - 2;  // 1-indexed → 0-indexed prev = (N-1)-1
             return (firstMask & (1L << prevBit)) != 0;
@@ -118,6 +122,9 @@ namespace LittleHero
         private void OnConfirmStart()
         {
             if (_pendingChapter == null) return;
+            // 5036 — 개발 모드: 권장 레벨 경고 스킵
+            if (DevUnlockAllChapters) { StartChapter(); return; }
+
             int playerLevel = PlayerProgress.Instance?.Level ?? 1;
             int recommended = RecommendedLevelFor(_pendingChapter.chapterNumber);
 
