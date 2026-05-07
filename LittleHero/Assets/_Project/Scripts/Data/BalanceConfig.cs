@@ -71,5 +71,14 @@ namespace LittleHero
         public float enemyXpMul        = 0.5f;   // 마리당 ×5
         public float spawnIntervalMul  = 0.15f;  // spawn 간격 × 0.15 (cap 비례)
         public float enemyDropChanceMul = 0.5f;  // 마리당 ×5 (드랍 합산 보존)
+
+        // 5034 balance_integration_v1 — 챕터 1~35 권장 진행 매트릭스 (D1=A 균형)
+        [Header("5034 — 챕터별 권장 진행 매트릭스 (35 챕터)")]
+        [Tooltip("챕터 N 진입 시 권장 캐릭터 레벨 (대략 N+9). 길이 35.")]
+        public int[] recommendedLevelByChapter = new int[35];
+        [Tooltip("챕터 N 진입 시 권장 무기 강화 +N (대략 N×0.7). 길이 35.")]
+        public int[] recommendedWeaponEnhanceByChapter = new int[35];
+        [Tooltip("챕터 N 진입 시 권장 슬롯 강화 ⭐ (대략 N×0.6). 길이 35.")]
+        public int[] recommendedSlotStarforceByChapter = new int[35];
     }
 }
