@@ -180,6 +180,16 @@ namespace LittleHero
 
         private WaveConfig BuildWaveConfig(int waveNumber)
         {
+            // 5038 step 3 (대안) — waves[N-1] 가 set 시 spawnCount 만 WaveComposition 합산 사용.
+            //   enemyPool / miniBoss 는 _chapterData 답습 (RegisterEnemyPool 이미 등록 — 변경 X).
+            //   동적 RegisterEnemy 호출 제거 — Spawner 상태 안전.
+            if (_chapterData.waves != null && waveNumber >= 1 && waveNumber <= _chapterData.waves.Length)
+            {
+                var wc = _chapterData.waves[waveNumber - 1];
+                if (wc != null && wc.compositions != null && wc.compositions.Length > 0)
+                    return BuildFromComposition(wc, waveNumber);
+            }
+
             BalanceConfig balance = GameManager.Instance.Balance;
             bool isMiniB = waveNumber % balance.miniBossWaveInterval == 0
                            && waveNumber < _chapterData.totalWaves;
@@ -198,6 +208,31 @@ namespace LittleHero
                 enemyPool  = _chapterData.enemyPool,
                 spawnCount = spawnCount,
                 duration   = _chapterData.waveDuration,
+                miniBoss   = mb,
+                boss       = null,
+            };
+        }
+
+        // 5038 step 3 (대안) — WaveComposition 의 count 합산만 사용. enemyPool / miniBoss 는 _chapterData 답습.
+        // 동적 RegisterEnemy 호출 X — Spawner 상태 보존 (RegisterEnemyPool 등록만 사용).
+        private WaveConfig BuildFromComposition(WaveComposition wc, int waveNumber)
+        {
+            int total = 0;
+            for (int i = 0; i < wc.compositions.Length; i++)
+            {
+                var ec = wc.compositions[i];
+                if (ec != null) total += ec.count;
+            }
+            // miniBoss 는 _chapterData.miniBossPool 답습 (Elite waveType 시 wave 5/10/15 정합)
+            BalanceConfig balance = GameManager.Instance.Balance;
+            bool isMiniB = wc.waveType == WaveType.Elite
+                           && _chapterData.miniBossPool != null && _chapterData.miniBossPool.Length > 0;
+            EnemyData mb = isMiniB ? _chapterData.miniBossPool[Random.Range(0, _chapterData.miniBossPool.Length)] : null;
+            return new WaveConfig
+            {
+                enemyPool  = _chapterData.enemyPool,
+                spawnCount = total,
+                duration   = wc.waveDuration > 0f ? wc.waveDuration : _chapterData.waveDuration,
                 miniBoss   = mb,
                 boss       = null,
             };
