@@ -63,6 +63,9 @@ namespace LittleHero
                 float finalDmg = effective * penalty * elemMul;
                 DamageSystem.DealDamage(targets[i], finalDmg, wc);
                 ElementResolver.ApplyElementEffect(targets[i], element, finalDmg);
+                // 5033.0i — element=None 인 전사/궁수 무기 시그니처 시각 (마법사 element 무기는 ElementVfxBank 우선)
+                if (element == MagicElement.None && wc.HasValue && targets[i] != null)
+                    WeaponVfxBank.Spawn(wc.Value, targets[i].transform.position);
             }
         }
 
@@ -75,6 +78,9 @@ namespace LittleHero
             float finalDmg = EnhanceDamage(damage) * elemMul;
             DamageSystem.DealDamage(target, finalDmg, wc);
             ElementResolver.ApplyElementEffect(target, element, finalDmg);
+            // 5033.0i — element=None 인 전사/궁수 무기 시그니처 시각
+            if (element == MagicElement.None && wc.HasValue && target != null)
+                WeaponVfxBank.Spawn(wc.Value, target.transform.position);
         }
 
         /// <summary>다중 타깃 보정 비율 미리보기 (UI / 시뮬용).</summary>
