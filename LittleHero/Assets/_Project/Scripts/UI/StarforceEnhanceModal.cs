@@ -63,7 +63,14 @@ namespace LittleHero
             float nextMul = StarforceService.GetBaseMultiplierForLevel(lv + 1);
 
             if (_titleText != null) _titleText.text = $"슬롯 강화 — {SlotLabel(_slot)}";
-            if (_currentLevelText != null) _currentLevelText.text = $"⭐ {lv} / {StarforceService.MAX_LEVEL}";
+            // 5034 — 권장 ⭐ 표시 (BalanceConfig 기반, 현재 챕터)
+            int recommended = GetRecommendedStarforce();
+            if (_currentLevelText != null)
+            {
+                _currentLevelText.text = (recommended > 0 && lv < recommended)
+                    ? $"⭐ {lv} / {StarforceService.MAX_LEVEL} <color=#aaa>(권장 ⭐{recommended})</color>"
+                    : $"⭐ {lv} / {StarforceService.MAX_LEVEL}";
+            }
             if (_nextEffectText != null)
             {
                 _nextEffectText.text = maxed
@@ -103,6 +110,16 @@ namespace LittleHero
         }
 
         public void Close() => gameObject.SetActive(false);
+
+        // 5034 — BalanceConfig.recommendedSlotStarforceByChapter[챕터-1] 조회
+        private int GetRecommendedStarforce()
+        {
+            var cfg = GameManager.Instance?.Balance;
+            if (cfg == null || cfg.recommendedSlotStarforceByChapter == null) return 0;
+            int chapter = MetaProgressionChapter.SelectedChapter?.chapterNumber ?? 1;
+            int idx = Mathf.Clamp(chapter - 1, 0, cfg.recommendedSlotStarforceByChapter.Length - 1);
+            return cfg.recommendedSlotStarforceByChapter[idx];
+        }
 
         private static string SlotLabel(EquipSlot s) => s switch
         {

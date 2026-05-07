@@ -39,7 +39,15 @@ namespace LittleHero
 
             int lv = StarforceService.GetLevel(_slot);
             bool maxed = lv >= StarforceService.MAX_LEVEL;
-            if (_starLevelText != null) _starLevelText.text = $"⭐ {lv}";
+            // 5034 — 권장 ⭐ 표시 (현재 챕터 기반)
+            int recommended = GetRecommendedStarforce();
+            if (_starLevelText != null)
+            {
+                if (recommended > 0 && lv < recommended)
+                    _starLevelText.text = $"⭐ {lv} <color=#aaa>(권장 ⭐{recommended})</color>";
+                else
+                    _starLevelText.text = $"⭐ {lv}";
+            }
             if (_nextCostText != null)
             {
                 _nextCostText.text = maxed
@@ -47,6 +55,16 @@ namespace LittleHero
                     : $"다음 ◈ {StarforceService.GetCostForLevel(lv)}";
             }
             RefreshIcon();
+        }
+
+        // 5034 — BalanceConfig.recommendedSlotStarforceByChapter[챕터-1] 조회
+        private int GetRecommendedStarforce()
+        {
+            var cfg = GameManager.Instance?.Balance;
+            if (cfg == null || cfg.recommendedSlotStarforceByChapter == null) return 0;
+            int chapter = MetaProgressionChapter.SelectedChapter?.chapterNumber ?? 1;
+            int idx = Mathf.Clamp(chapter - 1, 0, cfg.recommendedSlotStarforceByChapter.Length - 1);
+            return cfg.recommendedSlotStarforceByChapter[idx];
         }
 
         private void RefreshIcon()
