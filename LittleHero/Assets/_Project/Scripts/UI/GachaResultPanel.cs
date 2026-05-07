@@ -53,7 +53,22 @@ namespace LittleHero
             // 출시 전 fix #4 패턴 — 활성화 시 가장 마지막에 그려져 입력·시각 우선권 확보.
             transform.SetAsLastSibling();
             // 5033.0j — CloseButton 을 panel 자식 sibling 마지막으로 (10연차 텍스트가 X 가리는 결함 회피)
-            if (_closeButton != null) _closeButton.transform.SetAsLastSibling();
+            if (_closeButton != null)
+            {
+                _closeButton.gameObject.SetActive(true);
+                _closeButton.transform.SetAsLastSibling();
+                // 5033.0k — RectTransform 우상단 강제 (Inspector layout 결함 회피)
+                var rt = _closeButton.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    rt.anchorMin = new Vector2(1f, 1f);
+                    rt.anchorMax = new Vector2(1f, 1f);
+                    rt.pivot     = new Vector2(1f, 1f);
+                    rt.anchoredPosition = new Vector2(-20f, -20f);
+                    if (rt.sizeDelta.x < 40f || rt.sizeDelta.y < 40f)
+                        rt.sizeDelta = new Vector2(56f, 56f);
+                }
+            }
         }
 
         private void OnDestroy()
