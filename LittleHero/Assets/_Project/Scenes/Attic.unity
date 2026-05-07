@@ -3635,6 +3635,7 @@ GameObject:
   - component: {fileID: 130553661}
   - component: {fileID: 130553660}
   - component: {fileID: 130553659}
+  - component: {fileID: 130553663}
   m_Layer: 0
   m_Name: EndgameMenuPanel
   m_TagString: Untagged
@@ -3741,6 +3742,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &130553663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130553658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &133185344
 GameObject:
   m_ObjectHideFlags: 0
@@ -10624,6 +10638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 374776824}
   - component: {fileID: 374776825}
+  - component: {fileID: 374776826}
   m_Layer: 5
   m_Name: MetaUpgradePanel
   m_TagString: Untagged
@@ -10669,6 +10684,19 @@ MonoBehaviour:
   _rowsParent: {fileID: 1494133851}
   _rowPrefab: {fileID: 3757034488183273942, guid: 8e60f5e7c3e1f4a67b233e698de34b9c, type: 3}
   _starFragmentsText: {fileID: 1701712061}
+--- !u!114 &374776826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374776823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &376848003
 GameObject:
   m_ObjectHideFlags: 0
@@ -11164,6 +11192,7 @@ GameObject:
   - component: {fileID: 403127696}
   - component: {fileID: 403127695}
   - component: {fileID: 403127697}
+  - component: {fileID: 403127698}
   m_Layer: 0
   m_Name: GachaPanel
   m_TagString: Untagged
@@ -11280,6 +11309,19 @@ MonoBehaviour:
   _multiButton: {fileID: 249101596}
   _multiCostText: {fileID: 142106624}
   _currency: 0
+--- !u!114 &403127698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403127693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &407116843
 GameObject:
   m_ObjectHideFlags: 0
@@ -14323,6 +14365,7 @@ GameObject:
   - component: {fileID: 489548772}
   - component: {fileID: 489548771}
   - component: {fileID: 489548770}
+  - component: {fileID: 489548774}
   m_Layer: 0
   m_Name: WondrousMapPanel
   m_TagString: Untagged
@@ -14518,6 +14561,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &489548774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489548769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &491615054
 GameObject:
   m_ObjectHideFlags: 0
@@ -17037,6 +17093,7 @@ GameObject:
   m_Component:
   - component: {fileID: 578348408}
   - component: {fileID: 578348409}
+  - component: {fileID: 578348410}
   m_Layer: 5
   m_Name: DiaryPanel
   m_TagString: Untagged
@@ -17082,6 +17139,19 @@ MonoBehaviour:
   _slotsParent: {fileID: 811437736}
   _slotPrefab: {fileID: 4109832479727977209, guid: 6d2a1e27f37684ad09f21e1af394258e, type: 3}
   _countText: {fileID: 1999854926}
+--- !u!114 &578348410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578348407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &580159495
 GameObject:
   m_ObjectHideFlags: 0
@@ -17562,6 +17632,7 @@ GameObject:
   - component: {fileID: 592762895}
   - component: {fileID: 592762894}
   - component: {fileID: 592762893}
+  - component: {fileID: 592762897}
   m_Layer: 0
   m_Name: EnhanceModalPanel
   m_TagString: Untagged
@@ -17660,6 +17731,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &592762897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592762892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &597186002
 GameObject:
   m_ObjectHideFlags: 0
@@ -19517,6 +19601,7 @@ GameObject:
   - component: {fileID: 643924106}
   - component: {fileID: 643924105}
   - component: {fileID: 643924104}
+  - component: {fileID: 643924108}
   m_Layer: 0
   m_Name: EquipmentCardPanel
   m_TagString: Untagged
@@ -19647,6 +19732,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &643924108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643924103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &646335413
 GameObject:
   m_ObjectHideFlags: 0
@@ -20307,6 +20405,7 @@ GameObject:
   - component: {fileID: 665027891}
   - component: {fileID: 665027890}
   - component: {fileID: 665027889}
+  - component: {fileID: 665027892}
   m_Layer: 0
   m_Name: StarforceEnhanceModal
   m_TagString: Untagged
@@ -20399,6 +20498,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 665027887}
   m_CullTransparentMesh: 1
+--- !u!114 &665027892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665027887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &666492221
 GameObject:
   m_ObjectHideFlags: 0
@@ -24190,6 +24302,7 @@ GameObject:
   - component: {fileID: 746708459}
   - component: {fileID: 746708458}
   - component: {fileID: 746708457}
+  - component: {fileID: 746708461}
   m_Layer: 0
   m_Name: CharacterInfoPanel
   m_TagString: Untagged
@@ -24309,6 +24422,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &746708461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746708456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &747707651
 GameObject:
   m_ObjectHideFlags: 0
@@ -39462,6 +39588,7 @@ GameObject:
   - component: {fileID: 1216281486}
   - component: {fileID: 1216281485}
   - component: {fileID: 1216281487}
+  - component: {fileID: 1216281488}
   m_Layer: 0
   m_Name: SlotStarforcePanel
   m_TagString: Untagged
@@ -39559,6 +39686,19 @@ MonoBehaviour:
   _enhanceModal: {fileID: 665027889}
   _shardsText: {fileID: 1969886036}
   _closeButton: {fileID: 1260218587}
+--- !u!114 &1216281488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216281483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1216854242
 GameObject:
   m_ObjectHideFlags: 0
@@ -41618,6 +41758,7 @@ GameObject:
   - component: {fileID: 1292465650}
   - component: {fileID: 1292465649}
   - component: {fileID: 1292465648}
+  - component: {fileID: 1292465651}
   m_Layer: 0
   m_Name: GachaResultPanel
   m_TagString: Untagged
@@ -41724,6 +41865,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1292465646}
   m_CullTransparentMesh: 1
+--- !u!114 &1292465651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292465646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1292549836
 GameObject:
   m_ObjectHideFlags: 0
@@ -42813,6 +42967,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1331402944}
   - component: {fileID: 1331402945}
+  - component: {fileID: 1331402946}
   m_Layer: 5
   m_Name: BestiaryPanel
   m_TagString: Untagged
@@ -42858,6 +43013,19 @@ MonoBehaviour:
   _slotsParent: {fileID: 576280361}
   _slotPrefab: {fileID: 7127816415151119647, guid: 59fc7f4ba3c0f4abeb712c64419f2f3d, type: 3}
   _countText: {fileID: 1447825405}
+--- !u!114 &1331402946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331402943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1332521132
 GameObject:
   m_ObjectHideFlags: 0
@@ -52097,6 +52265,7 @@ GameObject:
   - component: {fileID: 1629340168}
   - component: {fileID: 1629340167}
   - component: {fileID: 1629340166}
+  - component: {fileID: 1629340170}
   m_Layer: 0
   m_Name: ConversionForgePanel
   m_TagString: Untagged
@@ -52197,6 +52366,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 500, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1629340170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629340165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1634094241
 GameObject:
   m_ObjectHideFlags: 0
@@ -54250,6 +54432,7 @@ GameObject:
   - component: {fileID: 1716152109}
   - component: {fileID: 1716152108}
   - component: {fileID: 1716152107}
+  - component: {fileID: 1716152110}
   m_Layer: 0
   m_Name: InventorySelectionPanel
   m_TagString: Untagged
@@ -54391,6 +54574,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1716152105}
   m_CullTransparentMesh: 1
+--- !u!114 &1716152110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716152105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1724544366
 GameObject:
   m_ObjectHideFlags: 0
@@ -56062,6 +56258,7 @@ GameObject:
   - component: {fileID: 1775096381}
   - component: {fileID: 1775096380}
   - component: {fileID: 1775096379}
+  - component: {fileID: 1775096383}
   m_Layer: 0
   m_Name: InventoryPanel
   m_TagString: Untagged
@@ -56203,6 +56400,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1775096383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775096378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1775154418
 GameObject:
   m_ObjectHideFlags: 0
@@ -58585,6 +58795,7 @@ GameObject:
   - component: {fileID: 1857073304}
   - component: {fileID: 1857073303}
   - component: {fileID: 1857073302}
+  - component: {fileID: 1857073306}
   m_Layer: 0
   m_Name: StarlightShopPanel
   m_TagString: Untagged
@@ -58702,6 +58913,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1857073306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857073301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1858022900
 GameObject:
   m_ObjectHideFlags: 0
@@ -62796,6 +63020,7 @@ GameObject:
   - component: {fileID: 1976050111}
   - component: {fileID: 1976050110}
   - component: {fileID: 1976050112}
+  - component: {fileID: 1976050113}
   m_Layer: 0
   m_Name: LimitedShopPanel
   m_TagString: Untagged
@@ -62895,6 +63120,19 @@ MonoBehaviour:
   _itemPrefab: {fileID: 747707653}
   _emptyText: {fileID: 1256344615}
   _closeButton: {fileID: 1858022902}
+--- !u!114 &1976050113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976050108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019c9946766674681bbde3dc97972587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ModalPanelGuard
+  _sortingOrder: 100
 --- !u!1 &1976521190
 GameObject:
   m_ObjectHideFlags: 0
