@@ -14,12 +14,35 @@ namespace LittleHero.EditorTools
         private const string WAVES_PATH = "Assets/_Project/Data/Waves";
 
         [MenuItem("Tools/LittleHero/Seed Wave Compositions — CH1 시범")]
-        public static void SeedCH1()
+        public static void SeedCH1() => SeedRange(1, 1);
+
+        /// <summary>5038.2 — CH2~35 일괄 시드 (V2 35 챕터 완전 wave 단위 적용).</summary>
+        [MenuItem("Tools/LittleHero/Seed Wave Compositions — CH2~35 일괄")]
+        public static void SeedAllV2() => SeedRange(2, 35);
+
+        /// <summary>5038.2 — CH1~35 일괄 (CH1 멱등 갱신 포함).</summary>
+        [MenuItem("Tools/LittleHero/Seed Wave Compositions — CH1~35 전체")]
+        public static void SeedAll() => SeedRange(1, 35);
+
+        private static void SeedRange(int startChapter, int endChapter)
         {
             EnsureFolder();
-            var ch = ChapterVariantSeeder.LoadChapterByNumber(1);
-            if (ch == null) { Debug.LogWarning("[WaveCompositionSeeder] CH1 ChapterData 부재"); return; }
-            if (ch.enemyPool == null || ch.enemyPool.Length == 0) { Debug.LogWarning("[WaveCompositionSeeder] CH1 enemyPool 비어있음"); return; }
+            int wired = 0, skipped = 0;
+            for (int n = startChapter; n <= endChapter; n++)
+            {
+                if (SeedOneChapter(n)) wired++;
+                else skipped++;
+            }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"[WaveCompositionSeeder] CH{startChapter}~CH{endChapter} 시드 완료 — wired={wired}, skipped={skipped}.");
+        }
+
+        private static bool SeedOneChapter(int chapterNum)
+        {
+            var ch = ChapterVariantSeeder.LoadChapterByNumber(chapterNum);
+            if (ch == null) { Debug.LogWarning($"[WaveCompositionSeeder] CH{chapterNum} ChapterData 부재"); return false; }
+            if (ch.enemyPool == null || ch.enemyPool.Length == 0) { Debug.LogWarning($"[WaveCompositionSeeder] CH{chapterNum} enemyPool 비어있음"); return false; }
 
             var waves = new WaveComposition[ch.totalWaves];
             for (int i = 0; i < ch.totalWaves; i++)
@@ -32,9 +55,7 @@ namespace LittleHero.EditorTools
             }
             ch.waves = waves;
             EditorUtility.SetDirty(ch);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            Debug.Log($"[WaveCompositionSeeder] CH1 wave 1~{ch.totalWaves - 1} wiring 완료 (boss wave={ch.totalWaves} skip).");
+            return true;
         }
 
         private static WaveComposition EnsureWaveComp(ChapterData ch, int waveNum, bool isElite)
