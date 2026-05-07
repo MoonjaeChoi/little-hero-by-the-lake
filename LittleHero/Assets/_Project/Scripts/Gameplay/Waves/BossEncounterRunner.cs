@@ -56,10 +56,24 @@ namespace LittleHero
                 || BossEncounterContext.PendingType == BossEncounterContext.Mode.MiniBoss)
                 BackgroundApplier.Apply(_backgroundRenderer, BossEncounterContext.PendingChapter);
 
+            // 5037.5 — Daily/Weekly 모드 시 EndgameModeData.enemyPool 활용 (sub-enemy mix spawn).
+            EnemyData[] subPool = new EnemyData[0];
+            int subCount = 0;
+            var mode = BossEncounterContext.PendingMode;
+            if (mode != null && mode.enemyPool != null && mode.subEnemySpawnCount > 0
+                && (BossEncounterContext.PendingType == BossEncounterContext.Mode.Daily
+                    || BossEncounterContext.PendingType == BossEncounterContext.Mode.Weekly))
+            {
+                subPool = mode.enemyPool;
+                subCount = mode.subEnemySpawnCount;
+                for (int i = 0; i < subPool.Length; i++)
+                    if (subPool[i] != null) _spawner.RegisterEnemy(subPool[i]);
+            }
+
             var config = new WaveConfig
             {
-                enemyPool  = new EnemyData[0],
-                spawnCount = 0,
+                enemyPool  = subPool,
+                spawnCount = subCount,
                 duration   = _battleDuration,
                 miniBoss   = null,
                 boss       = boss,

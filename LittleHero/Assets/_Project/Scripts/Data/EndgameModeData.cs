@@ -38,6 +38,12 @@ namespace LittleHero
         [Header("보스 풀 (DailyBoss/WeeklyBoss 전용)")]
         public EnemyData[] bossPool;
 
+        // 5037.5 — 보스 전투 중 함께 spawn 되는 sub-enemy 풀 (Variant archetype 활용).
+        [Header("Sub-enemy 풀 (5037.5 — 보스 전투 중 mix spawn)")]
+        public EnemyData[] enemyPool;
+        [Tooltip("보스 전투 동안 spawn 할 sub-enemy 총 마리수 (0=mix 비활성)")]
+        public int subEnemySpawnCount = 0;
+
         [Header("무한 모드 깊이 → 보상 스케일 곡선 (InfiniteTower 전용)")]
         public AnimationCurve depthScaling;
     }

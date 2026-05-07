@@ -77,6 +77,9 @@ namespace LittleHero
             if (config.boss != null)
             {
                 SpawnEnemy(config.boss);
+                // 5037.5 — Daily/Weekly Endgame 보스 전투 시 sub-enemy mix (EndgameModeData.enemyPool)
+                if (config.spawnCount > 0 && config.enemyPool != null && config.enemyPool.Length > 0)
+                    yield return SpawnRegular(config, config.spawnCount);
             }
             else if (config.miniBoss != null)
             {
