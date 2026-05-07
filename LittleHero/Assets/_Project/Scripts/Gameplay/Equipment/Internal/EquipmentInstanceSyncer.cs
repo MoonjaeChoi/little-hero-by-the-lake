@@ -114,23 +114,37 @@ namespace LittleHero
             return null;
         }
 
-        // 5033.0f — Starter weapon 자동 생성 (Weapon 슬롯 빈 SaveData 시 1회)
+        // 5033.0f — Starter weapon 자동 생성 (직업 일치 Weapon 슬롯 비어있을 때 1회)
+        // 5033.0h — 직업 mismatch 인스턴스 자동 unequip (직업 변경 시 새 starter 생성)
         private void EnsureStarterWeapon(SaveData data)
         {
-            // 이미 Weapon 슬롯에 isEquipped=true 인 instance 있으면 skip
+            var playerClass = EquipmentClassResolver.ResolvePlayerClass();
+
+            // Weapon 슬롯의 직업 일치 isEquipped=true 인스턴스 있으면 skip
+            // 직업 mismatch 인스턴스는 unequip (다음 시점에 신규 starter 생성)
+            bool unequippedAny = false;
             foreach (var inst in data.equipmentInstances)
             {
                 if (inst == null || !inst.isEquipped || string.IsNullOrEmpty(inst.templateId)) continue;
                 if (!EquipmentTemplateRegistry.TryGet(inst.templateId, out var tpl) || tpl == null) continue;
-                if (tpl.slot == EquipSlot.Weapon) return;
+                if (tpl.slot != EquipSlot.Weapon) continue;
+                if (tpl.requiredClass == playerClass || tpl.category == WeaponCategory.None) return;
+                inst.isEquipped = false;
+                unequippedAny = true;
+                Debug.Log($"[EquipmentInstanceSyncer] {tpl.id} 직업 mismatch ({tpl.requiredClass} != {playerClass}) — unequip");
             }
 
             var character = MetaProgressionCharacter.SelectedCharacter;
-            if (character == null || string.IsNullOrEmpty(character.starterWeaponTemplateId)) return;
+            if (character == null || string.IsNullOrEmpty(character.starterWeaponTemplateId))
+            {
+                if (unequippedAny) SaveSystem.Save(data);
+                return;
+            }
 
             if (!EquipmentTemplateRegistry.TryGet(character.starterWeaponTemplateId, out var starterTpl) || starterTpl == null)
             {
                 Debug.LogWarning($"[EquipmentInstanceSyncer] starter template '{character.starterWeaponTemplateId}' 미등록");
+                if (unequippedAny) SaveSystem.Save(data);
                 return;
             }
 
