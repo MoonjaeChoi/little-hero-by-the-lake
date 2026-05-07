@@ -53,6 +53,19 @@ namespace LittleHero.EditorTools
             Debug.Log($"[ChapterVariantSeeder] Rule SO + CH6~35 (전체) wiring 완료. entries={rule.entries.Length}");
         }
 
+        /// <summary>5037.4 — Hardcore CH36~50 cascade (Endgame reuse). 룰 매트릭스 그대로 답습.</summary>
+        [MenuItem("Tools/LittleHero/Seed Chapter Variants — Rule SO + Hardcore CH36~50")]
+        public static void SeedRuleAndWireHardcore()
+        {
+            VariantSoFactory.EnsureAllVariants();
+            VariantSoFactory.EnsureProjectilePrefabs();
+            var rule = EnsureRuleSo(50);  // CH3~50 매트릭스 (Hardcore 포함)
+            ApplyRule(rule);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"[ChapterVariantSeeder] Rule SO + Hardcore CH36~50 wiring 완료. entries={rule.entries.Length}");
+        }
+
         private static ChapterVariantRule EnsureRuleSo(int endChapter = 15)
         {
             if (!AssetDatabase.IsValidFolder("Assets/_Project/Data/Rules"))
