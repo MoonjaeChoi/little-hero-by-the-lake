@@ -23,6 +23,10 @@ namespace LittleHero
         public EnemyData[] miniBossPool;
         public EnemyData bossEnemy;
 
+        [Header("5038 step 1 — Wave 단위 데이터 (runtime 미사용, step 3 통합 예정)")]
+        [Tooltip("waves[N-1] 가 set 이어도 step 1 단계에서는 ChapterRunner 가 사용 안 함 — Seeder 시드만 (step 2). step 3 cascade 시 BuildFromComposition 분기 추가.")]
+        public WaveComposition[] waves;
+
         [Header("보상")]
         public int starFragmentReward;
     }
