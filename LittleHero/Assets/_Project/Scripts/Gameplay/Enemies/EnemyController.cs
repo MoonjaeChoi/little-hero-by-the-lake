@@ -38,6 +38,9 @@ namespace LittleHero
         public IBossPhase CurrentPhase { get; private set; }
         public void SetCurrentPhase(IBossPhase phase) => CurrentPhase = phase;
 
+        // 5035 T06 — IEnemyBehavior Strategy (Initialize 에서 EnemyBehaviorFactory.Create)
+        private IEnemyBehavior _behavior;
+
         public EnemyData Data => _data;
         public bool IsDead => _isDead;
         public float MaxHealth => _maxHealth;
@@ -85,6 +88,18 @@ namespace LittleHero
             // BossPhaseManager.CreateInitial 이 bossTier 따라 Phase 1 또는 null 반환.
             CurrentPhase = BossPhaseManager.CreateInitial(this);
             CurrentPhase?.OnEnter(this);
+
+            // 5035 T06 — IEnemyBehavior Strategy 통합. EnemyBehaviorFactory 가 type → instance.
+            _behavior = EnemyBehaviorFactory.Create(data.behaviorType);
+            _behavior.Initialize(this, data, PlayerFinder.Get());
+            _behavior.OnEnter();
+        }
+
+        // 5035 T06 — FixedUpdate 에서 _behavior.Tick (Rigidbody2D 정합)
+        private void FixedUpdate()
+        {
+            if (_isDead) return;
+            _behavior?.Tick(Time.fixedDeltaTime);
         }
 
         // PIVOT v3 Phase 2 — EnemyAnimationManager 가 매 프레임 호출 (Unity Update callback 폐기)
@@ -241,6 +256,10 @@ namespace LittleHero
             EnemyAnimationManager.Unregister(this);
             // 5001 T07 — IBossPhase 정리 (Phase OnExit + null)
             if (CurrentPhase != null) { CurrentPhase.OnExit(this); CurrentPhase = null; }
+            // 5035 T06 — IEnemyBehavior OnExit + IDeathReaction
+            if (_behavior != null) { _behavior.OnExit(); _behavior = null; }
+            if (_data != null)
+                EnemyDeathReactionFactory.Create(_data.deathReactionType).OnDeath(this, transform.position);
             GameEvents.RaiseEnemyKilled(_data);
             OnDied?.Invoke(this);
 

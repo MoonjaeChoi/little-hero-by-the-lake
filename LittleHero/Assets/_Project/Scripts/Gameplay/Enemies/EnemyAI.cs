@@ -12,23 +12,14 @@ namespace LittleHero
 
         private void Awake()
         {
+            // 5035 T06 — EnemyController 의 IEnemyBehavior (FollowBehavior 답습) 이 Tick 처리.
+            // EnemyAI 폐기 (D5=A) — prefab 호환 위해 컴포넌트 보존만, 자가 비활성.
             _rb = GetComponent<Rigidbody2D>();
-            _rb.gravityScale = 0f;
-            _rb.freezeRotation = true;
-            _controller = GetComponent<EnemyController>();
+            if (_rb != null) { _rb.gravityScale = 0f; _rb.freezeRotation = true; }
+            enabled = false;
         }
 
-        private void OnEnable()
-        {
-            FindPlayer();
-        }
-
-        private void FixedUpdate()
-        {
-            if (_controller.IsDead) return;
-            if (_target == null) FindPlayer();
-            Chase();
-        }
+        private void FixedUpdate() { /* 5035 — 폐기 (EnemyController.FixedUpdate 가 처리) */ }
 
         private void Chase()
         {
