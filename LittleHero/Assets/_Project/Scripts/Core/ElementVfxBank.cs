@@ -24,6 +24,11 @@ namespace LittleHero
             _icePrefab       = Resources.Load<GameObject>("VFX/Element/Ice");
             _lightningPrefab = Resources.Load<GameObject>("VFX/Element/Lightning");
             _arcanePrefab    = Resources.Load<GameObject>("VFX/Element/Arcane");
+            // 5033.1 — VfxPool Register (GC 0 cascade, D2=A 정합)
+            VfxPool.Register("element_Fire",      _firePrefab);
+            VfxPool.Register("element_Ice",       _icePrefab);
+            VfxPool.Register("element_Lightning", _lightningPrefab);
+            VfxPool.Register("element_Arcane",    _arcanePrefab);
             _initialized = true;
         }
 
@@ -53,14 +58,15 @@ namespace LittleHero
         public static void Spawn(MagicElement element, Vector3 position)
         {
             if (element == MagicElement.None) return;
+            EnsureLoaded();
             var prefab = GetPrefab(element);
             if (prefab == null)
             {
                 VfxPool.SpawnStarBurst(position);
                 return;
             }
-            var instance = Object.Instantiate(prefab, position, Quaternion.identity);
-            Object.Destroy(instance, SPAWN_LIFETIME_SECONDS);
+            // 5033.1 — VfxPool Pool 활용 (GC 0)
+            VfxPool.Spawn("element_" + element, position, SPAWN_LIFETIME_SECONDS);
         }
     }
 }

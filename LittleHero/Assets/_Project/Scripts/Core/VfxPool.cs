@@ -21,6 +21,47 @@ namespace LittleHero
         private static readonly List<GameObject> _starBurstPool = new List<GameObject>(INITIAL_SIZE);
         private static Transform _root;
 
+        // 5033.1 — 일반 prefab 풀링 (Element/Weapon VFX 등 Hovl variant 대응)
+        private static readonly Dictionary<string, GameObject> _registry = new Dictionary<string, GameObject>(16);
+        private static readonly Dictionary<string, List<GameObject>> _pools = new Dictionary<string, List<GameObject>>(16);
+
+        /// <summary>5033.1 — id 별 prefab 등록. ElementVfxBank/WeaponVfxBank 의 EnsureLoaded 가 호출.</summary>
+        public static void Register(string id, GameObject prefab)
+        {
+            if (string.IsNullOrEmpty(id) || prefab == null) return;
+            if (_registry.ContainsKey(id)) return;
+            _registry[id] = prefab;
+            _pools[id] = new List<GameObject>(8);
+        }
+
+        /// <summary>5033.1 — id 키로 풀에서 spawn + lifetime 후 자동 deactivate (GC 0).</summary>
+        public static void Spawn(string id, Vector3 position, float lifetime)
+        {
+            if (string.IsNullOrEmpty(id)) return;
+            if (!_registry.TryGetValue(id, out var prefab) || prefab == null) return;
+            EnsureRoot();
+
+            var pool = _pools[id];
+            GameObject go = null;
+            for (int i = 0; i < pool.Count; i++)
+            {
+                if (pool[i] != null && !pool[i].activeSelf) { go = pool[i]; break; }
+            }
+            if (go == null)
+            {
+                go = Object.Instantiate(prefab, _root);
+                pool.Add(go);
+            }
+
+            go.transform.position = position;
+            go.transform.rotation = Quaternion.identity;
+            go.transform.localScale = Vector3.one;
+            go.SetActive(true);
+            var auto = go.GetComponent<PoolAutoDeactivate>();
+            if (auto == null) auto = go.AddComponent<PoolAutoDeactivate>();
+            auto.Init(lifetime);
+        }
+
         // Warning Circle (보스 telegraph 반경 표시)
         private static Sprite _warningSprite;
         private static readonly List<GameObject> _warningPool = new List<GameObject>(16);
@@ -150,6 +191,18 @@ namespace LittleHero
                 float p = Mathf.Clamp01(_t);
                 sr.color = new Color(1f, 0.2f, 0.2f, 0.4f + Mathf.Sin(Time.time * 8f) * 0.15f * p);
             }
+            if (_t <= 0f) gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>5033.1 — VfxPool.Spawn 의 lifetime 후 자동 SetActive(false). Pool 재사용 보장.</summary>
+    public class PoolAutoDeactivate : MonoBehaviour
+    {
+        private float _t;
+        public void Init(float duration) { _t = duration; }
+        private void Update()
+        {
+            _t -= Time.deltaTime;
             if (_t <= 0f) gameObject.SetActive(false);
         }
     }

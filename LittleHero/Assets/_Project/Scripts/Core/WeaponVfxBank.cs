@@ -32,6 +32,15 @@ namespace LittleHero
             _crossbowPrefab  = Resources.Load<GameObject>("VFX/Weapon/Crossbow");
             _daggerPrefab    = Resources.Load<GameObject>("VFX/Weapon/Dagger");
             _boomerangPrefab = Resources.Load<GameObject>("VFX/Weapon/Boomerang");
+            // 5033.1 — VfxPool Register (GC 0 cascade)
+            VfxPool.Register("weapon_Sword",     _swordPrefab);
+            VfxPool.Register("weapon_Axe",       _axePrefab);
+            VfxPool.Register("weapon_Mace",      _macePrefab);
+            VfxPool.Register("weapon_Spear",     _spearPrefab);
+            VfxPool.Register("weapon_Bow",       _bowPrefab);
+            VfxPool.Register("weapon_Crossbow",  _crossbowPrefab);
+            VfxPool.Register("weapon_Dagger",    _daggerPrefab);
+            VfxPool.Register("weapon_Boomerang", _boomerangPrefab);
             _initialized = true;
         }
 
@@ -57,10 +66,11 @@ namespace LittleHero
             if (category == WeaponCategory.None) return;
             if (category == WeaponCategory.Staff || category == WeaponCategory.Wand || category == WeaponCategory.Tome)
                 return;  // 마법사 무기 — ElementVfxBank 가 element 우선 처리
+            EnsureLoaded();
             var prefab = GetPrefab(category);
             if (prefab == null) return;
-            var instance = Object.Instantiate(prefab, position, Quaternion.identity);
-            Object.Destroy(instance, SPAWN_LIFETIME_SECONDS);
+            // 5033.1 — VfxPool Pool 활용 (GC 0)
+            VfxPool.Spawn("weapon_" + category, position, SPAWN_LIFETIME_SECONDS);
         }
     }
 }
