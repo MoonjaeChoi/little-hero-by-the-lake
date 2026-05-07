@@ -75,21 +75,24 @@ namespace LittleHero.EditorTools
             // count 합산만 사용 — enemyData 는 BuildFromComposition 에서 무시 (_chapterData.enemyPool 답습)
             int regularCount = 8 + waveNum;  // 점진 증가 (wave 1=9, wave 19=27)
             var comps = new System.Collections.Generic.List<EnemyComposition>();
-            comps.Add(EnsureEnemyComp(id + "_E1", ch.enemyPool[0], regularCount));
+            // 5038.4 — Elite wave (5/10/15) 는 Burst (한 번에 spawn 의도), Standard 는 Continuous
+            SpawnPattern pattern = isElite ? SpawnPattern.Burst : SpawnPattern.Continuous;
+            float interval = isElite ? 0f : 0.5f;  // Burst 는 interval 무의미 (0)
+            comps.Add(EnsureEnemyComp(id + "_E1", ch.enemyPool[0], regularCount, pattern, interval));
             wc.compositions = comps.ToArray();
             EditorUtility.SetDirty(wc);
             return wc;
         }
 
-        private static EnemyComposition EnsureEnemyComp(string id, EnemyData enemy, int count)
+        private static EnemyComposition EnsureEnemyComp(string id, EnemyData enemy, int count, SpawnPattern pattern = SpawnPattern.Continuous, float interval = 0.5f)
         {
             string path = $"{WAVES_PATH}/{id}.asset";
             var ec = AssetDatabase.LoadAssetAtPath<EnemyComposition>(path);
             if (ec == null) { ec = ScriptableObject.CreateInstance<EnemyComposition>(); AssetDatabase.CreateAsset(ec, path); }
             ec.enemyData = enemy;  // 참고용 (BuildFromComposition 가 무시)
             ec.count = count;
-            ec.pattern = SpawnPattern.Continuous;
-            ec.interval = 0.5f;
+            ec.pattern = pattern;
+            ec.interval = interval;
             ec.startDelay = 0f;
             EditorUtility.SetDirty(ec);
             return ec;
