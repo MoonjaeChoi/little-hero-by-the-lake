@@ -139,3 +139,81 @@ MonoBehaviour:
   - chapterNumber: 25
     variantId: Variant_Charger_Bull
     slot: 1
+  - chapterNumber: 26
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 26
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 27
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 27
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 28
+    variantId: Variant_Stationary_Sentry
+    slot: 0
+  - chapterNumber: 28
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 28
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 29
+    variantId: Variant_Splitter_Bear
+    slot: 0
+  - chapterNumber: 29
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 29
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 30
+    variantId: Variant_Bomber_Mine
+    slot: 0
+  - chapterNumber: 30
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 30
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 31
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 31
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 32
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 32
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 33
+    variantId: Variant_Stationary_Sentry
+    slot: 0
+  - chapterNumber: 33
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 33
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 34
+    variantId: Variant_Splitter_Bear
+    slot: 0
+  - chapterNumber: 34
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 34
+    variantId: Variant_Charger_Bull
+    slot: 1
+  - chapterNumber: 35
+    variantId: Variant_Bomber_Mine
+    slot: 0
+  - chapterNumber: 35
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 35
+    variantId: Variant_Charger_Bull
+    slot: 1

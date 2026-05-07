@@ -24,6 +24,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3072b3606318545d68200d7f7eee95be, type: 2}
   - {fileID: 11400000, guid: 975deea173e904e33b24c07a09c8ea7f, type: 2}
   - {fileID: 11400000, guid: e176d3b0ff2964c1b8a104a56e847eab, type: 2}
+  - {fileID: 11400000, guid: e267fbe98317e466b9a3aacd698c8f22, type: 2}
+  - {fileID: 11400000, guid: 8e9f1729edcf24c028dae0727386c760, type: 2}
   miniBossPool:
   - {fileID: 11400000, guid: ab440f526a0e54a0fa709cdf2edee72c, type: 2}
   - {fileID: 11400000, guid: be223802b52f24923b87bdc70e1f9761, type: 2}
