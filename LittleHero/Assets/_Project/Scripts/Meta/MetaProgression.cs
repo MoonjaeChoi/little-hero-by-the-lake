@@ -45,7 +45,7 @@ namespace LittleHero
         private void Awake()
         {
             // 5023 — Awake slim. Loader + Bootstrapper 분리.
-            if (Instance != null) { Destroy(gameObject); return; }
+            if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
             // 5037.0 cascade — Load 또는 마이그레이션 throw 시에도 Data 보장 (NullRef 회피)
@@ -55,6 +55,24 @@ namespace LittleHero
             MetaProgressionCharacter.InitFromSave(MetaProgressionLoader.ResolveSelectedCharacterFromSave(_characterPool, Data));
             MetaProgressionBootstrapper.Run();
         }
+
+        // 5037.0a — Singleton instance 가 destroy 시 정적 reference 정리 (Test 격리 + DontDestroyOnLoad 잔존 회피)
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
+        }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// 5037.0a — Test 전용 헬퍼. Test 프레임워크가 Singleton 정적 상태를 명시 reset.
+        /// 어셈블리 분리 (LittleHero.Tests.Editor) 로 internal 접근 불가 → public + TestOnly_ prefix.
+        /// </summary>
+        public static void TestOnly_OverrideInstance(MetaProgression instance, SaveData data)
+        {
+            Instance = instance;
+            if (instance != null) instance.Data = data ?? new SaveData();
+        }
+#endif
 
         private void OnEnable()
         {
