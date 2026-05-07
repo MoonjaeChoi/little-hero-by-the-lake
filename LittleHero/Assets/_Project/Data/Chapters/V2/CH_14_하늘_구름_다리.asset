@@ -24,8 +24,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a745d5268a87a4d749b71286494cd0d9, type: 2}
   - {fileID: 11400000, guid: 3569bc40c345344aba1e6bd39382c9b8, type: 2}
   - {fileID: 11400000, guid: 2b57d1f7af28b4285b1fc5c7db71c046, type: 2}
+  - {fileID: 11400000, guid: e267fbe98317e466b9a3aacd698c8f22, type: 2}
   miniBossPool:
   - {fileID: 11400000, guid: 453368819d0184f83a382a9d52737d23, type: 2}
   - {fileID: 11400000, guid: a76577649f37d4179b84851f260a8f35, type: 2}
+  - {fileID: 11400000, guid: a974c39926fe14010b8064a27bef46c7, type: 2}
   bossEnemy: {fileID: 11400000, guid: 9b80ed4f1e71d42018959ac2c0b28087, type: 2}
   starFragmentReward: 17

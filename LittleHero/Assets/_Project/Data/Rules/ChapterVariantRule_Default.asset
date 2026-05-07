@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ff6e1046aef45d5ba8ee436cb55e53, type: 3}
+  m_Name: ChapterVariantRule_Default
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.ChapterVariantRule
+  entries:
+  - chapterNumber: 3
+    variantId: Variant_Stationary_Sentry
+    slot: 0
+  - chapterNumber: 4
+    variantId: Variant_Splitter_Bear
+    slot: 0
+  - chapterNumber: 5
+    variantId: Variant_Bomber_Mine
+    slot: 0
+  - chapterNumber: 8
+    variantId: Variant_Stationary_Sentry
+    slot: 0
+  - chapterNumber: 9
+    variantId: Variant_Splitter_Bear
+    slot: 0
+  - chapterNumber: 10
+    variantId: Variant_Bomber_Mine
+    slot: 0
+  - chapterNumber: 10
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 11
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 12
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 13
+    variantId: Variant_Stationary_Sentry
+    slot: 0
+  - chapterNumber: 13
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 14
+    variantId: Variant_Splitter_Bear
+    slot: 0
+  - chapterNumber: 14
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 15
+    variantId: Variant_Bomber_Mine
+    slot: 0
+  - chapterNumber: 15
+    variantId: Variant_Ranged_Archer
+    slot: 1
+  - chapterNumber: 15
+    variantId: Variant_Charger_Bull
+    slot: 1

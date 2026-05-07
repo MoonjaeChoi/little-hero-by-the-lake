@@ -52,4 +52,4 @@ MonoBehaviour:
   chargerSpeedMultiplier: 3
   rangedFireInterval: 1.5
   rangedKeepDistance: 4
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 2021819918218739778, guid: f486486520c8444abb1b9b05b6be5b45, type: 3}
