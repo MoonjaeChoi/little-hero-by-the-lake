@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52698276b7e542c588accfb9ce7b062, type: 3}
+  m_Name: Variant_Ranged_Archer
+  m_EditorClassIdentifier: Assembly-CSharp::LittleHero.EnemyData
+  id: Variant_Ranged_Archer
+  displayName: "\uC6D0\uAC70\uB9AC \uAD81\uC218"
+  description: 
+  icon: {fileID: 0}
+  prefab: {fileID: 0}
+  maxHealth: 25
+  moveSpeed: 1.2
+  damage: 6
+  xpDrop: 2.5
+  starDustDrop: 1.25
+  armor: 0
+  tintColor: {r: 1, g: 1, b: 1, a: 1}
+  scaleMultiplier: 1
+  isMiniB: 0
+  isBoss: 0
+  bossAttackType: 0
+  bossAttackCooldown: 4
+  bossAttackDamage: 20
+  bossAttackRange: 5
+  bossTier: 0
+  phase2Pattern: 0
+  phase2Threshold: 0.5
+  phase2SpeedMultiplier: 1.3
+  lootTable: {fileID: 0}
+  elementResistance:
+  - 1
+  - 1
+  - 1
+  - 1
+  behaviorType: 4
+  deathReactionType: 0
+  splitterChildData: {fileID: 0}
+  splitterChildCount: 3
+  bomberRadius: 1.5
+  bomberDamage: 30
+  bomberTelegraphSeconds: 1
+  chargerInterval: 3
+  chargerSpeedMultiplier: 3
+  rangedFireInterval: 1.5
+  rangedKeepDistance: 4
+  projectilePrefab: {fileID: 0}
