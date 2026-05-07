@@ -73,7 +73,8 @@ namespace LittleHero.EditorTools
                     if (image == null) continue;
                     image.sprite = sprite;
                     image.type = Image.Type.Sliced;
-                    image.color = new Color(1f, 1f, 1f, 0.95f);
+                    image.color = new Color(1f, 1f, 1f, 0.85f);
+                    image.raycastTarget = false;  // 5038.7 fix — 자식 button click 차단 회피
                     EditorUtility.SetDirty(panel);
                     count++;
                 }
