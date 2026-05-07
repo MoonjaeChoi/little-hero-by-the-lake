@@ -1,3 +1,4 @@
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -8,6 +9,16 @@ namespace LittleHero.Tests.Editor
     /// </summary>
     public class ClassBonusApplierTests
     {
+        // 5037.0 cascade — 정적 _appliedClass 가 Test 간 공유 → 새 GameObject 의 Reset(stats) 가 잘못된 Remove 호출.
+        // Test 격리 보장 — 정적 상태만 fresh 로 강제 reset.
+        [SetUp]
+        public void ResetStaticState()
+        {
+            var f = typeof(ClassBonusApplier).GetField("_appliedClass",
+                BindingFlags.Static | BindingFlags.NonPublic);
+            f?.SetValue(null, null);
+        }
+
         [Test]
         public void Warrior_AddsBossDamageBonus()
         {

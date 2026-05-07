@@ -101,7 +101,8 @@ namespace LittleHero
                 return new SaveData();
             string json = File.ReadAllText(SavePath);
             var data = JsonUtility.FromJson<SaveData>(json);
-            return SaveDataMigration.Apply(data);
+            // 5037.0 cascade — invalid JSON 또는 마이그레이션 fail 시 fresh SaveData fallback (NullRef 회피)
+            return SaveDataMigration.Apply(data) ?? new SaveData();
         }
 
         public static void Delete()

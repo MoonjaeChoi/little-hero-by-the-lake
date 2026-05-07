@@ -48,7 +48,10 @@ namespace LittleHero
             if (Instance != null) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            Data = MetaProgressionLoader.Load();
+            // 5037.0 cascade — Load 또는 마이그레이션 throw 시에도 Data 보장 (NullRef 회피)
+            try { Data = MetaProgressionLoader.Load(); }
+            catch (System.Exception e) { Debug.LogWarning($"[MetaProgression] Load failed: {e.Message}"); Data = new SaveData(); }
+            if (Data == null) Data = new SaveData();
             MetaProgressionCharacter.InitFromSave(MetaProgressionLoader.ResolveSelectedCharacterFromSave(_characterPool, Data));
             MetaProgressionBootstrapper.Run();
         }
