@@ -87,7 +87,13 @@ namespace LittleHero
         }
 
         // 5036 — 개발 단계 디버그 플래그. true 시 모든 챕터 진입 가능 + 권장 레벨 경고 비활성.
-        public static bool DevUnlockAllChapters = false;
+        // 5038.6 — Editor 모드 default true (사용자 요청 "모든 챕터 자유롭게"). iOS 빌드 시 false 유지.
+        public static bool DevUnlockAllChapters =
+#if UNITY_EDITOR
+            true;
+#else
+            false;
+#endif
 
         // chapter N 해방 = chapter N-1 첫 클리어. CH1 은 항상 해방.
         private static bool IsChapterUnlocked(int chapterNum, long firstMask)
