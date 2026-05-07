@@ -45,6 +45,8 @@ namespace LittleHero
             if (s == null) return baseDamage;
             // 메이플 풍 — base + STR-derived 합산 (이미 PlayerStats.AttackDamage 가 baseConfig + bonus 합산)
             float dmg = baseDamage + s.AttackDamage;
+            // 5033.4 — Weapon 슬롯 ⭐ 단계 곱셈 (옵션 Y, gacha_v1.md §3.3 정합)
+            dmg *= (1f + StarforceService.GetBaseMultiplier(EquipSlot.Weapon));
             // FinalDamage% (망토·하의·안경) + AdditiveDamageBonus% (옵션 라인) 합산 곱셈
             float mul = 1f + (s.FinalDamageBonus + s.AdditiveDamageBonus) / 100f;
             return dmg * mul;
