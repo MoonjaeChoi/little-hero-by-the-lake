@@ -105,5 +105,34 @@ namespace LittleHero.Tests.Editor
             Assert.IsNotNull(rule);
             Assert.GreaterOrEqual(rule.entries.Length, 42, "5037.2 cascade 후 entries < 42");
         }
+
+        // 5037.3 — CH26~35 cascade 검증 (35 챕터 완전 적용)
+        [Test]
+        public void Chapter28_Has_Stationary_Ranged_Charger()
+        {
+            var ch = LoadChapter(28);
+            Assert.IsNotNull(ch);
+            Assert.IsTrue(MiniBossContains(ch, "Variant_Stationary_Sentry"), "CH28 miniBossPool Stationary 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Ranged_Archer"), "CH28 enemyPool Ranged 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Charger_Bull"), "CH28 enemyPool Charger 부재");
+        }
+
+        [Test]
+        public void Chapter35_Has_Bomber_Ranged_Charger()
+        {
+            var ch = LoadChapter(35);
+            Assert.IsNotNull(ch);
+            Assert.IsTrue(MiniBossContains(ch, "Variant_Bomber_Mine"), "CH35 miniBossPool Bomber 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Ranged_Archer"), "CH35 enemyPool Ranged 부재");
+            Assert.IsTrue(EnemyPoolContains(ch, "Variant_Charger_Bull"), "CH35 enemyPool Charger 부재");
+        }
+
+        [Test]
+        public void RuleSO_Has_68_Entries_After_Full_Cascade()
+        {
+            var rule = LoadRule();
+            Assert.IsNotNull(rule);
+            Assert.GreaterOrEqual(rule.entries.Length, 68, "5037.3 cascade 후 entries < 68 (CH3~35 완전 적용)");
+        }
     }
 }
