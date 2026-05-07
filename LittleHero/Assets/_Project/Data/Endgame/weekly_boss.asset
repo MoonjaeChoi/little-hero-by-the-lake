@@ -35,6 +35,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 941adfe5bee6748688c48c262629b73f, type: 2}
   - {fileID: 11400000, guid: fb0343668a9104a2292d573d8c52188e, type: 2}
   - {fileID: 11400000, guid: 52100394a579a4af29dd180bb4a2aa2a, type: 2}
+  enemyPool:
+  - {fileID: 11400000, guid: 47dd53c56b7ba44988fa103719e2cf68, type: 2}
+  - {fileID: 11400000, guid: 8e9f1729edcf24c028dae0727386c760, type: 2}
+  - {fileID: 11400000, guid: a974c39926fe14010b8064a27bef46c7, type: 2}
+  - {fileID: 11400000, guid: e267fbe98317e466b9a3aacd698c8f22, type: 2}
+  - {fileID: 11400000, guid: 664d42cf28258498f9165fdcd652b75a, type: 2}
+  subEnemySpawnCount: 20
   depthScaling:
     serializedVersion: 2
     m_Curve:
