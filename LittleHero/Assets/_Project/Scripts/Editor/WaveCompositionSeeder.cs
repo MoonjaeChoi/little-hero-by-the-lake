@@ -24,6 +24,10 @@ namespace LittleHero.EditorTools
         [MenuItem("Tools/LittleHero/Seed Wave Compositions — CH1~35 전체")]
         public static void SeedAll() => SeedRange(1, 35);
 
+        /// <summary>5038.3 — Hardcore CH36~50 (50 챕터 완전 wave 단위 적용).</summary>
+        [MenuItem("Tools/LittleHero/Seed Wave Compositions — Hardcore CH36~50")]
+        public static void SeedHardcore() => SeedRange(36, 50);
+
         private static void SeedRange(int startChapter, int endChapter)
         {
             EnsureFolder();
