@@ -228,6 +228,7 @@ Assets/_Project/
 | **mage_element_vfx_integration** | Hovl Magic Effects FREE 4 element prefab 통합 + Editor 도구 — 5029 placeholder (StarBurst) → Hovl variant (Fire/Ice/Lightning/Arcane), R1 SerializeField static + R2 Magic Number 자동 수용, NUnit +3, 5033.1 GC cascade backlog (5033, 4 commit, D1=B+D2=A+D3=B) | ✅ 2026-05-06 |
 | **5033.0 cascade fix** | element 전파 (7 attack pattern) + EventSystem 영구 wiring (EnsureInputActions) + UI raycast/listener (Awake 패턴 + Canvas overrideSorting + raycastTarget 자동) + TestEquip 폐기 + EquipmentInstance starter + ModalPanelGuard 17 panel + WeaponVfxBank 8 (전사·궁수 시그니처) + GachaResultPanel layout — 사용자 시각/UI 검증 완료 (5033.0~k, 12 commit) | ✅ 2026-05-06 |
 | **balance_integration_v1** | 메이플 정합 + 챕터 1~35 매트릭스 (Lv/+N/⭐) + 직업 시너지 (전사 보스+10% / 궁수 크리+10% / 마법사 AOE+15%) + CurveSimulator 통합 시뮬 + UI 권장 ⭐ (5034, 7 commit, NUnit +8, ai-assisted 10/10 채택) | ✅ 2026-05-07 |
+| **enemy_system_v2** | IEnemyBehavior + IDeathReaction Strategy + 5 신규 적 (Stationary/Charger/Splitter/Ranged/Bomber) + WaveComposition/EnemyComposition SO + Factory 패턴 — 사용자 요청 (위치 고정 적 + OOP 재사용) (5035, 8 commit, NUnit +12, ai-assisted 8/8 채택) | ✅ 2026-05-07 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
