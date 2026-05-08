@@ -231,6 +231,7 @@ Assets/_Project/
 | **enemy_system_v2** | IEnemyBehavior + IDeathReaction Strategy + 5 신규 적 (Stationary/Charger/Splitter/Ranged/Bomber) + WaveComposition/EnemyComposition SO + Factory 패턴 — 사용자 요청 (위치 고정 적 + OOP 재사용) (5035, 8 commit, NUnit +12, ai-assisted 8/8 채택) | ✅ 2026-05-07 |
 | **enemy_chapter_assignment_v1** | 6 Variant SO + Seeder/Factory + Rule SO + EnemyProjectile + 50 챕터 wiring (CH3~50, entries=107) + 5037.5 EndgameModeData enemyPool 옵션 B (Daily 12 / Weekly 20 sub-enemy mix) (5037 시리즈 21 commit, NUnit +22) | ✅ 2026-05-07 |
 | **wave_composition_v1** | ChapterData.waves[20] 인프라 + BuildFromComposition 단순화 + Seeder + 50 챕터 일괄 시드 (1900 Wave SO, CH1~50) — 신중 재설계 + cascade (5038 시리즈 9 commit, NUnit +3, wave 1~15 검증) | ✅ 2026-05-08 |
+| **main_menu_revamp** | 탕탕특공대 답습 + 동화책 메타포 — TopBar 4 화폐 + CenterStage + ChapterBookCarousel + BottomNav 5-tab + MainCTAButton + SideQuickBar (5040, 4 commit + Phase 1~4 docs, 8 컴포넌트 + NUnit +6, scene wiring 5040.1 backlog) | ✅ 부분 2026-05-08 |
 | 4 출시 | TestFlight + App Store | 🔄 진행 중 |
 
 ## 12. 시스템 현황 (간략)
