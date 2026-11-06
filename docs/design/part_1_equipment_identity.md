@@ -6,6 +6,21 @@
 
 ---
 
+## 🔎 구현 현황 (2026-07-17 검증)
+
+> 범례: ✅ 설계대로 구현 · 🔄 사양 변경 · ❌ 미구현/폐기 · ⛔ 아키텍처/PIVOT 으로 무효
+
+| 설계 항목 | 상태 | 실제 구현 |
+|---|---|---|
+| 4중 구조 (캐릭터 레벨 + 강화 + 옵션 + 신화) | ✅ | `PlayerProgress` + `EnhancementService` + `AffixRoller`/`EffectResolver` + `MythicDefinition` 4종. 여기에 **슬롯 스타포스(⭐ 마법의돌)** 층이 추가됨 |
+| 듀얼 실현 (Eternal Realm + Season Realm) | ❌ | **미구현.** 로컬 싱글 진행 하나 + `SeasonPassService`(시즌 패스만). 베테랑/신규 realm 분리 없음 |
+| 데이터 주도 콘텐츠 | ✅ | ScriptableObject 400+ (`EquipmentTemplate`/`AffixDefinition`/`ChapterData` 등) + Editor 시드 메뉴 |
+| 모바일 전용 단일 API | 🔄 | 모바일 ✅ — API 없음(로컬 Unity) |
+
+**§4 미해결 질문 해소**: 클래스 = **3종** 전사(STR)/궁수(AGI)/마법사(WIS), 모두 무료·첫 시작 강제 선택 · 슬롯 = **12** (주 7 + 장신구 5, `enum EquipSlot`) · 무기 = **24** (직업별 8, `WeaponCategory` 11종) · 등급/색상은 V5 sticker 톤으로 통일. 잘못된 직업 무기는 `EquipmentManager.EquipInstance` 거부.
+
+---
+
 ## 1. 핵심 결정
 
 자사 게임은 디아블로의 빌드 다양성을 메인 축으로 잡고, 메이플의 깊이를 일부 차용하되 천장 시스템으로 좌절을 차단하며, 탕탕특공대의 진행 명확성을 진입 단계에 적용한다.

@@ -6,6 +6,25 @@
 
 ---
 
+## 🔎 구현 현황 (2026-07-17 검증)
+
+> 범례: ✅ 설계대로 구현 · 🔄 사양 변경 · ❌ 미구현/폐기 · ⛔ 아키텍처/PIVOT 으로 무효
+>
+> 구현: `EffectResolver.cs` + `AffixDefinition`/`SubAffixDefinition` + `MythicDefinition` + `SlotAffixPool`. 통합 리졸버 개념은 살았으나 op 체계·세트·SQL 은 변경/폐기.
+
+| 설계 항목 | 상태 | 실제 구현 |
+|---|---|---|
+| Effect 통합 데이터 모델 | 🔄 | `EffectResolver` 로 구현. 단 `op` = **ADD / MUL 2종만** (OVERRIDE 없음), `type` STAT_MOD 중심. MUL% 는 필드에 합산 후 `PlayerStats.ApplyResolvedBonus` 에서 `×(1+p/100)` 적용 |
+| 캐릭터 베이스 스탯 리졸버 입력 | ✅ | `PlayerStats` 베이스 위에 장비 보너스 가산 |
+| 세트(Set) 정의 구조 | ❌ | **세트 폐기** (`setId` 명시적 abandon). 디아블로식 세트 시너지 미도입 |
+| 신화 정의 (rarity_weight/archetype/season) | 🔄 | `MythicDefinition` **4종** (설계 50~80종 아님). 마일리지 200 발현. `ActiveMythicIds` 수집 후 게임플레이/DamageSystem 에서 발동 |
+| 드롭 풀 vs 효과 적용 SQL 분리 | ⛔ | DB 없음 — SO 기반. `SlotAffixPool` 12(슬롯별 6:3:1 가중) + `GlobalSubAffixPool` 1 |
+| archetype 운영 핸들 | 🔄 | 부분 — 신화 4종 규모라 archetype 분포 운영은 미가동 |
+
+**실제 규모**: 주 Affix 22 + 부 Affix(SubAffix) 12 + 신화 4 + SlotAffixPool 12.
+
+---
+
 ## 1. 핵심 결정
 
 출처가 캐릭터 레벨이든 베이스든 신화든 세트든, 산출되는 결과물은 모두 동일한 `Effect` 데이터 레코드다. 형태가 같으면 리졸버는 출처를 신경쓰지 않고 **한 가지 알고리즘**으로 처리할 수 있다.

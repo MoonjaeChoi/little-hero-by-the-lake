@@ -6,6 +6,26 @@
 
 ---
 
+## 🔎 구현 현황 (2026-07-17 검증)
+
+> 범례: ✅ 설계대로 구현 · 🔄 사양 변경 · ❌ 미구현/폐기 · ⛔ 아키텍처/PIVOT 으로 무효
+>
+> 구현: **uGUI** 패널 40+ (`Scripts/UI/`). 웹 컴포넌트(React)가 아닌 Unity MonoBehaviour 패널. TMP 는 URP 셰이더 이슈로 회피, Legacy Text 사용.
+
+| 설계 항목 | 상태 | 실제 구현 |
+|---|---|---|
+| 아이템 카드 5단 정보 위계 | ✅ | `EquipmentCardPanel` + `EquipmentCardRow` + `InventoryDetailView` |
+| 인벤토리 그리드 → 풀스크린 카드 | ✅ | `InventoryPanel` + `InventoryGridCard` + `InventorySelectionPanel`(페이징/썸네일) |
+| 강화 결과 1초 도파민 연출 | ✅ | `EnhanceModalPanel` / `StarforceEnhanceModal` + LitMotion 애니메이션 |
+| 굴림 히스토리 (강화 N회/천장/신화) | 🔄 | 부분 — 강화·스타포스 시도 표시 제한적, 전용 히스토리 라인 미완 |
+| 스와이프 비교 | ❌ | 미구현 |
+| 단일 API `GET /items/{id}` + React Query | ⛔ | REST 없음 — 로컬 데이터 직접 바인딩(`InventoryModel` MVP 분리) |
+| `result_type` enum 애니 분기 | 🔄 | 서버 enum 아님 — 클라이언트 강화 결과로 직접 분기 |
+
+**실제 UI 규모**: HUD/인벤토리/장비/강화/스타포스/가챠/변환모루/한정상점/도감(`BestiaryPanel`)/일기장(`DiaryPanel`)/메타업그레이드 등 30+ 패널. 한 손 플레이 + 가상 조이스틱 좌하단.
+
+---
+
 ## 1. 핵심 결정
 
 ### 아이템 카드의 정보 위계 5단

@@ -6,6 +6,29 @@
 
 ---
 
+## 🔎 구현 현황 (2026-07-17 검증) — ⚠️ 본 파트는 실제 구현과 전면 상이
+
+> 범례: ✅ 설계대로 구현 · 🔄 사양 변경 · ❌ 미구현/폐기 · ⛔ 아키텍처/PIVOT 으로 무효
+>
+> **이 문서가 상정한 웹/서버 아키텍처는 실제로 채택되지 않았다.** 프로젝트는 **Unity 6.3 / C# 로컬 클라이언트** 로 구현되었고, 백엔드 서버가 존재하지 않는다. 아래 사양은 대부분 ⛔ 무효이며, 실제 아키텍처는 `CLAUDE.md §4` 를 참조한다.
+
+| 설계 (본 문서) | 상태 | 실제 구현 |
+|---|---|---|
+| 클라이언트: React Native (Expo) | ⛔ | **Unity 6.3 LTS, URP 2D, C# (.NET Standard 2.1)** |
+| 엣지: API Gateway (인증/레이트리밋) | ⛔ | 없음 (로컬 앱) |
+| 서비스: FastAPI 모놀리스 (player/game/realtime) | ⛔ | **MonoBehaviour Manager + 정적 EventBus**. `GameManager`/`MetaProgression` 등 |
+| 데이터: PostgreSQL + Redis | ⛔ | **로컬 `save.json`** (`SaveSystem`, `JsonUtility`) + `SaveDataMigration`. DB·캐시 없음 |
+| 강화 요청 REST 트랜잭션 (SELECT FOR UPDATE 등) | ⛔ | 정적 호출 `EnhancementService`(로컬), 부수효과는 C# `GameEvents` |
+| 운영 어드민(CMS/유저검색/재화지급) | ⛔ | 서버 어드민 없음 — **Editor 메뉴(Tools/LittleHero)** 시드/검증 도구로 대체 |
+| AWS 인프라 (RDS/ElastiCache/ECS/S3) | ⛔ | 없음 — App Store/TestFlight 배포 |
+| 프론트 모노레포 (api-client/ui-core/game-types) | ⛔ | 단일 Unity 프로젝트, 어셈블리 3종(`Assembly-CSharp`/`-Editor`/`Tests.Editor`) |
+
+**실제 아키텍처 (CLAUDE.md §4, 3계층)**: ① Data Layer = ScriptableObject(밸런스/콘텐츠) · ② Logic Layer = MonoBehaviour Manager + EventBus(정적 `GameEvents` + SO Event Channel) · ③ UI Layer = uGUI Panel/HUD. 데미지 흐름은 `DamageQuery`/`DamageDealer`/`DamageSystem` (Physics2D 기반). OOP 정책은 §15 + `ProjectValidator`(Editor) 로 강제.
+
+> ⛔ 아래 원본 본문(FastAPI 디렉토리 구조·REST 흐름·AWS 견적 등)은 **역사적 설계 기록**으로만 보존한다. 현재 코드에는 대응물이 없다.
+
+---
+
 ## 1. 핵심 결정
 
 ### 런타임 4계층 구조
